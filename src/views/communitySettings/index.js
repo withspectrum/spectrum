@@ -5,20 +5,19 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { Upsell404Community } from '../../components/upsell';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import Head from '../../components/head';
-import ViewError from '../../components/viewError';
-import Analytics from '../communityAnalytics';
-import Members from '../communityMembers';
-import Overview from './components/overview';
-import Header from '../../components/settingsViews/header';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import Header from 'src/components/settingsViews/header';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
+import { MobileTitlebar } from 'src/components/titlebar';
+import Analytics from '../communityAnalytics';
+import Members from '../communityMembers';
+import Overview from './components/overview';
 
 type Props = {
   data: {
@@ -60,18 +59,7 @@ class CommunitySettings extends React.Component<Props> {
         community.communityPermissions.isModerator;
 
       if (!canViewCommunitySettings) {
-        return (
-          <React.Fragment>
-            <ViewError
-              heading={'You don’t have permission to manage this community.'}
-              subheading={
-                'If you want to create your own community, you can get started below.'
-              }
-            >
-              <Upsell404Community />
-            </ViewError>
-          </React.Fragment>
-        );
+        return <ErrorView titlebarTitle={'Settings'} />;
       }
 
       const subnavItems = [
@@ -112,46 +100,49 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <ViewGrid>
+        <React.Fragment>
           <Head title={title} />
+          <MobileTitlebar title={'Settings'} menuAction={'view-back'} />
 
-          <View data-cy="community-settings">
-            <Header
-              avatar={avatar}
-              subheading={subheading}
-              heading={'Settings'}
-            />
+          <ViewGrid>
+            <View data-cy="community-settings">
+              <Header
+                avatar={avatar}
+                subheading={subheading}
+                heading={'Settings'}
+              />
 
-            <SegmentedControl>
-              {subnavItems.map(item => (
-                <Segment
-                  key={item.label}
-                  to={item.to}
-                  isActive={activeTab === item.activeLabel}
-                >
-                  {item.label}
-                </Segment>
-              ))}
-            </SegmentedControl>
+              <SegmentedControl>
+                {subnavItems.map(item => (
+                  <Segment
+                    key={item.label}
+                    to={item.to}
+                    isActive={activeTab === item.activeLabel}
+                  >
+                    {item.label}
+                  </Segment>
+                ))}
+              </SegmentedControl>
 
-            <Switch>
-              <Route path={`${match.url}/analytics`}>
-                {() => <Analytics community={community} id={community.id} />}
-              </Route>
-              <Route path={`${match.url}/members`}>
-                {() => <Members community={community} history={history} />}
-              </Route>
-              <Route path={`${match.url}`}>
-                {() => (
-                  <Overview
-                    community={community}
-                    communitySlug={communitySlug}
-                  />
-                )}
-              </Route>
-            </Switch>
-          </View>
-        </ViewGrid>
+              <Switch>
+                <Route path={`${match.url}/analytics`}>
+                  {() => <Analytics community={community} id={community.id} />}
+                </Route>
+                <Route path={`${match.url}/members`}>
+                  {() => <Members community={community} history={history} />}
+                </Route>
+                <Route path={`${match.url}`}>
+                  {() => (
+                    <Overview
+                      community={community}
+                      communitySlug={communitySlug}
+                    />
+                  )}
+                </Route>
+              </Switch>
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 

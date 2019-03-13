@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import queryString from 'query-string';
 import { Button, TextButton } from 'src/components/buttons';
-import Column from 'src/components/column';
 import SlackConnection from '../communitySettings/components/slack';
 import { CommunityInvitationForm } from 'src/components/emailInvitationForm';
 import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Stepper from './components/stepper';
 import Share from './components/share';
-import { Login } from '../../views/login';
+import { Login } from 'src/views/login';
+import { MobileTitlebar } from 'src/components/titlebar';
 import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import getCurrentUserSettings, {
@@ -176,64 +176,71 @@ class NewCommunity extends React.Component<Props, State> {
     const description = this.description();
     if (user && user.email) {
       return (
-        <ViewGrid>
-          <SingleColumnGrid>
-            <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
-              <Stepper activeStep={activeStep} />
-              <Title centered={activeStep === 3}>{title}</Title>
-              <Description centered={activeStep === 3}>
-                {description}
-              </Description>
+        <React.Fragment>
+          <MobileTitlebar title={'New community'} menuAction={'menu'} />
+          <ViewGrid>
+            <SingleColumnGrid>
+              <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
+                <Stepper activeStep={activeStep} />
+                <Title centered={activeStep === 3}>{title}</Title>
+                <Description centered={activeStep === 3}>
+                  {description}
+                </Description>
 
-              {// gather community meta info
-              activeStep === 1 && !community && (
-                <CreateCommunityForm communityCreated={this.communityCreated} />
-              )}
+                {// gather community meta info
+                activeStep === 1 && !community && (
+                  <CreateCommunityForm
+                    communityCreated={this.communityCreated}
+                  />
+                )}
 
-              {activeStep === 1 && community && (
-                <EditCommunityForm
-                  communityUpdated={this.communityCreated}
-                  community={community}
-                />
-              )}
+                {activeStep === 1 && community && (
+                  <EditCommunityForm
+                    communityUpdated={this.communityCreated}
+                    community={community}
+                  />
+                )}
 
-              {activeStep === 2 && community && community.id && (
-                <ContentContainer data-cy="community-creation-invitation-step">
-                  <Divider />
-                  <SlackConnection isOnboarding={true} id={community.id} />
-                  <Divider />
-                  <CommunityInvitationForm id={community.id} />
-                </ContentContainer>
-              )}
+                {activeStep === 2 && community && community.id && (
+                  <ContentContainer data-cy="community-creation-invitation-step">
+                    <Divider />
+                    <SlackConnection isOnboarding={true} id={community.id} />
+                    <Divider />
+                    <CommunityInvitationForm id={community.id} />
+                  </ContentContainer>
+                )}
 
-              {// connect a slack team or invite via email
-              activeStep === 2 && (
-                <Actions>
-                  <TextButton onClick={() => this.step('previous')}>
-                    Back
-                  </TextButton>
-                  {hasInvitedPeople ? (
-                    <Button onClick={() => this.step('next')}>Continue</Button>
-                  ) : (
-                    <TextButton
-                      color={'brand.default'}
-                      onClick={() => this.step('next')}
-                    >
-                      Skip this step
+                {// connect a slack team or invite via email
+                activeStep === 2 && (
+                  <Actions>
+                    <TextButton onClick={() => this.step('previous')}>
+                      Back
                     </TextButton>
-                  )}
-                </Actions>
-              )}
+                    {hasInvitedPeople ? (
+                      <Button onClick={() => this.step('next')}>
+                        Continue
+                      </Button>
+                    ) : (
+                      <TextButton
+                        color={'brand.default'}
+                        onClick={() => this.step('next')}
+                      >
+                        Skip this step
+                      </TextButton>
+                    )}
+                  </Actions>
+                )}
 
-              {// share the community
-              activeStep === 3 && (
-                <ContentContainer>
-                  <Share community={community} onboarding={true} />
-                </ContentContainer>
-              )}
-            </Container>
-          </SingleColumnGrid>
-        </ViewGrid>
+                {// share the community
+                activeStep === 3 && (
+                  <ContentContainer>
+                    <Share community={community} onboarding={true} />
+                  </ContentContainer>
+                )}
+              </Container>
+            </SingleColumnGrid>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 

@@ -3,7 +3,6 @@ import * as React from 'react';
 import type { Match } from 'react-router';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
-import Fab from 'src/components/fab';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
 import { PrimaryButton } from 'src/views/community/components/button';
@@ -35,28 +34,19 @@ class DirectMessages extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <Fab
-          title="New message"
-          to={{
-            pathname: '/new/message',
-            state: { modal: true },
-          }}
-        >
-          <Icon glyph={'message-simple-new'} size={32} />
-        </Fab>
+        {!activeThreadId && (
+          <MobileTitlebar
+            title="Messages"
+            menuAction="menu"
+            rightAction={
+              <Link to={'/new/message'}>
+                <Icon glyph={'message-simple-new'} />
+              </Link>
+            }
+          />
+        )}
 
         <ViewGrid>
-          {!activeThreadId && (
-            <MobileTitlebar
-              title="Messages"
-              menuAction="menu"
-              rightAction={
-                <Link to={'/new/message'}>
-                  <Icon glyph={'message-simple-new'} />
-                </Link>
-              }
-            />
-          )}
           <SecondaryPrimaryColumnGrid>
             <StyledSecondaryColumn shouldHideThreadList={!!activeThreadId}>
               <ThreadsList activeThreadId={activeThreadId} />

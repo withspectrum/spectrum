@@ -815,7 +815,7 @@ export const StickyHeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 4px ${props => hexa(props.theme.bg.reverse, 0.08)};
+  box-shadow: 0 1px 2px ${props => hexa(props.theme.bg.reverse, 0.08)};
   flex: 0 0 64px;
   align-self: stretch;
   background: ${theme.bg.wash};

@@ -453,13 +453,13 @@ class ComposerWithData extends React.Component<Props, State> {
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
         />
+        <MobileTitlebar
+          title={'New post'}
+          menuAction={'view-close'}
+          previousHistoryBackFallback={'/'}
+        />
 
         <Container data-cy="thread-composer" isModal={isModal}>
-          <MobileTitlebar
-            title={'New post'}
-            menuAction={'view-close'}
-            previousHistoryBackFallback={'/'}
-          />
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}

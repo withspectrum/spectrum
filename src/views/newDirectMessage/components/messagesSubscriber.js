@@ -49,23 +49,17 @@ const MessagesSubscriber = (props: Props) => {
     return (ref.scrollTop = scrollHeight - clientHeight);
   };
 
-  useEffect(
-    () => {
-      setLastSeen(id);
-      scrollToBottom();
-      const unsubscribe = subscribeToNewMessages();
-      return () => Promise.resolve(unsubscribe());
-    },
-    [id]
-  );
+  useEffect(() => {
+    setLastSeen(id);
+    scrollToBottom();
+    subscribeToNewMessages();
+    return () => Promise.resolve(subscribeToNewMessages());
+  }, [id]);
 
   const refHeight = ref && ref.scrollHeight;
-  useEffect(
-    () => {
-      scrollToBottom();
-    },
-    [refHeight, id, messages, isLoading]
-  );
+  useEffect(() => {
+    scrollToBottom();
+  }, [refHeight, id, messages, isLoading]);
 
   if (hasError) return <LoadingMessagesWrapper innerRef={el => (ref = el)} />;
   if (isLoading)

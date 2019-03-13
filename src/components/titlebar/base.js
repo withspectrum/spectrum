@@ -5,7 +5,7 @@ import { withRouter, type History } from 'react-router-dom';
 import { NavigationContext } from 'src/routes';
 import Icon from 'src/components/icons';
 import {
-  Container,
+  TitlebarContainer,
   Content,
   Actions,
   Title,
@@ -69,7 +69,7 @@ const MobileTitlebar = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Container {...rest} hasAction={rightAction}>
+        <TitlebarContainer {...rest} hasAction={rightAction}>
           <Content>
             {menuAction && (
               <MenuActionContainer>
@@ -90,7 +90,7 @@ const MobileTitlebar = (props: Props) => {
           </Content>
 
           {rightAction && <Actions>{rightAction}</Actions>}
-        </Container>
+        </TitlebarContainer>
       )}
     </NavigationContext.Consumer>
   );

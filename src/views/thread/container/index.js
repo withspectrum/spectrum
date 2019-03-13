@@ -15,7 +15,9 @@ import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icons';
 import { PrimaryButton } from 'src/views/community/components/button';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import {
+  ViewGrid,
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
@@ -27,6 +29,7 @@ import {
 import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
 import { MobileTitlebar } from 'src/components/titlebar';
+import { RouteModalContext } from 'src/routes';
 import MessagesSubscriber from '../components/messagesSubscriber';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
@@ -107,20 +110,14 @@ const ThreadContainer = (props: Props) => {
     }
   };
 
-  useEffect(
-    () => {
-      markCurrentThreadNotificationsAsSeen();
-    },
-    [id, props.notifications.length]
-  );
+  useEffect(() => {
+    markCurrentThreadNotificationsAsSeen();
+  }, [id, props.notifications.length]);
 
-  useEffect(
-    () => {
-      updateThreadLastSeen();
-      return () => updateThreadLastSeen();
-    },
-    [id]
-  );
+  useEffect(() => {
+    updateThreadLastSeen();
+    return () => updateThreadLastSeen();
+  }, [id]);
 
   const { community, channel, isLocked } = thread;
   const { communityPermissions } = community;
@@ -130,71 +127,85 @@ const ThreadContainer = (props: Props) => {
   return (
     <React.Fragment>
       <ThreadHead thread={thread} />
+      <MobileTitlebar title={'Conversation'} menuAction={'view-back'} />
 
-      <SecondaryPrimaryColumnGrid style={{ gridArea: 'view' }}>
-        <SecondaryColumn>
-          <DesktopAppUpsell />
+      <RouteModalContext.Consumer>
+        {({ hasModal }) => (
+          <ConditionalWrap
+            condition={!hasModal}
+            wrap={children => <ViewGrid>{children}</ViewGrid>}
+          >
+            <SecondaryPrimaryColumnGrid>
+              <SecondaryColumn>
+                <DesktopAppUpsell />
 
-          <SidebarSection>
-            <CommunityProfileCard community={community} />
-          </SidebarSection>
+                <SidebarSection>
+                  <CommunityProfileCard community={community} />
+                </SidebarSection>
 
-          <SidebarSection>
-            <ChannelProfileCard hideCommunityMeta channel={channel} />
-          </SidebarSection>
-        </SecondaryColumn>
+                <SidebarSection>
+                  <ChannelProfileCard hideCommunityMeta channel={channel} />
+                </SidebarSection>
+              </SecondaryColumn>
 
-        <PrimaryColumn>
-          <MobileTitlebar title={'Conversation'} menuAction={'view-back'} />
-          {/*
-            This <Stretch> container makes sure that the thread detail and messages
-            component are always at least the height of the screen, minus the
-            height of the chat input. This is necessary because we always want
-            the chat input at the bottom of the view, so it must always be tricked
-            into thinking that its preceeding sibling is full-height.
-          */}
-          <Stretch>
-            <StickyHeader thread={thread} />
-            <ThreadDetail thread={thread} />
+              <PrimaryColumn>
+                {/*
+                  This <Stretch> container makes sure that the thread detail and messages
+                  component are always at least the height of the screen, minus the
+                  height of the chat input. This is necessary because we always want
+                  the chat input at the bottom of the view, so it must always be tricked
+                  into thinking that its preceeding sibling is full-height.
+                */}
+                <Stretch>
+                  <StickyHeader thread={thread} />
+                  <ThreadDetail thread={thread} />
 
-            <MessagesSubscriber
-              id={thread.id}
-              thread={thread}
-              isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
-            />
-          </Stretch>
+                  <MessagesSubscriber
+                    id={thread.id}
+                    thread={thread}
+                    isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+                  />
+                </Stretch>
 
-          {canChat && (
-            <ChatInputWrapper>
-              <ChatInput threadType="story" threadId={thread.id} />
-            </ChatInputWrapper>
-          )}
-
-          {!canChat && !isLocked && (
-            <ChatInputWrapper>
-              <JoinCommunity
-                communityId={community.id}
-                render={({ isLoading }) => (
-                  <LockedMessages>
-                    <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
-                      {isLoading ? 'Joining...' : 'Join community to chat'}
-                    </PrimaryButton>
-                  </LockedMessages>
+                {canChat && (
+                  <ChatInputWrapper>
+                    <ChatInput threadType="story" threadId={thread.id} />
+                  </ChatInputWrapper>
                 )}
-              />
-            </ChatInputWrapper>
-          )}
 
-          {isLocked && (
-            <ChatInputWrapper>
-              <LockedMessages>
-                <Icon glyph={'private'} size={24} />
-                <LockedText>This conversation has been locked</LockedText>
-              </LockedMessages>
-            </ChatInputWrapper>
-          )}
-        </PrimaryColumn>
-      </SecondaryPrimaryColumnGrid>
+                {!canChat && !isLocked && (
+                  <ChatInputWrapper>
+                    <JoinCommunity
+                      communityId={community.id}
+                      render={({ isLoading }) => (
+                        <LockedMessages>
+                          <PrimaryButton
+                            isLoading={isLoading}
+                            icon={'door-enter'}
+                          >
+                            {isLoading
+                              ? 'Joining...'
+                              : 'Join community to chat'}
+                          </PrimaryButton>
+                        </LockedMessages>
+                      )}
+                    />
+                  </ChatInputWrapper>
+                )}
+
+                {isLocked && (
+                  <ChatInputWrapper>
+                    <LockedMessages>
+                      <Icon glyph={'private'} size={24} />
+                      <LockedText>This conversation has been locked</LockedText>
+                    </LockedMessages>
+                  </ChatInputWrapper>
+                )}
+              </PrimaryColumn>
+            </SecondaryPrimaryColumnGrid>
+          </ConditionalWrap>
+        )}
+      </RouteModalContext.Consumer>
     </React.Fragment>
   );
 };

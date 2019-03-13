@@ -7,7 +7,6 @@ import Icon from 'src/components/icons';
 import getComposerLink from 'src/helpers/get-composer-link';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
-import Fab from 'src/components/fab';
 import { CommunityProfileCard } from 'src/components/entities';
 import { MobileCommunityTitlebar } from 'src/components/titlebar';
 import type { SignedInMemberType } from '../types';
@@ -29,7 +28,7 @@ const Component = (props: SignedInMemberType) => {
   let containerEl = null;
 
   useEffect(() => {
-    containerEl = document.getElementById('scroller-for-thread-feed');
+    containerEl = document.getElementById('app-scroll-boundary');
   }, []);
 
   const [metaInfo, setMetaInfo] = useState(
@@ -42,20 +41,17 @@ const Component = (props: SignedInMemberType) => {
     })
   );
 
-  useEffect(
-    () => {
-      setMetaInfo(
-        generateMetaInfo({
-          type: 'community',
-          data: {
-            name: community.name,
-            description: community.description,
-          },
-        })
-      );
-    },
-    [community.id]
-  );
+  useEffect(() => {
+    setMetaInfo(
+      generateMetaInfo({
+        type: 'community',
+        data: {
+          name: community.name,
+          description: community.description,
+        },
+      })
+    );
+  }, [community.id]);
 
   const { title, description } = metaInfo;
 
@@ -89,68 +85,48 @@ const Component = (props: SignedInMemberType) => {
   const { pathname, search } = getComposerLink({ communityId: community.id });
 
   return (
-    <RouteModalContext.Consumer>
-      {({ hasModal }) => (
-        <React.Fragment>
-          {community.communityPermissions.isMember && (
-            <Fab
-              title="New post"
-              to={{
-                pathname,
-                search,
-                state: { modal: true },
-              }}
-            >
-              <Icon glyph={'post'} size={32} />
-            </Fab>
-          )}
+    <React.Fragment>
+      <Head
+        title={title}
+        description={description}
+        image={community.profilePhoto}
+      />
 
-          <ViewGrid data-cy="community-view">
-            <Head
-              title={title}
-              description={description}
-              image={community.profilePhoto}
+      <MobileCommunityTitlebar community={community} />
+
+      <ViewGrid data-cy="community-view">
+        <SecondaryPrimaryColumnGrid>
+          <SecondaryColumn>
+            <SidebarSection>
+              <CommunityProfileCard community={community} />
+            </SidebarSection>
+
+            <SidebarSection>
+              <TeamMembersList
+                community={community}
+                id={community.id}
+                first={100}
+                filter={{ isModerator: true, isOwner: true }}
+              />
+            </SidebarSection>
+
+            <SidebarSection>
+              <ChannelsList id={community.id} communitySlug={community.slug} />
+            </SidebarSection>
+          </SecondaryColumn>
+
+          <PrimaryColumn>
+            <CommunityFeeds
+              scrollToBottom={scrollToBottom}
+              contextualScrollToBottom={contextualScrollToBottom}
+              scrollToTop={scrollToTop}
+              scrollToPosition={scrollToPosition}
+              community={community}
             />
-
-            <SecondaryPrimaryColumnGrid>
-              <SecondaryColumn>
-                <SidebarSection>
-                  <CommunityProfileCard community={community} />
-                </SidebarSection>
-
-                <SidebarSection>
-                  <TeamMembersList
-                    community={community}
-                    id={community.id}
-                    first={100}
-                    filter={{ isModerator: true, isOwner: true }}
-                  />
-                </SidebarSection>
-
-                <SidebarSection>
-                  <ChannelsList
-                    id={community.id}
-                    communitySlug={community.slug}
-                  />
-                </SidebarSection>
-              </SecondaryColumn>
-
-              <PrimaryColumn>
-                <MobileCommunityTitlebar community={community} />
-
-                <CommunityFeeds
-                  scrollToBottom={scrollToBottom}
-                  contextualScrollToBottom={contextualScrollToBottom}
-                  scrollToTop={scrollToTop}
-                  scrollToPosition={scrollToPosition}
-                  community={community}
-                />
-              </PrimaryColumn>
-            </SecondaryPrimaryColumnGrid>
-          </ViewGrid>
-        </React.Fragment>
-      )}
-    </RouteModalContext.Consumer>
+          </PrimaryColumn>
+        </SecondaryPrimaryColumnGrid>
+      </ViewGrid>
+    </React.Fragment>
   );
 };
 

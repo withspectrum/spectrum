@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { SecondaryColumn, MEDIA_BREAK } from 'src/components/layout';
 
 export const View = styled.main`
-  grid-area: view;
+  grid-area: main;
   display: grid;
   grid-template-columns: minmax(320px, 400px) 1fr;
 `;

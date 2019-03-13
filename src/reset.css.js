@@ -47,10 +47,20 @@ injectGlobal`
     display: flex;
     box-sizing: border-box;
     flex: auto;
-    align-self: stretch;
-    max-width: 100%;
-    max-height: 100%;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: scroll;
+    overscroll-behavior-y: none;
+    background: ${theme.bg.wash};
     -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    height: 100%
+    width: 100%;
+    display: flex;
   }
 
   a {
@@ -94,20 +104,6 @@ injectGlobal`
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
     color: ${theme.text.placeholder};
-  }
-
-  #root {
-    display: flex;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    flex-direction: column;
-    -ms-flex-direction: column;
-    -moz-flex-direction: column;
-    -webkit-flex-direction: column;
-    height: 100%;
-    width: 100%;
   }
 
   .fade-enter {

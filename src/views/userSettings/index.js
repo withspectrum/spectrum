@@ -9,7 +9,6 @@ import getCurrentUserSettings, {
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
-import ViewError from 'src/components/viewError';
 import { View } from './style';
 import Overview from './components/overview';
 import Header from 'src/components/settingsViews/header';
@@ -17,6 +16,7 @@ import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
+import { MobileTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -46,18 +46,7 @@ class UserSettings extends React.Component<Props> {
 
     // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
     if ((currentUser && !user) || (currentUser && user && !user.id)) {
-      return (
-        <React.Fragment>
-          <ViewError
-            heading={'We ran into an error finding this user’s settings.'}
-            subheading={
-              'If you are trying to view your own settings, refresh the page below to sign in again.'
-            }
-            clearStorage
-            refresh
-          />
-        </React.Fragment>
-      );
+      return <ErrorView />;
     }
 
     // user is viewing their own settings, validated on the server
@@ -73,21 +62,27 @@ class UserSettings extends React.Component<Props> {
       };
 
       return (
-        <ViewGrid>
+        <React.Fragment>
           <Head title={`Settings for ${user.name}`} />
+          <MobileTitlebar
+            title={'Settings'}
+            menuAction={'view-back'}
+            previousHistoryBackFallback={`/users/${user.username}`}
+          />
+          <ViewGrid>
+            <View data-cy="user-settings">
+              <Header
+                avatar={avatar}
+                subheading={subheading}
+                heading={'My Settings'}
+              />
 
-          <View data-cy="user-settings">
-            <Header
-              avatar={avatar}
-              subheading={subheading}
-              heading={'My Settings'}
-            />
-
-            <Route path={`${match.url}`}>
-              {() => <Overview user={user} />}
-            </Route>
-          </View>
-        </ViewGrid>
+              <Route path={`${match.url}`}>
+                {() => <Overview user={user} />}
+              </Route>
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 

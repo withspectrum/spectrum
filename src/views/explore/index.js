@@ -33,12 +33,12 @@ class Explore extends React.Component<Props> {
 
     return (
       <React.Fragment>
+        <MobileTitlebar title={'Explore'} menuAction={'menu'} />
+        <Head title={title} description={description} />
         <ViewGrid
           style={{ height: '100%', maxHeight: '100%' }}
           data-cy="explore-page"
         >
-          <MobileTitlebar title={'Explore'} menuAction={'menu'} />
-          <Head title={title} description={description} />
           <ErrorBoundary fallbackComponent={null}>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}

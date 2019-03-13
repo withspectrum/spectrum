@@ -24,23 +24,25 @@ export const ErrorView = (props: Props) => {
   } = props;
 
   return (
-    <ViewGrid>
+    <React.Fragment>
       <ErrorTitlebar title={titlebarTitle} />
-      <CenteredGrid>
-        <Card>
-          <Emoji role="img" aria-label="Oops">
-            {emoji}
-          </Emoji>
-          <Heading>{heading}</Heading>
-          <Description>{subheading}</Description>
-          <ActionsRow>
-            <OutlineButton href={'mailto:hi@spectrum.chat'}>
-              Contact us
-            </OutlineButton>
-            <PrimaryButton to={'/'}>Go home</PrimaryButton>
-          </ActionsRow>
-        </Card>
-      </CenteredGrid>
-    </ViewGrid>
+      <ViewGrid>
+        <CenteredGrid>
+          <Card>
+            <Emoji role="img" aria-label="Oops">
+              {emoji}
+            </Emoji>
+            <Heading>{heading}</Heading>
+            <Description>{subheading}</Description>
+            <ActionsRow>
+              <OutlineButton href={'mailto:hi@spectrum.chat'}>
+                Contact us
+              </OutlineButton>
+              <PrimaryButton to={'/'}>Go home</PrimaryButton>
+            </ActionsRow>
+          </Card>
+        </CenteredGrid>
+      </ViewGrid>
+    </React.Fragment>
   );
 };

@@ -5,7 +5,7 @@ import { zIndex, hexa } from 'src/components/globals';
 import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
 
 export const Container = styled.div`
-  grid-area: view;
+  grid-area: main;
   display: flex;
   justify-content: center;
   z-index: ${zIndex.slider + 1};

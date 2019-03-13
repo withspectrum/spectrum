@@ -5,15 +5,16 @@ export const useAppScroller = () => {
   const [ref, setRef] = useState(null);
 
   useEffect(() => {
-    if (!ref) setRef(document.getElementById('scroller-for-thread-feed'));
+    if (!ref) setRef(document.getElementById('main'));
   });
 
   const scrollToTop = () => {
-    const elem = ref || document.getElementById('scroller-for-thread-feed');
+    const elem = ref || document.getElementById('main');
     if (elem) return elem.scrollTo(0, 0);
   };
+
   const scrollToBottom = () => {
-    const elem = ref || document.getElementById('scroller-for-thread-feed');
+    const elem = ref || document.getElementById('main');
     if (elem) return (elem.scrollTop = elem.scrollHeight - elem.clientHeight);
   };
 

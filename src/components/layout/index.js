@@ -9,6 +9,7 @@ export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
 export const PRIMARY_COLUMN_WIDTH = 600;
 export const SECONDARY_COLUMN_WIDTH = 340;
 export const COL_GAP = 16;
+export const TITLEBAR_HEIGHT = 62;
 export const MAX_WIDTH =
   PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP;
 export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
@@ -25,14 +26,9 @@ const StyledViewGrid = styled.main.attrs({
   className: 'view-grid',
 })`
   display: grid;
-  grid-area: view;
-  height: 100vh;
-  max-height: 100vh;
-  overflow-y: ${props => (props.hasModal ? 'hidden' : 'visible')};
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    grid-template-rows: min-content 1fr;
-  }
+  grid-area: main;
+  overflow: hidden;
+  overflow-y: ${props => (props.hasModal ? 'hidden' : 'auto')};
 `;
 
 export const ViewGrid = (props: Props) => (
@@ -143,7 +139,6 @@ export const PrimaryColumn = styled.section`
     border-right: 0;
     border-bottom: 0;
     grid-column-start: 1;
-    min-height: 100vh;
   }
 `;
 
@@ -153,12 +148,19 @@ export const SecondaryColumn = styled.section`
   overflow-y: scroll;
   position: sticky;
   top: 0;
-  padding-bottom: 64px;
-  padding-right: 16px;
+  padding-bottom: 48px;
+  padding-right: 12px;
   grid-area: secondary;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    height: auto;
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     display: none;
   }
+`;
+
+export const ChatInputWrapper = styled.div`
+  position: sticky;
+  bottom: 0;
+  width: 100vw;
+  z-index: 3000;
 `;

@@ -89,36 +89,30 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     of chat is to scroll up for older messages
   */
   const { scrollToBottom, scrollToTop } = useAppScroller();
-  useEffect(
-    () => {
-      if (activeSegment === 'chat') {
-        scrollToBottom();
-      } else {
-        scrollToTop();
-      }
-    },
-    [activeSegment]
-  );
+  useEffect(() => {
+    if (activeSegment === 'chat') {
+      scrollToBottom();
+    } else {
+      scrollToTop();
+    }
+  }, [activeSegment]);
 
   const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
 
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
-  useEffect(
-    () => {
-      if (activeSegment === 'chat') {
-        if (!community.watercoolerId) {
-          setActiveSegment('posts');
-        }
+  useEffect(() => {
+    if (activeSegment === 'chat') {
+      if (!community.watercoolerId) {
+        setActiveSegment('posts');
       }
-    },
-    [community.slug]
-  );
+    }
+  }, [community.slug]);
 
   return (
     <FeedsContainer>
-      <SegmentedControl mobileStickyOffset={62}>
+      <SegmentedControl>
         {segments.map(segment => {
           return (
             <Segment

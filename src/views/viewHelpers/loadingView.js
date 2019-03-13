@@ -6,9 +6,11 @@ import { ViewGrid } from 'src/components/layout';
 
 export const LoadingView = () => {
   return (
-    <ViewGrid>
+    <React.Fragment>
       <LoadingTitlebar />
-      <Loading />
-    </ViewGrid>
+      <ViewGrid>
+        <Loading />
+      </ViewGrid>
+    </React.Fragment>
   );
 };

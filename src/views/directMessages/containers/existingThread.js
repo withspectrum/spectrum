@@ -116,14 +116,14 @@ class ExistingThread extends React.Component<Props> {
           .filter(user => user && user.username !== currentUser.username);
         return (
           <React.Fragment>
-            <MobileTitlebar
+            {/* <MobileTitlebar
               title={names}
               titleIcon={titleIcon}
               menuAction="view-back"
               rightAction={rightAction}
               previousHistoryBackFallback={'/messages'}
               forceHistoryBack={'/messages'}
-            />
+            /> */}
             <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}

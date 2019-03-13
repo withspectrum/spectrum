@@ -178,14 +178,14 @@ class ChannelSettings extends React.Component<Props> {
 
       return (
         <React.Fragment>
+          <MobileTitlebar
+            title={'Settings'}
+            menuAction={'view-back'}
+            previousHistoryBackFallback={`/${channel.community.slug}/${
+              channel.slug
+            }`}
+          />
           <ViewGrid>
-            <MobileTitlebar
-              title={'Settings'}
-              menuAction={'view-back'}
-              previousHistoryBackFallback={`/${channel.community.slug}/${
-                channel.slug
-              }`}
-            />
             <View>
               <Header
                 subheading={subheading}

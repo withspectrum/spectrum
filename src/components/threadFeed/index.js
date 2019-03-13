@@ -235,7 +235,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
       return (
         <Threads data-cy="thread-feed">
           {newActivityIndicator && (
-            <NewActivityIndicator elem="scroller-for-thread-feed" />
+            <NewActivityIndicator elem="app-scroll-boundary" />
           )}
 
           {(networkStatus === 2 || networkStatus === 1) && (

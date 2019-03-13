@@ -1,19 +1,18 @@
 import styled from 'styled-components';
-import { MEDIA_BREAK } from 'src/components/layout';
+import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const StyledAppViewWrapper = styled.div`
   display: grid;
+  width: 100%;
   grid-template-columns: ${props => (props.isSignedIn ? '72px 1fr' : '1fr')};
   grid-template-areas: ${props =>
-    props.isSignedIn ? "'navigation view'" : "'view'"};
-  overflow: hidden;
-  overflow-y: scroll;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
+    props.isSignedIn ? "'navigation main'" : "'main'"};
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: 1fr;
-    grid-template-areas: 'view';
+    grid-template-rows: ${TITLEBAR_HEIGHT}px 1fr;
+    grid-template-areas:
+      'titlebar'
+      'main';
   }
 `;

@@ -5,7 +5,7 @@ import styled, { keyframes } from 'styled-components';
 import { zIndex } from '../globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
-export const Container = styled.div`
+export const ToastsContainer = styled.div`
   position: fixed;
   top: 0;
   right: 0;
@@ -21,6 +21,9 @@ export const Container = styled.div`
   @media (max-width: ${MEDIA_BREAK}px) {
     /* titlebars are ~56px */
     top: 60px;
+    left: 0;
+    right: 0;
+    max-width: 100%;
   }
 `;
 

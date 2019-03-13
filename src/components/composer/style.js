@@ -24,7 +24,7 @@ export const DropImageOverlay = (props: { visible: boolean }) => {
 };
 
 export const Wrapper = styled.div`
-  grid-area: view;
+  grid-area: main;
   display: flex;
   justify-content: center;
   z-index: ${zIndex.slider + 1};

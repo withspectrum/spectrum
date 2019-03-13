@@ -38,7 +38,7 @@ class MembersList extends React.Component<Props, State> {
     this.setState({
       // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
       // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('scroller-for-thread-feed'),
+      scrollElement: document.getElementById('app-view-scroller'),
     });
   }
 

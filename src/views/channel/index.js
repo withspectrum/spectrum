@@ -346,9 +346,9 @@ class ChannelView extends React.Component<Props, State> {
             description={description}
             image={community.profilePhoto}
           />
-          <ViewGrid>
-            <MobileChannelTitlebar channel={channel} />
+          <MobileChannelTitlebar channel={channel} />
 
+          <ViewGrid>
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
                 <SidebarSection>
@@ -378,7 +378,7 @@ class ChannelView extends React.Component<Props, State> {
               </SecondaryColumn>
 
               <PrimaryColumn>
-                <SegmentedControl mobileStickyOffset={62}>
+                <SegmentedControl>
                   <Segment
                     segmentLabel="posts"
                     onClick={() => this.handleSegmentClick('posts')}

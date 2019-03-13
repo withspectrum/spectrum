@@ -155,9 +155,9 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:last_name" content={user.name} />
             <meta property="profile:username" content={user.username} />
           </Head>
-          <ViewGrid data-cy="user-view">
-            <MobileUserTitlebar currentUser={currentUser} user={user} />
+          <MobileUserTitlebar currentUser={currentUser} user={user} />
 
+          <ViewGrid data-cy="user-view">
             <SecondaryPrimaryColumnGrid>
               <SecondaryColumn>
                 <SidebarSection>
@@ -177,7 +177,7 @@ class UserView extends React.Component<Props, State> {
                 </SidebarSection>
               </SecondaryColumn>
               <PrimaryColumn>
-                <SegmentedControl mobileStickyOffset={62}>
+                <SegmentedControl>
                   <Segment
                     segmentLabel="creator"
                     onClick={() => this.handleSegmentClick('creator')}

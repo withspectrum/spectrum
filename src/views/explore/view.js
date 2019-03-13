@@ -47,7 +47,7 @@ class CollectionSwitcher extends React.Component<Props, State> {
   ref = null;
 
   componentDidMount() {
-    this.parentRef = document.getElementById('scroller-for-thread-feed');
+    this.parentRef = document.getElementById('app-scroll-boundary');
   }
 
   handleSegmentClick(selectedView) {
@@ -71,7 +71,7 @@ class CollectionSwitcher extends React.Component<Props, State> {
   render() {
     return (
       <Collections innerRef={el => (this.ref = el)}>
-        <SegmentedControl mobileStickyOffset={56}>
+        <SegmentedControl>
           {collections.map((collection, i) => (
             <Segment
               key={i}

@@ -56,7 +56,7 @@ class AppViewWrapper extends React.Component<Props> {
         isSignedIn={isSignedIn}
         // Note(@mxstbr): This ID is needed to make infinite scrolling work
         // DO NOT REMOVE IT
-        id={'scroller-for-thread-feed'}
+        id={'app-scroll-boundary'}
         {...this.props}
       />
     );

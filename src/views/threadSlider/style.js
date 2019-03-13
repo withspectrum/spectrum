@@ -5,7 +5,7 @@ import { zIndex } from 'src/components/globals';
 import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
 
 export const Container = styled.div`
-  grid-area: view;
+  grid-area: main;
   display: flex;
   justify-content: center;
   z-index: ${zIndex.slider + 1};
@@ -36,7 +36,7 @@ export const ThreadContainerBackground = styled.div`
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
     padding: 0;
-    box-shadow: 0;
+    box-shadow: none;
   }
 `;
 
