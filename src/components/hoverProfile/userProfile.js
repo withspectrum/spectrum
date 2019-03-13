@@ -29,17 +29,17 @@ type ProfileProps = {
   user: GetUserType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
-  innerRef: (?HTMLElement) => void,
+  ref: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
   render() {
-    const { user, currentUser, innerRef, style } = this.props;
+    const { user, currentUser, ref, style } = this.props;
     const me = currentUser && currentUser.id === user.id;
 
     return (
-      <HoverWrapper popperStyle={style} innerRef={innerRef}>
+      <HoverWrapper popperStyle={style} ref={ref}>
         <ProfileCard>
           <ConditionalWrap
             condition={!!user.username}

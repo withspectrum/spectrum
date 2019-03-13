@@ -207,7 +207,7 @@ class Message extends React.Component<Props, State> {
         <OuterMessageContainer
           data-cy={isSelected ? 'message-selected' : 'message'}
           selected={isSelected}
-          innerRef={this.setWrapperRef}
+          ref={this.setWrapperRef}
         >
           <GutterContainer>
             {showAuthorContext ? (

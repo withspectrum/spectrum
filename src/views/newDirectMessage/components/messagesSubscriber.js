@@ -61,10 +61,10 @@ const MessagesSubscriber = (props: Props) => {
     scrollToBottom();
   }, [refHeight, id, messages, isLoading]);
 
-  if (hasError) return <LoadingMessagesWrapper innerRef={el => (ref = el)} />;
+  if (hasError) return <LoadingMessagesWrapper ref={el => (ref = el)} />;
   if (isLoading)
     return (
-      <LoadingMessagesWrapper innerRef={el => (ref = el)}>
+      <LoadingMessagesWrapper ref={el => (ref = el)}>
         <Loading style={{ padding: '64px 32px' }} />
       </LoadingMessagesWrapper>
     );
@@ -87,7 +87,7 @@ const MessagesSubscriber = (props: Props) => {
   const sortedMessages = sortAndGroupMessages(uniqueMessages);
 
   return (
-    <MessagesScrollWrapper innerRef={el => (ref = el)}>
+    <MessagesScrollWrapper ref={el => (ref = el)}>
       <ErrorBoundary>
         <ChatMessages
           messages={sortedMessages}

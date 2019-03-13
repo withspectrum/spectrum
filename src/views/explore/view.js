@@ -70,7 +70,7 @@ class CollectionSwitcher extends React.Component<Props, State> {
 
   render() {
     return (
-      <Collections innerRef={el => (this.ref = el)}>
+      <Collections ref={el => (this.ref = el)}>
         <SegmentedControl>
           {collections.map((collection, i) => (
             <Segment

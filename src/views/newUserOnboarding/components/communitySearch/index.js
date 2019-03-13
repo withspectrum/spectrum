@@ -273,7 +273,7 @@ class Search extends React.Component<Props, State> {
         <SearchInputWrapper>
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
-            innerRef={c => {
+            ref={c => {
               this.input = c;
             }}
             type="text"

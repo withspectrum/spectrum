@@ -60,7 +60,7 @@ class SearchViewInput extends React.Component<Props, State> {
             onChange={this.onChange}
             value={value}
             placeholder={placeholder}
-            innerRef={input => {
+            ref={input => {
               this.searchInput = input;
             }}
             autoFocus={true}

@@ -52,7 +52,7 @@ class AppViewWrapper extends React.Component<Props> {
 
     return (
       <StyledAppViewWrapper
-        innerRef={el => (this.ref = el)}
+        ref={el => (this.ref = el)}
         isSignedIn={isSignedIn}
         // Note(@mxstbr): This ID is needed to make infinite scrolling work
         // DO NOT REMOVE IT

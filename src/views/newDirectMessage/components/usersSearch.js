@@ -17,7 +17,7 @@ const UsersSearch = (props: Props) => {
     <React.Fragment>
       <SearchInputWrapper>
         <SearchInput
-          innerRef={el => (ref = el)}
+          ref={el => (ref = el)}
           value={searchQuery}
           onChange={onChange}
           type="text"

@@ -55,7 +55,7 @@ type Props = {
   currentUser: ?Object,
   toggleEdit: Function,
   uploadImage: Function,
-  innerRef?: any,
+  ref?: any,
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
@@ -417,7 +417,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
       : null;
 
     return (
-      <ThreadWrapper isEditing={isEditing} innerRef={this.props.innerRef}>
+      <ThreadWrapper isEditing={isEditing} ref={this.props.ref}>
         <ThreadContent isEditing={isEditing}>
           {isEditing ? (
             <ThreadEditInputs

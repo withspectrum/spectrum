@@ -26,13 +26,13 @@ type ProfileProps = {
   channel: GetChannelType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
-  innerRef: (?HTMLElement) => void,
+  ref: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
   render() {
-    const { channel, innerRef, style } = this.props;
+    const { channel, ref, style } = this.props;
 
     const {
       isOwner: isChannelOwner,
@@ -47,7 +47,7 @@ class HoverProfile extends Component<ProfileProps> {
     const isGlobalModerator = isCommunityModerator;
 
     return (
-      <HoverWrapper popperStyle={style} innerRef={innerRef}>
+      <HoverWrapper popperStyle={style} ref={ref}>
         <ProfileCard>
           <ChannelCommunityRow to={`/${channel.community.slug}`}>
             <AvatarImage

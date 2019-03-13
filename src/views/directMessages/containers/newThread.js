@@ -767,7 +767,7 @@ class NewThread extends React.Component<Props, State> {
           )}
 
           <ComposerInput
-            innerRef={c => {
+            ref={c => {
               this.input = c;
             }}
             type="text"
@@ -825,7 +825,7 @@ class NewThread extends React.Component<Props, State> {
 
         <ViewContent
           moved={selectedUsersForNewThread.length > 0}
-          innerRef={scrollBody => (this.scrollBody = scrollBody)}
+          ref={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages && existingThreadWithMessages.id && (
             <Header

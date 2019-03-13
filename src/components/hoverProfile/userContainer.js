@@ -17,18 +17,12 @@ import LoadingHoverProfile from './loadingHoverProfile';
 const MentionHoverProfile = getUserByUsername(props => {
   if (props.data && props.data.user) {
     return (
-      <UserProfile
-        innerRef={props.innerRef}
-        user={props.data.user}
-        style={props.style}
-      />
+      <UserProfile ref={props.ref} user={props.data.user} style={props.style} />
     );
   }
 
   if (props.data && props.data.loading) {
-    return (
-      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
-    );
+    return <LoadingHoverProfile style={props.style} ref={props.ref} />;
   }
 
   return null;
@@ -105,7 +99,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
     //     <Manager>
     //       <Reference>
     //         {({ ref }) => (
-    //           <Span innerRef={ref} style={style}>
+    //           <Span ref={ref} style={style}>
     //             {children}
     //           </Span>
     //         )}
@@ -124,7 +118,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
     //               <MentionHoverProfile
     //                 username={username}
     //                 me={me}
-    //                 innerRef={ref}
+    //                 ref={ref}
     //                 style={style}
     //               />
     //             )}

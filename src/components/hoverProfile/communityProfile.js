@@ -27,19 +27,19 @@ type ProfileProps = {
   community: GetCommunityType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
-  innerRef: (?HTMLElement) => void,
+  ref: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
   render() {
-    const { community, innerRef, style } = this.props;
+    const { community, ref, style } = this.props;
 
     const { communityPermissions } = community;
     const { isOwner, isModerator } = communityPermissions;
 
     return (
-      <HoverWrapper popperStyle={style} innerRef={innerRef}>
+      <HoverWrapper popperStyle={style} ref={ref}>
         <ProfileCard>
           <Link to={`/${community.slug}`}>
             <CoverContainer>

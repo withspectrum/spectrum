@@ -107,7 +107,7 @@ export default (props: Props) => {
             {({ getRootProps, getInputProps, isDragActive }) => (
               <DropzoneWrapper
                 {...getRootProps({
-                  refKey: 'innerRef',
+                  refKey: 'ref',
                 })}
               >
                 <input {...getInputProps()} />

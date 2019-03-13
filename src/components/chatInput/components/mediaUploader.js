@@ -108,7 +108,7 @@ class MediaUploader extends React.Component<Props> {
     return (
       <Form
         onSubmit={e => e.preventDefault()}
-        innerRef={c => (this.form = c)}
+        ref={c => (this.form = c)}
         data-cy="chat-input-media-uploader"
       >
         <Tooltip content={'Upload photo'}>

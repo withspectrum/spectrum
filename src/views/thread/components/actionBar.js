@@ -437,7 +437,7 @@ class ActionBar extends React.Component<Props, State> {
                           glyph="settings"
                           onClick={this.toggleFlyout}
                           dataCy="thread-actions-dropdown-trigger"
-                          innerRef={ref}
+                          ref={ref}
                         />
                       );
                     }}
@@ -459,7 +459,7 @@ class ActionBar extends React.Component<Props, State> {
                           return (
                             <Flyout
                               data-cy="thread-actions-dropdown"
-                              innerRef={ref}
+                              ref={ref}
                               style={style}
                             >
                               <FlyoutRow hideAbove={768}>
