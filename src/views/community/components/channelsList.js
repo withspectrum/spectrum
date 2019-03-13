@@ -73,7 +73,7 @@ class Component extends React.Component<Props> {
           <SidebarSectionHeader>
             <SidebarSectionHeading>Channels</SidebarSectionHeading>
             {isOwner && (
-              <Tooltip content={'Manage channels'} placement="top">
+              <Tooltip content={'Manage channels'}>
                 <span>
                   <Link to={`/${community.slug}/settings`}>
                     <Icon glyph={'settings'} size={24} />

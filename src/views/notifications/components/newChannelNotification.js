@@ -38,14 +38,7 @@ const NewChannelComponent = ({
       <ToggleChannelNotifications
         channel={channel}
         render={state => (
-          <ToggleNotificationsContainer
-            tipLocation={'top-left'}
-            tipText={
-              channel.channelPermissions.receiveNotifications
-                ? 'Turn notifications off'
-                : 'Turn notifications on'
-            }
-          >
+          <ToggleNotificationsContainer>
             {state.isLoading ? (
               <Loading />
             ) : (

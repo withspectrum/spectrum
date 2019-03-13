@@ -82,12 +82,7 @@ export const LikeCount = (props: LikeCountProps) => {
   const { count } = thread.reactions;
   return (
     <LikeCountWrapper active={active}>
-      <Icon
-        glyph={'thumbsup'}
-        size={24}
-        tipText={`${count} likes`}
-        tipLocation={'top-right'}
-      />
+      <Icon glyph={'thumbsup'} size={24} />
       <CurrentCount>{count || '0'}</CurrentCount>
     </LikeCountWrapper>
   );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Spinner } from 'src/components/globals';
+import Icon from 'src/components/icons';
 import {
   Label,
   StyledSolidButton,
@@ -9,8 +11,6 @@ import {
   SpinnerContainer,
   StyledButtonRow,
 } from './style';
-import { Spinner } from '../globals';
-import Icon from '../icons';
 
 type ButtonProps = {|
   loading?: boolean,
@@ -28,17 +28,7 @@ type IconProps = {
   color?: string,
   hoverColor?: string,
   disabled?: boolean,
-  tipText?: string,
   size?: number,
-  tipLocation?:
-    | 'top'
-    | 'top-left'
-    | 'top-right'
-    | 'bottom'
-    | 'bottom-right'
-    | 'bottom-left'
-    | 'left'
-    | 'right',
 };
 
 export const Button = (props: ButtonProps) => (
@@ -140,12 +130,7 @@ export const TextButton = (props: ButtonProps) => (
 
 export const IconButton = (props: IconProps) => (
   <StyledIconButton disabled={props.loading} data-cy={props.dataCy} {...props}>
-    <Icon
-      glyph={props.glyph}
-      tipText={props.tipText}
-      tipLocation={props.tipLocation}
-      size={props.size}
-    />
+    <Icon glyph={props.glyph} size={props.size} />
   </StyledIconButton>
 );
 

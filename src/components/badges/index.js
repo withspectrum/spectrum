@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { Span, ProBadge, BlockedBadge, PendingBadge, TeamBadge } from './style';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import Tooltip from 'src/components/tooltip';
 
 type Props = {
   type: string,
@@ -21,73 +22,60 @@ class Badge extends React.Component<Props> {
     switch (type) {
       case 'beta-supporter':
         return (
-          <ProBadge
-            type={type}
-            tipText={'Beta Supporter'}
-            tipLocation={'top'}
-            {...rest}
-          >
-            {label || 'Supporter'}
-          </ProBadge>
+          <Tooltip content={'Beta Supporter'}>
+            <ProBadge type={type} {...rest}>
+              {label || 'Supporter'}
+            </ProBadge>
+          </Tooltip>
         );
       case 'blocked':
         return (
-          <BlockedBadge
-            type={type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            {...rest}
-          >
-            {label || type}
-          </BlockedBadge>
+          <Tooltip content={this.props.tipText}>
+            <BlockedBadge type={type} {...rest}>
+              {label || type}
+            </BlockedBadge>
+          </Tooltip>
         );
       case 'pending':
         return (
-          <PendingBadge
-            type={type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            {...rest}
-          >
-            {label || type}
-          </PendingBadge>
+          <Tooltip content={this.props.tipText}>
+            <PendingBadge type={type} {...rest}>
+              {label || type}
+            </PendingBadge>
+          </Tooltip>
         );
       case 'moderator':
       case 'admin':
         return (
-          <TeamBadge
-            type={type}
-            tipText={`${
+          <Tooltip
+            content={`${
               type === 'moderator' ? 'Moderator' : 'Owner'
             } of this community`}
-            tipLocation="top-left"
-            {...rest}
           >
-            Team
-          </TeamBadge>
+            <TeamBadge type={type} {...rest}>
+              Team
+            </TeamBadge>
+          </Tooltip>
         );
       case 'bot':
         return (
-          <Span
-            tipText="Automatically posted"
-            tipLocation={'top-left'}
-            onClick={this.props.onClick && this.props.onClick}
-            {...rest}
-          >
-            {label || type}
-          </Span>
+          <Tooltip content={'Automatically posted'}>
+            <Span onClick={this.props.onClick && this.props.onClick} {...rest}>
+              {label || type}
+            </Span>
+          </Tooltip>
         );
       default:
         return (
-          <Span
-            type={type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.props.onClick && this.props.onClick}
-            {...rest}
-          >
-            {label || type}
-          </Span>
+          <Tooltip content={this.props.tipText}>
+            <Span
+              type={type}
+              onClick={this.props.onClick && this.props.onClick}
+              {...rest}
+            >
+              {label || type}
+            </Span>
+          </Tooltip>
         );
     }
   }

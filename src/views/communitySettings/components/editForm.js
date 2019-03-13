@@ -7,6 +7,7 @@ import editCommunityMutation from 'shared/graphql/mutations/community/editCommun
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { openModal } from 'src/actions/modals';
+import Tooltip from 'src/components/tooltip';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Button, IconButton } from 'src/components/buttons';
 import { Notice } from 'src/components/listItems/style';
@@ -370,14 +371,18 @@ class EditForm extends React.Component<Props, State> {
             </Button>
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (
-                <IconButton
-                  glyph="delete"
-                  tipText={`Delete ${name}`}
-                  tipLocation="top-right"
-                  color="text.placeholder"
-                  hoverColor={'warn.alt'}
-                  onClick={e => this.triggerDeleteCommunity(e, community.id)}
-                />
+                <Tooltip content={`Delete ${name}`}>
+                  <span>
+                    <IconButton
+                      glyph="delete"
+                      color="text.placeholder"
+                      hoverColor={'warn.alt'}
+                      onClick={e =>
+                        this.triggerDeleteCommunity(e, community.id)
+                      }
+                    />
+                  </span>
+                </Tooltip>
               )}
             </TertiaryActionContainer>
           </Actions>

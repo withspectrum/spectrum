@@ -24,8 +24,6 @@ const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
         glyph="view-close"
         color="text.placeholder"
         hoverColor="warn.alt"
-        tipText="Dismiss"
-        tipLocation="top-left"
         onClick={onDismiss}
       />
     </FlexRow>

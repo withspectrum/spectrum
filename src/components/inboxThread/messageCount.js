@@ -18,11 +18,7 @@ class MessageCount extends React.Component<Props> {
     } = this.props;
 
     return (
-      <CountWrapper
-        active={active}
-        tipText={`${messageCount} messages`}
-        tipLocation={'top-right'}
-      >
+      <CountWrapper active={active}>
         <Icon glyph="message-simple" size={24} />
         <span>{messageCount}</span>
       </CountWrapper>

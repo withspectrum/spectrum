@@ -107,7 +107,7 @@ const User = (props: Props) => {
             <InitDirectMessageWrapper
               user={userObject}
               render={
-                <Tooltip content="Send message" placement="top">
+                <Tooltip content="Send message">
                   <MessageIcon>
                     <Icon glyph="message-simple-new" size={24} />
                   </MessageIcon>

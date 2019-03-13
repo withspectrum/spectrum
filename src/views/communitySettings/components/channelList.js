@@ -3,11 +3,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { openModal } from '../../../actions/modals';
-import { Loading } from '../../../components/loading';
-import { IconButton, Button } from '../../../components/buttons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import { openModal } from 'src/actions/modals';
+import { Loading } from 'src/components/loading';
+import { IconButton, Button } from 'src/components/buttons';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import Tooltip from 'src/components/tooltip';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { Dispatch } from 'redux';
@@ -16,7 +17,7 @@ import {
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import { ChannelListItem } from 'src/components/listItems';
 
 type Props = {
@@ -52,11 +53,11 @@ class ChannelList extends React.Component<Props> {
                     <Link
                       to={`/${channel.community.slug}/${channel.slug}/settings`}
                     >
-                      <IconButton
-                        tipText={'Settings'}
-                        tipLocation={'top-left'}
-                        glyph="settings"
-                      />
+                      <Tooltip content={'Manage channel'}>
+                        <span>
+                          <IconButton glyph="settings" />
+                        </span>
+                      </Tooltip>
                     </Link>
                   </ChannelListItem>
                 );

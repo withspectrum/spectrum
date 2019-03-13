@@ -1,12 +1,13 @@
 // @flow
 import * as React from 'react';
-import { MediaLabel, MediaInput, Form } from './style';
+import Tooltip from 'src/components/tooltip';
 import Icon from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
 } from 'src/helpers/images';
+import { MediaLabel, MediaInput, Form } from './style';
 
 type Props = {
   onValidated: Function,
@@ -110,19 +111,17 @@ class MediaUploader extends React.Component<Props> {
         innerRef={c => (this.form = c)}
         data-cy="chat-input-media-uploader"
       >
-        <MediaLabel>
-          <MediaInput
-            type="file"
-            accept={'.png, .jpg, .jpeg, .gif, .mp4'}
-            multiple={false}
-            onChange={this.onChange}
-          />
-          <Icon
-            glyph="photo"
-            tipLocation={'top-right'}
-            tipText="Upload photo"
-          />
-        </MediaLabel>
+        <Tooltip content={'Upload photo'}>
+          <MediaLabel>
+            <MediaInput
+              type="file"
+              accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+              multiple={false}
+              onChange={this.onChange}
+            />
+            <Icon glyph="photo" />
+          </MediaLabel>
+        </Tooltip>
       </Form>
     );
   }

@@ -52,7 +52,7 @@ const Navigation = (props: Props) => {
 
             <Route path="/explore">
               {({ match }) => (
-                <Tooltip content="Explore">
+                <Tooltip content="Explore" placement={'left'}>
                   <AvatarGrid
                     isActive={
                       match && match.url === '/explore' && match.isExact
@@ -79,7 +79,7 @@ const Navigation = (props: Props) => {
 
             <Route path="/users/:username">
               {({ match }) => (
-                <Tooltip content="Profile">
+                <Tooltip content="Profile" placement={'left'}>
                   <AvatarGrid
                     isActive={
                       match &&

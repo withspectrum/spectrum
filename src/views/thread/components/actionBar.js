@@ -6,6 +6,7 @@ import { Manager, Reference, Popper } from 'react-popper';
 import { CLIENT_URL } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
+import Tooltip from 'src/components/tooltip';
 import Icon from 'src/components/icons';
 import compose from 'recompose/compose';
 import { Button, TextButton, IconButton } from 'src/components/buttons';
@@ -303,57 +304,51 @@ class ActionBar extends React.Component<Props, State> {
       return (
         <ActionBarContainer>
           <div style={{ display: 'flex' }}>
-            <LikeButton thread={thread} tipLocation={'bottom-right'} />
+            <LikeButton thread={thread} />
 
             {!thread.channel.isPrivate && (
               <ShareButtons>
-                <ShareButton
-                  facebook
-                  tipText={'Share'}
-                  tipLocation={'bottom-right'}
-                  data-cy="thread-facebook-button"
-                >
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
-                      thread.content.title
-                    )}&u=https://spectrum.chat${getThreadLink(thread)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon
-                      glyph={'facebook'}
-                      size={24}
-                      onClick={() =>
-                        track(events.THREAD_SHARED, { method: 'facebook' })
-                      }
-                    />
-                  </a>
-                </ShareButton>
+                <Tooltip content={'Share'}>
+                  <ShareButton facebook data-cy="thread-facebook-button">
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                        thread.content.title
+                      )}&u=https://spectrum.chat${getThreadLink(thread)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon
+                        glyph={'facebook'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'facebook' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Tooltip>
 
-                <ShareButton
-                  twitter
-                  tipText={'Tweet'}
-                  tipLocation={'bottom-right'}
-                  data-cy="thread-tweet-button"
-                >
-                  <a
-                    href={`https://twitter.com/share?url=https://spectrum.chat${getThreadLink(
-                      thread
-                    )}&text=${encodeURIComponent(
-                      thread.content.title
-                    )} on @withspectrum`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Icon
-                      glyph={'twitter'}
-                      size={24}
-                      onClick={() =>
-                        track(events.THREAD_SHARED, { method: 'twitter' })
-                      }
-                    />
-                  </a>
-                </ShareButton>
+                <Tooltip content={'Tweet'}>
+                  <ShareButton twitter data-cy="thread-tweet-button">
+                    <a
+                      href={`https://twitter.com/share?url=https://spectrum.chat${getThreadLink(
+                        thread
+                      )}&text=${encodeURIComponent(
+                        thread.content.title
+                      )} on @withspectrum`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon
+                        glyph={'twitter'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'twitter' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Tooltip>
 
                 <Clipboard
                   style={{ background: 'none' }}
@@ -364,21 +359,19 @@ class ActionBar extends React.Component<Props, State> {
                     )
                   }
                 >
-                  <ShareButton
-                    tipText={'Copy link'}
-                    tipLocation={'bottom-right'}
-                    data-cy="thread-copy-link-button"
-                  >
-                    <a>
-                      <Icon
-                        glyph={'link'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'link' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
+                  <Tooltip content={'Copy link'}>
+                    <ShareButton data-cy="thread-copy-link-button">
+                      <a>
+                        <Icon
+                          glyph={'link'}
+                          size={24}
+                          onClick={() =>
+                            track(events.THREAD_SHARED, { method: 'link' })
+                          }
+                        />
+                      </a>
+                    </ShareButton>
+                  </Tooltip>
                 </Clipboard>
               </ShareButtons>
             )}
@@ -395,21 +388,19 @@ class ActionBar extends React.Component<Props, State> {
                     )
                   }
                 >
-                  <ShareButton
-                    tipText={'Copy link'}
-                    tipLocation={'bottom-right'}
-                    data-cy="thread-copy-link-button"
-                  >
-                    <a>
-                      <Icon
-                        glyph={'link'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'link' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
+                  <Tooltip content={'Copy link'}>
+                    <ShareButton data-cy="thread-copy-link-button">
+                      <a>
+                        <Icon
+                          glyph={'link'}
+                          size={24}
+                          onClick={() =>
+                            track(events.THREAD_SHARED, { method: 'link' })
+                          }
+                        />
+                      </a>
+                    </ShareButton>
+                  </Tooltip>
                 </Clipboard>
               </ShareButtons>
             )}

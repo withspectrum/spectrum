@@ -68,7 +68,7 @@ const DirectMessagesTab = (props: Props) => {
       {({ setNavigationIsOpen }) => (
         <Route path="/messages">
           {({ match }) => (
-            <Tooltip content="Messages">
+            <Tooltip content="Messages" placement={'left'}>
               <AvatarGrid isActive={match && match.url.includes('/messages')}>
                 <AvatarLink
                   to={'/messages'}

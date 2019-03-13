@@ -57,7 +57,7 @@ class Component extends React.Component<TeamMemberListType> {
         <SidebarSectionHeader>
           <SidebarSectionHeading>Team</SidebarSectionHeading>
           {isOwner && (
-            <Tooltip content={'Manage team'} placement="top">
+            <Tooltip content={'Manage team'}>
               <span>
                 <Link to={`/${community.slug}/settings/members`}>
                   <Icon glyph={'settings'} size={24} />

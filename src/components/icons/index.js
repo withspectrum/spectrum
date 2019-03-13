@@ -8,8 +8,6 @@ import styled, { css } from 'styled-components';
 type Props = {
   glyph: string,
   size?: number | string,
-  tipText?: string,
-  tipLocation?: string,
   count?: ?string,
   onClick?: Function,
   onboarding?: string,
@@ -886,23 +884,12 @@ export const Glyph = ({ glyph }: GlyphProps) => {
 
 class Icon extends React.Component<Props> {
   render() {
-    const {
-      size = 32,
-      tipText,
-      tipLocation,
-      onboarding,
-      count,
-      onClick,
-      glyph,
-      dataCy,
-    } = this.props;
+    const { size = 32, onboarding, count, onClick, glyph, dataCy } = this.props;
 
     return (
       <SvgWrapper
         data-cy={dataCy}
         size={size}
-        tipText={tipText}
-        tipLocation={tipLocation}
         onboarding={onboarding}
         count={count}
         className={'icon'}

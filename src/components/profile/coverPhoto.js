@@ -40,8 +40,6 @@ export const CoverPhoto = (props: Object) => {
               color="text.reverse"
               opacity="0.5"
               hoverColor="text.reverse"
-              tipText={`Edit profile`}
-              tipLocation={'left'}
             />
           </Link>
         ) : props.currentUser ? (
@@ -50,8 +48,6 @@ export const CoverPhoto = (props: Object) => {
             color="text.reverse"
             hoverColor="text.reverse"
             onClick={props.onClick}
-            tipText={`Message ${props.user.name}`}
-            tipLocation={'left'}
           />
         ) : null}
         {props.children}

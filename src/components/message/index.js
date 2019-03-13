@@ -3,10 +3,12 @@ import * as React from 'react';
 import { btoa } from 'b2a';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import { withRouter, type Location, type History } from 'react-router';
 import queryString from 'query-string';
 import Clipboard from 'react-clipboard.js';
 import { openGallery } from 'src/actions/gallery';
+import Tooltip from 'src/components/tooltip';
 import Reaction from 'src/components/reaction';
 import { ReactionWrapper } from 'src/components//reaction/style';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
@@ -16,7 +18,6 @@ import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
 import { track, events } from 'src/helpers/analytics';
-import type { Dispatch } from 'redux';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -242,15 +243,15 @@ class Message extends React.Component<Props, State> {
             )}
 
             {message.modifiedAt && !isEditing && (
-              <EditedIndicator
-                data-cy="edited-message-indicator"
-                tipLocation={'top-right'}
-                tipText={`Edited ${convertTimestampToDate(
+              <Tooltip
+                content={`Edited ${convertTimestampToDate(
                   new Date(message.modifiedAt)
                 )}`}
               >
-                Edited
-              </EditedIndicator>
+                <EditedIndicator data-cy="edited-message-indicator">
+                  Edited
+                </EditedIndicator>
+              </Tooltip>
             )}
 
             {message.reactions.count > 0 && (
@@ -261,35 +262,37 @@ class Message extends React.Component<Props, State> {
                 currentUser={currentUser}
                 dispatch={dispatch}
                 render={({ me, count, hasReacted, mutation }) => (
-                  <ReactionWrapper
-                    hasCount={count}
-                    hasReacted={hasReacted}
-                    me={me}
-                    onClick={
-                      me
-                        ? (e: any) => {
-                            e.stopPropagation();
-                          }
-                        : (e: any) => {
-                            e.stopPropagation();
-                            mutation();
-                          }
-                    }
-                    tipText={me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'}
-                    tipLocation={'top-right'}
+                  <Tooltip
+                    content={me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'}
                   >
-                    <Icon
-                      dataCy={
-                        hasReacted
-                          ? 'inline-unlike-action'
-                          : 'inline-like-action'
+                    <ReactionWrapper
+                      hasCount={count}
+                      hasReacted={hasReacted}
+                      me={me}
+                      onClick={
+                        me
+                          ? (e: any) => {
+                              e.stopPropagation();
+                            }
+                          : (e: any) => {
+                              e.stopPropagation();
+                              mutation();
+                            }
                       }
-                      glyph="like-fill"
-                      size={16}
-                      color={'text.reverse'}
-                    />
-                    <span>{count}</span>
-                  </ReactionWrapper>
+                    >
+                      <Icon
+                        dataCy={
+                          hasReacted
+                            ? 'inline-unlike-action'
+                            : 'inline-like-action'
+                        }
+                        glyph="like-fill"
+                        size={16}
+                        color={'text.reverse'}
+                      />
+                      <span>{count}</span>
+                    </ReactionWrapper>
+                  </Tooltip>
                 )}
               />
             )}
@@ -298,30 +301,30 @@ class Message extends React.Component<Props, State> {
               <ActionsContainer>
                 <Actions>
                   {canEditMessage && (
-                    <Action
-                      tipText={`Edit`}
-                      tipLocation={'top'}
-                      onClick={this.initEditMessage}
-                    >
-                      <Icon dataCy="edit-message" glyph="edit" size={20} />
-                    </Action>
+                    <Tooltip content={'Edit'}>
+                      <Action onClick={this.initEditMessage}>
+                        <Icon dataCy="edit-message" glyph="edit" size={20} />
+                      </Action>
+                    </Tooltip>
                   )}
+
                   {canModerateMessage && (
-                    <Action
-                      tipText={`Delete`}
-                      tipLocation={'top'}
-                      onClick={this.deleteMessage}
-                    >
-                      <Icon dataCy="delete-message" glyph="delete" size={20} />
-                    </Action>
+                    <Tooltip content={'Delete'}>
+                      <Action onClick={this.deleteMessage}>
+                        <Icon
+                          dataCy="delete-message"
+                          glyph="delete"
+                          size={20}
+                        />
+                      </Action>
+                    </Tooltip>
                   )}
-                  <Action
-                    tipText={`Reply`}
-                    tipLocation={'top'}
-                    onClick={this.replyToMessage}
-                  >
-                    <Icon dataCy="reply-to-message" glyph="reply" size={20} />
-                  </Action>
+
+                  <Tooltip content={'Reply'}>
+                    <Action onClick={this.replyToMessage}>
+                      <Icon dataCy="reply-to-message" glyph="reply" size={20} />
+                    </Action>
+                  </Tooltip>
 
                   {!me && (
                     <Reaction
@@ -331,23 +334,23 @@ class Message extends React.Component<Props, State> {
                       currentUser={currentUser}
                       dispatch={dispatch}
                       render={({ hasReacted, mutation }) => (
-                        <LikeAction
-                          hasReacted={hasReacted}
-                          tipText={hasReacted ? 'Unlike' : 'Like'}
-                          tipLocation={'top'}
-                          onClick={e => {
-                            e.stopPropagation();
-                            mutation();
-                          }}
-                        >
-                          <Icon
-                            dataCy={
-                              hasReacted ? 'unlike-action' : 'like-action'
-                            }
-                            glyph={hasReacted ? 'like-fill' : 'like'}
-                            size={20}
-                          />
-                        </LikeAction>
+                        <Tooltip content={hasReacted ? 'Unlike' : 'Like'}>
+                          <LikeAction
+                            hasReacted={hasReacted}
+                            onClick={e => {
+                              e.stopPropagation();
+                              mutation();
+                            }}
+                          >
+                            <Icon
+                              dataCy={
+                                hasReacted ? 'unlike-action' : 'like-action'
+                              }
+                              glyph={hasReacted ? 'like-fill' : 'like'}
+                              size={20}
+                            />
+                          </LikeAction>
+                        </Tooltip>
                       )}
                     />
                   )}
@@ -373,9 +376,15 @@ class Message extends React.Component<Props, State> {
                         )
                       }
                     >
-                      <Action tipText={`Link`} tipLocation={'top'}>
-                        <Icon dataCy="link-to-message" glyph="link" size={20} />
-                      </Action>
+                      <Tooltip content={'Link to message'}>
+                        <Action>
+                          <Icon
+                            dataCy="link-to-message"
+                            glyph="link"
+                            size={20}
+                          />
+                        </Action>
+                      </Tooltip>
                     </Clipboard>
                   )}
                 </Actions>

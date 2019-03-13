@@ -11,7 +11,7 @@ const Tip = (props: Props) => {
 
   return (
     <Tippy
-      placement="left"
+      placement="top"
       touch={false}
       arrow={true}
       arrowType={'round'}

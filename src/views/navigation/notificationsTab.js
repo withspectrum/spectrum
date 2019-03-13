@@ -77,7 +77,7 @@ const NotificationsTab = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Tooltip content="Notifications">
+        <Tooltip content="Notifications" placement={'left'}>
           <AvatarGrid isActive={isActive}>
             <AvatarLink
               to={'/notifications'}

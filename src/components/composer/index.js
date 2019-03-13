@@ -17,6 +17,7 @@ import uploadImage, {
 import { TextButton } from '../buttons';
 import { PrimaryButton } from 'src/views/community/components/button';
 import { MobileTitlebar } from 'src/components/titlebar';
+import Tooltip from 'src/components/tooltip';
 import {
   MediaLabel,
   MediaInput,
@@ -486,29 +487,25 @@ class ComposerWithData extends React.Component<Props, State> {
           )}
           <Actions>
             <InputHints>
-              <MediaLabel>
-                <MediaInput
-                  type="file"
-                  accept={'.png, .jpg, .jpeg, .gif, .mp4'}
-                  multiple={false}
-                  onChange={this.uploadFile}
-                />
-                <Icon
-                  glyph="photo"
-                  tipLocation={'top-right'}
-                  tipText="Upload photo"
-                />
-              </MediaLabel>
-              <DesktopLink
-                target="_blank"
-                href="https://guides.github.com/features/mastering-markdown/"
-              >
-                <Icon
-                  tipText="Style with Markdown"
-                  tipLocation="top-right"
-                  glyph="markdown"
-                />
-              </DesktopLink>
+              <Tooltip content={'Upload photo'}>
+                <MediaLabel>
+                  <MediaInput
+                    type="file"
+                    accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                    multiple={false}
+                    onChange={this.uploadFile}
+                  />
+                  <Icon glyph="photo" />
+                </MediaLabel>
+              </Tooltip>
+              <Tooltip content={'Style with Markdown'}>
+                <DesktopLink
+                  target="_blank"
+                  href="https://guides.github.com/features/mastering-markdown/"
+                >
+                  <Icon glyph="markdown" />
+                </DesktopLink>
+              </Tooltip>
             </InputHints>
             <ButtonRow>
               <TextButton

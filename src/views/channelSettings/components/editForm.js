@@ -8,20 +8,14 @@ import editChannelMutation from 'shared/graphql/mutations/channel/editChannel';
 import type { EditChannelType } from 'shared/graphql/mutations/channel/editChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
-import { openModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { Notice } from '../../../components/listItems/style';
-import { Button, IconButton } from '../../../components/buttons';
-import { NullCard } from '../../../components/upsell';
-import {
-  Input,
-  UnderlineInput,
-  TextArea,
-} from '../../../components/formElements';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+import { openModal } from 'src/actions/modals';
+import Tooltip from 'src/components/tooltip';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Notice } from 'src/components/listItems/style';
+import { Button, IconButton } from 'src/components/buttons';
+import { NullCard } from 'src/components/upsell';
+import { Input, UnderlineInput, TextArea } from 'src/components/formElements';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import {
   Form,
   TertiaryActionContainer,
@@ -29,7 +23,7 @@ import {
   Actions,
   GeneralNotice,
   Location,
-} from '../../../components/editForm/style';
+} from 'src/components/editForm/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -255,15 +249,17 @@ class ChannelWithData extends React.Component<Props, State> {
               </Button>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
-                  <IconButton
-                    glyph="delete"
-                    tipText={`Delete ${name}`}
-                    tipLocation="top-right"
-                    color="text.placeholder"
-                    hoverColor="warn.alt"
-                    onClick={e => this.triggerDeleteChannel(e, channel.id)}
-                    dataCy="delete-channel-button"
-                  />
+                  <Tooltip content={`Delete ${name}`}>
+                    <span>
+                      <IconButton
+                        glyph="delete"
+                        color="text.placeholder"
+                        hoverColor="warn.alt"
+                        onClick={e => this.triggerDeleteChannel(e, channel.id)}
+                        dataCy="delete-channel-button"
+                      />
+                    </span>
+                  </Tooltip>
                 </TertiaryActionContainer>
               )}
             </Actions>
