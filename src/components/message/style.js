@@ -350,7 +350,7 @@ export const BlockQuote = styled.blockquote`
   padding: 4px 12px 4px 16px;
 `;
 
-export const QuotedParagraph = Paragraph.withComponent('div').extend`
+export const QuotedParagraph = styled(Paragraph)`
   color: ${theme.text.alt};
 
   code {

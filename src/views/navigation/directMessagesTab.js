@@ -42,24 +42,21 @@ const DirectMessagesTab = (props: Props) => {
         .reduce((count, { node }) => (node.isSeen ? count : count + 1), 0)
     : 0;
   // $FlowIssue Mark all as seen when the tab becomes active
-  React.useEffect(
-    () => {
-      props.dispatch(
-        updateNotificationsCount(
-          'directMessageNotifications',
-          isActive ? 0 : unseenCount
-        )
-      );
-      if (isActive)
-        props.markDirectMessageNotificationsSeen().then(() => props.refetch());
-    },
-    [
-      data.directMessageNotifications &&
-        data.directMessageNotifications.edges.length,
-      unseenCount,
-      isActive,
-    ]
-  );
+  React.useEffect(() => {
+    props.dispatch(
+      updateNotificationsCount(
+        'directMessageNotifications',
+        isActive ? 0 : unseenCount
+      )
+    );
+    if (isActive)
+      props.markDirectMessageNotificationsSeen().then(() => props.refetch());
+  }, [
+    data.directMessageNotifications &&
+      data.directMessageNotifications.edges.length,
+    unseenCount,
+    isActive,
+  ]);
 
   // Keep the dock icon notification count indicator of the desktop app in sync
   if (isDesktopApp()) {
@@ -71,7 +68,7 @@ const DirectMessagesTab = (props: Props) => {
       {({ setNavigationIsOpen }) => (
         <Route path="/messages">
           {({ match }) => (
-            <Tooltip title="Messages">
+            <Tooltip content="Messages">
               <AvatarGrid isActive={match && match.url.includes('/messages')}>
                 <AvatarLink
                   to={'/messages'}

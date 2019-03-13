@@ -95,7 +95,7 @@ const CommunityList = (props: Props) => {
     return (
       <Route path="/:communitySlug" key={community.id}>
         {({ match }) => (
-          <Tooltip title={community.name}>
+          <Tooltip content={community.name}>
             <AvatarGrid
               isActive={
                 match &&

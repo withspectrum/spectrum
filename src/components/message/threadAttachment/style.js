@@ -1,5 +1,5 @@
 // @flow
-import styled, { injectGlobal } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
 import { tint, zIndex } from 'src/components/globals';
@@ -9,7 +9,7 @@ export const LinkWrapper = styled(Link)``;
 export const Column = styled.div``;
 export const AvatarWrapper = styled.div``;
 
-injectGlobal`
+createGlobalStyle`
   .attachment-container {
 
     h3 {

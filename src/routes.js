@@ -9,14 +9,13 @@ import {
   type Location,
   type History,
 } from 'react-router';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
 import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
-import './reset.css.js';
+import GlobalStyles from './reset.css.js';
 import { theme } from 'shared/theme';
-import { FlexCol } from './components/globals';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import ScrollManager from 'src/components/scrollManager';
 import Head from 'src/components/head';
@@ -210,6 +209,7 @@ class Routes extends React.Component<Props> {
       return (
         <ThemeProvider theme={theme}>
           <ScrollManager>
+            <GlobalStyles />
             <Head
               title="Ongoing Maintenance - Spectrum"
               description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
@@ -237,6 +237,7 @@ class Routes extends React.Component<Props> {
         >
           {/* Default meta tags, get overriden by anything further down the tree */}
           <Head title={title} description={description} />
+          <GlobalStyles />
 
           <ErrorBoundary fallbackComponent={ErrorFallback}>
             <ScrollManager>

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { withApollo } from 'react-apollo';
-import { Route, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Tooltip from 'src/components/tooltip';
 import compose from 'recompose/compose';
@@ -46,31 +46,28 @@ const NotificationsTab = (props: Props) => {
       .filter(Boolean)
       .reduce((count, { node }) => (node.isSeen ? count : count + 1), 0);
   // $FlowIssue Mark all as seen when the tab becomes active
-  React.useEffect(
-    () => {
-      const count = data.notifications
-        ? data.notifications.edges
-            .filter(Boolean)
-            .filter(({ node }) => !node.isSeen).length
-        : 0;
-      props.dispatch(
-        setNotifications(
-          data.notifications
-            ? data.notifications.edges.filter(Boolean).map(({ node }) => node)
-            : []
-        )
-      );
-      props.dispatch(
-        updateNotificationsCount('notifications', props.active ? 0 : count)
-      );
-      if (isActive) props.markAllNotificationsSeen();
-    },
-    [
-      isActive,
-      data.notifications && data.notifications.edges.length,
-      unseenCount,
-    ]
-  );
+  React.useEffect(() => {
+    const count = data.notifications
+      ? data.notifications.edges
+          .filter(Boolean)
+          .filter(({ node }) => !node.isSeen).length
+      : 0;
+    props.dispatch(
+      setNotifications(
+        data.notifications
+          ? data.notifications.edges.filter(Boolean).map(({ node }) => node)
+          : []
+      )
+    );
+    props.dispatch(
+      updateNotificationsCount('notifications', props.active ? 0 : count)
+    );
+    if (isActive) props.markAllNotificationsSeen();
+  }, [
+    isActive,
+    data.notifications && data.notifications.edges.length,
+    unseenCount,
+  ]);
 
   // Keep the dock icon notification count indicator of the desktop app in sync
   if (isDesktopApp()) {
@@ -80,7 +77,7 @@ const NotificationsTab = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Tooltip title="Notifications">
+        <Tooltip content="Notifications">
           <AvatarGrid isActive={isActive}>
             <AvatarLink
               to={'/notifications'}

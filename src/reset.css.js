@@ -1,15 +1,12 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 // $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
-import tippy from '!!raw-loader!brianlovin-react-tippy/dist/tippy.css';
 import theme from 'shared/theme';
 
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;
-injectGlobal`${tippy}`;
+export default createGlobalStyle`
+  ${prismGlobalCSS}
 
-injectGlobal`
   * {
     border: 0;
     box-sizing: inherit;
@@ -332,5 +329,9 @@ injectGlobal`
   .threadComposer textarea {
     line-height: 1.5;
     height: calc(100% + 48px)!important;
+  }
+  
+  .tippy-backdrop {
+    background-color: ${theme.text.default};
   }
 `;

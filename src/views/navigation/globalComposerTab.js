@@ -9,7 +9,7 @@ const GlobalComposerTab = () => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Tooltip title="New post">
+        <Tooltip content="New post">
           <AvatarGrid>
             <AvatarLink
               to={{ pathname: '/new/thread', state: { modal: true } }}

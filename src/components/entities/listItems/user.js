@@ -104,16 +104,16 @@ const User = (props: Props) => {
 
         <Actions>
           {messageButton && (
-            <Tooltip title="Send message" position="top">
-              <InitDirectMessageWrapper
-                user={userObject}
-                render={
+            <InitDirectMessageWrapper
+              user={userObject}
+              render={
+                <Tooltip content="Send message" placement="top">
                   <MessageIcon>
                     <Icon glyph="message-simple-new" size={24} />
                   </MessageIcon>
-                }
-              />
-            </Tooltip>
+                </Tooltip>
+              }
+            />
           )}
 
           {children}

@@ -1,25 +1,36 @@
 // @flow
 import React from 'react';
-import { Tooltip } from 'brianlovin-react-tippy';
+import Tippy from '@tippy.js/react';
 
-const Tip = (props: Props) => (
-  <Tooltip
-    position="left-start"
-    arrow={true}
-    arrowSize={'small'}
-    html={
-      <span style={{ fontSize: '14px', fontWeight: '600' }}>{props.title}</span>
-    }
-    // https://github.com/FezVrasta/popper.js/issues/535
-    popperOptions={{
-      modifiers: {
-        preventOverflow: {
-          boundariesElement: 'window',
+type Props = {
+  content: string,
+};
+
+const Tip = (props: Props) => {
+  const { style = {}, content, ...rest } = props;
+
+  return (
+    <Tippy
+      placement="left"
+      touch={false}
+      arrow={true}
+      arrowType={'round'}
+      content={
+        <span style={{ fontSize: '14px', fontWeight: '600', ...style }}>
+          {content}
+        </span>
+      }
+      // https://github.com/FezVrasta/popper.js/issues/535
+      popperOptions={{
+        modifiers: {
+          preventOverflow: {
+            boundariesElement: 'window',
+          },
         },
-      },
-    }}
-    {...props}
-  />
-);
+      }}
+      {...rest}
+    />
+  );
+};
 
 export default Tip;
