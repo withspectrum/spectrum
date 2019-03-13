@@ -33,12 +33,11 @@ export const Body = (props: BodyProps) => {
     message.messageType === messageTypeObj.draftjs &&
     draftOnlyContainsEmoji(JSON.parse(message.content.body));
   const WrapperComponent = bubble ? Text : QuotedParagraph;
-  const as = bubble ? 'p' : 'div';
   switch (message.messageType) {
     case 'optimistic':
       return (
         <div key={message.id} className="markdown">
-          <WrapperComponent as={as} me={me}>
+          <WrapperComponent me={me}>
             <div dangerouslySetInnerHTML={{ __html: message.content.body }} />
           </WrapperComponent>
         </div>
@@ -46,7 +45,7 @@ export const Body = (props: BodyProps) => {
     case messageTypeObj.text:
     default:
       return (
-        <WrapperComponent as={as} key={message.id} me={me}>
+        <WrapperComponent key={message.id} me={me}>
           {message.content.body}
         </WrapperComponent>
       );
@@ -65,7 +64,7 @@ export const Body = (props: BodyProps) => {
     case messageTypeObj.draftjs: {
       const parsed = JSON.parse(message.content.body);
       return (
-        <WrapperComponent as={as} key={message.id} me={me}>
+        <WrapperComponent key={message.id} me={me}>
           {message.parent && showParent && (
             // $FlowIssue
             <QuotedMessage message={message.parent} />

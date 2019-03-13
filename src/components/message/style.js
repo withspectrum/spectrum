@@ -348,7 +348,7 @@ export const BlockQuote = styled.blockquote`
   padding: 4px 12px 4px 16px;
 `;
 
-export const QuotedParagraph = styled(Paragraph)`
+export const QuotedParagraph = styled.div`
   color: ${theme.text.alt};
 
   code {
