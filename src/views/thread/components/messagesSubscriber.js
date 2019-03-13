@@ -27,7 +27,7 @@ class Messages extends React.Component<Props> {
       prevProps.data.thread.messageConnection.edges.length <
         this.props.data.thread.messageConnection.edges.length
     ) {
-      const elem = document.getElementById('scroller-for-thread-feed');
+      const elem = document.getElementById('app-scroll-boundary');
       if (elem)
         return {
           top: elem.scrollTop,
@@ -39,7 +39,7 @@ class Messages extends React.Component<Props> {
 
   componentDidUpdate(_, __, previousScroll) {
     if (previousScroll) {
-      const elem = document.getElementById('scroller-for-thread-feed');
+      const elem = document.getElementById('app-scroll-boundary');
       elem.scrollTop =
         elem.scrollHeight - previousScroll.height + previousScroll.top;
     }
