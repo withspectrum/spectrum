@@ -424,148 +424,153 @@ class ActionBar extends React.Component<Props, State> {
             )}
 
             {shouldRenderActionsDropdown && (
-              <DropWrap
-                onMouseEnter={this.toggleHover}
-                onMouseLeave={this.toggleHover}
-                style={{ marginRight: '8px' }}
-              >
+              <DropWrap style={{ marginRight: '8px' }}>
                 <Manager>
                   <Reference>
                     {({ ref }) => {
                       return (
-                        <IconButton
-                          glyph="settings"
-                          onClick={this.toggleFlyout}
-                          dataCy="thread-actions-dropdown-trigger"
-                          ref={ref}
-                        />
+                        <span ref={ref}>
+                          <IconButton
+                            glyph="settings"
+                            onClick={this.toggleFlyout}
+                            dataCy="thread-actions-dropdown-trigger"
+                          />
+                        </span>
                       );
                     }}
                   </Reference>
                   {(isSettingsBtnHovering || flyoutOpen) && (
                     <OutsideClickHandler onOutsideClick={this.toggleFlyout}>
                       <Popper
-                        placement="bottom-end"
                         modifiers={{
-                          preventOverflow: { enabled: true },
                           flip: {
-                            boundariesElement: 'scrollParent',
+                            boundariesElement: 'viewport',
                             behavior: ['top', 'bottom', 'top'],
                           },
                           hide: { enable: false },
                         }}
                       >
-                        {({ style, ref, placement }) => {
+                        {({ style, ref }) => {
                           return (
-                            <Flyout
-                              data-cy="thread-actions-dropdown"
+                            <div
                               ref={ref}
-                              style={style}
+                              style={{
+                                position: 'relative',
+                                right: '170px',
+                                top: '-30px',
+                              }}
                             >
-                              <FlyoutRow hideAbove={768}>
-                                <TextButton
-                                  icon={
-                                    thread.receiveNotifications
-                                      ? 'notification-fill'
-                                      : 'notification'
-                                  }
-                                  hoverColor={'brand.alt'}
-                                  onClick={this.toggleNotification}
-                                  dataCy={'thread-dropdown-notifications'}
-                                >
-                                  {thread.receiveNotifications
-                                    ? 'Subscribed'
-                                    : 'Notify me'}
-                                </TextButton>
-                              </FlyoutRow>
-
-                              {shouldRenderEditThreadAction && (
-                                <FlyoutRow>
-                                  <TextButton
-                                    icon="edit"
-                                    onClick={this.props.toggleEdit}
-                                    hoverColor={'space.default'}
-                                    dataCy={'thread-dropdown-edit'}
-                                  >
-                                    <Label>Edit post</Label>
-                                  </TextButton>
-                                </FlyoutRow>
-                              )}
-
-                              {shouldRenderPinThreadAction && (
-                                <FlyoutRow>
-                                  <TextButton
-                                    icon={isPinned ? 'pin-fill' : 'pin'}
-                                    hoverColor={
-                                      isPinned
-                                        ? 'warn.default'
-                                        : 'special.default'
-                                    }
-                                    onClick={this.props.togglePinThread}
-                                    dataCy={'thread-dropdown-pin'}
-                                    loading={isPinningThread}
-                                    disabled={isPinningThread}
-                                  >
-                                    <Label>
-                                      {isPinned ? 'Unpin thread' : 'Pin thread'}
-                                    </Label>
-                                  </TextButton>
-                                </FlyoutRow>
-                              )}
-
-                              {shouldRenderMoveThreadAction && (
-                                <FlyoutRow hideBelow={1024}>
-                                  <TextButton
-                                    icon={'channel'}
-                                    hoverColor={'special.default'}
-                                    onClick={this.triggerChangeChannel}
-                                    dataCy={'thread-dropdown-move'}
-                                  >
-                                    Move thread
-                                  </TextButton>
-                                </FlyoutRow>
-                              )}
-
-                              {shouldRenderLockThreadAction && (
-                                <FlyoutRow>
+                              <Flyout
+                                data-cy="thread-actions-dropdown"
+                                style={style}
+                              >
+                                <FlyoutRow hideAbove={768}>
                                   <TextButton
                                     icon={
-                                      thread.isLocked
-                                        ? 'private'
-                                        : 'private-unlocked'
+                                      thread.receiveNotifications
+                                        ? 'notification-fill'
+                                        : 'notification'
                                     }
-                                    hoverColor={
-                                      thread.isLocked
-                                        ? 'success.default'
-                                        : 'warn.alt'
-                                    }
-                                    onClick={this.props.threadLock}
-                                    dataCy={'thread-dropdown-lock'}
-                                    loading={isLockingThread}
-                                    disabled={isLockingThread}
+                                    hoverColor={'brand.alt'}
+                                    onClick={this.toggleNotification}
+                                    dataCy={'thread-dropdown-notifications'}
                                   >
-                                    <Label>
-                                      {thread.isLocked
-                                        ? 'Unlock chat'
-                                        : 'Lock chat'}
-                                    </Label>
+                                    {thread.receiveNotifications
+                                      ? 'Subscribed'
+                                      : 'Notify me'}
                                   </TextButton>
                                 </FlyoutRow>
-                              )}
 
-                              {shouldRenderDeleteThreadAction && (
-                                <FlyoutRow>
-                                  <TextButton
-                                    icon="delete"
-                                    hoverColor="warn.default"
-                                    onClick={this.props.triggerDelete}
-                                    dataCy={'thread-dropdown-delete'}
-                                  >
-                                    <Label>Delete</Label>
-                                  </TextButton>
-                                </FlyoutRow>
-                              )}
-                            </Flyout>
+                                {shouldRenderEditThreadAction && (
+                                  <FlyoutRow>
+                                    <TextButton
+                                      icon="edit"
+                                      onClick={this.props.toggleEdit}
+                                      hoverColor={'space.default'}
+                                      dataCy={'thread-dropdown-edit'}
+                                    >
+                                      <Label>Edit post</Label>
+                                    </TextButton>
+                                  </FlyoutRow>
+                                )}
+
+                                {shouldRenderPinThreadAction && (
+                                  <FlyoutRow>
+                                    <TextButton
+                                      icon={isPinned ? 'pin-fill' : 'pin'}
+                                      hoverColor={
+                                        isPinned
+                                          ? 'warn.default'
+                                          : 'special.default'
+                                      }
+                                      onClick={this.props.togglePinThread}
+                                      dataCy={'thread-dropdown-pin'}
+                                      loading={isPinningThread}
+                                      disabled={isPinningThread}
+                                    >
+                                      <Label>
+                                        {isPinned
+                                          ? 'Unpin thread'
+                                          : 'Pin thread'}
+                                      </Label>
+                                    </TextButton>
+                                  </FlyoutRow>
+                                )}
+
+                                {shouldRenderMoveThreadAction && (
+                                  <FlyoutRow hideBelow={1024}>
+                                    <TextButton
+                                      icon={'channel'}
+                                      hoverColor={'special.default'}
+                                      onClick={this.triggerChangeChannel}
+                                      dataCy={'thread-dropdown-move'}
+                                    >
+                                      Move thread
+                                    </TextButton>
+                                  </FlyoutRow>
+                                )}
+
+                                {shouldRenderLockThreadAction && (
+                                  <FlyoutRow>
+                                    <TextButton
+                                      icon={
+                                        thread.isLocked
+                                          ? 'private'
+                                          : 'private-unlocked'
+                                      }
+                                      hoverColor={
+                                        thread.isLocked
+                                          ? 'success.default'
+                                          : 'warn.alt'
+                                      }
+                                      onClick={this.props.threadLock}
+                                      dataCy={'thread-dropdown-lock'}
+                                      loading={isLockingThread}
+                                      disabled={isLockingThread}
+                                    >
+                                      <Label>
+                                        {thread.isLocked
+                                          ? 'Unlock chat'
+                                          : 'Lock chat'}
+                                      </Label>
+                                    </TextButton>
+                                  </FlyoutRow>
+                                )}
+
+                                {shouldRenderDeleteThreadAction && (
+                                  <FlyoutRow>
+                                    <TextButton
+                                      icon="delete"
+                                      hoverColor="warn.default"
+                                      onClick={this.props.triggerDelete}
+                                      dataCy={'thread-dropdown-delete'}
+                                    >
+                                      <Label>Delete</Label>
+                                    </TextButton>
+                                  </FlyoutRow>
+                                )}
+                              </Flyout>
+                            </div>
                           );
                         }}
                       </Popper>

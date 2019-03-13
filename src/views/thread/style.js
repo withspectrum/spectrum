@@ -150,7 +150,7 @@ export const ThreadWrapper = styled(FlexCol)`
   flex: none;
   min-width: 320px;
   position: relative;
-  z-index: ${zIndex.card + 1};
+  z-index: 4;
   background: ${theme.bg.default};
   /* manually nudge up 60px to cover the sliding header in the thread view */
   top: -60px;
