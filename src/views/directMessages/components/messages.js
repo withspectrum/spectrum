@@ -33,41 +33,10 @@ type State = {
 };
 
 class MessagesWithData extends React.Component<Props, State> {
-  state = {
-    subscription: null,
-  };
+  subscription: ?Function;
 
   componentDidMount() {
     this.subscribe();
-  }
-
-  componentDidUpdate(prev) {
-    const { data, setLastSeen } = this.props;
-
-    if (this.props.data.loading) {
-      this.unsubscribe();
-    }
-
-    if (
-      prev.data.networkStatus === 1 &&
-      prev.data.loading &&
-      !this.props.data.loading
-    ) {
-      this.subscribe();
-    }
-    // force scroll to bottom when a message is sent in the same thread
-    if (
-      prev.data.directMessageThread &&
-      data.directMessageThread &&
-      prev.data.directMessageThread.id === data.directMessageThread.id &&
-      (prev.data.messages && data.messages) &&
-      prev.data.messages.length < data.messages.length
-    ) {
-      // mark this thread as unread when new messages come in and i'm viewing it
-      if (data.directMessageThread) {
-        setLastSeen(data.directMessageThread.id);
-      }
-    }
   }
 
   componentWillUnmount() {
@@ -75,26 +44,105 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   subscribe = () => {
-    this.setState({
-      subscription: this.props.subscribeToNewMessages(),
-    });
+    this.subscription = this.props.subscribeToNewMessages();
   };
 
   unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
+    if (this.subscription) this.subscription();
   };
+
+  getSnapshotBeforeUpdate(prev) {
+    const curr = this.props;
+    // First load
+    if (
+      !prev.data.directMessageThread &&
+      curr.data.directMessageThread &&
+      curr.data.directMessageThread.messageConnection.edges.length > 0
+    ) {
+      return {
+        type: 'bottom',
+      };
+    }
+    // New messages
+    if (
+      prev.data.directMessageThread &&
+      curr.data.directMessageThread &&
+      prev.data.directMessageThread.messageConnection.edges.length <
+        curr.data.directMessageThread.messageConnection.edges.length
+    ) {
+      const elem = document.getElementById('app-scroll-boundary');
+      if (!elem) return null;
+
+      // If we are near the bottom when new messages come in, stick to the bottom
+      if (elem.scrollHeight < elem.scrollTop + elem.clientHeight + 400) {
+        return {
+          type: 'bottom',
+        };
+      }
+
+      // If messages were added at the end, keep the scroll position the same
+      if (
+        prev.data.directMessageThread.messageConnection.edges[0].node.id ===
+        curr.data.directMessageThread.messageConnection.edges[0].node.id
+      ) {
+        return null;
+      }
+
+      // If messages were added at the top, persist the scroll position
+      return {
+        type: 'persist',
+        values: {
+          top: elem.scrollTop,
+          height: elem.scrollHeight,
+        },
+      };
+    }
+    return null;
+  }
+
+  componentDidUpdate(prev, _, snapshot) {
+    const { data, setLastSeen } = this.props;
+
+    if (snapshot) {
+      const elem = document.getElementById('app-scroll-boundary');
+      if (elem) {
+        switch (snapshot.type) {
+          case 'bottom': {
+            elem.scrollTop = elem.scrollHeight;
+            break;
+          }
+          case 'persist': {
+            elem.scrollTop =
+              elem.scrollHeight - snapshot.values.height + snapshot.values.top;
+            break;
+          }
+        }
+      }
+    }
+
+    const firstLoad =
+      !prev.data.directMessageThread && data.directMessageThread;
+    const newThread =
+      prev.data.directMessageThread &&
+      data.directMessageThread &&
+      prev.data.directMessageThread.id !== data.directMessageThread.id;
+
+    if (firstLoad) {
+      this.subscribe();
+      setLastSeen(data.directMessageThread.id);
+    } else if (newThread) {
+      this.unsubscribe();
+      this.subscribe();
+      setLastSeen(data.directMessageThread.id);
+    }
+  }
 
   render() {
     const {
-      data: { messages, hasNextPage, fetchMore },
+      data: { messages, directMessageThread, hasNextPage, fetchMore },
       hasError,
       isLoading,
       isFetchingMore,
-      thread,
     } = this.props;
 
     if (hasError) {
@@ -136,7 +184,7 @@ class MessagesWithData extends React.Component<Props, State> {
               messages={sortedMessages}
               uniqueMessageCount={uniqueMessages.length}
               threadType={'directMessageThread'}
-              thread={thread}
+              thread={directMessageThread}
             />
           </ErrorBoundary>
         </MessagesScrollWrapper>
