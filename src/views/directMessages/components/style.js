@@ -12,7 +12,7 @@ import {
   P,
   hexa,
   zIndex,
-} from '../../../components/globals';
+} from 'src/components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
   height: 100vh;
@@ -28,19 +28,19 @@ export const Wrapper = styled(FlexCol)`
   max-width: 100%;
   min-height: 64px;
   position: relative;
-  background: ${props => (props.active ? theme.bg.wash : theme.bg.default)};
+  background: ${props =>
+    props.active
+      ? theme.bg.wash
+      : props.isUnread
+      ? hexa(theme.brand.default, 0.04)
+      : theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
   box-shadow: ${props =>
-    props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none'};
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 16px;
-    width: calc(100% - 16px);
-    border-bottom: 1px solid ${theme.bg.wash};
-  }
+    props.active
+      ? `inset 2px 0 0 ${props.theme.text.placeholder}`
+      : props.isUnread
+      ? `inset 2px 0 0 ${props.theme.brand.default}`
+      : 'none'};
 
   &:hover {
     cursor: pointer;
@@ -76,9 +76,8 @@ export const Heading = styled(H3)`
 
 export const Meta = styled(H4)`
   font-size: 15px;
-  font-weight: ${props => (props.isUnread ? 600 : 400)};
-  color: ${props =>
-    props.isUnread ? props.theme.text.default : props.theme.text.alt};
+  font-weight: 400;
+  color: ${theme.text.alt};
 
   ${props => (props.nowrap ? Truncate() : '')};
 `;
@@ -113,7 +112,7 @@ export const Usernames = styled.span`
   white-space: nowrap;
   overflow: hidden;
   color: ${theme.text.default};
-  font-weight: ${props => (props.isUnread ? 800 : 600)};
+  font-weight: 600;
   line-height: 1.1;
   margin-bottom: 1px;
   font-size: 15px;
@@ -127,7 +126,7 @@ export const Usernames = styled.span`
 export const Timestamp = styled.span`
   font-size: 14px;
   text-align: right;
-  color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
+  color: ${theme.text.alt};
   padding-right: 4px;
   display: inline-block;
   flex: 1 0 auto;
@@ -136,9 +135,8 @@ export const Timestamp = styled.span`
 
 export const Snippet = styled.p`
   font-size: 15px;
-  font-weight: ${props => (props.unread ? 700 : 500)};
-  color: ${props =>
-    props.unread ? props.theme.text.default : props.theme.text.alt};
+  font-weight: 400;
+  color: ${theme.text.secondary};
   padding-right: 4px;
   display: inline-block;
   line-height: 1.3;
