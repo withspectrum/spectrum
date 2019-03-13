@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { SvgWrapper } from '../icons';
-import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
+import { Truncate, monoStack, hexa } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 
 export const Byline = styled.span`
@@ -95,8 +95,6 @@ export const Action = styled.li`
   &:first-child {
     border-left: 0;
   }
-
-  ${Tooltip};
 `;
 
 export const LikeAction = styled(Action)`
@@ -498,7 +496,6 @@ export const EditedIndicator = styled.span`
   display: block;
   font-size: 11px;
   color: ${props => props.theme.text.alt};
-  ${Tooltip};
 `;
 
 export const ThreadAttachmentsContainer = styled.ul``;

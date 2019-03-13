@@ -1,7 +1,6 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Tooltip } from '../globals';
 
 export const View = styled.main`
   display: flex;
@@ -190,7 +189,6 @@ export const GrowthText = styled.span`
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;
-  ${Tooltip} top: 2px;
 `;
 
 export const EditDropdownContainer = styled.div`

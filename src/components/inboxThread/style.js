@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { zIndex, Tooltip, hexa } from 'src/components/globals';
+import { zIndex, hexa } from 'src/components/globals';
 
 export const InboxThreadItem = styled.div`
   display: flex;
@@ -153,8 +153,6 @@ export const CountWrapper = styled.div`
   a:hover {
     color: ${theme.text.default};
   }
-
-  ${Tooltip};
 `;
 
 const avatarLinkStyles = css`

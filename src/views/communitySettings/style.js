@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import theme from 'shared/theme';
 import Card from '../../components/card';
 import { Link } from 'react-router-dom';
-import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
+import { FlexCol, H1, H2, H3, Span } from 'src/components/globals';
 
 export const ListHeader = styled.div`
   display: flex;
@@ -225,5 +225,4 @@ export const GrowthText = styled.h5`
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;
-  ${Tooltip} top: 2px;
 `;

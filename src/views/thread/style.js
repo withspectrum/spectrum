@@ -11,7 +11,6 @@ import {
   H3,
   Transition,
   zIndex,
-  Tooltip,
   hexa,
   Truncate,
 } from 'src/components/globals';
@@ -465,8 +464,6 @@ export const ShareButton = styled.span`
         ? props.theme.social.twitter.default
         : props.theme.text.default};
   }
-
-  ${Tooltip};
 `;
 
 export const StickyHeaderContent = styled.div`
