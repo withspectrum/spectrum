@@ -88,9 +88,21 @@ class MessagesWithData extends React.Component<Props, State> {
     const previousMessageCount =
       previousMessagesHaveLoaded &&
       prev.data.thread.messageConnection.edges.length;
+    const previousOptimistic =
+      previousMessagesHaveLoaded &&
+      prev.data.thread.messageConnection.edges.filter(
+        ({ node }) => node.messageType === 'optimistic'
+      ).length;
+    const newOptimistic =
+      newMessagesHaveLoaded &&
+      curr.data.thread.messageConnection.edges.filter(
+        ({ node }) => node.messageType === 'optimistic'
+      ).length;
     const newMessageCount =
       newMessagesHaveLoaded && curr.data.thread.messageConnection.edges.length;
-    const newMessageSent = previousMessageCount < newMessageCount;
+    const newMessageSent =
+      previousMessageCount < newMessageCount ||
+      previousOptimistic !== newOptimistic;
     const messagesLoadedForFirstTime = !prev.data.thread && curr.data.thread;
 
     if (
@@ -108,9 +120,15 @@ class MessagesWithData extends React.Component<Props, State> {
       setTimeout(() => curr.forceScrollToBottom());
     }
 
-    // force scroll to bottom when a message is sent in the same thread
+    // scroll to bottom when a message is sent in the same thread
     if (newMessageSent && !prev.isFetchingMore) {
-      curr.contextualScrollToBottom();
+      // If user sent a message themselves, force the scroll
+      if (previousOptimistic !== newOptimistic) {
+        curr.forceScrollToBottom();
+        // otherwise only scroll to the bottom if they are near the bottom
+      } else {
+        curr.contextualScrollToBottom();
+      }
     }
 
     // if the thread changes in the inbox we have to update the subscription

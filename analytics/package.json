@@ -22,7 +22,7 @@
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",
-    "source-map-support": "^0.5.10",
+    "source-map-support": "^0.5.11",
     "toobusy-js": "^0.5.1"
   }
 }

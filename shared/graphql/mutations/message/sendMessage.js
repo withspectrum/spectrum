@@ -33,7 +33,10 @@ const sendMessageOptions = {
         variables: {
           message: {
             ...message,
-            messageType: messageTypeObj.text,
+            messageType:
+              message.messageType === messageTypeObj.media
+                ? messageTypeObj.media
+                : messageTypeObj.text,
             content: {
               body:
                 message.messageType === messageTypeObj.media
@@ -47,6 +50,7 @@ const sendMessageOptions = {
           addMessage: {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
+            bot: false,
             messageType:
               message.messageType === messageTypeObj.media
                 ? messageTypeObj.media
