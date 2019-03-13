@@ -9,7 +9,7 @@ import Icon from 'src/components/icons';
 import JoinChannelWrapper from 'src/components/joinChannelWrapper';
 import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
 import {
-  SmallHoverWarnOutlineButton,
+  SmallOutlineButton,
   SmallPrimaryButton,
 } from 'src/views/community/components/button';
 import { Row, Content, Label, Description, Actions } from './style';
@@ -43,13 +43,9 @@ const Channel = (props: Props) => {
         <LeaveChannelWrapper
           channel={channel}
           render={({ isLoading, isHovering }) => (
-            <SmallHoverWarnOutlineButton>
-              {isLoading
-                ? 'Leaving...'
-                : isHovering
-                ? 'Leave channel'
-                : 'Member'}
-            </SmallHoverWarnOutlineButton>
+            <SmallOutlineButton style={{ width: '100px' }}>
+              {isLoading ? 'Leaving...' : isHovering ? 'Leave' : 'Member'}
+            </SmallOutlineButton>
           )}
         />
       );

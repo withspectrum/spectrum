@@ -5,7 +5,6 @@ import type { CommunityActionsRowType } from '../types';
 import {
   PrimaryButton,
   OutlineButton,
-  HoverWarnOutlineButton,
 } from 'src/views/community/components/button';
 import { openModal } from 'src/actions/modals';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
@@ -13,6 +12,10 @@ import { ActionsRowContainer } from '../style';
 
 export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
   const { community, dispatch } = props;
+
+  const [isHovering, setHover] = React.useState(false);
+  const onMouseEnter = () => setHover(true);
+  const onMouseLeave = () => setHover(false);
 
   const leaveCommunity = () =>
     dispatch(
@@ -37,9 +40,13 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
         )}
 
         {!isOwner && (
-          <HoverWarnOutlineButton onClick={leaveCommunity}>
-            Leave community
-          </HoverWarnOutlineButton>
+          <OutlineButton
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onClick={leaveCommunity}
+          >
+            {isHovering ? 'Leave community' : 'Member'}
+          </OutlineButton>
         )}
       </ActionsRowContainer>
     );
