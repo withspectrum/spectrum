@@ -138,8 +138,13 @@ class Messages extends React.Component<Props> {
         hasMore={hasMore}
         isReverse={!!thread.watercooler}
         loadMore={loadMore}
-        loader={<Loading key={0} />}
-        threshold={250}
+        loader={
+          <Loading
+            style={{ marginBottom: '300px', marginTop: '50px' }}
+            key={0}
+          />
+        }
+        threshold={700}
       >
         <ChatMessages
           thread={thread}
