@@ -58,7 +58,7 @@ const CommunityList = (props: Props) => {
         NINE,
       ];
 
-      const appControlKey = isDesktopApp() ? e.metaKey : e.altKey;
+      const appControlKey = e.metaKey;
 
       if (appControlKey) {
         const index = possibleKeys.indexOf(e.keyCode);
@@ -72,7 +72,8 @@ const CommunityList = (props: Props) => {
       }
     };
 
-    window.addEventListener('keydown', handleCommunitySwitch, false);
+    isDesktopApp() &&
+      window.addEventListener('keydown', handleCommunitySwitch, false);
     return () =>
       window.removeEventListener('keydown', handleCommunitySwitch, false);
   }, []);
@@ -82,7 +83,7 @@ const CommunityList = (props: Props) => {
     setNavigationIsOpen(false);
   };
 
-  const appControlSymbol = isDesktopApp() ? '⌘' : '⌥';
+  const appControlSymbol = '⌘';
 
   return sorted.map((community, index) => {
     if (!community) return null;
@@ -118,7 +119,7 @@ const CommunityList = (props: Props) => {
 
                 <Label>{community.name}</Label>
 
-                {index < 9 && (
+                {index < 9 && isDesktopApp() && (
                   <Shortcut>
                     {appControlSymbol}
                     {index + 1}
