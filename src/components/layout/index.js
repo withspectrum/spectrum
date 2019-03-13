@@ -27,8 +27,7 @@ const StyledViewGrid = styled.main.attrs({
 })`
   display: grid;
   grid-area: main;
-  overflow: hidden;
-  overflow-y: ${props => (props.hasModal ? 'hidden' : 'auto')};
+  overflow: ${props => (props.hasModal ? 'hidden' : 'visible')};
 `;
 
 export const ViewGrid = (props: Props) => (
