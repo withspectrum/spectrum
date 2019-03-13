@@ -33,7 +33,10 @@ const sendMessageOptions = {
         variables: {
           message: {
             ...message,
-            messageType: messageTypeObj.text,
+            messageType:
+              message.messageType === messageTypeObj.media
+                ? messageTypeObj.media
+                : messageTypeObj.text,
             content: {
               body:
                 message.messageType === messageTypeObj.media
