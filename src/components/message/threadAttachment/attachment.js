@@ -17,12 +17,11 @@ class Attachment extends React.Component<Props> {
 
     if (loading)
       return (
-        <Container
-          className="attachment-container"
-          style={{ padding: '16px 12px' }}
-        >
-          <Loading />
-        </Container>
+        <div className="attachment-container">
+          <Container style={{ padding: '16px 12px' }}>
+            <Loading />
+          </Container>
+        </div>
       );
     if (error) return null;
 
