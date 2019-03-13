@@ -64,6 +64,16 @@ class InboxThread extends React.Component<Props> {
       thread.lastActive &&
       thread.currentUserLastSeen < thread.lastActive;
 
+    const nowTime = new Date().getTime();
+    const publishedTime = new Date(thread.lastActive).getTime();
+    const publishedInLastDay = nowTime - publishedTime < 86400;
+    const newUnseenThreadInPastDay =
+      !active &&
+      currentUser &&
+      !thread.currentUserLastSeen &&
+      publishedInLastDay &&
+      currentUser.id !== thread.author.user.id;
+
     const text = JSON.parse(thread.content.body).blocks.filter(
       ({ type }) => type === 'unstyled' || type.indexOf('header') === 0
     );
@@ -74,7 +84,7 @@ class InboxThread extends React.Component<Props> {
     return (
       <ErrorBoundary fallbackComponent={null}>
         <InboxThreadItem
-          new={newMessagesSinceLastViewed}
+          new={newMessagesSinceLastViewed || newUnseenThreadInPastDay}
           data-cy="thread-card"
           active={active}
         >
@@ -131,14 +141,12 @@ class InboxThread extends React.Component<Props> {
                 />
               </ErrorBoundary>
 
-              <ThreadTitle active={active} new={newMessagesSinceLastViewed}>
+              <ThreadTitle active={active}>
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
               {!isInbox && (
-                <ThreadSnippet active={active} new={newMessagesSinceLastViewed}>
-                  {snippet}
-                </ThreadSnippet>
+                <ThreadSnippet active={active}>{snippet}</ThreadSnippet>
               )}
 
               <ErrorBoundary fallbackComponent={null}>

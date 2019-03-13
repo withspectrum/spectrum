@@ -26,9 +26,7 @@ class ThreadTimestamp extends React.Component<HeaderProps> {
       createdWithinLastDay &&
       !active
     ) {
-      return (
-        <NewThreadTimestamp active={active}>New thread</NewThreadTimestamp>
-      );
+      return <NewThreadTimestamp active={active}>New post</NewThreadTimestamp>;
     }
 
     return <Timestamp active={active}>{timestamp}</Timestamp>;

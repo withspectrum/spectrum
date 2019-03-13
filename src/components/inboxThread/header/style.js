@@ -97,12 +97,7 @@ export const Timestamp = styled(MetaTitleText)`
 
 export const NewThreadTimestamp = styled(MetaSubtitleText)`
   color: ${props =>
-    props.active ? props.theme.text.reverse : props.theme.success.default};
-
-  &:hover {
-    color: ${props =>
-      props.active ? props.theme.text.reverse : props.theme.success.default};
-  }
+    props.active ? props.theme.text.reverse : props.theme.brand.default};
 `;
 
 export const MetaSubtitlePinned = styled(MetaSubtitleText)`
