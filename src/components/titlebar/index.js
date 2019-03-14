@@ -26,6 +26,7 @@ export const DesktopTitlebar = (props: Props) => (
       borderBottom: `1px solid ${theme.bg.border}`,
       position: 'sticky',
       top: '0',
+      zIndex: 9000,
     }}
     {...props}
   />
