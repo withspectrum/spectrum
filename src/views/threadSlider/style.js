@@ -11,6 +11,14 @@ export const Container = styled.div`
   z-index: ${zIndex.slider + 1};
   position: sticky;
   top: 0;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    grid-area: none;
+    grid-row-start: 1;
+    grid-row-end: -1;
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
 `;
 
 export const Overlay = styled.div`
@@ -53,6 +61,9 @@ export const ThreadContainer = styled.div`
     transform: translateX(0);
     padding: 0;
     box-shadow: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
   }
 `;
 
