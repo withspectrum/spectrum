@@ -74,7 +74,7 @@ class Badge extends React.Component<Props> {
             onClick={this.props.onClick && this.props.onClick}
             {...rest}
           >
-            {label || type}
+            APP
           </Span>
         );
       default:
