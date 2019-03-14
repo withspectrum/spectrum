@@ -36,10 +36,7 @@ class Explore extends React.Component<Props> {
     return (
       <React.Fragment>
         <Head title={title} description={description} />
-        <ViewGrid
-          style={{ height: '100%', maxHeight: '100%' }}
-          data-cy="explore-page"
-        >
+        <ViewGrid data-cy="explore-page">
           <ErrorBoundary>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
