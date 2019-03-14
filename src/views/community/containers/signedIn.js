@@ -20,16 +20,26 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 import { RouteModalContext } from 'src/routes';
 
 const Component = (props: SignedInMemberType) => {
-  const { community } = props;
+  const { community, currentUser, setCommunityLastSeen } = props;
 
   let containerEl = null;
 
   useEffect(() => {
     containerEl = document.getElementById('app-scroll-boundary');
   }, []);
+
+  useEffect(() => {
+    if (!community.id || !currentUser) return;
+
+    setCommunityLastSeen({
+      id: community.id,
+      lastSeen: new Date(),
+    });
+  }, [community.id, currentUser]);
 
   const [metaInfo, setMetaInfo] = useState(
     generateMetaInfo({
@@ -132,5 +142,6 @@ const Component = (props: SignedInMemberType) => {
 
 export const SignedIn = compose(
   withCurrentUser,
+  setCommunityLastSeenMutation,
   connect()
 )(Component);
