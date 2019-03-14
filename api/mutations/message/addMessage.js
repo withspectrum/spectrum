@@ -9,6 +9,7 @@ import { setDirectMessageThreadLastActive } from '../../models/directMessageThre
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
+import { setCommunityLastActive } from '../../models/community';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
@@ -353,6 +354,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   return membershipPromise()
     .then(() => createParticipantInThread(message.threadId, user.id))
+    .then(() => setCommunityLastActive(thread.communityId, new Date()))
     .then(async () => {
       const contextPermissions = {
         communityId: thread.communityId,

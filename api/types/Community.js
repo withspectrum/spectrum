@@ -148,6 +148,7 @@ const Community = /* GraphQL */ `
     pinnedThreadId: String
     pinnedThread: Thread
     isPrivate: Boolean
+    lastActive: Date
     communityPermissions: CommunityPermissions @cost(complexity: 1)
     channelConnection: CommunityChannelsConnection @cost(complexity: 1)
     members(
@@ -307,6 +308,11 @@ const Community = /* GraphQL */ `
     id: ID!
   }
 
+  input SetCommunityLastSeenInput {
+    id: ID!
+    lastSeen: Date!
+  }
+
   extend type Mutation {
     createCommunity(input: CreateCommunityInput!): Community
       @rateLimit(max: 3, window: "15m")
@@ -343,6 +349,7 @@ const Community = /* GraphQL */ `
     disableCommunityWatercooler(
       input: DisableCommunityWatercoolerInput!
     ): Community
+    setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
   }
 `;
 

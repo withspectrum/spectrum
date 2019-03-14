@@ -21,9 +21,25 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 
 const Component = (props: SignedInMemberType) => {
-  const { community, dispatch, location } = props;
+  const {
+    community,
+    currentUser,
+    dispatch,
+    location,
+    setCommunityLastSeen,
+  } = props;
+
+  useEffect(() => {
+    if (!community.id || !currentUser) return;
+
+    setCommunityLastSeen({
+      id: community.id,
+      lastSeen: new Date(),
+    });
+  }, [community.id, currentUser]);
 
   const [metaInfo, setMetaInfo] = useState(
     generateMetaInfo({
@@ -119,5 +135,6 @@ const Component = (props: SignedInMemberType) => {
 export const SignedIn = compose(
   withCurrentUser,
   withRouter,
+  setCommunityLastSeenMutation,
   connect()
 )(Component);

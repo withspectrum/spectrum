@@ -190,6 +190,16 @@ export const getCommunitiesOnlineMemberCounts = (
     .run();
 };
 
+export const setCommunityLastActive = (id: string, lastActive: Date) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update({
+      lastActive: new Date(lastActive),
+    })
+    .run();
+};
+
 export type CreateCommunityInput = {
   input: {
     name: string,
