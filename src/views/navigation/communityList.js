@@ -9,7 +9,14 @@ import { storeItem } from 'src/helpers/localStorage';
 import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { getAccessibilityActiveState } from './accessibility';
-import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
+import {
+  AvatarGrid,
+  AvatarLink,
+  Avatar,
+  Shortcut,
+  Label,
+  BlackDot,
+} from './style';
 
 const CommunityList = (props: Props) => {
   const { data, history, sidenavIsOpen, setNavigationIsOpen } = props;
@@ -118,7 +125,7 @@ const CommunityList = (props: Props) => {
                 />
                 {new Date(community.lastActive) >
                   new Date(community.communityPermissions.lastSeen) && (
-                  <p>New stuff!</p>
+                  <BlackDot />
                 )}
 
                 <Label>{community.name}</Label>

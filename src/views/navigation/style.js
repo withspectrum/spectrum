@@ -127,6 +127,7 @@ export const AvatarLink = styled(Link)`
   align-items: center;
   justify-content: center;
   padding: 8px 12px 6px;
+  position: relative;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: row;
@@ -199,6 +200,17 @@ export const RedDot = styled.span`
   background: ${theme.warn.alt};
   top: 0;
   right: 0px;
+`;
+
+export const BlackDot = styled.span`
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  border: 3px solid ${theme.bg.default};
+  position: absolute;
+  background: ${theme.brand.default};
+  top: 2px;
+  right: 10px;
 `;
 
 // We make it a real link element because anchor links don’t work properly with React Router.
