@@ -1,11 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import {
-  SecondaryColumn,
-  MEDIA_BREAK,
-  TITLEBAR_HEIGHT,
-} from 'src/components/layout';
+import { SecondaryColumn, MEDIA_BREAK } from 'src/components/layout';
 
 export const View = styled.main`
   grid-area: main;
@@ -15,19 +11,21 @@ export const View = styled.main`
 
 export const ViewContent = styled.div`
   height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    min-height: calc(100vh - 58px);
+  }
 `;
 
 export const MessagesList = styled.div`
-  max-height: 100vh;
-  overflow: hidden;
-  overflow-y: scroll;
   background: ${theme.bg.default};
   border-right: 1px solid ${theme.bg.border};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     min-width: 320px;
     border-right: none;
     max-width: 100%;
@@ -68,7 +66,7 @@ export const ComposeHeader = styled.div`
   border-bottom: 1px solid ${theme.bg.border};
   color: ${theme.brand.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

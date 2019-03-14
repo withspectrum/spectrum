@@ -392,9 +392,6 @@ class ComposerWithData extends React.Component<Props, State> {
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
       .then(({ data }) => {
-        // get the thread id to redirect the user
-        const id = data.publishThread.id;
-
         this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button

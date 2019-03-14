@@ -196,7 +196,7 @@ class MessagesWithData extends React.Component<Props, State> {
     if (isLoading) {
       return (
         <MessagesScrollWrapper>
-          <Loading />
+          <Loading style={{ padding: '64px 0' }} />
         </MessagesScrollWrapper>
       );
     }

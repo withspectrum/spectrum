@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
 import Column from 'src/components/column';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,
@@ -14,7 +15,6 @@ import {
   hexa,
   Truncate,
 } from 'src/components/globals';
-import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ThreadViewContainer = styled.div`
   display: flex;
@@ -90,7 +90,7 @@ export const Input = styled(FlexRow)`
   max-width: 100%;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     z-index: ${zIndex.mobileInput};
   }
 `;
@@ -116,7 +116,7 @@ export const DetailViewWrapper = styled(FlexCol)`
   justify-content: flex-start;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     background-color: ${theme.bg.default};
     background-image: none;
   }
@@ -130,7 +130,7 @@ export const Container = styled(FlexCol)`
   flex: auto;
   overflow-y: scroll;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 16px;
   }
 `;
@@ -356,7 +356,7 @@ export const Location = styled(FlexRow)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -375,7 +375,7 @@ export const ChatWrapper = styled.div`
   flex: none;
   margin-top: 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     overflow-x: hidden;
   }
 `;
@@ -631,7 +631,7 @@ export const ActionBarContainer = styled.div`
   border-right: 0;
   padding: 6px 32px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 0;
     margin-top: 0;
     border-radius: 0;
@@ -660,7 +660,7 @@ export const FollowButton = styled(Button)`
     color: ${theme.text.default};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.currentUser ? 'none' : 'flex')};
   }
 `;
@@ -819,7 +819,7 @@ export const StickyHeaderContainer = styled.div`
 `;
 
 export const Stretch = styled.div`
-  min-height: calc(100vh - 74px);
+  min-height: calc(100vh - 58px);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     /* account for fixed position chat input */

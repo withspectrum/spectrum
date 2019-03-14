@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { SvgWrapper } from '../icons';
 import { Truncate, monoStack, hexa } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Byline = styled.span`
   display: flex;
@@ -152,7 +153,7 @@ export const OuterMessageContainer = styled.div`
         opacity: 1;
       }
     `} &:hover {
-    @media (min-width: 768px) {
+    @media (min-width: ${MEDIA_BREAK}px) {
       background: ${props =>
         props.selected
           ? props.theme.special.wash
@@ -443,7 +444,7 @@ export const EditorInput = styled(EditorWrapper)`
   max-width: 100%;
   word-break: break-all;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
     padding-left: 16px;
   }

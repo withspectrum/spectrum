@@ -1,7 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { zIndex, hexa } from 'src/components/globals';
+import { hexa } from 'src/components/globals';
 import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const Container = styled.div`

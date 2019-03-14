@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import Card from '../card';
-import { FlexRow, FlexCol, Truncate } from '../globals';
+import Card from 'src/components/card';
+import { FlexRow, FlexCol, Truncate } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const StyledCard = styled(Card)`
   padding: 16px;
@@ -140,7 +141,7 @@ export const Location = styled(FlexRow)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

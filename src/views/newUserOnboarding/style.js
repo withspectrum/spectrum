@@ -1,9 +1,9 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
-import { Button } from '../../components/buttons';
-import { Shadow, hexa, zIndex } from '../../components/globals';
+import { Button } from 'src/components/buttons';
+import { Shadow, hexa, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const OnboardingContainer = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ export const OnboardingContent = styled.div`
   align-items: center;
   overflow-x: hidden;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 32px 16px;
   }
 `;
@@ -57,7 +57,7 @@ export const Title = styled.h1`
   letter-spacing: 0.3px;
   margin-bottom: 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 32px;
   }
 `;

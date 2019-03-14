@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import Goop from '../goop';
+import Goop from 'src/components/goop';
 import {
   ClusterOne,
   ClusterTwo,
@@ -10,8 +10,9 @@ import {
   ClusterFour,
   Constellations,
   Empty,
-} from '../illustrations';
-import { FlexCol, hexa } from '../globals';
+} from 'src/components/illustrations';
+import { FlexCol, hexa } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Default = styled(FlexCol)`
   display: flex;
@@ -117,7 +118,7 @@ export const Illustrated = styled(Default)`
   > img {
     opacity: 0.15;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       opacity: 0.025;
     }
   }

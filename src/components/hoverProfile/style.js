@@ -3,6 +3,7 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
 import { Link } from 'react-router-dom';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HoverWrapper = styled.div`
   position: absolute;
@@ -11,7 +12,7 @@ export const HoverWrapper = styled.div`
   width: 256px;
   ${props => props.popperStyle};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
     pointer-events: none;
   }

@@ -10,10 +10,11 @@ import {
   Shadow,
   zIndex,
   Truncate,
-} from '../../components/globals';
-import { HorizontalRule } from '../../components/globals';
-import Card from '../../components/card';
-import { IconButton } from '../../components/buttons';
+} from 'src/components/globals';
+import { HorizontalRule } from 'src/components/globals';
+import Card from 'src/components/card';
+import { IconButton } from 'src/components/buttons';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -35,7 +36,7 @@ export const NotificationCard = styled.div`
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     border-bottom: 1px solid ${props => props.theme.bg.border};
     box-shadow: none;
@@ -290,7 +291,7 @@ export const RequestCard = styled.div`
     font-size: 16px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     border-bottom: 1px solid ${props => props.theme.bg.border};
     box-shadow: none;

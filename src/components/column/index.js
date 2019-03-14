@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
 import styled, { css } from 'styled-components';
-import { FlexCol } from '../globals';
+import { FlexCol } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const BaseColumn = styled(FlexCol)`
   margin: 32px 16px;
   align-items: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 0;
     max-width: 100%;
   }
@@ -16,7 +16,7 @@ const BaseColumn = styled(FlexCol)`
   ${p =>
     p.hideOnMobile &&
     css`
-      @media screen and (max-width: 768px) {
+      @media screen and (max-width: ${MEDIA_BREAK}px) {
         display: none;
       }
     `};
@@ -27,7 +27,7 @@ const PrimaryColumn = styled(BaseColumn)`
   flex: 2 1 60%;
   max-width: 640px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
     max-width: 100%;
     margin-top: 2px;
@@ -40,7 +40,7 @@ const SecondaryColumn = styled(BaseColumn)`
   flex: 1 1 30%;
   max-width: 320px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: none;
     align-self: stretch;
     max-width: 100%;
@@ -51,7 +51,7 @@ const OnlyColumn = styled(PrimaryColumn)`
   max-width: 840px;
   flex: 0 0 75%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: 1;
     min-width: 100%;
     width: 100%;

@@ -3,6 +3,7 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   Truncate,
   FlexCol,
@@ -258,7 +259,7 @@ export const ComposerInput = styled.input`
   position: relative;
   z-index: ${zIndex.search};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 20px 16px;
   }
 `;
@@ -285,7 +286,7 @@ export const SearchResultsDropdown = styled.ul`
   overflow-y: auto;
   z-index: ${zIndex.dropDown};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
     left: 0;
     border-radius: 0 0 8px 8px;

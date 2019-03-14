@@ -10,10 +10,11 @@ import {
   zIndex,
   Shadow,
   hexa,
-} from '../globals';
-import { Button, OutlineButton, IconButton } from '../buttons';
-import { ReputationWrapper } from '../reputation/style';
-import Card from '../card';
+} from 'src/components/globals';
+import { Button, OutlineButton, IconButton } from 'src/components/buttons';
+import { ReputationWrapper } from 'src/components/reputation/style';
+import Card from 'src/components/card';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -79,7 +80,7 @@ export const FullProfile = styled.div`
   margin-top: -64px;
   background-color: ${theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: -48px;
   }
 `;

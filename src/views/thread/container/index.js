@@ -15,7 +15,6 @@ import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icons';
 import { PrimaryButton } from 'src/views/community/components/button';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -29,7 +28,6 @@ import {
 import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import { RouteModalContext } from 'src/routes';
 import MessagesSubscriber from '../components/messagesSubscriber';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';

@@ -1,8 +1,9 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import Card from '../../components/card';
-import { Transition, zIndex, Truncate } from '../../components/globals';
+import Card from 'src/components/card';
+import { Transition, zIndex, Truncate } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Grid = styled.main`
   display: grid;
@@ -23,7 +24,7 @@ export const Grid = styled.main`
     grid-template-areas: 'cover cover' 'meta content';
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-rows: 80px auto 1fr;
     grid-template-columns: 100%;
     grid-column-gap: 0;
@@ -55,7 +56,7 @@ export const SearchContainer = styled(Card)`
   display: flex;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     pointer-events: all;
     margin-bottom: 0;
@@ -104,7 +105,7 @@ export const CommunityContext = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: 16px;
   }
 `;
@@ -126,7 +127,7 @@ export const ChannelName = styled.h3`
   margin-left: 32px;
   color: ${theme.text.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 0;
   }
 `;
@@ -138,7 +139,7 @@ export const ChannelDescription = styled.h4`
   margin-bottom: 16px;
   color: ${theme.text.alt};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 0;
   }
 `;
@@ -146,7 +147,7 @@ export const ChannelDescription = styled.h4`
 export const MetadataContainer = styled.div`
   margin-left: 32px;
 
-  @media (max-width: 768px;) {
+  @media (max-width: ${MEDIA_BREAK}px;) {
     margin-left: 8px;
   }
 `;

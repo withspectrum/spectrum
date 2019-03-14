@@ -2,6 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const EmailListItem = styled.div`
   padding: 8px 0 16px;
@@ -27,7 +28,7 @@ export const View = styled.div`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -122,7 +123,7 @@ export const Location = styled(FlexRow)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -145,7 +146,7 @@ export const LogoutWrapper = styled.div`
     width: 100%;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: block;
   }
 `;

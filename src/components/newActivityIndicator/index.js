@@ -1,9 +1,11 @@
+// @flow
 import React, { Component } from 'react';
 import theme from 'shared/theme';
 import { connect } from 'react-redux';
-import { clearActivityIndicator } from '../../actions/newActivityIndicator';
+import { clearActivityIndicator } from 'src/actions/newActivityIndicator';
 import styled from 'styled-components';
-import { Gradient } from '../globals';
+import { Gradient } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const Pill = styled.div`
   padding: ${props => (props.refetching ? '8px' : '8px 16px')};
@@ -39,7 +41,7 @@ const Pill = styled.div`
     transition: transform 0.1s ease-in-out;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     transform: translateX(-50%) translateY(${props =>
       props.active ? '60px' : '40px'});
 

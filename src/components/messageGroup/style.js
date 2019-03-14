@@ -2,6 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const MessagesWrapper = styled.div`
   flex: 1 0 auto;
@@ -10,7 +11,7 @@ export const MessagesWrapper = styled.div`
   flex-direction: column;
   max-width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-bottom: 16px;
   }
 `;

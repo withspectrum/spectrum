@@ -1,13 +1,14 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { OutlineButton } from '../buttons';
+import { OutlineButton } from 'src/components/buttons';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const FetchMoreButton = styled(OutlineButton)`
   width: 100%;
   padding: 16px 0;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 32px 0;
     border-radius: 0;
     background: #fff;

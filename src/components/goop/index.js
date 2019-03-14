@@ -1,6 +1,8 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 /* eslint no-eval: 0 */
 
@@ -37,7 +39,7 @@ export const SvgWrapper = styled.div`
   color: ${props => eval(`props.theme.${props.color}`)};
   pointer-events: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 150%;
     left: -25%;
     right: -25%;

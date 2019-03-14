@@ -1,7 +1,8 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { TextButton } from '../../components/buttons';
+import { TextButton } from 'src/components/buttons';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Heading = styled.h1`
   margin-left: 16px;
@@ -151,7 +152,7 @@ export const SearchFilter = styled(Filter)`
     background: none;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

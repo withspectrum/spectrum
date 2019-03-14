@@ -1,14 +1,15 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled.div`
   display: grid;
   grid-gap: 16px;
   align-items: flex-end;
   padding: 16px 0;
-  @media (min-width: 768px) {
+  @media (min-width: ${MEDIA_BREAK}px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;

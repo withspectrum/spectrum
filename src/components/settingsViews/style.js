@@ -1,6 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const View = styled.main`
   display: flex;
@@ -8,7 +9,7 @@ export const View = styled.main`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -21,7 +22,7 @@ export const SectionsContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 8px 0;
   }
 `;
@@ -33,7 +34,7 @@ export const Column = styled.div`
   flex: 1 0 ${props => (props.fullWidth ? '100%' : '33%')};
   max-width: ${props => (props.fullWidth ? '1200px' : '600px')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: 1 0 100%;
     padding: 0;
     max-width: 100%;
@@ -52,7 +53,7 @@ export const SectionCard = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
   }
 `;
@@ -122,7 +123,7 @@ export const StyledHeader = styled.div`
   align-items: center;
   flex: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -135,7 +136,7 @@ export const StyledSubnav = styled.div`
   width: 100%;
   flex: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0 16px;
     display: block;
     justify-content: center;

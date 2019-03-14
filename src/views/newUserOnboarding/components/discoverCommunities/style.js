@@ -1,13 +1,8 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
-import {
-  Gradient,
-  Truncate,
-  Transition,
-  zIndex,
-} from '../../../../components/globals';
+import { Gradient, Truncate, Transition, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Row = styled.div`
   width: 100%;
@@ -17,7 +12,7 @@ export const Row = styled.div`
   justify-content: center;
   padding: 8px 16px 0 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 8px 0 0;
   }
 `;

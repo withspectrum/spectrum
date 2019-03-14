@@ -1,16 +1,10 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
-import {
-  FlexCol,
-  FlexRow,
-  Shadow,
-  hexa,
-  zIndex,
-} from '../../../../components/globals';
-import { CommunityAvatar } from '../../../../components/avatar';
-import Icon from '../../../../components/icons';
+import { FlexCol, FlexRow, Shadow, hexa, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
+import { CommunityAvatar } from 'src/components/avatar';
+import Icon from 'src/components/icons';
 
 export const SearchWrapper = styled.div`
   position: relative;
@@ -21,7 +15,7 @@ export const SearchWrapper = styled.div`
   width: 100%;
   max-width: 640px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 32px 32px 16px;
   }
 `;
@@ -41,7 +35,7 @@ export const SearchInput = styled.input`
   position: relative;
   z-index: ${zIndex.search};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
   }
 `;
@@ -70,7 +64,7 @@ export const SearchResultsDropdown = styled.ul`
   z-index: ${zIndex.search};
   background: ${theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0 0 8px 8px;
   }
 `;

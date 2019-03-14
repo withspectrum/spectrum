@@ -1,9 +1,10 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { keyframes } from 'styled-components';
-import { Card } from '../card';
-import { hexa, FlexCol, zIndex } from '../globals';
+import { Card } from 'src/components/card';
+import { hexa, FlexCol, zIndex } from 'src/components/globals';
 import { Link } from 'react-router-dom';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ShimmerList = styled(Card)`
   padding: 16px;
@@ -27,7 +28,7 @@ export const ShimmerThreadDetail = styled(FlexCol)`
   padding: 36px 32px;
   display: inline-block;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 16px;
   }
 
@@ -119,7 +120,7 @@ export const ShimmerComposer = styled(Card)`
     min-height: 32px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -135,7 +136,7 @@ export const ShimmerInboxComposer = styled.div`
     min-height: 32px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -151,7 +152,7 @@ export const ShimmerSelect = styled.div`
   background: ${theme.bg.default};
   border: 2px solid ${theme.bg.border};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: calc(50% - 12px);
   }
 
@@ -256,7 +257,7 @@ export const LoadingNavbarContainer = styled.nav`
     position: relative;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     bottom: 0;
     top: auto;
     box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.15);
@@ -267,7 +268,7 @@ export const LoadingNavbarContainer = styled.nav`
 export const LogoLink = styled(Link)`
   margin-right: 32px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -299,7 +300,7 @@ export const GridProfile = styled.div`
     grid-template-areas: 'cover cover' 'meta content';
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-rows: 80px auto 1fr;
     grid-template-columns: 100%;
     grid-column-gap: 0;

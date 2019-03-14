@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import MentionsInput from '../mentionsInput';
 import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexRow,
   hexa,
@@ -37,7 +38,7 @@ export const ChatInputWrapper = styled.div`
   border-top: 1px solid ${theme.bg.border};
   box-shadow: -1px 0 0 ${theme.bg.border}, 1px 0 0 ${theme.bg.border};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
@@ -91,7 +92,7 @@ export const InputWrapper = styled.div`
     transition: border-color 0.2s ease-in;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-left: 16px;
   }
 `;
@@ -109,7 +110,7 @@ export const Input = styled(MentionsInput).attrs({
   background: ${props =>
     props.networkDisabled ? 'none' : props.theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
   }
 
@@ -208,7 +209,7 @@ export const EmojiToggle = styled(IconButton)`
   background-color: transparent;
   top: calc(50% - 16px);
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

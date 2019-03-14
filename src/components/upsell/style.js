@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexRow,
   FlexCol,
@@ -210,7 +210,7 @@ export const SigninLink = styled.span`
 
 export const FullscreenContent = styled.div`
   width: 100%;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -242,7 +242,7 @@ export const SigninButtonsContainer = styled.div`
   padding-top: 48px;
   max-width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 24px;
   }
 `;
@@ -253,7 +253,7 @@ export const Col = styled.div`
   flex-wrap: wrap;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     align-items: center;
   }
@@ -306,7 +306,7 @@ export const SigninButton = styled.a`
     fill: currentColor !important;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 16px 0;
 
     ${props =>
@@ -399,7 +399,7 @@ export const JoinChannelContainer = styled.div`
   background: ${theme.bg.wash};
   position: relative;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     button {
       width: 100%;
     }

@@ -40,6 +40,7 @@ import {
   Content,
 } from './style';
 import { track, events } from 'src/helpers/analytics';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 type Props = Object;
 
@@ -60,7 +61,7 @@ export const Overview = (props: Props) => {
     align-items: flex-start;
     z-index: 2;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-top: 0;
       margin-bottom: 16px;
       text-align: center;
@@ -73,7 +74,7 @@ export const Overview = (props: Props) => {
     font-weight: 500;
     max-width: 580px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       text-align: center;
     }
   `;
@@ -82,7 +83,7 @@ export const Overview = (props: Props) => {
     margin-bottom: 16px;
     font-size: 40px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       font-size: 24px;
     }
   `;
@@ -92,7 +93,7 @@ export const Overview = (props: Props) => {
     align-items: flex-start;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       align-items: center;
     }
   `;
@@ -102,7 +103,7 @@ export const Overview = (props: Props) => {
     font-size: 16px;
     border: 2px solid ${theme.text.reverse};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       margin-top: 16px;
     }
@@ -141,7 +142,7 @@ export const Overview = (props: Props) => {
       display: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: none;
     }
   `;
@@ -194,7 +195,7 @@ export const Centralized = (props: Props) => {
   const Text = styled(FlexCol)`
     margin: 40px 16px 64px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-top: 20px;
       margin-bottom: 44px;
     }
@@ -218,14 +219,14 @@ export const Centralized = (props: Props) => {
   `;
 
   const Actions = styled.div`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: flex;
       justify-content: center;
     }
   `;
 
   const ThisTagline = styled(Tagline)`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-bottom: 0;
     }
   `;
@@ -319,7 +320,7 @@ export const CommunitySearch = (props: Props) => {
     text-align: center;
     max-width: 640px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       text-align: left;
     }
   `;
@@ -342,7 +343,7 @@ export const Chat = (props: Props) => {
     overflow: hidden;
     margin: 40px 16px 80px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-bottom: 40px;
     }
   `;
@@ -365,14 +366,14 @@ export const Chat = (props: Props) => {
   `;
 
   const Actions = styled.div`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: flex;
       justify-content: center;
     }
   `;
 
   const ThisTagline = styled(Tagline)`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-bottom: 0;
     }
   `;
@@ -513,7 +514,7 @@ export const Yours = (props: Props) => {
     font-size: 16px;
     border: 2px solid ${theme.text.reverse};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       margin-top: 16px;
     }
@@ -537,7 +538,7 @@ export const Yours = (props: Props) => {
       display: inline-block;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       justify-content: center;
     }
   `;
@@ -552,7 +553,7 @@ export const Yours = (props: Props) => {
     flex-wrap: wrap;
     margin-left: -32px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: none;
     }
   `;

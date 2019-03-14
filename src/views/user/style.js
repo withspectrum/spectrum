@@ -1,9 +1,10 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { FlexRow, FlexCol } from '../../components/globals';
-import Card from '../../components/card';
-import { Transition, zIndex } from '../../components/globals';
+import { FlexRow, FlexCol } from 'src/components/globals';
+import Card from 'src/components/card';
+import { Transition, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Row = styled(FlexRow)`
   padding: 8px 16px;
@@ -52,7 +53,7 @@ export const SearchContainer = styled(Card)`
   display: flex;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     pointer-events: all;
     margin-bottom: 0;
@@ -97,7 +98,7 @@ export const Grid = styled.main`
     grid-template-areas: 'cover cover' 'meta content';
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-rows: 80px auto 1fr;
     grid-template-columns: 100%;
     grid-column-gap: 0;
@@ -120,13 +121,13 @@ export const Meta = styled(Column)`
     margin-left: 32px;
     width: calc(100% - 32px);
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       width: 100%;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0 16px;
 
     > div {
@@ -142,7 +143,7 @@ export const MetaMemberships = styled.div`
     display: none;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

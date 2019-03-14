@@ -1,6 +1,8 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
-import { FlexRow } from '../globals';
+import { FlexRow } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const StyledGrid = styled(FlexRow)`
   flex-wrap: wrap;
@@ -17,12 +19,12 @@ const StyledGrid = styled(FlexRow)`
       margin-top: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       flex: none;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: flex-start;
