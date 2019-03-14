@@ -46,8 +46,18 @@ export const ViewGrid = styled.main.attrs({
 export const SingleColumnGrid = styled.div`
   display: grid;
   justify-self: center;
-  grid-template-columns: 1fr;
-  max-width: ${MAX_WIDTH}px;
+  grid-template-columns: minmax(${MAX_WIDTH}px, 1fr);
+  background: ${theme.bg.default};
+  max-width: calc(${MAX_WIDTH}px + 2px); /* left/right border */
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    width: 100%;
+    max-width: ${MEDIA_BREAK}px;
+    border-left: 0;
+    border-right: 0;
+  }
 `;
 
 /*

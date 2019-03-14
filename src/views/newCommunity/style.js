@@ -12,8 +12,6 @@ export const Container = styled(Card)`
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
   background-position: ${props =>
     props.repeat ? 'center top' : 'center center'};
-  border-left: 1px solid ${theme.bg.border};
-  border-right: 1px solid ${theme.bg.border};
   width: 100%;
   max-width: ${MEDIA_BREAK}px;
   height: 100%;

@@ -14,7 +14,6 @@ import {
 import { HorizontalRule } from 'src/components/globals';
 import Card from 'src/components/card';
 import { IconButton } from 'src/components/buttons';
-import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -22,25 +21,14 @@ export const HzRule = styled(HorizontalRule)`
 
 export const NotificationCard = styled.div`
   padding: 16px;
+  width: 100%;
   padding-bottom: 24px;
   overflow: hidden;
-  transition: ${Transition.hover.off};
-  border-radius: 8px;
-  background: ${props => props.theme.bg.default};
-  margin-top: 8px;
-  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
   position: relative;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
 
   &:hover {
-    transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0;
-    border-bottom: 1px solid ${props => props.theme.bg.border};
-    box-shadow: none;
-    margin-top: 0;
+    background: ${theme.bg.wash};
   }
 `;
 
@@ -281,20 +269,16 @@ export const RequestCard = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 16px 16px 24px;
-  border-radius: 8px;
-  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  padding: 16px;
   background: ${props => props.theme.bg.default};
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid ${theme.bg.border};
+  z-index: 10;
 
   > p {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 16px;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    border-radius: 0;
-    border-bottom: 1px solid ${props => props.theme.bg.border};
-    box-shadow: none;
   }
 `;
 
