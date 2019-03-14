@@ -239,6 +239,7 @@ const ChatInput = (props: Props) => {
     // Clear the chat input now that we're sending a message for sure
     onChange({ target: { value: '' } });
     removeQuotedMessage();
+    inputRef && inputRef.focus();
   };
 
   // $FlowFixMe
@@ -338,7 +339,7 @@ const ChatInput = (props: Props) => {
                 onBlur={props.onBlur}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
-                autoFocus={true}
+                autoFocus={false}
                 inputRef={node => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
