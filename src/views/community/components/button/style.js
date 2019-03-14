@@ -112,7 +112,7 @@ export const StyledPrimaryOutlineButton = styled(StyledOutlineButton)`
 `;
 
 export const StyledSmallOutlineButton = styled(StyledOutlineButton)`
-  padding: 5px 12px 6px 12px;
+  padding: 6px 12px;
   font-size: 15px;
 `;
 
