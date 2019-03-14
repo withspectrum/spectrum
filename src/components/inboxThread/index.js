@@ -52,12 +52,6 @@ class InboxThread extends React.Component<Props> {
       location,
     } = this.props;
 
-    const isInbox =
-      viewContext &&
-      (viewContext === 'inbox' ||
-        viewContext === 'communityInbox' ||
-        viewContext === 'channelInbox');
-
     const newMessagesSinceLastViewed =
       !active &&
       thread.currentUserLastSeen &&
@@ -89,26 +83,9 @@ class InboxThread extends React.Component<Props> {
           active={active}
         >
           <InboxLinkWrapper
-            to={
-              isInbox
-                ? {
-                    pathname: location.pathname,
-                    search: `?t=${thread.id}`,
-                  }
-                : {
-                    pathname: getThreadLink(thread),
-                    state: { modal: true },
-                  }
-            }
-            onClick={evt => {
-              const isMobile = window.innerWidth < 768;
-              if (isMobile && isInbox) {
-                evt.preventDefault();
-                this.props.history.push({
-                  pathname: getThreadLink(thread),
-                  state: { modal: true },
-                });
-              }
+            to={{
+              pathname: getThreadLink(thread),
+              state: { modal: false },
             }}
           />
 
@@ -145,9 +122,7 @@ class InboxThread extends React.Component<Props> {
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
-              {!isInbox && (
-                <ThreadSnippet active={active}>{snippet}</ThreadSnippet>
-              )}
+              <ThreadSnippet active={active}>{snippet}</ThreadSnippet>
 
               <ErrorBoundary>
                 <ThreadActivity

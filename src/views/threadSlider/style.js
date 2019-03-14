@@ -45,7 +45,6 @@ export const ThreadContainerBackground = styled.div`
 
 export const ThreadContainer = styled.div`
   display: flex;
-  min-height: 100vh;
   width: 100%;
   max-width: ${MAX_WIDTH + 32}px;
   z-index: ${zIndex.slider + 4};

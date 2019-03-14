@@ -20,7 +20,6 @@ export const ThreadViewContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  max-height: 100%;
   max-width: 1024px;
   background-color: ${theme.bg.wash};
   margin: ${props =>
@@ -821,6 +820,11 @@ export const StickyHeaderContainer = styled.div`
 
 export const Stretch = styled.div`
   min-height: calc(100vh - 74px);
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* account for fixed position chat input */
+    padding-bottom: 72px;
+  }
 `;
 
 export const LockedWrapper = styled.div`

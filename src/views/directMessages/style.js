@@ -1,7 +1,11 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import { SecondaryColumn, MEDIA_BREAK } from 'src/components/layout';
+import {
+  SecondaryColumn,
+  MEDIA_BREAK,
+  TITLEBAR_HEIGHT,
+} from 'src/components/layout';
 
 export const View = styled.main`
   grid-area: main;
@@ -10,7 +14,7 @@ export const View = styled.main`
 `;
 
 export const ViewContent = styled.div`
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -37,20 +41,9 @@ export const MessagesContainer = styled.div`
   flex-direction: column;
   background: ${theme.bg.default};
 
-  @media (min-width: 768px) {
-    ${props =>
-      props.hideOnDesktop &&
-      css`
-        display: none;
-      `};
-  }
-
-  @media (max-width: 768px) {
-    ${props =>
-      props.hideOnMobile &&
-      css`
-        display: none;
-      `};
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* account for fixed bottom chatinput */
+    padding-bottom: 72px;
   }
 `;
 

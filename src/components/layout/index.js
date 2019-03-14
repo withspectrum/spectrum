@@ -163,5 +163,7 @@ export const ChatInputWrapper = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     width: 100vw;
+    position: fixed;
+    bottom: 0;
   }
 `;

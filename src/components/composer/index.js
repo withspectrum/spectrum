@@ -59,7 +59,6 @@ type Props = {
   publishThread: Function,
   history: History,
   location: Location,
-  isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
   isEditing: boolean,
@@ -409,9 +408,7 @@ class ComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );
-        if (this.props.isInbox) {
-          this.props.history.replace(`/?t=${id}`);
-        } else if (this.props.location.pathname === '/new/thread') {
+        if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(getThreadLink(data.publishThread));
         } else {
           this.props.history.push(getThreadLink(data.publishThread));
