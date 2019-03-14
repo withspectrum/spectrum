@@ -8,7 +8,7 @@ export const Container = styled.div`
   grid-area: main;
   display: flex;
   justify-content: center;
-  z-index: ${zIndex.slider + 1};
+  z-index: 9995;
   position: sticky;
   top: 0;
   align-items: center;
@@ -22,7 +22,7 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: ${zIndex.slider + 2};
+  z-index: 9996;
 `;
 
 export const ComposerContainer = styled.div`
@@ -34,7 +34,7 @@ export const ComposerContainer = styled.div`
   max-width: 500px;
   border-radius: 4px;
   background: ${theme.bg.wash};
-  z-index: ${zIndex.slider + 3};
+  z-index: 9997;
   box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
   position: relative;
   overflow: hidden;
@@ -49,7 +49,7 @@ export const ComposerContainer = styled.div`
 
 export const CloseButton = styled.span`
   position: fixed;
-  bottom: 24px;
+  top: 24px;
   right: 24px;
   width: 60px;
   height: 60px;

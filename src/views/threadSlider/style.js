@@ -61,7 +61,7 @@ export const ThreadContainer = styled.div`
 
 export const CloseButton = styled.span`
   position: fixed;
-  bottom: 24px;
+  top: 24px;
   right: 24px;
   width: 60px;
   height: 60px;
