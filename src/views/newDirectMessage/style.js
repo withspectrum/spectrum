@@ -59,7 +59,7 @@ export const CloseButton = styled.span`
   justify-content: center;
   background: ${theme.bg.reverse};
   color: ${theme.text.reverse};
-  z-index: ${zIndex.slider + 4};
+  z-index: 9997;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
