@@ -14,7 +14,8 @@ import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { UserAvatar } from 'src/components/avatar';
-import { MessagesContainer, ViewContent, ChatInputWrapper } from '../style';
+import { MessagesContainer, ViewContent } from '../style';
+import { ChatInputWrapper } from 'src/components/layout';
 import { Loading } from 'src/components/loading';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';

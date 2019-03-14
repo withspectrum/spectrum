@@ -10,12 +10,8 @@ import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from 'src/components/chatInput';
 import { NullState } from 'src/components/upsell';
-import {
-  MessagesContainer,
-  ViewContent,
-  NoThreads,
-  ChatInputWrapper,
-} from '../style';
+import { MessagesContainer, ViewContent, NoThreads } from '../style';
+import { ChatInputWrapper } from 'src/components/layout';
 import { getDirectMessageThreadQuery } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import { debounce } from 'src/helpers/utils';

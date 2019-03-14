@@ -70,15 +70,6 @@ export const CloseButton = styled.span`
   }
 `;
 
-export const ChatInputWrapper = styled.div`
-  bottom: 0;
-  width: calc(100% + 2px); /* hide left and right borders */
-  position: sticky;
-  left: -1px;
-  border-radius: 0 0 4px 4px;
-  z-index: 100;
-`;
-
 export const MessagesScrollWrapper = styled.div`
   /* height of container minus titlebar minus chat input */
   height: 100%;

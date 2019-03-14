@@ -13,8 +13,9 @@ import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
+import { ChatInputWrapper } from 'src/components/layout';
 import { FeedsContainer, SidebarSection } from '../style';
-import { Stretch, ChatInputWrapper } from '../../thread/style';
+import { Stretch } from '../../thread/style';
 
 export const CommunityFeeds = (props: CommunityFeedsType) => {
   const { community } = props;

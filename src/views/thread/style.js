@@ -108,15 +108,6 @@ export const Detail = styled(Column)`
     `}
 `;
 
-export const ChatInputWrapper = styled.div`
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  grid-area: primary;
-  z-index: 3;
-`;
-
 export const DetailViewWrapper = styled(FlexCol)`
   background-image: ${({ theme }) =>
     `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${

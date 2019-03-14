@@ -36,7 +36,8 @@ import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
 import DesktopAppUpsell from '../components/desktopAppUpsell';
-import { Stretch, ChatInputWrapper, LockedText } from '../style';
+import { ChatInputWrapper } from 'src/components/layout';
+import { Stretch, LockedText } from '../style';
 
 const ThreadContainer = (props: Props) => {
   const { data, isLoading, client, currentUser } = props;

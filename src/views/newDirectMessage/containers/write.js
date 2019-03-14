@@ -12,7 +12,7 @@ import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { ErrorBoundary } from 'src/components/error';
 import Icon from 'src/components/icons';
 import MessagesCheck from '../components/messagesCheck';
-import { ChatInputWrapper } from '../style';
+import { ChatInputWrapper } from 'src/components/layout';
 import MessagesSubscriber from '../components/messagesSubscriber';
 
 const Write = (props: Props) => {

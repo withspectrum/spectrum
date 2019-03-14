@@ -80,15 +80,6 @@ export const ComposeHeader = styled.div`
   }
 `;
 
-export const ChatInputWrapper = styled.div`
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  grid-area: primary;
-  z-index: 3;
-`;
-
 export const StyledSecondaryColumn = styled(SecondaryColumn)`
   border-left: 1px solid ${theme.bg.border};
   border-right: 1px solid ${theme.bg.border};
