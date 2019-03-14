@@ -148,6 +148,7 @@ export const Dropdowns = styled(FlexRow)`
   z-index: 9999;
   border-bottom: 1px solid ${theme.bg.border};
   padding: 8px;
+  padding-left: 12px;
   font-size: 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
