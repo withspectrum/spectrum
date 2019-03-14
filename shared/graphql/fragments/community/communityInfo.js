@@ -12,6 +12,7 @@ export type CommunityInfoType = {
   coverPhoto: string,
   pinnedThreadId: ?string,
   watercoolerId: ?string,
+  lastActive?: Date,
   isPrivate: boolean,
   communityPermissions: {
     isMember: boolean,
@@ -42,6 +43,7 @@ export default gql`
     watercoolerId
     isPrivate
     watercoolerId
+    lastActive
     communityPermissions {
       isMember
       isBlocked
