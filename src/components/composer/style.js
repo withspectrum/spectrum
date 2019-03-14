@@ -70,7 +70,7 @@ export const Overlay = styled.div`
 export const Container = styled(FlexCol)`
   display: flex;
   height: 100%;
-  max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+  max-height: 100vh;
   width: 100%;
   max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
