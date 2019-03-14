@@ -116,6 +116,10 @@ const CommunityList = (props: Props) => {
                   src={community.profilePhoto}
                   size={sidenavIsOpen ? 32 : 36}
                 />
+                {new Date(community.lastActive) >
+                  new Date(community.communityPermissions.lastSeen) && (
+                  <p>New stuff!</p>
+                )}
 
                 <Label>{community.name}</Label>
 
