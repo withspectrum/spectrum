@@ -68,7 +68,7 @@ export const DeleteCoverButton = styled.button`
   height: 24px;
   width: 24px;
   cursor: pointer;
-  z-index: 50;
+  z-index: 8;
   &:hover {
     background-color: ${theme.warn.alt};
   }

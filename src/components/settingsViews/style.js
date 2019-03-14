@@ -199,7 +199,6 @@ export const EditDropdownContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 16px;
 `;
 
 export const Dropdown = styled.div`
@@ -209,7 +208,8 @@ export const Dropdown = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  background: ${theme.bg.default};
   width: 320px;
   overflow: hidden;
 `;
@@ -226,6 +226,7 @@ export const DropdownSection = styled.div`
   padding: 12px 8px;
   background: ${theme.bg.default};
   display: flex;
+  flex: 1 0 auto;
   align-items: center;
   justify-content: flex-start;
   border-bottom: 1px solid ${theme.bg.border};

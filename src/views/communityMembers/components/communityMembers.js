@@ -138,7 +138,7 @@ class CommunityMembers extends React.Component<Props, State> {
     const { user, ...permissions } = communityMember;
     return (
       <React.Fragment>
-        <Row>
+        <Row style={{ position: 'relative', alignItems: 'center' }}>
           <UserListItem
             userObject={user}
             key={user.id}
