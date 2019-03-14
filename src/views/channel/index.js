@@ -24,7 +24,9 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ChannelProfileCard } from 'src/components/entities';
-import { MobileChannelTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
+import { MobileChannelAction } from 'src/components/titlebar/actions';
+import { CommunityAvatar } from 'src/components/avatar';
 import {
   PrimaryButton,
   OutlineButton,
@@ -84,6 +86,25 @@ class ChannelView extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
+    const { dispatch } = this.props;
+
+    if (this.props.data.channel) {
+      const { channel } = this.props.data;
+      dispatch(
+        setTitlebarProps({
+          title: `# ${this.props.data.channel.name}`,
+          titleIcon: (
+            <CommunityAvatar
+              isClickable={false}
+              community={channel.community}
+              size={24}
+            />
+          ),
+          rightAction: <MobileChannelAction channel={channel} />,
+        })
+      );
+    }
+
     if (
       (!prevProps.data.channel && this.props.data.channel) ||
       (prevProps.data.channel &&
@@ -346,7 +367,6 @@ class ChannelView extends React.Component<Props, State> {
             description={description}
             image={community.profilePhoto}
           />
-          <MobileChannelTitlebar channel={channel} />
 
           <ViewGrid>
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
@@ -438,7 +458,7 @@ class ChannelView extends React.Component<Props, State> {
       return <LoadingView />;
     }
 
-    return <ErrorView titlebarTitle={'Channel'} />;
+    return <ErrorView />;
   }
 }
 

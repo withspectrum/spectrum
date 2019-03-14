@@ -65,7 +65,7 @@ class CommunityMembersSettings extends React.Component<Props> {
       );
     }
 
-    return <ErrorView titlebarTitle={'Settings'} />;
+    return <ErrorView />;
   }
 }
 

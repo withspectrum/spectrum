@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
 import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
-import { MAX_WIDTH, MEDIA_BREAK } from 'src/components/layout';
+import { MAX_WIDTH, MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;
@@ -27,7 +27,7 @@ export const Wrapper = styled.div`
   grid-area: main;
   display: flex;
   justify-content: center;
-  z-index: ${zIndex.slider + 1};
+  z-index: 9995;
   position: sticky;
   top: 0;
 `;
@@ -66,21 +66,23 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: ${zIndex.slider + 2};
+  z-index: 9998;
 `;
 
 export const Container = styled(FlexCol)`
   display: flex;
-  height: 100vh;
+  height: 100%;
+  max-height: 100vh;
   width: 100%;
   position: fixed;
   max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
-  z-index: ${zIndex.slider + 3};
+  z-index: 9998;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     padding: 0;
     box-shadow: 0;
   }

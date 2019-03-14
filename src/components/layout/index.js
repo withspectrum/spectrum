@@ -1,9 +1,7 @@
 // @flow
-import React from 'react';
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
-import { RouteModalContext } from 'src/routes';
 
 export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
 export const PRIMARY_COLUMN_WIDTH = 600;
@@ -21,20 +19,20 @@ export const MEDIA_BREAK =
   do not remove this className.
   see `src/routes.js` for an explanation of what's going on here
 */
-const StyledViewGrid = styled.main.attrs({
+export const ViewGrid = styled.main.attrs({
   id: 'main',
   className: 'view-grid',
 })`
   display: grid;
   grid-area: main;
-  overflow: ${props => (props.hasModal ? 'hidden' : 'visible')};
-`;
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
 
-export const ViewGrid = (props: Props) => (
-  <RouteModalContext.Consumer>
-    {({ hasModal }) => <StyledViewGrid hasModal={hasModal} {...props} />}
-  </RouteModalContext.Consumer>
-);
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+  }
+`;
 
 /*
 ┌──┬────────┬──┐

@@ -70,7 +70,7 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.directMessageThread.messageConnection.edges.length <
         curr.data.directMessageThread.messageConnection.edges.length
     ) {
-      const elem = document.getElementById('app-scroll-boundary');
+      const elem = document.getElementById('main');
       if (!elem) return null;
 
       // If we are near the bottom when new messages come in, stick to the bottom
@@ -106,7 +106,7 @@ class MessagesWithData extends React.Component<Props, State> {
     const { data, setLastSeen } = this.props;
 
     if (snapshot) {
-      const elem = document.getElementById('app-scroll-boundary');
+      const elem = document.getElementById('main');
       if (elem) {
         switch (snapshot.type) {
           case 'bottom': {

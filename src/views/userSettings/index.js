@@ -16,7 +16,7 @@ import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   data: {
@@ -30,6 +30,12 @@ type Props = {
 class UserSettings extends React.Component<Props> {
   componentDidMount() {
     track(events.USER_SETTINGS_VIEWED);
+    const { dispatch } = this.props;
+    return dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
   }
 
   render() {
@@ -64,11 +70,6 @@ class UserSettings extends React.Component<Props> {
       return (
         <React.Fragment>
           <Head title={`Settings for ${user.name}`} />
-          <MobileTitlebar
-            title={'Settings'}
-            menuAction={'view-back'}
-            previousHistoryBackFallback={`/users/${user.username}`}
-          />
           <ViewGrid>
             <View data-cy="user-settings">
               <Header
@@ -86,7 +87,7 @@ class UserSettings extends React.Component<Props> {
       );
     }
 
-    return <ErrorView titlebarTitle={'Settings'} />;
+    return <ErrorView />;
   }
 }
 

@@ -4,13 +4,13 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import createDirectMessageThreadMutation from 'shared/graphql/mutations/directMessageThread/createDirectMessageThread';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import ChatInput from 'src/components/chatInput';
-import { MobileTitlebar, DesktopTitlebar } from 'src/components/titlebar';
+import { DesktopTitlebar } from 'src/components/titlebar';
 import { UserAvatar } from 'src/components/avatar';
 import { SmallOutlineButton } from 'src/views/community/components/button';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { ErrorBoundary } from 'src/components/error';
-import Icon from 'src/components/icons';
 import MessagesCheck from '../components/messagesCheck';
 import { ChatInputWrapper } from 'src/components/layout';
 import MessagesSubscriber from '../components/messagesSubscriber';
@@ -30,14 +30,20 @@ const Write = (props: Props) => {
     usersForMessage.length > 1
       ? usersForMessage.map(user => user && user.name).join(', ')
       : usersForMessage[0].name;
-  const titlebarIcon =
+  const titleIcon =
     usersForMessage.length === 1 ? (
       <UserAvatar user={usersForMessage[0]} size={24} />
     ) : null;
 
   const toSearch = () => setActiveStep('search');
-
   useEffect(() => {
+    dispatch(
+      setTitlebarProps({
+        title: titlebarTitle,
+        titleIcon: titleIcon,
+        leftAction: 'view-back',
+      })
+    );
     if (hadInitialUser) dispatch(initNewThreadWithUser(null));
   }, []);
 
@@ -74,20 +80,9 @@ const Write = (props: Props) => {
 
   return (
     <React.Fragment>
-      <MobileTitlebar
-        title={titlebarTitle}
-        titleIcon={titlebarIcon}
-        menuAction={
-          !hadInitialUser ? (
-            <Icon glyph={'view-back'} onClick={toSearch} />
-          ) : (
-            'view-back'
-          )
-        }
-      />
       <DesktopTitlebar
         title={titlebarTitle}
-        titleIcon={titlebarIcon}
+        titleIcon={titleIcon}
         rightAction={
           !hadInitialUser && (
             <SmallOutlineButton onClick={toSearch}>Edit</SmallOutlineButton>

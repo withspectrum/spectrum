@@ -9,7 +9,7 @@ type Props = {
   data: { user: GetUserType },
 };
 
-class AuthViewHandler extends React.Component<Props> {
+class AnalyticsTracking extends React.Component<Props> {
   componentDidMount() {
     const AMPLITUDE_API_KEY =
       process.env.NODE_ENV === 'production'
@@ -42,4 +42,4 @@ class AuthViewHandler extends React.Component<Props> {
   }
 }
 
-export default compose(getCurrentUser)(AuthViewHandler);
+export default compose(getCurrentUser)(AnalyticsTracking);

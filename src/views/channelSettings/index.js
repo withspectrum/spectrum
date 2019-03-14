@@ -20,7 +20,7 @@ import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   data: {
@@ -38,8 +38,16 @@ type Props = {
 
 class ChannelSettings extends React.Component<Props> {
   componentDidMount() {
-    if (this.props.data && this.props.data.channel) {
-      const { channel } = this.props.data;
+    const { dispatch, data } = this.props;
+
+    dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
+
+    if (data && data.channel) {
+      const { channel } = data;
 
       track(events.CHANNEL_SETTINGS_VIEWED, {
         channel: transformations.analyticsChannel(channel),
@@ -177,26 +185,17 @@ class ChannelSettings extends React.Component<Props> {
       };
 
       return (
-        <React.Fragment>
-          <MobileTitlebar
-            title={'Settings'}
-            menuAction={'view-back'}
-            previousHistoryBackFallback={`/${channel.community.slug}/${
-              channel.slug
-            }`}
-          />
-          <ViewGrid>
-            <View>
-              <Header
-                subheading={subheading}
-                heading={`${channel.name} Settings ${
-                  channel.isArchived ? '(Archived)' : ''
-                }`}
-              />
-              <ActiveView />
-            </View>
-          </ViewGrid>
-        </React.Fragment>
+        <ViewGrid>
+          <View>
+            <Header
+              subheading={subheading}
+              heading={`${channel.name} Settings ${
+                channel.isArchived ? '(Archived)' : ''
+              }`}
+            />
+            <ActiveView />
+          </View>
+        </ViewGrid>
       );
     }
 
@@ -204,7 +203,7 @@ class ChannelSettings extends React.Component<Props> {
       return <LoadingView />;
     }
 
-    return <ErrorView titlebarTitle={'Settings'} />;
+    return <ErrorView />;
   }
 }
 

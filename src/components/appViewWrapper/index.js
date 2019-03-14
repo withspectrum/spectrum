@@ -13,8 +13,8 @@ class AppViewWrapper extends React.Component<Props> {
   }
 
   getSnapshotBeforeUpdate(prevProps) {
-    const { hasModal: currModal } = this.props;
-    const { hasModal: prevModal } = prevProps;
+    const { isModal: currModal } = this.props;
+    const { isModal: prevModal } = prevProps;
 
     /*
       If the user is going to open a modal, grab the current scroll
@@ -54,9 +54,6 @@ class AppViewWrapper extends React.Component<Props> {
       <StyledAppViewWrapper
         ref={el => (this.ref = el)}
         isSignedIn={isSignedIn}
-        // Note(@mxstbr): This ID is needed to make infinite scrolling work
-        // DO NOT REMOVE IT
-        id={'app-scroll-boundary'}
         {...this.props}
       />
     );

@@ -9,7 +9,6 @@ import {
 import Icon from 'src/components/icons';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
-import MobileTitlebar from 'src/components/titlebar';
 import { Container, Overlay, ComposerContainer, CloseButton } from '../style';
 
 type Props = {
@@ -53,13 +52,7 @@ const NewDirectMessage = (props: Props) => {
           <Icon glyph="view-close" size={32} />
         </CloseButton>
 
-        <ComposerContainer>
-          {/* <MobileTitlebar
-            title={'New message'}
-            menuAction={'view-back'}
-          /> */}
-          {children}
-        </ComposerContainer>
+        <ComposerContainer>{children}</ComposerContainer>
       </Container>
     </ErrorBoundary>
   );

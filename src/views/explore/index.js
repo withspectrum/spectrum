@@ -11,7 +11,7 @@ import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ViewGrid } from 'src/components/layout';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   currentUser?: Object,
@@ -19,6 +19,8 @@ type Props = {
 
 class Explore extends React.Component<Props> {
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setTitlebarProps({ title: 'Explore' }));
     track(events.EXPLORE_PAGE_VIEWED);
   }
 
@@ -33,7 +35,6 @@ class Explore extends React.Component<Props> {
 
     return (
       <React.Fragment>
-        <MobileTitlebar title={'Explore'} menuAction={'menu'} />
         <Head title={title} description={description} />
         <ViewGrid
           style={{ height: '100%', maxHeight: '100%' }}

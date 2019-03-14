@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Icon from 'src/components/icons';
-import getComposerLink from 'src/helpers/get-composer-link';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import { CommunityProfileCard } from 'src/components/entities';
-import { MobileCommunityTitlebar } from 'src/components/titlebar';
+import { CommunityAvatar } from 'src/components/avatar';
+import { MobileCommunityAction } from 'src/components/titlebar/actions';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/teamMembersList';
 import { CommunityFeeds } from '../components/communityFeeds';
@@ -20,16 +21,9 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
-import { RouteModalContext } from 'src/routes';
 
 const Component = (props: SignedInMemberType) => {
-  const { community } = props;
-
-  let containerEl = null;
-
-  useEffect(() => {
-    containerEl = document.getElementById('app-scroll-boundary');
-  }, []);
+  const { community, dispatch, location } = props;
 
   const [metaInfo, setMetaInfo] = useState(
     generateMetaInfo({
@@ -51,38 +45,38 @@ const Component = (props: SignedInMemberType) => {
         },
       })
     );
+    dispatch(
+      setTitlebarProps({
+        title: community.name,
+        titleIcon: (
+          <CommunityAvatar
+            isClickable={false}
+            community={community}
+            size={24}
+          />
+        ),
+        rightAction: <MobileCommunityAction community={community} />,
+      })
+    );
   }, [community.id]);
 
+  useEffect(() => {
+    dispatch(
+      setTitlebarProps({
+        title: community.name,
+        titleIcon: (
+          <CommunityAvatar
+            isClickable={false}
+            community={community}
+            size={24}
+          />
+        ),
+        rightAction: <MobileCommunityAction community={community} />,
+      })
+    );
+  }, [location]);
+
   const { title, description } = metaInfo;
-
-  const scrollToTop = () => {
-    if (containerEl) return containerEl.scrollTo(0, 0);
-  };
-
-  const scrollToBottom = () => {
-    if (containerEl) {
-      containerEl.scrollTop =
-        containerEl.scrollHeight - containerEl.clientHeight;
-    }
-  };
-
-  const scrollToPosition = (position: number) => {
-    if (containerEl) {
-      containerEl.scrollTop = position;
-    }
-  };
-
-  const contextualScrollToBottom = () => {
-    if (
-      containerEl &&
-      containerEl.scrollHeight - containerEl.clientHeight <
-        containerEl.scrollTop + 280
-    ) {
-      scrollToBottom();
-    }
-  };
-
-  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   return (
     <React.Fragment>
@@ -91,8 +85,6 @@ const Component = (props: SignedInMemberType) => {
         description={description}
         image={community.profilePhoto}
       />
-
-      <MobileCommunityTitlebar community={community} />
 
       <ViewGrid data-cy="community-view">
         <SecondaryPrimaryColumnGrid>
@@ -116,13 +108,7 @@ const Component = (props: SignedInMemberType) => {
           </SecondaryColumn>
 
           <PrimaryColumn>
-            <CommunityFeeds
-              scrollToBottom={scrollToBottom}
-              contextualScrollToBottom={contextualScrollToBottom}
-              scrollToTop={scrollToTop}
-              scrollToPosition={scrollToPosition}
-              community={community}
-            />
+            <CommunityFeeds community={community} />
           </PrimaryColumn>
         </SecondaryPrimaryColumnGrid>
       </ViewGrid>
@@ -132,5 +118,6 @@ const Component = (props: SignedInMemberType) => {
 
 export const SignedIn = compose(
   withCurrentUser,
+  withRouter,
   connect()
 )(Component);

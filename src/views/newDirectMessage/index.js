@@ -15,7 +15,7 @@ const NewDirectMessage = (props: Props) => {
     return (
       <ViewContainer {...props}>
         <Search
-          usersForMessage={usersForMessage}
+          usersForMessage={usersForMessage.filter(Boolean)}
           setUsersForMessage={setUsersForMessage}
           setActiveStep={setActiveStep}
         />
@@ -35,7 +35,7 @@ const NewDirectMessage = (props: Props) => {
             step
           */
           hadInitialUser={initialUsers.length === 1}
-          usersForMessage={usersForMessage}
+          usersForMessage={usersForMessage.filter(Boolean)}
           setActiveStep={setActiveStep}
         />
       </ViewContainer>

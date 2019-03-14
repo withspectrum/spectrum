@@ -29,7 +29,7 @@ import markNotificationsSeenMutation from 'shared/graphql/mutations/notification
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
@@ -85,6 +85,9 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setTitlebarProps({ title: 'Notifications ' }));
+
     this.markAllNotificationsSeen();
 
     WebPushManager.getPermissionState()
@@ -192,7 +195,6 @@ class NotificationsPure extends React.Component<Props, State> {
       return (
         <React.Fragment>
           <Head title={title} description={description} />
-          <MobileTitlebar title={'Notifications'} menuAction={'menu'} />
           <ViewGrid>
             <SingleColumnGrid>
               <React.Fragment>
@@ -352,13 +354,12 @@ class NotificationsPure extends React.Component<Props, State> {
     }
 
     if (hasError) {
-      return <ErrorView titlebarTitle={'Notifications'} />;
+      return <ErrorView />;
     }
 
     // no issues loading, but the user doesnt have notifications yet
     return (
       <ErrorView
-        titlebarTitle={'Notifications'}
         emoji="😙"
         heading="No notifications...yet"
         subheading="Looks like you’re new around here! When you start receiving notifications about conversations on Spectrum, they'll show up here."

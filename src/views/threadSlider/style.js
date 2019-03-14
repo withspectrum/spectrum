@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { zIndex } from 'src/components/globals';
-import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK, MAX_WIDTH, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const Container = styled.div`
   grid-area: main;
@@ -10,14 +10,9 @@ export const Container = styled.div`
   justify-content: center;
   z-index: ${zIndex.slider + 1};
   position: sticky;
-  top: 0;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    grid-area: none;
-    grid-row-start: 1;
-    grid-row-end: -1;
-    grid-column-start: 1;
-    grid-column-end: -1;
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
@@ -61,9 +56,6 @@ export const ThreadContainer = styled.div`
     transform: translateX(0);
     padding: 0;
     box-shadow: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
   }
 `;
 

@@ -10,13 +10,13 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import uploadImage, {
   type UploadImageInput,
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
 import { TextButton } from '../buttons';
 import { PrimaryButton } from 'src/views/community/components/button';
-import { MobileTitlebar } from 'src/components/titlebar';
 import Tooltip from 'src/components/tooltip';
 import {
   MediaLabel,
@@ -144,6 +144,13 @@ class ComposerWithData extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'New post',
+      })
+    );
+
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleGlobalKeyPress, false);
@@ -453,11 +460,6 @@ class ComposerWithData extends React.Component<Props, State> {
           isModal={isModal}
           onClick={this.closeComposer}
           data-cy="thread-composer-overlay"
-        />
-        <MobileTitlebar
-          title={'New post'}
-          menuAction={'view-close'}
-          previousHistoryBackFallback={'/'}
         />
 
         <Container data-cy="thread-composer" isModal={isModal}>

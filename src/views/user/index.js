@@ -7,10 +7,11 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import ThreadFeed from 'src/components/threadFeed';
 import { UserProfileCard } from 'src/components/entities';
-import { MobileUserTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import CommunityList from './components/communityList';
 import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { UserAvatar } from 'src/components/avatar';
 import {
   getUserByMatch,
   type GetUserType,
@@ -39,6 +40,7 @@ import {
 } from 'src/components/threadFeed/style';
 import { PrimaryButton } from 'src/views/community/components/button';
 import Icon from 'src/components/icons';
+import { MobileUserAction } from 'src/components/titlebar/actions';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -74,13 +76,62 @@ class UserView extends React.Component<Props, State> {
     hasThreads: true,
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { dispatch } = this.props;
+    if (this.props.data && this.props.data.user) {
+      dispatch(
+        setTitlebarProps({
+          title: this.props.data.user.name,
+          titleIcon: (
+            <UserAvatar
+              isClickable={false}
+              showOnlineStatus={false}
+              user={this.props.data.user}
+              size={24}
+            />
+          ),
+          rightAction: <MobileUserAction user={this.props.data.user} />,
+        })
+      );
+    }
+  }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.data.user) return;
-    if (!this.props.data.user) return;
+    const { dispatch } = this.props;
+    if (!prevProps.data || !this.props.data) return;
+
+    if (!prevProps.data.user && this.props.data.user) {
+      return dispatch(
+        setTitlebarProps({
+          title: this.props.data.user.name,
+          titleIcon: (
+            <UserAvatar
+              isClickable={false}
+              showOnlineStatus={false}
+              user={this.props.data.user}
+              size={24}
+            />
+          ),
+          rightAction: <MobileUserAction user={this.props.data.user} />,
+        })
+      );
+    }
     // track when a new profile is viewed without the component having been remounted
     if (prevProps.data.user.id !== this.props.data.user.id) {
+      return dispatch(
+        setTitlebarProps({
+          title: this.props.data.user.name,
+          titleIcon: (
+            <UserAvatar
+              isClickable={false}
+              showOnlineStatus={false}
+              user={this.props.data.user}
+              size={24}
+            />
+          ),
+          rightAction: <MobileUserAction user={this.props.data.user} />,
+        })
+      );
     }
   }
 
@@ -155,7 +206,6 @@ class UserView extends React.Component<Props, State> {
             <meta property="profile:last_name" content={user.name} />
             <meta property="profile:username" content={user.username} />
           </Head>
-          <MobileUserTitlebar currentUser={currentUser} user={user} />
 
           <ViewGrid data-cy="user-view">
             <SecondaryPrimaryColumnGrid>
@@ -258,7 +308,6 @@ class UserView extends React.Component<Props, State> {
     if (!user) {
       return (
         <ErrorView
-          titlebarTitle={'Profile'}
           heading={'We couldn’t find a user with this username'}
           subheading={
             'You may be trying to view a profile that is deleted, or Spectrum is just having a hiccup. If you think something has gone wrong, please contact us.'
@@ -267,7 +316,7 @@ class UserView extends React.Component<Props, State> {
       );
     }
 
-    return <ErrorView titlebarTitle={'Profile'} />;
+    return <ErrorView />;
   }
 }
 

@@ -157,6 +157,11 @@ export const ThreadWrapper = styled(FlexCol)`
       overflow: hidden;
       overflow-y: scroll;
     `}
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    top: 0;
+    margin-bottom: 0;
+  }
 `;
 
 export const ThreadContent = styled.div`

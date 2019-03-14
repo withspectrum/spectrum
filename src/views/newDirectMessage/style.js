@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { zIndex, hexa } from 'src/components/globals';
-import { MEDIA_BREAK, MAX_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const Container = styled.div`
   grid-area: main;
@@ -40,11 +40,9 @@ export const ComposerContainer = styled.div`
   overflow: hidden;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    max-height: 100vh;
     max-width: 100vw;
-    position: fixed;
-    top: 0;
-    height: 100vh;
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     border-radius: 0;
   }
 `;
@@ -71,9 +69,9 @@ export const CloseButton = styled.span`
 `;
 
 export const MessagesScrollWrapper = styled.div`
-  /* height of container minus titlebar minus chat input */
+  /* height of container minus chat input */
   height: 100%;
-  max-height: calc(100% - 62px - 58px);
+  max-height: calc(100% - 58px);
   overflow: hidden;
   overflow-y: scroll;
   background: ${theme.bg.default};

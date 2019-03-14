@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import type { Location, History, Match } from 'react-router';
 import Icon from 'src/components/icons';
 import { ThreadView } from 'src/views/thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   Container,
   Overlay,
@@ -19,7 +21,8 @@ type Props = {
 };
 
 const ThreadSlider = (props: Props) => {
-  const { previousLocation, history, match } = props;
+  const { previousLocation, history, match, titlebar, dispatch } = props;
+  const prevTitlebarProps = useRef(titlebar);
   const { params } = match;
   const { threadId } = params;
 
@@ -38,6 +41,8 @@ const ThreadSlider = (props: Props) => {
 
     document.addEventListener('keydown', handleKeyPress, false);
     return () => {
+      const prev = prevTitlebarProps.current;
+      dispatch(setTitlebarProps({ ...prev }));
       document.removeEventListener('keydown', handleKeyPress, false);
     };
   }, []);
@@ -61,4 +66,5 @@ const ThreadSlider = (props: Props) => {
   );
 };
 
-export default ThreadSlider;
+const map = state => ({ titlebar: state.titlebar });
+export default connect(map)(ThreadSlider);

@@ -23,10 +23,8 @@ export default createGlobalStyle`
 
   html {
     display: flex;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    max-height: 100%;
-    max-width: 100%;
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.5;
@@ -41,23 +39,16 @@ export default createGlobalStyle`
   }
 
   body {
-    display: flex;
     box-sizing: border-box;
-    flex: auto;
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
     overscroll-behavior-y: none;
-    background: ${theme.bg.wash};
     -webkit-overflow-scrolling: touch;
   }
 
   #root {
     height: 100%
     width: 100%;
-    display: flex;
   }
 
   a {

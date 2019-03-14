@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
@@ -16,6 +17,7 @@ import {
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
 import { CLIENT_URL } from 'src/api/constants';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   redirectPath: ?string,
@@ -27,6 +29,9 @@ type Props = {
 export class Login extends React.Component<Props> {
   componentDidMount() {
     let redirectPath;
+    const { dispatch } = this.props;
+    dispatch(setTitlebarProps({ title: 'Login' }));
+
     if (this.props.location) {
       const searchObj = queryString.parse(this.props.location.search);
       redirectPath = searchObj.r;
@@ -81,4 +86,7 @@ export class Login extends React.Component<Props> {
   }
 }
 
-export default compose(withRouter)(Login);
+export default compose(
+  withRouter,
+  connect()
+)(Login);

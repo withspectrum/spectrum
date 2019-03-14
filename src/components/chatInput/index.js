@@ -89,31 +89,22 @@ const ChatInput = (props: Props) => {
 
   // On mount, set the text state to the cached value if one exists
   // $FlowFixMe
-  React.useEffect(
-    () => {
-      changeText(localStorage.getItem(cacheKey) || '');
-      // NOTE(@mxstbr): We ONLY want to run this if we switch between threads, never else!
-    },
-    [props.threadId]
-  );
+  React.useEffect(() => {
+    changeText(localStorage.getItem(cacheKey) || '');
+    // NOTE(@mxstbr): We ONLY want to run this if we switch between threads, never else!
+  }, [props.threadId]);
 
   // Cache the latest text everytime it changes
   // $FlowFixMe
-  React.useEffect(
-    () => {
-      localStorage.setItem(cacheKey, text);
-    },
-    [text]
-  );
+  React.useEffect(() => {
+    localStorage.setItem(cacheKey, text);
+  }, [text]);
 
   // Focus chatInput when quoted message changes
   // $FlowFixMe
-  React.useEffect(
-    () => {
-      if (inputRef) inputRef.focus();
-    },
-    [props.quotedMessage && props.quotedMessage.messageId]
-  );
+  React.useEffect(() => {
+    if (inputRef) inputRef.focus();
+  }, [props.quotedMessage && props.quotedMessage.messageId]);
 
   const removeAttachments = () => {
     removeQuotedMessage();
@@ -287,6 +278,7 @@ const ChatInput = (props: Props) => {
     !props.networkOnline ||
     (props.websocketConnection !== 'connected' &&
       props.websocketConnection !== 'reconnected');
+
   return (
     <React.Fragment>
       <ChatInputContainer>

@@ -13,6 +13,7 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import { UserAvatar } from 'src/components/avatar';
 import { MessagesContainer, ViewContent } from '../style';
 import { ChatInputWrapper } from 'src/components/layout';
@@ -22,7 +23,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
-import { MobileTitlebar, DesktopTitlebar } from 'src/components/titlebar';
+import { DesktopTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -57,10 +58,37 @@ class ExistingThread extends React.Component<Props> {
 
   componentDidUpdate(prev) {
     const curr = this.props;
+    const { dispatch, currentUser } = curr;
 
     const didReconnect = useConnectionRestored({ curr, prev });
     if (didReconnect && curr.data.refetch) {
       curr.data.refetch();
+    }
+
+    if (curr.data.directMessageThread) {
+      const thread = curr.data.directMessageThread;
+      const trimmedUsers = thread.participants.filter(
+        user => user.userId !== currentUser.id
+      );
+      const titleIcon =
+        trimmedUsers.length === 1 ? (
+          <UserAvatar user={trimmedUsers[0]} size={24} />
+        ) : null;
+      const rightAction =
+        trimmedUsers.length === 1 ? (
+          <Link to={`/users/${trimmedUsers[0].username}`}>
+            <Icon glyph={'info'} />
+          </Link>
+        ) : null;
+      const names = trimmedUsers.map(user => user.name).join(', ');
+      dispatch(
+        setTitlebarProps({
+          title: names,
+          titleIcon,
+          rightAction,
+          leftAction: 'view-back',
+        })
+      );
     }
 
     // if the thread slider is open, dont be focusing shit up in heyuhr
@@ -117,14 +145,6 @@ class ExistingThread extends React.Component<Props> {
           .filter(user => user && user.username !== currentUser.username);
         return (
           <React.Fragment>
-            {/* <MobileTitlebar
-              title={names}
-              titleIcon={titleIcon}
-              menuAction="view-back"
-              rightAction={rightAction}
-              previousHistoryBackFallback={'/messages'}
-              forceHistoryBack={'/messages'}
-            /> */}
             <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}
@@ -167,7 +187,7 @@ class ExistingThread extends React.Component<Props> {
         return <LoadingView />;
       }
 
-      return <ErrorView titlebarTitle={'Conversation'} />;
+      return <ErrorView />;
     }
 
     /*

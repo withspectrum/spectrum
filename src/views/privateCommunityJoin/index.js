@@ -91,7 +91,7 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
 
     if (isLoading) return <LoadingView />;
 
-    return <ErrorView titlebarTitle={'Join community'} />;
+    return <ErrorView />;
   }
 }
 

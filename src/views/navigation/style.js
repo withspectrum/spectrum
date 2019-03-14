@@ -14,7 +14,7 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 99;
+  z-index: 9998 /* on top of titlebar */;
   background: rgba(0, 0, 0, 0.4);
 `;
 
@@ -38,8 +38,8 @@ export const NavigationWrapper = styled.div`
     display: ${props => (props.isOpen ? 'block' : 'none')};
     position: fixed;
     width: 100%;
-    z-index: 100;
     height: 100vh;
+    z-index: 9997;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.16);
   }
 `;
@@ -74,7 +74,7 @@ export const NavigationGrid = styled.div`
   @media (max-width: ${MEDIA_BREAK}px) {
     position: fixed;
     top: 0;
-    z-index: 100;
+    z-index: 9999 /* on top of overlay and titlebar */;
     width: 100%;
     max-width: 256px;
     grid-gap: 0px;

@@ -55,7 +55,7 @@ class Messages extends React.Component<Props> {
       prev.data.thread.messageConnection.edges.length <
         curr.data.thread.messageConnection.edges.length
     ) {
-      const elem = document.getElementById('app-scroll-boundary');
+      const elem = document.getElementById('main');
       if (!elem) return null;
 
       // If we are near the bottom when new messages come in, stick to the bottom
@@ -87,7 +87,7 @@ class Messages extends React.Component<Props> {
 
   componentDidUpdate(_, __, snapshot) {
     if (snapshot) {
-      const elem = document.getElementById('app-scroll-boundary');
+      const elem = document.getElementById('main');
       if (!elem) return;
       switch (snapshot.type) {
         case 'bottom': {

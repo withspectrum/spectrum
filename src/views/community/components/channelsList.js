@@ -48,8 +48,6 @@ class Component extends React.Component<Props> {
       data: { community },
     } = this.props;
 
-    console.log({ community });
-
     if (isLoading) {
       return <Loading style={{ padding: '32px' }} />;
     }

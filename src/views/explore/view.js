@@ -47,7 +47,7 @@ class CollectionSwitcher extends React.Component<Props, State> {
   ref = null;
 
   componentDidMount() {
-    this.parentRef = document.getElementById('app-scroll-boundary');
+    this.parentRef = document.getElementById('main');
   }
 
   handleSegmentClick(selectedView) {
@@ -167,7 +167,7 @@ class CategoryList extends React.Component<CategoryListProps> {
       return <Loading style={{ padding: '64px 32px', minHeight: '100vh' }} />;
     }
 
-    return <ErrorView titlebarTitle={'Explore'} />;
+    return <ErrorView />;
   }
 }
 

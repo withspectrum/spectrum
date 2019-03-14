@@ -1,15 +1,14 @@
 // @flow
 import * as React from 'react';
+import { connect } from 'react-redux';
 import type { Match } from 'react-router';
-import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
 import {
   PrimaryButton,
   SmallPrimaryButton,
 } from 'src/views/community/components/button';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -31,57 +30,72 @@ type State = {
 };
 
 class DirectMessages extends React.Component<Props, State> {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'Messages',
+        rightAction: (
+          <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
+        ),
+      })
+    );
+  }
+
+  componentDidUpdate() {
+    const { match, dispatch } = this.props;
+    const { params } = match;
+    if (!params.threadId) {
+      dispatch(
+        setTitlebarProps({
+          title: 'Messages',
+          rightAction: (
+            <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
+          ),
+        })
+      );
+    }
+  }
+
   render() {
     const { match } = this.props;
     const activeThreadId = match.params.threadId;
 
     return (
-      <React.Fragment>
-        {!activeThreadId && (
-          <MobileTitlebar
-            title="Messages"
-            menuAction="menu"
-            rightAction={
-              <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
-            }
-          />
-        )}
+      <ViewGrid>
+        <SecondaryPrimaryColumnGrid>
+          <StyledSecondaryColumn shouldHideThreadList={!!activeThreadId}>
+            <ThreadsList activeThreadId={activeThreadId} />
+          </StyledSecondaryColumn>
 
-        <ViewGrid>
-          <SecondaryPrimaryColumnGrid>
-            <StyledSecondaryColumn shouldHideThreadList={!!activeThreadId}>
-              <ThreadsList activeThreadId={activeThreadId} />
-            </StyledSecondaryColumn>
-
-            <PrimaryColumn>
-              {activeThreadId ? (
-                <ExistingThread id={activeThreadId} match={match} />
-              ) : (
-                <NoCommunitySelected>
-                  <div>
-                    <NoCommunityHeading>
-                      No conversation selected
-                    </NoCommunityHeading>
-                    <NoCommunitySubheading>
-                      Choose from an existing conversation, or start a new one.
-                    </NoCommunitySubheading>
-                    <PrimaryButton
-                      to={{
-                        pathname: '/new/message',
-                        state: { modal: true },
-                      }}
-                    >
-                      New message
-                    </PrimaryButton>
-                  </div>
-                </NoCommunitySelected>
-              )}
-            </PrimaryColumn>
-          </SecondaryPrimaryColumnGrid>
-        </ViewGrid>
-      </React.Fragment>
+          <PrimaryColumn>
+            {activeThreadId ? (
+              <ExistingThread id={activeThreadId} match={match} />
+            ) : (
+              <NoCommunitySelected>
+                <div>
+                  <NoCommunityHeading>
+                    No conversation selected
+                  </NoCommunityHeading>
+                  <NoCommunitySubheading>
+                    Choose from an existing conversation, or start a new one.
+                  </NoCommunitySubheading>
+                  <PrimaryButton
+                    to={{
+                      pathname: '/new/message',
+                      state: { modal: true },
+                    }}
+                  >
+                    New message
+                  </PrimaryButton>
+                </div>
+              </NoCommunitySelected>
+            )}
+          </PrimaryColumn>
+        </SecondaryPrimaryColumnGrid>
+      </ViewGrid>
     );
   }
 }
 
-export default DirectMessages;
+export default connect()(DirectMessages);

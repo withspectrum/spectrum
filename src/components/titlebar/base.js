@@ -9,7 +9,7 @@ import {
   Content,
   Actions,
   Title,
-  MenuActionContainer,
+  LeftActionContainer,
 } from './style';
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
   history: History,
   titleIcon?: any,
   rightAction?: any,
-  menuAction: 'view-back' | 'menu',
+  leftAction: 'view-back' | 'menu',
 };
 
 const MobileTitlebar = (props: Props) => {
@@ -25,7 +25,7 @@ const MobileTitlebar = (props: Props) => {
     title,
     titleIcon,
     rightAction,
-    menuAction,
+    leftAction,
     history,
     previousHistoryBackFallback,
     forceHistoryBack,
@@ -33,7 +33,7 @@ const MobileTitlebar = (props: Props) => {
   } = props;
 
   const handleMenuClick = setNavOpen => () => {
-    if (menuAction === 'menu') {
+    if (leftAction === 'menu') {
       return setNavOpen(true);
     }
 
@@ -50,12 +50,12 @@ const MobileTitlebar = (props: Props) => {
     return history.push(previousHistoryBackFallback || '/');
   };
 
-  const menuActionComponent = setNavigationIsOpen => {
-    if (typeof menuAction === 'string') {
+  const leftActionComponent = setNavigationIsOpen => {
+    if (typeof leftAction === 'string') {
       return (
         <Icon
           onClick={handleMenuClick(setNavigationIsOpen)}
-          glyph={menuAction}
+          glyph={leftAction}
           size={32}
         />
       );
@@ -63,7 +63,7 @@ const MobileTitlebar = (props: Props) => {
 
     // if the menu action is a component, just render the component being passed
     // from the view directly
-    return menuAction;
+    return leftAction;
   };
 
   return (
@@ -71,10 +71,10 @@ const MobileTitlebar = (props: Props) => {
       {({ setNavigationIsOpen }) => (
         <TitlebarContainer {...rest} hasAction={rightAction}>
           <Content>
-            {menuAction && (
-              <MenuActionContainer>
-                {menuActionComponent(setNavigationIsOpen)}
-              </MenuActionContainer>
+            {leftAction && (
+              <LeftActionContainer>
+                {leftActionComponent(setNavigationIsOpen)}
+              </LeftActionContainer>
             )}
 
             <div style={{ width: '12px' }} />

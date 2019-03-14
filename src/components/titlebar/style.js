@@ -11,7 +11,7 @@ export const TitlebarContainer = styled.div`
     props.hasAction ? 'space-between' : 'flex-start'};
   width: 100%;
   background: ${theme.bg.default};
-  z-index: 15;
+  z-index: 9996; /* on top of everything except navigation */
   padding-right: 16px;
   padding-left: 8px;
   flex: none;
@@ -58,7 +58,7 @@ export const Actions = styled.div`
   }
 `;
 
-export const MenuActionContainer = styled.span`
+export const LeftActionContainer = styled.span`
   display: flex;
   align-items: center;
   cursor: pointer;

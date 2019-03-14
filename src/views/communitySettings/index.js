@@ -14,7 +14,7 @@ import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
 import Overview from './components/overview';
@@ -29,6 +29,15 @@ type Props = {
 };
 
 class CommunitySettings extends React.Component<Props> {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.data.community && this.props.data.community) {
       const { community } = this.props.data;
@@ -59,7 +68,7 @@ class CommunitySettings extends React.Component<Props> {
         community.communityPermissions.isModerator;
 
       if (!canViewCommunitySettings) {
-        return <ErrorView titlebarTitle={'Settings'} />;
+        return <ErrorView />;
       }
 
       const subnavItems = [
@@ -102,7 +111,6 @@ class CommunitySettings extends React.Component<Props> {
       return (
         <React.Fragment>
           <Head title={title} />
-          <MobileTitlebar title={'Settings'} menuAction={'view-back'} />
 
           <ViewGrid>
             <View data-cy="community-settings">
@@ -150,7 +158,7 @@ class CommunitySettings extends React.Component<Props> {
       return <LoadingView />;
     }
 
-    return <ErrorView titlebarTitle={'Settings'} />;
+    return <ErrorView />;
   }
 }
 

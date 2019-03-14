@@ -28,7 +28,7 @@ import {
 } from 'src/components/entities';
 import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
-import { MobileTitlebar } from 'src/components/titlebar';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import { RouteModalContext } from 'src/routes';
 import MessagesSubscriber from '../components/messagesSubscriber';
 import StickyHeader from '../components/stickyHeader';
@@ -40,12 +40,12 @@ import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 
 const ThreadContainer = (props: Props) => {
-  const { data, isLoading, client, currentUser } = props;
+  const { data, isLoading, client, currentUser, dispatch } = props;
 
   if (isLoading) return <LoadingView />;
 
   const { thread } = data;
-  if (!thread) return <ErrorView titlebarTitle={'Conversation'} />;
+  if (!thread) return <ErrorView />;
 
   const { id } = thread;
 
@@ -120,6 +120,15 @@ const ThreadContainer = (props: Props) => {
     return () => updateThreadLastSeen();
   }, [id]);
 
+  useEffect(() => {
+    dispatch(
+      setTitlebarProps({
+        title: 'Conversation',
+        leftAction: 'view-back',
+      })
+    );
+  }, []);
+
   const { community, channel, isLocked } = thread;
   const { communityPermissions } = community;
   const { isMember } = communityPermissions;
@@ -128,12 +137,11 @@ const ThreadContainer = (props: Props) => {
   return (
     <React.Fragment>
       <ThreadHead thread={thread} />
-      <MobileTitlebar title={'Conversation'} menuAction={'view-back'} />
 
       <RouteModalContext.Consumer>
-        {({ hasModal }) => (
+        {({ isModal }) => (
           <ConditionalWrap
-            condition={!hasModal}
+            condition={!isModal}
             wrap={children => <ViewGrid>{children}</ViewGrid>}
           >
             <SecondaryPrimaryColumnGrid>

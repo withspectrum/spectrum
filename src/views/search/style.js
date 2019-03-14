@@ -13,8 +13,9 @@ export const View = styled.div`
 export const SearchWrapper = styled.div`
   color: ${theme.text.alt};
   display: flex;
-  align-items: center;
   flex: none;
+  align-items: center;
+  align-self: flex-start;
   transition: all 0.2s;
   border-bottom: 1px solid ${theme.bg.border};
   position: relative;
