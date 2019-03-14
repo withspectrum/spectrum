@@ -26,6 +26,7 @@ import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { MarkdownHint } from 'src/components/markdownHint';
 import { useAppScroller } from 'src/hooks/useAppScroller';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -105,6 +106,11 @@ const ChatInput = (props: Props) => {
   React.useEffect(() => {
     if (inputRef) inputRef.focus();
   }, [props.quotedMessage && props.quotedMessage.messageId]);
+
+  React.useEffect(() => {
+    // autofocus the chat input on desktop
+    if (inputRef && window && window.innerWidth > MEDIA_BREAK) inputRef.focus();
+  }, [inputRef]);
 
   const removeAttachments = () => {
     removeQuotedMessage();
@@ -337,9 +343,9 @@ const ChatInput = (props: Props) => {
                 value={text}
                 onFocus={props.onFocus}
                 onBlur={props.onBlur}
+                autoFocus={false}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
-                autoFocus={false}
                 inputRef={node => {
                   if (props.onRef) props.onRef(node);
                   setInputRef(node);
