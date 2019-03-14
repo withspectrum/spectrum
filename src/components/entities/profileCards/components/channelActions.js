@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { ChannelActionsRowType } from '../types';
+import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
   OutlineButton,
@@ -18,6 +19,11 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
   const isTeamMember = isOwner || isModerator;
 
   const { channelPermissions } = channel;
+
+  const { pathname, search } = getComposerLink({
+    communityId: community.id,
+    channelId: channel.id,
+  });
 
   if (channelPermissions.isMember) {
     return (
@@ -40,6 +46,10 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
             </HoverWarnOutlineButton>
           )}
         />
+
+        <PrimaryButton to={{ pathname, search, state: { modal: true } }}>
+          New Post
+        </PrimaryButton>
       </ActionsRowContainer>
     );
   }

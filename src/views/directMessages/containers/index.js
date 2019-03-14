@@ -5,7 +5,10 @@ import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
-import { PrimaryButton } from 'src/views/community/components/button';
+import {
+  PrimaryButton,
+  SmallPrimaryButton,
+} from 'src/views/community/components/button';
 import { MobileTitlebar } from 'src/components/titlebar';
 import {
   ViewGrid,
@@ -39,9 +42,7 @@ class DirectMessages extends React.Component<Props, State> {
             title="Messages"
             menuAction="menu"
             rightAction={
-              <Link to={'/new/message'}>
-                <Icon glyph={'message-simple-new'} />
-              </Link>
+              <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
             }
           />
         )}

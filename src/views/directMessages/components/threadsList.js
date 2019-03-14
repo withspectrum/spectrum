@@ -20,7 +20,10 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { DesktopTitlebar } from 'src/components/titlebar';
-import { PrimaryButton } from 'src/views/community/components/button';
+import {
+  PrimaryButton,
+  SmallPrimaryButton,
+} from 'src/views/community/components/button';
 import {
   NoCommunitySelected,
   NoCommunityHeading,
@@ -187,7 +190,16 @@ class ThreadsList extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <DesktopTitlebar title={'Messages'} />
+        <DesktopTitlebar
+          title={'Messages'}
+          rightAction={
+            <SmallPrimaryButton
+              to={{ pathname: '/new/message', state: { modal: true } }}
+            >
+              New
+            </SmallPrimaryButton>
+          }
+        />
         <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
           <InfiniteList
             loadMore={this.paginate}

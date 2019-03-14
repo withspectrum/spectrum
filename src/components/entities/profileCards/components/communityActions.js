@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { CommunityActionsRowType } from '../types';
+import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
   OutlineButton,
@@ -29,6 +30,7 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
 
   const { isMember, isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
+  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   if (isMember) {
     return (
@@ -48,6 +50,10 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
             {isHovering ? 'Leave community' : 'Member'}
           </OutlineButton>
         )}
+
+        <PrimaryButton to={{ pathname, search, state: { modal: true } }}>
+          New Post
+        </PrimaryButton>
       </ActionsRowContainer>
     );
   }

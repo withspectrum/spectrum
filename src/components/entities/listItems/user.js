@@ -12,6 +12,7 @@ import Tooltip from 'src/components/tooltip';
 import type { Dispatch } from 'redux';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import ConditionalWrap from 'src/components/conditionalWrap';
+import { SmallOutlineButton } from 'src/views/community/components/button';
 import {
   Row,
   UserAvatarContainer,
@@ -106,13 +107,7 @@ const User = (props: Props) => {
           {messageButton && (
             <InitDirectMessageWrapper
               user={userObject}
-              render={
-                <Tooltip content="Send message">
-                  <MessageIcon>
-                    <Icon glyph="message-simple-new" size={24} />
-                  </MessageIcon>
-                </Tooltip>
-              }
+              render={<SmallOutlineButton>Message</SmallOutlineButton>}
             />
           )}
 
