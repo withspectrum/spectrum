@@ -96,7 +96,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     } else {
       scrollToTop();
     }
-  }, [activeSegment]);
+  }, [activeSegment, community.slug]);
 
   const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
