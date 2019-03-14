@@ -13,11 +13,11 @@ import {
   ChatInputWrapper,
   Input,
   InputWrapper,
-  SendButton,
   PhotoSizeError,
   PreviewWrapper,
   RemovePreviewButton,
 } from './style';
+import { PrimaryButton } from 'src/views/community/components/button';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';
@@ -347,12 +347,13 @@ const ChatInput = (props: Props) => {
                 staticSuggestions={props.participants}
               />
             </InputWrapper>
-            <SendButton
+            <PrimaryButton
               data-cy="chat-input-send-button"
-              glyph="send-fill"
               onClick={submit}
-              // hasAttachment={mediaPreview || quotedMessage ? true : false}
-            />
+              style={{ flex: 'none', marginLeft: '8px' }}
+            >
+              Send
+            </PrimaryButton>
           </Form>
         </ChatInputWrapper>
       </ChatInputContainer>
