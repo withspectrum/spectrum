@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { type History, type Match } from 'react-router';
+import querystring from 'query-string';
+import { withRouter, type History, type Match } from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
@@ -65,16 +66,22 @@ type Props = {
 
 type State = {
   hasNoThreads: boolean,
-  selectedView: string,
   hasThreads: boolean,
 };
 
 class UserView extends React.Component<Props, State> {
   state = {
     hasNoThreads: false,
-    selectedView: 'creator',
     hasThreads: true,
   };
+
+  constructor(props) {
+    super(props);
+    const { location, history } = props;
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    if (!tab) history.push({ search: querystring.stringify({ tab: 'posts' }) });
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -117,7 +124,11 @@ class UserView extends React.Component<Props, State> {
       );
     }
     // track when a new profile is viewed without the component having been remounted
-    if (prevProps.data.user.id !== this.props.data.user.id) {
+    if (
+      prevProps.data.user &&
+      this.props.data.user &&
+      prevProps.data.user.id !== this.props.data.user.id
+    ) {
       return dispatch(
         setTitlebarProps({
           title: this.props.data.user.name,
@@ -138,13 +149,9 @@ class UserView extends React.Component<Props, State> {
   hasNoThreads = () => this.setState({ hasThreads: false });
   hasThreads = () => this.setState({ hasThreads: true });
 
-  handleSegmentClick = (label: string) => {
-    if (this.state.selectedView === label) return;
-
-    return this.setState({
-      selectedView: label,
-      hasThreads: true,
-    });
+  handleSegmentClick = (tab: string) => {
+    const { history } = this.props;
+    return history.push({ search: querystring.stringify({ tab }) });
   };
 
   initReport = () => {
@@ -171,9 +178,14 @@ class UserView extends React.Component<Props, State> {
       match: {
         params: { username },
       },
+      location,
       currentUser,
     } = this.props;
-    const { hasThreads, selectedView } = this.state;
+    const { hasThreads } = this.state;
+
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    const selectedView = tab;
 
     if (queryVarIsChanging) {
       return <LoadingView />;
@@ -191,7 +203,7 @@ class UserView extends React.Component<Props, State> {
       });
 
       const Feed =
-        selectedView === 'creator'
+        selectedView === 'posts'
           ? ThreadFeedWithData
           : ThreadParticipantFeedWithData;
 
@@ -229,17 +241,15 @@ class UserView extends React.Component<Props, State> {
               <PrimaryColumn>
                 <SegmentedControl>
                   <Segment
-                    segmentLabel="creator"
-                    onClick={() => this.handleSegmentClick('creator')}
-                    isActive={selectedView === 'creator'}
+                    onClick={() => this.handleSegmentClick('posts')}
+                    isActive={selectedView === 'posts'}
                   >
                     Posts
                   </Segment>
 
                   <Segment
-                    segmentLabel="participant"
-                    onClick={() => this.handleSegmentClick('participant')}
-                    isActive={selectedView === 'participant'}
+                    onClick={() => this.handleSegmentClick('activity')}
+                    isActive={selectedView === 'activity'}
                   >
                     Activity
                   </Segment>
@@ -253,19 +263,20 @@ class UserView extends React.Component<Props, State> {
                 </SegmentedControl>
 
                 {hasThreads &&
-                  (selectedView === 'creator' ||
-                    selectedView === 'participant') && (
+                  (selectedView === 'posts' || selectedView === 'activity') && (
                     <Feed
                       userId={user.id}
                       username={username}
                       viewContext={
-                        selectedView === 'participant'
+                        selectedView === 'activity'
                           ? 'userProfileReplies'
                           : 'userProfile'
                       }
                       hasNoThreads={this.hasNoThreads}
                       hasThreads={this.hasThreads}
-                      kind={selectedView}
+                      kind={
+                        selectedView === 'posts' ? 'creator' : 'participant'
+                      }
                       id={user.id}
                     />
                   )}
@@ -324,5 +335,6 @@ export default compose(
   getUserByMatch,
   withCurrentUser,
   viewNetworkHandler,
+  withRouter,
   connect()
 )(UserView);

@@ -1,26 +1,39 @@
 // @flow
-// $FlowIssue
 import React, { useEffect } from 'react';
+import compose from 'recompose/compose';
 import theme from 'shared/theme';
+import { withRouter } from 'react-router-dom';
+import querystring from 'query-string';
 import MembersList from './membersList';
 import type { CommunityFeedsType } from '../types';
 import { TeamMembersList } from './teamMembersList';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions';
 import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
-import MessagesSubscriber from '../../thread/components/messagesSubscriber';
+import { Stretch } from 'src/views/thread/style';
+import MessagesSubscriber from 'src/views/thread/components/messagesSubscriber';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
 import { FeedsContainer, SidebarSection } from '../style';
-import { Stretch } from '../../thread/style';
 
-export const CommunityFeeds = (props: CommunityFeedsType) => {
-  const { community } = props;
-  const defaultSegment = community.watercoolerId ? 'chat' : 'posts';
-  const [activeSegment, setActiveSegment] = React.useState(defaultSegment);
+const Feeds = (props: CommunityFeedsType) => {
+  const { community, location, history } = props;
+  const { search } = location;
+  const { tab } = querystring.parse(search);
+
+  const changeTab = (tab: string) => {
+    return history.push({ search: querystring.stringify({ tab }) });
+  };
+
+  if (!tab) {
+    const defaultTab = community.watercoolerId ? 'chat' : 'posts';
+    changeTab(defaultTab);
+  }
+
+  const activeSegment = tab;
 
   const renderFeed = () => {
     switch (activeSegment) {
@@ -106,7 +119,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
   useEffect(() => {
     if (activeSegment === 'chat') {
       if (!community.watercoolerId) {
-        setActiveSegment('posts');
+        changeTab('posts');
       }
     }
   }, [community.slug]);
@@ -120,7 +133,7 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
               key={segment}
               hideOnDesktop={segment === 'info'}
               isActive={segment === activeSegment}
-              onClick={() => setActiveSegment(segment)}
+              onClick={() => changeTab(segment)}
             >
               {segment[0].toUpperCase() + segment.substr(1)}
             </Segment>
@@ -131,3 +144,5 @@ export const CommunityFeeds = (props: CommunityFeedsType) => {
     </FeedsContainer>
   );
 };
+
+export const CommunityFeeds = compose(withRouter)(Feeds);

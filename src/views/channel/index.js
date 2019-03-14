@@ -2,6 +2,8 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import querystring from 'query-string';
+import { withRouter } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Head from 'src/components/head';
@@ -65,14 +67,14 @@ type Props = {
   dispatch: Dispatch<Object>,
 };
 
-type State = {
-  selectedView: 'posts' | 'search' | 'members',
-};
-
 class ChannelView extends React.Component<Props, State> {
-  state = {
-    selectedView: 'posts',
-  };
+  constructor(props) {
+    super(props);
+    const { location, history } = props;
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    if (!tab) history.push({ search: querystring.stringify({ tab: 'posts' }) });
+  }
 
   componentDidMount() {
     if (this.props.data && this.props.data.channel) {
@@ -130,12 +132,9 @@ class ChannelView extends React.Component<Props, State> {
     }
   }
 
-  handleSegmentClick = label => {
-    if (this.state.selectedView === label) return;
-
-    return this.setState({
-      selectedView: label,
-    });
+  handleSegmentClick = (tab: string) => {
+    const { history } = this.props;
+    return history.push({ search: querystring.stringify({ tab }) });
   };
 
   renderActionButton = (channel: GetChannelType) => {
@@ -265,10 +264,13 @@ class ChannelView extends React.Component<Props, State> {
       data: { channel },
       currentUser,
       isLoading,
+      location,
     } = this.props;
-    const { selectedView } = this.state;
     const { communitySlug } = match.params;
     const isLoggedIn = currentUser;
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    const selectedView = tab;
 
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
@@ -400,7 +402,6 @@ class ChannelView extends React.Component<Props, State> {
               <PrimaryColumn>
                 <SegmentedControl>
                   <Segment
-                    segmentLabel="posts"
                     onClick={() => this.handleSegmentClick('posts')}
                     isActive={selectedView === 'posts'}
                   >
@@ -408,7 +409,6 @@ class ChannelView extends React.Component<Props, State> {
                   </Segment>
 
                   <Segment
-                    segmentLabel="members"
                     onClick={() => this.handleSegmentClick('members')}
                     isActive={selectedView === 'members'}
                   >
@@ -466,5 +466,6 @@ export default compose(
   withCurrentUser,
   getChannelByMatch,
   viewNetworkHandler,
+  withRouter,
   connect()
 )(ChannelView);
