@@ -28,8 +28,6 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   z-index: 9995;
-  position: sticky;
-  top: 0;
 `;
 
 export const DropImageOverlayWrapper = styled.div`
@@ -72,9 +70,8 @@ export const Overlay = styled.div`
 export const Container = styled(FlexCol)`
   display: flex;
   height: 100%;
-  max-height: 100vh;
+  max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   width: 100%;
-  position: fixed;
   max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
   z-index: 9998;
@@ -147,7 +144,7 @@ export const Dropdowns = styled(FlexRow)`
   max-height: 48px;
   align-items: center;
   background-color: ${theme.bg.wash};
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  border-bottom: 1px solid ${theme.bg.border};
   z-index: 9999;
   border-bottom: 1px solid ${theme.bg.border};
   padding: 8px;
