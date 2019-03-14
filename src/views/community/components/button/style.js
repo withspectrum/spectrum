@@ -76,7 +76,7 @@ export const StyledPrimaryButton = styled(StyledButton)`
 `;
 
 export const StyledSmallPrimaryButton = styled(StyledPrimaryButton)`
-  padding: 5px 12px 6px 12px;
+  padding: 6px 12px;
   font-size: 15px;
 `;
 
@@ -132,6 +132,6 @@ export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
 export const StyledSmallHoverWarnOutlineButton = styled(
   StyledHoverWarnOutlineButton
 )`
-  padding: 5px 12px 6px 12px;
+  padding: 6px 12px;
   font-size: 15px;
 `;
