@@ -3,7 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
-  PrimaryButton,
+  PrimaryOutlineButton,
   OutlineButton,
 } from 'src/views/community/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
@@ -24,7 +24,7 @@ export const UnconnectedUserActions = (props: Props) => {
 
       <InitDirectMessageWrapper
         user={user}
-        render={<PrimaryButton>Message</PrimaryButton>}
+        render={<PrimaryOutlineButton>Message</PrimaryOutlineButton>}
       />
     </ActionsRowContainer>
   );

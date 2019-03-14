@@ -6,6 +6,7 @@ import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
   OutlineButton,
+  PrimaryOutlineButton,
   HoverWarnOutlineButton,
 } from 'src/views/community/components/button';
 import JoinChannel from 'src/components/joinChannelWrapper';
@@ -47,9 +48,9 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
           )}
         />
 
-        <PrimaryButton to={{ pathname, search, state: { modal: true } }}>
+        <PrimaryOutlineButton to={{ pathname, search, state: { modal: true } }}>
           New Post
-        </PrimaryButton>
+        </PrimaryOutlineButton>
       </ActionsRowContainer>
     );
   }

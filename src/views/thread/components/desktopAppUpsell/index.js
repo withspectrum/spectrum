@@ -10,7 +10,7 @@ import {
   DESKTOP_APP_MAC_URL,
 } from 'src/helpers/desktop-app-utils';
 import { isMac } from 'src/helpers/is-os';
-import { PrimaryButton } from 'src/views/community/components/button';
+import { PrimaryOutlineButton } from 'src/views/community/components/button';
 import { SidebarSection } from 'src/views/community/style';
 import { Container, AppIcon, Content, Title, Subtitle } from './style';
 
@@ -63,7 +63,7 @@ class DesktopAppUpsell extends React.Component<Props, State> {
             <Subtitle>A better way to keep up with your communities.</Subtitle>
 
             <a href={DESKTOP_APP_MAC_URL} onClick={this.download}>
-              <PrimaryButton>Download</PrimaryButton>
+              <PrimaryOutlineButton>Download</PrimaryOutlineButton>
             </a>
           </Content>
         </Container>

@@ -94,6 +94,23 @@ export const StyledOutlineButton = styled(StyledButton)`
   }
 `;
 
+export const StyledPrimaryOutlineButton = styled(StyledOutlineButton)`
+  background: transparent;
+  border: 1px solid ${theme.brand.alt};
+  color: ${theme.brand.alt};
+
+  &:hover {
+    background: transparent;
+    border: 1px solid ${tint(theme.brand.alt, -8)};
+    color: ${tint(theme.brand.alt, -8)};
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px ${theme.bg.default},
+      0 0 0 3px ${hexa(theme.brand.alt, 0.16)};
+  }
+`;
+
 export const StyledSmallOutlineButton = styled(StyledOutlineButton)`
   padding: 5px 12px 6px 12px;
   font-size: 15px;

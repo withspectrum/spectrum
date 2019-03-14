@@ -5,6 +5,7 @@ import type { CommunityActionsRowType } from '../types';
 import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
+  PrimaryOutlineButton,
   OutlineButton,
 } from 'src/views/community/components/button';
 import { openModal } from 'src/actions/modals';
@@ -51,9 +52,9 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
           </OutlineButton>
         )}
 
-        <PrimaryButton to={{ pathname, search, state: { modal: true } }}>
+        <PrimaryOutlineButton to={{ pathname, search, state: { modal: true } }}>
           New Post
-        </PrimaryButton>
+        </PrimaryOutlineButton>
       </ActionsRowContainer>
     );
   }
