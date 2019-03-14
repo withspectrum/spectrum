@@ -10,6 +10,7 @@ const CommunityMember = /* GraphQL */ `
     isBlocked: Boolean
     isPending: Boolean
     reputation: Int
+    lastSeen: Date
   }
 
   extend type Query {

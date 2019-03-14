@@ -310,7 +310,7 @@ const Community = /* GraphQL */ `
 
   input SetCommunityLastSeenInput {
     id: ID!
-    lastActive: Date!
+    lastSeen: Date!
   }
 
   extend type Mutation {

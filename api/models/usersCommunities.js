@@ -706,3 +706,17 @@ export const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<n
       )
     );
 };
+
+export const setCommunityLastSeen = (
+  communityId: string,
+  userId: string,
+  lastSeen: Date
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+    .update({
+      lastSeen,
+    })
+    .run();
+};
