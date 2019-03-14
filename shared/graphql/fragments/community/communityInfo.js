@@ -21,6 +21,7 @@ export type CommunityInfoType = {
     isPending: boolean,
     isModerator: boolean,
     reputation: number,
+    lastSeen?: Date,
   },
   brandedLogin: {
     isEnabled: boolean,
@@ -51,6 +52,7 @@ export default gql`
       isPending
       isModerator
       reputation
+      lastSeen
     }
     brandedLogin {
       isEnabled
