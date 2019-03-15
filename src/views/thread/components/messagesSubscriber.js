@@ -44,7 +44,8 @@ class Messages extends React.Component<Props> {
     if (
       !prev.data.thread &&
       curr.data.thread &&
-      curr.data.thread.messageConnection.edges.length > 0
+      curr.data.thread.messageConnection.edges.length > 0 &&
+      (curr.data.thread.currentUserLastSeen || curr.data.thread.watercooler)
     ) {
       return {
         type: 'bottom',
