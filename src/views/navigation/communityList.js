@@ -71,7 +71,11 @@ const CommunityList = (props: Props) => {
           const community = sorted[index];
           if (!community) return;
           setNavigationIsOpen(false);
-          return history.push(`/${community.slug}`);
+          return history.push(
+            `/${community.slug}?tab=${
+              community.watercoolerId ? 'chat' : 'posts'
+            }`
+          );
         }
       }
     };
@@ -103,7 +107,9 @@ const CommunityList = (props: Props) => {
               }
             >
               <AvatarLink
-                to={`/${community.slug}`}
+                to={`/${community.slug}?tab=${
+                  community.watercoolerId ? 'chat' : 'posts'
+                }`}
                 onClick={() => setNavigationIsOpen(false)}
                 {...getAccessibilityActiveState(
                   match &&

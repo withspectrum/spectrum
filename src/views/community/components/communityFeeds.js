@@ -35,7 +35,7 @@ const Feeds = (props: CommunityFeedsType) => {
       const defaultTab = community.watercoolerId ? 'chat' : 'posts';
       changeTab(defaultTab);
     }
-  }, []);
+  }, [community.id]);
 
   const renderFeed = () => {
     switch (tab) {
@@ -111,7 +111,7 @@ const Feeds = (props: CommunityFeedsType) => {
     } else {
       scrollToTop();
     }
-  }, [tab, community.slug]);
+  }, [tab]);
 
   const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
