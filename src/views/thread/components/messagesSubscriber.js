@@ -74,7 +74,15 @@ class Messages extends React.Component<Props> {
         };
       }
 
-      // If we are near the bottom when new messages come in, stick to the bottom
+      // If more than one new message was added at the bottom, stick to the current position
+      if (
+        prev.data.thread.messageConnection.edges.length + 1 <
+        curr.data.thread.messageConnection.edges.length
+      ) {
+        return null;
+      }
+
+      // If only one message came in and we are near the bottom when new messages come in, stick to the bottom
       if (elem.scrollHeight < elem.scrollTop + elem.clientHeight + 400) {
         return {
           type: 'bottom',
