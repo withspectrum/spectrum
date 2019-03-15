@@ -55,6 +55,8 @@ class Messages extends React.Component<Props> {
     if (
       prev.data.thread &&
       curr.data.thread &&
+      prev.data.thread.messageConnection.edges.length > 0 &&
+      curr.data.thread.messageConnection.edges.length > 0 &&
       prev.data.thread.messageConnection.edges.length <
         curr.data.thread.messageConnection.edges.length
     ) {

@@ -29,6 +29,7 @@ import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import MessagesSubscriber from '../components/messagesSubscriber';
+import TrendingThreads from '../components/trendingThreads';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
@@ -166,7 +167,15 @@ const ThreadContainer = (props: Props) => {
             </SidebarSection>
 
             <SidebarSection>
-              <ChannelProfileCard hideCommunityMeta channel={channel} />
+              <ChannelProfileCard
+                hideActions
+                hideCommunityMeta
+                channel={channel}
+              />
+            </SidebarSection>
+
+            <SidebarSection>
+              <TrendingThreads id={community.id} />
             </SidebarSection>
           </SecondaryColumn>
 
