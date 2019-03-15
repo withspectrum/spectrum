@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "algoliasearch": "^3.32.0",
+    "algoliasearch": "^3.32.1",
     "aws-sdk": "^2.409.0",
     "bull": "^3.7.0",
     "datadog-metrics": "^0.8.1",
