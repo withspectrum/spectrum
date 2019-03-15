@@ -3,7 +3,6 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import truncate from 'shared/truncate';
 import Header from './header';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
@@ -22,6 +21,8 @@ import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import ThreadActivity from './activity';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import getSnippet from 'shared/clients/draft-js/utils/getSnippet';
+import truncate from 'shared/truncate';
 
 type Props = {
   active: boolean,
@@ -66,13 +67,6 @@ class InboxThread extends React.Component<Props> {
       !thread.currentUserLastSeen &&
       publishedInLastDay &&
       currentUser.id !== thread.author.user.id;
-
-    const text = JSON.parse(thread.content.body).blocks.filter(
-      ({ type }) => type === 'unstyled' || type.indexOf('header') === 0
-    );
-    const raw = text.map(block => block.text).join('\n');
-    const withouteMultipleLineBreaks = raw.replace(/[\r\n]{3,}/g, '\n');
-    const snippet = truncate(withouteMultipleLineBreaks, 280);
 
     return (
       <ErrorBoundary>
@@ -121,7 +115,9 @@ class InboxThread extends React.Component<Props> {
                 {truncate(thread.content.title, 80)}
               </ThreadTitle>
 
-              <ThreadSnippet active={active}>{snippet}</ThreadSnippet>
+              <ThreadSnippet active={active}>
+                {getSnippet(JSON.parse(thread.content.body))}
+              </ThreadSnippet>
 
               <ErrorBoundary>
                 <ThreadActivity
