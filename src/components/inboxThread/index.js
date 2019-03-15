@@ -58,20 +58,16 @@ class InboxThread extends React.Component<Props> {
       thread.lastActive &&
       thread.currentUserLastSeen < thread.lastActive;
 
-    const nowTime = new Date().getTime();
-    const publishedTime = new Date(thread.lastActive).getTime();
-    const publishedInLastDay = nowTime - publishedTime < 86400;
-    const newUnseenThreadInPastDay =
+    const newUnseenThread =
       !active &&
       currentUser &&
       !thread.currentUserLastSeen &&
-      publishedInLastDay &&
       currentUser.id !== thread.author.user.id;
 
     return (
       <ErrorBoundary>
         <InboxThreadItem
-          new={newMessagesSinceLastViewed || newUnseenThreadInPastDay}
+          new={newMessagesSinceLastViewed || newUnseenThread}
           data-cy="thread-card"
           active={active}
         >
