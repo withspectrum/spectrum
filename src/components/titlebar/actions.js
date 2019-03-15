@@ -1,14 +1,17 @@
 // @flow
 import React from 'react';
+import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
 import {
   WhiteIconButton,
   SmallPrimaryButton,
+  SmallOutlineButton,
 } from 'src/views/community/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import getComposerLink from 'src/helpers/get-composer-link';
 import JoinChannel from 'src/components/joinCommunityWrapper';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 export const MobileCommunityAction = (props: Props) => {
   const { community } = props;
@@ -73,8 +76,16 @@ export const MobileChannelAction = (props: Props) => {
   );
 };
 
-export const MobileUserAction = (props: Props) => {
-  const { user } = props;
+const User = (props: Props) => {
+  const { user, currentUser } = props;
+
+  if (currentUser && currentUser.id === user.id) {
+    return (
+      <SmallOutlineButton to={`/users/${currentUser.username}/settings`}>
+        Settings
+      </SmallOutlineButton>
+    );
+  }
 
   return (
     <InitDirectMessageWrapper
@@ -87,3 +98,5 @@ export const MobileUserAction = (props: Props) => {
     />
   );
 };
+
+export const MobileUserAction = compose(withCurrentUser)(User);
