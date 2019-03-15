@@ -96,6 +96,7 @@ export const Timestamp = styled(MetaTitleText)`
 `;
 
 export const NewThreadTimestamp = styled(MetaSubtitleText)`
+  margin-left: 4px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.brand.default};
 `;

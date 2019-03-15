@@ -20,16 +20,20 @@ class ThreadTimestamp extends React.Component<HeaderProps> {
     const createdWithinLastDay = now - createdAtTime < 86400;
     const isAuthor = currentUser && currentUser.id === thread.author.user.id;
 
-    if (
+    const showNewPost =
       !isAuthor &&
       !thread.currentUserLastSeen &&
       createdWithinLastDay &&
-      !active
-    ) {
-      return <NewThreadTimestamp active={active}>New post</NewThreadTimestamp>;
-    }
+      !active;
 
-    return <Timestamp active={active}>{timestamp}</Timestamp>;
+    return (
+      <React.Fragment>
+        <Timestamp active={active}>{timestamp}</Timestamp>
+        {showNewPost && (
+          <NewThreadTimestamp active={active}>(new)</NewThreadTimestamp>
+        )}
+      </React.Fragment>
+    );
   }
 }
 

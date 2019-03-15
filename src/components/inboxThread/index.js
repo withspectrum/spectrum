@@ -124,6 +124,7 @@ class InboxThread extends React.Component<Props> {
                   thread={thread}
                   active={active}
                   currentUser={currentUser}
+                  newMessages={newMessagesSinceLastViewed}
                 />
               </ErrorBoundary>
             </Column>
