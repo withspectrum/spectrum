@@ -4,35 +4,68 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import { getCommunityThreadConnectionQuery } from 'shared/graphql/queries/community/getCommunityThreadConnection';
-import { Title, Container } from './desktopAppUpsell/style';
+import { Container } from './desktopAppUpsell/style';
 import getThreadLink from 'src/helpers/get-thread-link';
 import theme from 'shared/theme';
+import truncate from 'shared/truncate';
+import { SidebarSectionHeading } from 'src/views/community/style';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
+import { timeDifferenceShort } from 'shared/time-difference';
 
 const ThreadListItemContainer = styled(Link)`
   display: block;
-  padding: 4px 8px;
-  margin-left: -8px;
-  width: calc(100% + 16px) !important;
+  padding: 12px 16px;
+  border-bottom: 1px solid ${theme.bg.divider};
 
   &:hover {
     background-color: ${theme.bg.wash};
   }
 
-  &:first-of-type {
-    margin-top: 8px;
+  &:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 16px;
   }
+`;
+
+const ThreadContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ThreadTitle = styled.div`
+  font-size: 15px;
+  font-weight: 500;
+`;
+
+const ThreadMeta = styled.div`
+  font-size: 15px;
+  font-weight: 400;
+  color: ${theme.text.alt};
+  line-height: 1.2;
+  margin-top: 2px;
 `;
 
 type ThreadListItemProps = {
   thread: ThreadInfoType,
 };
 
-const ThreadListItem = (props: ThreadListItemProps) => (
-  <ThreadListItemContainer to={getThreadLink(props.thread)}>
-    {props.thread.content.title}
-  </ThreadListItemContainer>
-);
+const ThreadListItem = (props: ThreadListItemProps) => {
+  const { thread } = props;
+  const { lastActive, createdAt, content } = thread;
+
+  const now = new Date().getTime();
+  const then = lastActive || createdAt;
+  let timestamp = timeDifferenceShort(now, new Date(then).getTime());
+
+  return (
+    <ThreadListItemContainer to={getThreadLink(thread)}>
+      <ThreadContent>
+        <ThreadTitle>{truncate(content.title, 80)}</ThreadTitle>
+        <ThreadMeta>{timestamp}</ThreadMeta>
+      </ThreadContent>
+    </ThreadListItemContainer>
+  );
+};
 
 type Props = {
   id: string,
@@ -56,12 +89,16 @@ const TrendingThreads = (props: Props) => {
             .slice(0, 5);
           if (threads.length === 0) return null;
           return (
-            <Container>
-              <Title>Now trending in {data.community.name}</Title>
+            <React.Fragment>
+              <Container style={{ paddingBottom: '4px' }}>
+                <SidebarSectionHeading>
+                  Trending conversations
+                </SidebarSectionHeading>
+              </Container>
               {threads.map(thread => (
                 <ThreadListItem thread={thread} key={thread.id} />
               ))}
-            </Container>
+            </React.Fragment>
           );
         }
 

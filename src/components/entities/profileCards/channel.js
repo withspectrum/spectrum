@@ -22,7 +22,7 @@ export const ChannelProfileCard = (props: Props) => {
       {!hideActions ? (
         <ChannelActions channel={channel} />
       ) : (
-        <div style={{ paddingBottom: '18px' }} />
+        <div style={{ paddingBottom: '12px' }} />
       )}
     </ProfileContainer>
   );
