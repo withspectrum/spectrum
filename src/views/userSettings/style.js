@@ -140,13 +140,9 @@ export const GithubSignin = styled.div`
 `;
 
 export const LogoutWrapper = styled.div`
-  display: none;
+  display: block;
 
   button {
     width: 100%;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: block;
   }
 `;
