@@ -94,7 +94,8 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
 
   triggerDelete = () => {
     const {
-      modalProps: { id, entity, redirect },
+      history,
+      modalProps: { id, entity, redirect, extraProps },
       dispatch,
     } = this.props;
 
@@ -115,16 +116,13 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           this.close();
         });
       case 'thread': {
+        const { community } = extraProps.thread;
         return this.props
           .deleteThread(id)
           .then(({ data }: DeleteThreadType) => {
             const { deleteThread } = data;
             if (deleteThread) {
-              // TODO: When we figure out the mutation reducers in apollo
-              // client we can just history push and trust the store to update
-              // eslint-disable-next-line
-              window.location.href = redirect ? redirect : '/';
-              // history.push(redirect ? redirect : '/');
+              history.replace(`/${community.slug}?tab=posts`);
               dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
               this.setState({
                 isLoading: false,
