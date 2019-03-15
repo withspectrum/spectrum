@@ -34,6 +34,7 @@ import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
 import DesktopAppUpsell from '../components/desktopAppUpsell';
+import TopBottomButtons from '../components/topBottomButtons';
 import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 
@@ -135,6 +136,7 @@ const ThreadContainer = (props: Props) => {
   return (
     <React.Fragment>
       <ThreadHead thread={thread} />
+      <TopBottomButtons />
       <ViewGrid>
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>

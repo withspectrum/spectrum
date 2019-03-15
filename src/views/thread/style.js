@@ -843,3 +843,47 @@ export const LockedText = styled.div`
   font-weight: 500;
   margin-left: 16px;
 `;
+
+export const TopBottomButtonContainer = styled.div`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  transform: translateY(${props => (props.isVisible ? '0' : '8px')});
+  transition: transform opacity 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.alt};
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 3000;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (max-width: ${MEDIA_BREAK + 72}px) {
+    bottom: 84px;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
+export const TopButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+
+  &:hover {
+    color: ${theme.text.secondary};
+  }
+`;
+export const BottomButton = styled(TopButton)`
+  border-top: 1px solid ${theme.bg.border};
+`;
