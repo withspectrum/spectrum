@@ -542,8 +542,8 @@ const mapStateToProps = state => ({
 
 export default compose(
   uploadImage,
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  withRouter, // needed to use history.push() as a post-publish action
+  getComposerCommunitiesAndChannels,
+  publishThread,
+  withRouter,
   connect(mapStateToProps)
 )(ComposerWithData);

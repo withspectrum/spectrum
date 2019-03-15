@@ -8,8 +8,6 @@ type Props = {
   leftAction: 'menu' | 'view-back' | $React.Element,
   titleIcon?: any,
   rightAction?: any,
-  forceHistoryBack?: string,
-  previousHistoryBackFallback?: string,
 };
 
 export const MobileTitlebar = (props: Props) => (

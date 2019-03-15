@@ -33,7 +33,7 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
     const { token, communitySlug } = match.params;
 
     if (!token) {
-      return history.push(`/${communitySlug}`);
+      return history.replace(`/${communitySlug}`);
     }
 
     if (!currentUser) {
@@ -66,12 +66,12 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
       .then(() => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('success', 'Welcome!'));
-        return history.push(`/${communitySlug}`);
+        return history.replace(`/${communitySlug}`);
       })
       .catch(err => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('error', err.message));
-        return history.push(`/${communitySlug}`);
+        return history.replace(`/${communitySlug}`);
       });
   };
 

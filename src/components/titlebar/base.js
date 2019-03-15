@@ -21,24 +21,11 @@ type Props = {
 };
 
 const MobileTitlebar = (props: Props) => {
-  const {
-    title,
-    titleIcon,
-    rightAction,
-    leftAction,
-    history,
-    previousHistoryBackFallback,
-    forceHistoryBack,
-    ...rest
-  } = props;
+  const { title, titleIcon, rightAction, leftAction, history, ...rest } = props;
 
   const handleMenuClick = setNavOpen => () => {
     if (leftAction === 'menu') {
       return setNavOpen(true);
-    }
-
-    if (forceHistoryBack) {
-      return history.push(forceHistoryBack);
     }
 
     if (history.length >= 3) {
@@ -47,7 +34,7 @@ const MobileTitlebar = (props: Props) => {
 
     // if there is not history, redirect back to the home view of the app
     // and let the redirect handler push the user to their last-viewed community
-    return history.push(previousHistoryBackFallback || '/');
+    return history.push('/');
   };
 
   const leftActionComponent = setNavigationIsOpen => {

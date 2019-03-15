@@ -5,8 +5,6 @@ import { Route } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
-import { storeItem } from 'src/helpers/localStorage';
-import { LAST_ACTIVE_COMMUNITY_KEY } from 'src/views/homeViewRedirect';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { getAccessibilityActiveState } from './accessibility';
 import {
@@ -73,7 +71,6 @@ const CommunityList = (props: Props) => {
           const community = sorted[index];
           if (!community) return;
           setNavigationIsOpen(false);
-          storeItem(LAST_ACTIVE_COMMUNITY_KEY, community.id);
           return history.push(`/${community.slug}`);
         }
       }
@@ -84,11 +81,6 @@ const CommunityList = (props: Props) => {
     return () =>
       window.removeEventListener('keydown', handleCommunitySwitch, false);
   }, []);
-
-  const handleCommunityClick = (id: string) => () => {
-    storeItem(LAST_ACTIVE_COMMUNITY_KEY, id);
-    setNavigationIsOpen(false);
-  };
 
   const appControlSymbol = '⌘';
 
@@ -112,7 +104,7 @@ const CommunityList = (props: Props) => {
             >
               <AvatarLink
                 to={`/${community.slug}`}
-                onClick={handleCommunityClick(community.id)}
+                onClick={() => setNavigationIsOpen(false)}
                 {...getAccessibilityActiveState(
                   match &&
                     match.params &&

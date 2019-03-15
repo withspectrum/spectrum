@@ -80,7 +80,8 @@ class UserView extends React.Component<Props, State> {
     const { location, history } = props;
     const { search } = location;
     const { tab } = querystring.parse(search);
-    if (!tab) history.push({ search: querystring.stringify({ tab: 'posts' }) });
+    if (!tab)
+      history.replace({ search: querystring.stringify({ tab: 'posts' }) });
   }
 
   componentDidMount() {
@@ -151,7 +152,7 @@ class UserView extends React.Component<Props, State> {
 
   handleSegmentClick = (tab: string) => {
     const { history } = this.props;
-    return history.push({ search: querystring.stringify({ tab }) });
+    return history.replace({ search: querystring.stringify({ tab }) });
   };
 
   initReport = () => {

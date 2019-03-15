@@ -25,18 +25,20 @@ const Feeds = (props: CommunityFeedsType) => {
   const { tab } = querystring.parse(search);
 
   const changeTab = (tab: string) => {
-    return history.push({ search: querystring.stringify({ tab }) });
+    return history.replace({ search: querystring.stringify({ tab }) });
   };
 
-  if (!tab) {
-    const defaultTab = community.watercoolerId ? 'chat' : 'posts';
-    changeTab(defaultTab);
-  }
-
-  const activeSegment = tab;
+  useEffect(() => {
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    if (!tab) {
+      const defaultTab = community.watercoolerId ? 'chat' : 'posts';
+      changeTab(defaultTab);
+    }
+  }, []);
 
   const renderFeed = () => {
-    switch (activeSegment) {
+    switch (tab) {
       case 'chat': {
         if (!community.watercoolerId) return null;
         return (
@@ -104,12 +106,12 @@ const Feeds = (props: CommunityFeedsType) => {
   */
   const { scrollToBottom, scrollToTop } = useAppScroller();
   useEffect(() => {
-    if (activeSegment === 'chat') {
+    if (tab === 'chat') {
       scrollToBottom();
     } else {
       scrollToTop();
     }
-  }, [activeSegment, community.slug]);
+  }, [tab, community.slug]);
 
   const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');
@@ -117,7 +119,7 @@ const Feeds = (props: CommunityFeedsType) => {
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
   useEffect(() => {
-    if (activeSegment === 'chat') {
+    if (tab === 'chat') {
       if (!community.watercoolerId) {
         changeTab('posts');
       }
@@ -132,7 +134,7 @@ const Feeds = (props: CommunityFeedsType) => {
             <Segment
               key={segment}
               hideOnDesktop={segment === 'info'}
-              isActive={segment === activeSegment}
+              isActive={segment === tab}
               onClick={() => changeTab(segment)}
             >
               {segment[0].toUpperCase() + segment.substr(1)}
