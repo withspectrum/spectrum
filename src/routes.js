@@ -15,6 +15,7 @@ import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
 import GlobalStyles from './reset.css.js';
+import { GlobalThreadAttachmentStyles } from 'src/components/message/threadAttachment/style';
 import { theme } from 'shared/theme';
 import AppViewWrapper from 'src/components/appViewWrapper';
 import ScrollManager from 'src/components/scrollManager';
@@ -244,6 +245,7 @@ class Routes extends React.Component<Props> {
             {/* default meta tags, get overriden by anything further down the tree */}
             <Head title={title} description={description} />
             <GlobalStyles />
+            <GlobalThreadAttachmentStyles />
 
             {/* dont let non-critical pieces of UI crash the whole app */}
             <ErrorBoundary>

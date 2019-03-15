@@ -9,7 +9,7 @@ export const LinkWrapper = styled(Link)``;
 export const Column = styled.div``;
 export const AvatarWrapper = styled.div``;
 
-createGlobalStyle`
+export const GlobalThreadAttachmentStyles = createGlobalStyle`
   .attachment-container {
 
     h3 {
