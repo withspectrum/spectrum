@@ -41,6 +41,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { ViewGrid } from 'src/components/layout';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { StyledSingleColumn } from './style';
+import { updateNotificationsCount } from '../../actions/notifications';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -78,6 +79,7 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   markAllNotificationsSeen = () => {
+    this.props.dispatch(updateNotificationsCount('notifications', 0));
     this.props.markAllNotificationsSeen &&
       this.props.markAllNotificationsSeen().catch(err => {
         console.error('Error marking all notifications seen: ', err);
