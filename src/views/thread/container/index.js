@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -37,6 +37,7 @@ import DesktopAppUpsell from '../components/desktopAppUpsell';
 import TopBottomButtons from '../components/topBottomButtons';
 import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 
 const ThreadContainer = (props: Props) => {
   const { data, isLoading, client, currentUser, dispatch } = props;
@@ -49,11 +50,11 @@ const ThreadContainer = (props: Props) => {
   const { id } = thread;
 
   /*
-    update the last seen timestamp of the current thread whenever it first
-    loads, as well as when it unmounts as the user closes the thread. This
-    should provide the effect of locally marking the thread as "seen" while
-    athena handles storing the actual lastSeen timestamp update in the background
-    asynchronously.
+  update the last seen timestamp of the current thread whenever it first
+  loads, as well as when it unmounts as the user closes the thread. This
+  should provide the effect of locally marking the thread as "seen" while
+  athena handles storing the actual lastSeen timestamp update in the background
+  asynchronously.
   */
   const updateThreadLastSeen = () => {
     if (!currentUser || !thread) return;
@@ -83,6 +84,24 @@ const ThreadContainer = (props: Props) => {
       // Errors that happen with this shouldn't crash the app
       console.error(err);
     }
+  };
+
+  const [mentionSuggestions, setMentionSuggestions] = useState([
+    thread.author.user,
+  ]);
+  const updateMentionSuggestions = (thread: Thread) => {
+    const { messageConnection, author } = thread;
+
+    if (!messageConnection || messageConnection.edges.length === 0)
+      return setMentionSuggestions([author.user]);
+
+    const participants = messageConnection.edges
+      .map(edge => edge.node)
+      .map(node => node.author.user);
+
+    const participantsWithAuthor = [...participants, author.user];
+    const filtered = deduplicateChildren(participantsWithAuthor, 'id');
+    return setMentionSuggestions(filtered);
   };
 
   const markCurrentThreadNotificationsAsSeen = () => {
@@ -167,12 +186,17 @@ const ThreadContainer = (props: Props) => {
                 id={thread.id}
                 thread={thread}
                 isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+                onMessagesLoaded={updateMentionSuggestions}
               />
             </Stretch>
 
             {canChat && (
               <ChatInputWrapper>
-                <ChatInput threadType="story" threadId={thread.id} />
+                <ChatInput
+                  threadType="story"
+                  threadId={thread.id}
+                  participants={mentionSuggestions}
+                />
               </ChatInputWrapper>
             )}
 

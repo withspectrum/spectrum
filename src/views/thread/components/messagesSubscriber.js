@@ -22,6 +22,7 @@ type Props = {
   loadPreviousPage: Function,
   loadNextPage: Function,
   subscribeToNewMessages: Function,
+  onMessagesLoaded?: Function,
   ...$Exact<ViewNetworkHandlerType>,
 };
 
@@ -85,7 +86,39 @@ class Messages extends React.Component<Props> {
     return null;
   }
 
-  componentDidUpdate(_, __, snapshot) {
+  componentDidUpdate(prevProps, __, snapshot) {
+    const { onMessagesLoaded } = this.props;
+    // after the messages load, pass it back to the thread container so that
+    // it can populate @ mention suggestions
+    const prevData = prevProps.data;
+    const currData = this.props.data;
+    const wasLoading = prevData && prevData.loading;
+    const hasPrevThread = prevData && prevData.thread;
+    const hasCurrThread = currData && currData.thread;
+    const previousMessageConnection =
+      hasPrevThread && prevData.thread.messageConnection;
+    const currMessageConnection =
+      hasCurrThread && currData.thread.messageConnection;
+    // thread loaded for the first time
+    if (!hasPrevThread && hasCurrThread) {
+      if (currMessageConnection.edges.length > 0) {
+        onMessagesLoaded && onMessagesLoaded(currData.thread);
+      }
+    }
+    // new messages arrived
+    if (previousMessageConnection && hasCurrThread) {
+      if (
+        currMessageConnection.edges.length >
+        previousMessageConnection.edges.length
+      ) {
+        onMessagesLoaded && onMessagesLoaded(currData.thread);
+      }
+      // already loaded the thread, but was refetched
+      if (wasLoading && !currData.loading) {
+        onMessagesLoaded && onMessagesLoaded(currData.thread);
+      }
+    }
+
     if (snapshot) {
       const elem = document.getElementById('main');
       if (!elem) return;
