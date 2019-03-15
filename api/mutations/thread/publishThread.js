@@ -16,6 +16,7 @@ import { createParticipantInThread } from '../../models/usersThreads';
 import type { FileUpload, DBThread } from 'shared/types';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { setCommunityLastActive } from '../../models/community';
+import { setCommunityLastSeen } from '../../models/usersCommunities';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
@@ -334,9 +335,17 @@ export default requireAuth(
     }
 
     // create a relationship between the thread and the author and set community lastActive
+    const timestamp = new Date(dbThread.createdAt).getTime();
     await Promise.all([
       createParticipantInThread(dbThread.id, user.id),
-      setCommunityLastActive(dbThread.communityId, new Date()),
+      setCommunityLastActive(dbThread.communityId, new Date(timestamp)),
+      // Make sure Community.lastSeen > Community.lastActive by one second
+      // for the author
+      setCommunityLastSeen(
+        dbThread.communityId,
+        user.id,
+        new Date(timestamp + 1000)
+      ),
     ]);
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
