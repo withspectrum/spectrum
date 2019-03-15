@@ -1,13 +1,11 @@
 // @flow
 import React from 'react';
 import { withRouter } from 'react-router';
+import querystring from 'query-string';
 import compose from 'recompose/compose';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { SERVER_URL } from 'src/api/constants';
 import { LoadingView } from 'src/views/viewHelpers';
-import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
-
-export const LAST_ACTIVE_COMMUNITY_KEY = 'last-active-inbox-community';
 
 const HomeViewRedirect = (props: Props) => {
   const { data, history } = props;
@@ -29,11 +27,28 @@ const HomeViewRedirect = (props: Props) => {
     return null;
   }
 
-  // if the user has previously been viewing a community, take them back
-  const id = getItemFromStorage(LAST_ACTIVE_COMMUNITY_KEY);
-  const previouslySelected = communities.find(community => community.id === id);
-  if (previouslySelected) {
-    history.replace(`/${previouslySelected.slug}`);
+  const getSearch = community => {
+    const { watercoolerId } = community;
+    const tab = watercoolerId ? 'chat' : 'posts';
+    return querystring.stringify({ tab });
+  };
+
+  const recentlyActive = communities.sort((a, b) => {
+    if (!a.communityPermissions.lastSeen) return 1;
+    if (!b.communityPermissions.lastSeen) return -1;
+
+    const x = new Date(a.communityPermissions.lastSeen).getTime();
+    const y = new Date(b.communityPermissions.lastSeen).getTime();
+    const val = y - x;
+    return val;
+  })[0];
+
+  if (recentlyActive) {
+    const search = getSearch(recentlyActive);
+    history.replace({
+      pathname: `/${recentlyActive.slug}`,
+      search,
+    });
     return null;
   }
 
@@ -49,9 +64,13 @@ const HomeViewRedirect = (props: Props) => {
     // otherwise sort by reputation
     return bc <= ac ? -1 : 1;
   });
+
   const first = sorted[0];
-  storeItem(LAST_ACTIVE_COMMUNITY_KEY, first.id);
-  history.replace(`/${first.slug}`);
+  const search = getSearch(first);
+  history.replace({
+    pathname: `/${first.slug}`,
+    search,
+  });
   return null;
 };
 
