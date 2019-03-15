@@ -25,7 +25,10 @@ const Feeds = (props: CommunityFeedsType) => {
   const { tab } = querystring.parse(search);
 
   const changeTab = (tab: string) => {
-    return history.replace({ search: querystring.stringify({ tab }) });
+    return history.replace({
+      ...location,
+      search: querystring.stringify({ tab }),
+    });
   };
 
   const handleTabRedirect = () => {

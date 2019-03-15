@@ -74,7 +74,10 @@ class ChannelView extends React.Component<Props, State> {
     const { search } = location;
     const { tab } = querystring.parse(search);
     if (!tab)
-      history.replace({ search: querystring.stringify({ tab: 'posts' }) });
+      history.replace({
+        ...location,
+        search: querystring.stringify({ tab: 'posts' }),
+      });
   }
 
   componentDidMount() {
@@ -134,8 +137,11 @@ class ChannelView extends React.Component<Props, State> {
   }
 
   handleSegmentClick = (tab: string) => {
-    const { history } = this.props;
-    return history.replace({ search: querystring.stringify({ tab }) });
+    const { history, location } = this.props;
+    return history.replace({
+      ...location,
+      search: querystring.stringify({ tab }),
+    });
   };
 
   renderActionButton = (channel: GetChannelType) => {
