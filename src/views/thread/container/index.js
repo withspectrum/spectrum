@@ -160,8 +160,6 @@ const ThreadContainer = (props: Props) => {
       <ViewGrid>
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
-            <DesktopAppUpsell />
-
             <SidebarSection>
               <CommunityProfileCard community={community} />
             </SidebarSection>
@@ -177,6 +175,8 @@ const ThreadContainer = (props: Props) => {
             <SidebarSection>
               <TrendingThreads id={community.id} />
             </SidebarSection>
+
+            <DesktopAppUpsell />
           </SecondaryColumn>
 
           <PrimaryColumn>
