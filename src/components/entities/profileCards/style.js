@@ -43,7 +43,7 @@ export const ProfileAvatarContainer = styled.div`
   border-radius: 10px;
   background: ${theme.bg.default};
   border: 4px solid ${theme.bg.default};
-  margin-bottom: -52px;
+  margin-bottom: -44px;
 `;
 
 export const RoundProfileAvatarContainer = styled.div`
@@ -76,7 +76,7 @@ export const MetaContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 16px;
-  margin-top: 24px;
+  margin-top: 16px;
 `;
 
 export const Name = styled.h1`
