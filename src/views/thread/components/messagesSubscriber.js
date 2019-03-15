@@ -5,6 +5,7 @@ import getThreadMessages, {
   type GetThreadMessageConnectionType,
 } from 'shared/graphql/queries/thread/getThreadMessageConnection';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
+import NextPageButton from 'src/components/nextPageButton';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
@@ -154,31 +155,16 @@ class Messages extends React.Component<Props> {
 
     if (!sortedMessages || sortedMessages.length === 0) return <NullMessages />;
 
-    const hasMore = thread.watercooler
-      ? messageConnection.pageInfo.hasPreviousPage
-      : messageConnection.pageInfo.hasNextPage;
-    const loadMore = () => {
-      if (isFetchingMore) return Promise.resolve();
-      if (!hasMore) return Promise.resolve();
-
-      return thread.watercooler
-        ? this.props.loadPreviousPage()
-        : this.props.loadNextPage();
-    };
-
     return (
-      <InfiniteScroller
-        hasMore={hasMore}
-        isReverse={!!thread.watercooler}
-        loadMore={loadMore}
-        loader={
-          <Loading
-            style={{ marginBottom: '300px', marginTop: '50px' }}
-            key={0}
-          />
-        }
-        threshold={700}
-      >
+      <React.Fragment>
+        {messageConnection.pageInfo.hasPreviousPage && (
+          <NextPageButton
+            isFetchingMore={isFetchingMore}
+            fetchMore={this.props.loadPreviousPage}
+          >
+            Load more
+          </NextPageButton>
+        )}
         <ChatMessages
           thread={thread}
           uniqueMessageCount={unsortedMessages.length}
@@ -186,7 +172,15 @@ class Messages extends React.Component<Props> {
           threadType={'story'}
           isWatercooler={thread.watercooler}
         />
-      </InfiniteScroller>
+        {messageConnection.pageInfo.hasNextPage && (
+          <NextPageButton
+            isFetchingMore={isFetchingMore}
+            fetchMore={this.props.loadNextPage}
+          >
+            Load more
+          </NextPageButton>
+        )}
+      </React.Fragment>
     );
   }
 }
