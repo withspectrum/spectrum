@@ -13,6 +13,7 @@ import {
 } from 'src/components/globals';
 import { HorizontalRule } from 'src/components/globals';
 import Card from 'src/components/card';
+import { SingleColumnGrid } from 'src/components/layout';
 import { IconButton } from 'src/components/buttons';
 
 export const HzRule = styled(HorizontalRule)`
@@ -341,4 +342,9 @@ export const ToggleNotificationsContainer = styled.div`
   align-items: center;
   height: 100%;
   cursor: pointer;
+`;
+
+export const StyledSingleColumn = styled(SingleColumnGrid)`
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
 `;

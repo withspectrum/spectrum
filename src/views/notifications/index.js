@@ -17,7 +17,6 @@ import { PrivateChannelRequestApproved } from './components/privateChannelReques
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
 import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
 import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
-import { Column } from 'src/components/column';
 import Head from 'src/components/head';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { LoadingThread } from 'src/components/loading';
@@ -39,8 +38,9 @@ import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
-import { ViewGrid, SingleColumnGrid } from 'src/components/layout';
+import { ViewGrid } from 'src/components/layout';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { StyledSingleColumn } from './style';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -196,7 +196,7 @@ class NotificationsPure extends React.Component<Props, State> {
         <React.Fragment>
           <Head title={title} description={description} />
           <ViewGrid>
-            <SingleColumnGrid>
+            <StyledSingleColumn>
               <React.Fragment>
                 {!isDesktopApp() && this.state.showWebPushPrompt && (
                   <BrowserNotificationRequest
@@ -341,7 +341,7 @@ class NotificationsPure extends React.Component<Props, State> {
                   })}
                 </InfiniteList>
               </React.Fragment>
-            </SingleColumnGrid>
+            </StyledSingleColumn>
           </ViewGrid>
         </React.Fragment>
       );

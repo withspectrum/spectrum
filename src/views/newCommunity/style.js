@@ -13,6 +13,8 @@ export const Container = styled(Card)`
   background-position: ${props =>
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
   max-width: ${MEDIA_BREAK}px;
   height: 100%;
   min-height: 100vh;
