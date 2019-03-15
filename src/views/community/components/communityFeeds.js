@@ -28,14 +28,23 @@ const Feeds = (props: CommunityFeedsType) => {
     return history.replace({ search: querystring.stringify({ tab }) });
   };
 
-  useEffect(() => {
+  const handleTabRedirect = () => {
     const { search } = location;
     const { tab } = querystring.parse(search);
+
     if (!tab) {
       const defaultTab = community.watercoolerId ? 'chat' : 'posts';
       changeTab(defaultTab);
     }
-  }, [community.id]);
+
+    if (tab === 'chat' && !community.watercoolerId) {
+      changeTab('posts');
+    }
+  };
+
+  useEffect(() => {
+    handleTabRedirect();
+  }, []);
 
   const renderFeed = () => {
     switch (tab) {
@@ -119,11 +128,7 @@ const Feeds = (props: CommunityFeedsType) => {
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
   useEffect(() => {
-    if (tab === 'chat') {
-      if (!community.watercoolerId) {
-        changeTab('posts');
-      }
-    }
+    handleTabRedirect();
   }, [community.slug]);
 
   return (

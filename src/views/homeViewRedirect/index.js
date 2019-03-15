@@ -20,18 +20,12 @@ const HomeViewRedirect = (props: Props) => {
   const { communityConnection } = user;
   const { edges } = communityConnection;
   const communities = edges.map(edge => edge && edge.node);
-
+  history.replace('/spectrum');
   // if the user hasn't joined any communities yet, help them find some
   if (!communities || communities.length === 0) {
     history.replace('/explore');
     return null;
   }
-
-  const getSearch = community => {
-    const { watercoolerId } = community;
-    const tab = watercoolerId ? 'chat' : 'posts';
-    return querystring.stringify({ tab });
-  };
 
   const recentlyActive = communities.sort((a, b) => {
     if (!a.communityPermissions.lastSeen) return 1;
@@ -44,11 +38,7 @@ const HomeViewRedirect = (props: Props) => {
   })[0];
 
   if (recentlyActive) {
-    const search = getSearch(recentlyActive);
-    history.replace({
-      pathname: `/${recentlyActive.slug}`,
-      search,
-    });
+    history.replace(`/${recentlyActive.slug}`);
     return null;
   }
 
@@ -66,11 +56,7 @@ const HomeViewRedirect = (props: Props) => {
   });
 
   const first = sorted[0];
-  const search = getSearch(first);
-  history.replace({
-    pathname: `/${first.slug}`,
-    search,
-  });
+  history.replace(`/${first.slug}`);
   return null;
 };
 
