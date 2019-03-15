@@ -60,6 +60,20 @@ class Messages extends React.Component<Props> {
       const elem = document.getElementById('main');
       if (!elem) return null;
 
+      // If new messages were added at the top, persist the scroll position
+      if (
+        prev.data.thread.messageConnection.edges[0].node.id !==
+        curr.data.thread.messageConnection.edges[0].node.id
+      ) {
+        return {
+          type: 'persist',
+          values: {
+            top: elem.scrollTop,
+            height: elem.scrollHeight,
+          },
+        };
+      }
+
       // If we are near the bottom when new messages come in, stick to the bottom
       if (elem.scrollHeight < elem.scrollTop + elem.clientHeight + 400) {
         return {
@@ -67,22 +81,8 @@ class Messages extends React.Component<Props> {
         };
       }
 
-      // If messages were added at the end, keep the scroll position the same
-      if (
-        prev.data.thread.messageConnection.edges[0].node.id ===
-        curr.data.thread.messageConnection.edges[0].node.id
-      ) {
-        return null;
-      }
-
-      // If messages were added at the top, persist the scroll position
-      return {
-        type: 'persist',
-        values: {
-          top: elem.scrollTop,
-          height: elem.scrollHeight,
-        },
-      };
+      // Otherwise stick to the current position
+      return null;
     }
     return null;
   }
