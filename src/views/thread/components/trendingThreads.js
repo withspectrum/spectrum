@@ -9,10 +9,18 @@ import getThreadLink from 'src/helpers/get-thread-link';
 import theme from 'shared/theme';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 
-const ThreadListItemContainer = styled.span`
+const ThreadListItemContainer = styled(Link)`
   display: block;
+  padding: 4px 8px;
+  margin-left: -8px;
+  width: calc(100% + 16px) !important;
+
   &:hover {
     background-color: ${theme.bg.wash};
+  }
+
+  &:first-of-type {
+    margin-top: 8px;
   }
 `;
 
@@ -21,11 +29,9 @@ type ThreadListItemProps = {
 };
 
 const ThreadListItem = (props: ThreadListItemProps) => (
-  <Link to={getThreadLink(props.thread)}>
-    <ThreadListItemContainer>
-      {props.thread.content.title}
-    </ThreadListItemContainer>
-  </Link>
+  <ThreadListItemContainer to={getThreadLink(props.thread)}>
+    {props.thread.content.title}
+  </ThreadListItemContainer>
 );
 
 type Props = {
@@ -45,11 +51,13 @@ const TrendingThreads = (props: Props) => {
               ({ node }) => node
               // Only show five other trending threads
             )
+            // Don't show watercoolers
+            .filter(thread => !thread.watercooler)
             .slice(0, 5);
           if (threads.length === 0) return null;
           return (
             <Container>
-              <Title>Trending threads</Title>
+              <Title>Now trending in {data.community.name}</Title>
               {threads.map(thread => (
                 <ThreadListItem thread={thread} key={thread.id} />
               ))}
