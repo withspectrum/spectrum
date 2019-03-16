@@ -138,7 +138,8 @@ const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const CommunityLoginFallback = signedOutFallback(
   props => <Redirect to={`/${props.match.params.communitySlug}`} />,
-  CommunityLoginView
+  CommunityLoginView,
+  'preview'
 );
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
   <Login redirectPath={`${CLIENT_URL}/new/community`} />

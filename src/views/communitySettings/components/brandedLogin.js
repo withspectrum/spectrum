@@ -145,7 +145,7 @@ class BrandedLogin extends React.Component<Props, State> {
                 </Button>
 
                 <Link
-                  to={`/${community.slug}/login`}
+                  to={`/${community.slug}/login?preview`}
                   style={{ marginRight: '8px' }}
                 >
                   <OutlineButton
