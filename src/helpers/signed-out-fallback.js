@@ -41,7 +41,7 @@ const ConnectedSwitch = compose(withCurrentUser)(Switch);
 const signedOutFallback = (
   Component: React$ComponentType<*>,
   FallbackComponent: React$ComponentType<*>,
-  searchParamException: string = null
+  searchParamException: ?string = null
 ) => {
   return (props: *) => (
     <ConnectedSwitch
