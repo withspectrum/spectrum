@@ -71,12 +71,7 @@ class InboxThread extends React.Component<Props> {
           data-cy="thread-card"
           active={active}
         >
-          <InboxLinkWrapper
-            to={{
-              pathname: getThreadLink(thread),
-              state: { modal: false },
-            }}
-          />
+          <InboxLinkWrapper to={{ pathname: getThreadLink(thread) }} />
 
           <InboxThreadContent>
             {viewContext !== 'userProfile' &&

@@ -44,7 +44,6 @@ export class MentionMessageNotification extends React.Component<Props, State> {
         <CardLink
           to={{
             pathname: getThreadLink(notification.context.payload),
-            state: { modal: true },
           }}
         />
         <SpecialContext>
@@ -78,7 +77,6 @@ export class MiniMentionMessageNotification extends React.Component<
         <CardLink
           to={{
             pathname: getThreadLink(notification.context.payload),
-            state: { modal: true },
           }}
         />
         <CardContent>

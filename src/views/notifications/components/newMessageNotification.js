@@ -50,7 +50,6 @@ export const NewMessageNotification = ({
       <CardLink
         to={{
           pathname: getThreadLink(notification.context.payload),
-          state: { modal: true },
         }}
       />
       <CardContent>
@@ -84,7 +83,6 @@ export const MiniNewMessageNotification = ({
       <CardLink
         to={{
           pathname: getThreadLink(notification.context.payload),
-          state: { modal: true },
         }}
       />
       <CardContent>

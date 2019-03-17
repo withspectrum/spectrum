@@ -27,12 +27,7 @@ class ThreadListItem extends React.Component<Props> {
 
     return (
       <StyledThreadListItem>
-        <Link
-          to={{
-            pathname: getThreadLink(this.props.thread),
-            state: { modal: true },
-          }}
-        >
+        <Link to={{ pathname: getThreadLink(this.props.thread) }}>
           <ThreadListItemTitle>{title}</ThreadListItemTitle>
         </Link>
         {messageCount > 0 && (

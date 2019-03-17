@@ -115,7 +115,6 @@ export class MiniMentionThreadNotification extends React.Component<
         <CardLink
           to={{
             pathname: getThreadLink(notification.context.payload),
-            state: { modal: true },
           }}
         />
         <CardContent>
