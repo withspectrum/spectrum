@@ -58,7 +58,7 @@
     "graphql-tools": "^4.0.4",
     "helmet": "^3.15.1",
     "highlight.js": "^9.15.6",
-    "history": "^4.6.1",
+    "history": "^4.9.0",
     "hoist-non-react-statics": "^2.5.5",
     "host-validation": "^1.2.0",
     "hot-shots": "^5.9.2",
