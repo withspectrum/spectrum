@@ -12,7 +12,9 @@ const Switch = props => {
   if (searchParamException) {
     const searchParamsString = (props.location && props.location.search) || '';
     const searchParams = queryString.parse(searchParamsString);
-    isException = !!searchParams[searchParamException];
+    isException =
+      searchParams[searchParamException] === null ||
+      searchParams[searchParamException] !== 'false';
   }
 
   return (
