@@ -3,6 +3,7 @@ import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Button } from 'src/components/buttons';
+import { ViewGrid } from 'src/components/layout';
 import {
   H2,
   FlexCol,
@@ -746,5 +747,11 @@ export const AuthTab = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
+  }
+`;
+
+export const StyledViewGrid = styled(ViewGrid)`
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-height: 100vh;
   }
 `;

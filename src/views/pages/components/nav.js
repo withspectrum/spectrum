@@ -99,6 +99,9 @@ class Nav extends React.Component<Props, State> {
                 <UserAvatar
                   user={this.props.currentUser}
                   dataCy="navbar-splash-profile"
+                  clickable={false}
+                  showOnlineStatus={false}
+                  showHoverProfile={false}
                 />
               </Link>
             ) : (

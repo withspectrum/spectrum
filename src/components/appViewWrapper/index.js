@@ -3,6 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { StyledAppViewWrapper } from './style';
 
 class AppViewWrapper extends React.Component<Props> {
@@ -47,13 +48,16 @@ class AppViewWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { currentUser } = this.props;
-    const isSignedIn = currentUser && currentUser.id;
+    const { currentUser, history, location } = this.props;
+
+    const isMarketingPage = isViewingMarketingPage(history, currentUser);
+    const isViewingExplore = location && location.pathname === '/explore';
+    const isTwoColumn = isViewingExplore || !isMarketingPage;
 
     return (
       <StyledAppViewWrapper
         ref={el => (this.ref = el)}
-        isSignedIn={isSignedIn}
+        isTwoColumn={isTwoColumn}
         {...this.props}
       />
     );

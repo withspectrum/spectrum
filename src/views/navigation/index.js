@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { withRouter, Route } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
 import { UserAvatar } from 'src/components/avatar';
+import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Overlay,
@@ -26,8 +27,153 @@ import { NavigationContext } from 'src/routes';
 
 const Navigation = (props: Props) => {
   const { currentUser, history } = props;
+  const isMarketingPage = isViewingMarketingPage(history, currentUser);
+  if (isMarketingPage) return null;
 
-  if (!currentUser) return null;
+  if (!currentUser) {
+    return (
+      <NavigationContext.Consumer>
+        {({ navigationIsOpen, setNavigationIsOpen }) => (
+          <NavigationWrapper isOpen={navigationIsOpen}>
+            <Overlay
+              isOpen={navigationIsOpen}
+              onClick={() => setNavigationIsOpen(false)}
+            />
+
+            <NavigationGrid isOpen={navigationIsOpen}>
+              <Route path="/about">
+                {({ match }) => (
+                  <Tooltip content="Home" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/about'}
+                        data-cy="navbar-home"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="logo" />
+                        </IconWrapper>
+
+                        <Label>Home</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Route path="/features">
+                {({ match }) => (
+                  <Tooltip content="Features" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/features'}
+                        data-cy="navbar-features"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="announcement" />
+                        </IconWrapper>
+
+                        <Label>Features</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Route path="/support">
+                {({ match }) => (
+                  <Tooltip content="Support" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/support'}
+                        data-cy="navbar-support"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="support" />
+                        </IconWrapper>
+
+                        <Label>Support</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Route path="/apps">
+                {({ match }) => (
+                  <Tooltip content="Apps" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/apps'}
+                        data-cy="navbar-apps"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="download" />
+                        </IconWrapper>
+
+                        <Label>Apps</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Route path="/explore">
+                {({ match }) => (
+                  <Tooltip content="Explore" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/explore'}
+                        data-cy="navbar-explore"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="explore" />
+                        </IconWrapper>
+
+                        <Label>Explore</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Divider />
+
+              <Route path="/login">
+                {({ match }) => (
+                  <Tooltip content="login" placement={'left'}>
+                    <AvatarGrid isActive={!!match}>
+                      <AvatarLink
+                        to={'/login'}
+                        data-cy="navbar-login"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(!!match)}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="door-enter" />
+                        </IconWrapper>
+
+                        <Label>Log in or sign up</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+            </NavigationGrid>
+          </NavigationWrapper>
+        )}
+      </NavigationContext.Consumer>
+    );
+  }
 
   return (
     <NavigationContext.Consumer>

@@ -31,7 +31,7 @@ class Features extends React.Component<Props, State> {
           title={'Spectrum · Apps'}
           description={'Download Spectrum for Mac and Windows'}
         />
-        <Section goop={6} color="text.default">
+        <Section goop={6} color="bg.reverse">
           <Intro>
             <TextContent>
               <Heading>Spectrum for Mac</Heading>
