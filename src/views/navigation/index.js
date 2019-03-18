@@ -117,6 +117,41 @@ const Navigation = (props: Props) => {
               navigationIsOpen={navigationIsOpen}
               {...props}
             />
+
+            {currentUser && (
+              <React.Fragment>
+                <Divider />
+                <Route path="/new/community">
+                  {({ match }) => (
+                    <Tooltip content="Create a community" placement={'left'}>
+                      <AvatarGrid
+                        isActive={
+                          match &&
+                          match.url === '/new/community' &&
+                          match.isExact
+                        }
+                      >
+                        <AvatarLink
+                          to={'/new/community'}
+                          data-cy="navbar-new-community"
+                          {...getAccessibilityActiveState(
+                            match &&
+                              match.url === '/new/community' &&
+                              match.isExact
+                          )}
+                        >
+                          <IconWrapper>
+                            <Icon glyph="plus" />
+                          </IconWrapper>
+
+                          <Label>Create a community</Label>
+                        </AvatarLink>
+                      </AvatarGrid>
+                    </Tooltip>
+                  )}
+                </Route>
+              </React.Fragment>
+            )}
           </NavigationGrid>
         </NavigationWrapper>
       )}
