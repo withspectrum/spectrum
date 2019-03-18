@@ -13,6 +13,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
   let masterArray = [];
   let newArray = [];
   let checkId;
+  let checkBot;
 
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
@@ -34,12 +35,14 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
 
     if (i === 0) {
       checkId = messages[i].author.user.id;
+      checkBot = messages[i].bot;
       masterArray.push(robo);
     }
 
     const sameUser =
       messages[i].author.user.id !== 'robo' &&
-      messages[i].author.user.id === checkId; //=> boolean
+      messages[i].author.user.id === checkId &&
+      messages[i].bot === checkBot; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -88,6 +91,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
       }
       // and maintain the checkid
       checkId = messages[i].author.user.id;
+      checkBot = messages[i].bot;
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
@@ -107,6 +111,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
 
       // set a new checkid for the next user
       checkId = messages[i].author.user.id;
+      checkBot = messages[i].bot;
     }
   }
 
