@@ -8,7 +8,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import ViewError from 'src/components/viewError';
 import { Link } from 'react-router-dom';
 import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
@@ -16,12 +15,8 @@ import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import Login from '../login';
-import { Upsell404Channel } from 'src/components/upsell';
-import RequestToJoinChannel from 'src/components/upsell/requestToJoinChannel';
 import Search from './components/search';
 import { CLIENT_URL } from 'src/api/constants';
-import CommunityLogin from 'src/views/communityLogin';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
@@ -267,97 +262,22 @@ class ChannelView extends React.Component<Props, State> {
 
   render() {
     const {
-      match,
       data: { channel },
       currentUser,
       isLoading,
       location,
     } = this.props;
-    const { communitySlug } = match.params;
     const isLoggedIn = currentUser;
     const { search } = location;
     const { tab } = querystring.parse(search);
     const selectedView = tab;
-
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
-      const {
-        isBlocked,
-        isPending,
-        isMember,
-        isOwner,
-        isModerator,
-      } = channel.channelPermissions;
+      const { isMember, isOwner, isModerator } = channel.channelPermissions;
       const { community } = channel;
       const userHasPermissions = isMember || isOwner || isModerator;
-      const isRestricted = channel.isPrivate && !userHasPermissions;
-      const hasCommunityPermissions =
-        !community.isPrivate || community.communityPermissions.isMember;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
-
-      const redirectPath = `${CLIENT_URL}/${community.slug}/${channel.slug}`;
-
-      // if the channel is private but the user isn't logged in, redirect to the login page
-      if (!isLoggedIn && channel.isPrivate) {
-        if (community.brandedLogin.isEnabled) {
-          return <CommunityLogin redirectPath={redirectPath} match={match} />;
-        } else {
-          return <Login redirectPath={redirectPath} />;
-        }
-      }
-
-      // user has explicitly been blocked from this channel
-      if (
-        isBlocked ||
-        community.communityPermissions.isBlocked ||
-        !hasCommunityPermissions
-      ) {
-        return (
-          <ViewGrid>
-            <ViewError
-              emoji={'✋'}
-              heading={'You don’t have permission to view this channel.'}
-              subheading={`Head back to the ${communitySlug} community to get back on track.`}
-              dataCy={'channel-view-blocked'}
-            >
-              <Upsell404Channel community={communitySlug} />
-            </ViewError>
-          </ViewGrid>
-        );
-      }
-
-      // channel is private and the user is not a member or owner
-      if (isRestricted) {
-        return (
-          <ViewGrid>
-            <ViewError
-              emoji={isPending ? '🕓' : '🔑'}
-              heading={
-                isPending
-                  ? 'Your request to join this channel is pending'
-                  : 'This channel is private'
-              }
-              subheading={
-                isPending
-                  ? `Return to the ${
-                      community.name
-                    } community until you hear back.`
-                  : `Request to join this channel and the admins of ${
-                      community.name
-                    } will be notified.`
-              }
-              dataCy={'channel-view-is-restricted'}
-            >
-              <RequestToJoinChannel
-                channel={channel}
-                community={community}
-                isPending={isPending}
-              />
-            </ViewError>
-          </ViewGrid>
-        );
-      }
 
       // at this point the user has full permission to view the channel
       const { title, description } = generateMetaInfo({
@@ -411,6 +331,7 @@ class ChannelView extends React.Component<Props, State> {
                   <Segment
                     onClick={() => this.handleSegmentClick('posts')}
                     isActive={selectedView === 'posts'}
+                    data-cy="channel-posts-tab"
                   >
                     Posts
                   </Segment>
@@ -466,7 +387,7 @@ class ChannelView extends React.Component<Props, State> {
       return <LoadingView />;
     }
 
-    return <ErrorView />;
+    return <ErrorView data-cy="channel-view-error" />;
   }
 }
 

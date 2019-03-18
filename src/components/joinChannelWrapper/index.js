@@ -52,8 +52,16 @@ const JoinChannel = (props: Props) => {
       });
   };
 
+  const { channelPermissions } = channel;
+  const { isMember } = channelPermissions;
+  const cy = currentUser
+    ? isMember
+      ? null
+      : 'channel-join-button'
+    : 'channel-login-join-button';
+
   return (
-    <span style={{ display: 'flex' }} onClick={join}>
+    <span data-cy={cy} style={{ display: 'flex' }} onClick={join}>
       {render({ isLoading })}
     </span>
   );

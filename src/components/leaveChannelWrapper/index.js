@@ -44,6 +44,7 @@ const LeaveChannel = (props: Props) => {
 
   return (
     <span
+      data-cy="channel-leave-button"
       style={{ display: 'flex' }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

@@ -29,7 +29,10 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
     return (
       <ActionsRowContainer>
         {isTeamMember && (
-          <OutlineButton to={`/${community.slug}/${channel.slug}/settings`}>
+          <OutlineButton
+            data-cy="channel-settings-button"
+            to={`/${community.slug}/${channel.slug}/settings`}
+          >
             Settings
           </OutlineButton>
         )}
