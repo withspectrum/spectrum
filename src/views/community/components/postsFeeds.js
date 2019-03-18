@@ -4,34 +4,30 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import ThreadFeed from 'src/components/threadFeed';
+import Select from 'src/components/select';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 const CommunityThreadFeed = compose(
   connect(),
   getCommunityThreads
 )(ThreadFeed);
 
-export const PostsFeeds = (props: Props) => {
-  const { community } = props;
-  const [activeFeed] = useState('latest');
+export const PostsFeeds = withCurrentUser((props: Props) => {
+  const { community, currentUser } = props;
+  const [activeFeed, setActiveFeed] = useState(
+    !currentUser ? 'trending' : 'latest'
+  );
 
   return (
     <React.Fragment>
-      {/* <SegmentedControl sticky={false}>
-        <Segment
-          isActive={activeFeed === 'latest'}
-          onClick={() => setActiveFeed('latest')}
-        >
+      <Select value={activeFeed} onChange={e => setActiveFeed(e.target.value)}>
+        <option key="latest" value="latest">
           Latest
-        </Segment>
-
-        <Segment
-          isActive={activeFeed === 'trending'}
-          onClick={() => setActiveFeed('trending')}
-        >
-          Popular
-        </Segment>
-      </SegmentedControl> */}
-
+        </option>
+        <option key="trending" value="trending">
+          Trending
+        </option>
+      </Select>
       <CommunityThreadFeed
         viewContext="communityProfile"
         slug={community.slug}
@@ -44,4 +40,4 @@ export const PostsFeeds = (props: Props) => {
       />
     </React.Fragment>
   );
-};
+});
