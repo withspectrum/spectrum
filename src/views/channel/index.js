@@ -418,6 +418,7 @@ class ChannelView extends React.Component<Props, State> {
                   <Segment
                     onClick={() => this.handleSegmentClick('members')}
                     isActive={selectedView === 'members'}
+                    data-cy="channel-members-tab"
                   >
                     Members
                   </Segment>
