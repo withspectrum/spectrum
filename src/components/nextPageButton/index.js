@@ -10,10 +10,11 @@ type Props = {
   href?: Location,
   fetchMore: () => any,
   children?: string,
+  automatic?: boolean,
 };
 
 const NextPageButtonWrapper = (props: Props) => {
-  const { isFetchingMore, fetchMore, href, children } = props;
+  const { isFetchingMore, fetchMore, href, children, automatic = true } = props;
   const onChange = (isVisible: boolean) => {
     if (isFetchingMore || !isVisible) return;
     return fetchMore();
@@ -22,9 +23,24 @@ const NextPageButtonWrapper = (props: Props) => {
     <HasNextPage
       as={href ? Link : 'div'}
       to={href}
+      onClick={evt => {
+        evt.preventDefault();
+        onChange(true);
+      }}
       data-cy="load-previous-messages"
     >
-      <VisibilitySensor delayedCall onChange={onChange}>
+      <VisibilitySensor
+        active={automatic !== false && !isFetchingMore}
+        delayedCall
+        partialVisibility
+        scrollCheck
+        intervalDelay={250}
+        onChange={onChange}
+        offset={{
+          top: -250,
+          bottom: -250,
+        }}
+      >
         <NextPageButton loading={isFetchingMore}>
           {isFetchingMore ? (
             <Spinner size={16} color={'brand.default'} />
