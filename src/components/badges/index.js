@@ -60,9 +60,12 @@ class Badge extends React.Component<Props> {
       case 'bot':
         return (
           <Tooltip content={'Automatically posted'}>
-            <Span onClick={this.props.onClick && this.props.onClick} {...rest}>
-              {label || type}
-            </Span>
+            <Span
+              onClick={this.props.onClick && this.props.onClick}
+              {...rest}
+            >
+            APP
+          </Span>
           </Tooltip>
         );
       default:

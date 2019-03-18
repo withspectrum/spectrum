@@ -61,7 +61,9 @@ const ThreadListItem = (props: ThreadListItemProps) => {
     <ThreadListItemContainer to={getThreadLink(thread)}>
       <ThreadContent>
         <ThreadTitle>{truncate(content.title, 80)}</ThreadTitle>
-        <ThreadMeta>{timestamp}</ThreadMeta>
+        <ThreadMeta>
+          @{thread.author.user.username} · {timestamp}
+        </ThreadMeta>
       </ThreadContent>
     </ThreadListItemContainer>
   );

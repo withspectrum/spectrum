@@ -1,3 +1,4 @@
+// @flow
 const initialState = {
   title: '',
   titleIcon: null,
@@ -5,7 +6,10 @@ const initialState = {
   leftAction: 'menu',
 };
 
-export default function titlebar(state = initialState, action) {
+export default function titlebar(
+  state: typeof initialState = initialState,
+  action: Object
+) {
   const { type, payload } = action;
   switch (type) {
     case 'SET_TITLEBAR_PROPS': {

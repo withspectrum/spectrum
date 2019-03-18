@@ -30,6 +30,17 @@ class Messages extends React.Component<Props> {
   unsubscribe: Function;
 
   componentDidMount() {
+    const thread = this.props.data.thread;
+    // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
+    if (
+      thread &&
+      thread.messageConnection &&
+      (thread.watercooler || thread.currentUserLastSeen)
+    ) {
+      const elem = document.getElementById('main');
+      if (!elem) return;
+      elem.scrollTop = elem.scrollHeight;
+    }
     this.unsubscribe = this.props.subscribeToNewMessages();
   }
 
