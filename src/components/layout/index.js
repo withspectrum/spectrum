@@ -150,7 +150,7 @@ export const PrimaryColumn = styled.section`
 export const SecondaryColumn = styled.section`
   height: 100vh;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: sticky;
   top: 0;
   padding-bottom: 48px;
