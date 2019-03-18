@@ -7,7 +7,7 @@ import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
 import {
-  PrimaryButton,
+  PrimaryOutlineButton,
   OutlineButton,
 } from 'src/views/community/components/button';
 import ConditionalWrap from 'src/components/conditionalWrap';
@@ -84,9 +84,9 @@ class HoverProfile extends Component<ProfileProps> {
               <InitDirectMessageWrapper
                 user={user}
                 render={
-                  <PrimaryButton icon={'message-simple-new'}>
+                  <PrimaryOutlineButton icon={'message-simple-new'}>
                     Message
-                  </PrimaryButton>
+                  </PrimaryOutlineButton>
                 }
               />
             )}

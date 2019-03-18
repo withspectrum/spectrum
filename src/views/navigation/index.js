@@ -102,6 +102,7 @@ const Navigation = (props: Props) => {
                         showOnlineStatus={false}
                         user={currentUser}
                         isClickable={false}
+                        showHoverProfile={false}
                       />
                       <Label>Profile</Label>
                     </AvatarLink>

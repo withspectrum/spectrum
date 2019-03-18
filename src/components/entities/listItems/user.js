@@ -77,7 +77,7 @@ const User = (props: Props) => {
             <UserAvatar
               user={userObject}
               size={avatarSize}
-              showHoverProfile={!showHoverProfile}
+              showHoverProfile={showHoverProfile}
               isClickable={false}
             />
           </UserAvatarContainer>
