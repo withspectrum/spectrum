@@ -60,8 +60,13 @@ const RequestJoinCommunity = (props: Props) => {
       });
   };
 
+  const cy = isPending
+    ? 'cancel-request-to-join-private-community-button'
+    : 'request-to-join-private-community-button';
+
   return (
     <span
+      data-cy={cy}
       style={{ display: 'flex' }}
       onClick={isPending ? cancelRequest : sendRequest}
     >

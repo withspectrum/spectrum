@@ -135,7 +135,7 @@ const Feeds = (props: CommunityFeedsType) => {
   }, [community.slug]);
 
   return (
-    <FeedsContainer>
+    <FeedsContainer data-cy="community-view-content">
       <SegmentedControl>
         {segments.map(segment => {
           return (

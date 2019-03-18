@@ -32,7 +32,7 @@ export const PrivateCommunity = (props: Props) => {
     );
 
   return (
-    <ViewGrid>
+    <ViewGrid data-cy="community-view-private">
       <CenteredGrid>
         <PrivateCommunityWrapper>
           <Emoji role="img" aria-label="Private">

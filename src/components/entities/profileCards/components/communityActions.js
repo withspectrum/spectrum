@@ -47,6 +47,7 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={leaveCommunity}
+            data-cy="leave-community-button"
           >
             {isHovering ? 'Leave community' : 'Member'}
           </OutlineButton>

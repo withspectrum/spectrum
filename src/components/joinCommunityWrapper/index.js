@@ -56,8 +56,12 @@ const JoinCommunity = (props: Props) => {
       });
   };
 
+  const cy = currentUser
+    ? 'join-community-button'
+    : 'join-community-button-login';
+
   return (
-    <span style={{ display: 'flex' }} onClick={addMember}>
+    <span data-cy={cy} style={{ display: 'flex' }} onClick={addMember}>
       {render({ isLoading })}
     </span>
   );

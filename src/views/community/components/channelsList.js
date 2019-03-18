@@ -83,7 +83,7 @@ class Component extends React.Component<Props> {
             )}
           </SidebarSectionHeader>
 
-          <List>
+          <List data-cy="channel-list">
             {sortedChannels.map(channel => {
               if (!channel) return null;
               return (
