@@ -47,7 +47,7 @@ const Feeds = (props: CommunityFeedsType) => {
 
   useEffect(() => {
     handleTabRedirect();
-  }, []);
+  }, [tab]);
 
   const renderFeed = () => {
     switch (tab) {

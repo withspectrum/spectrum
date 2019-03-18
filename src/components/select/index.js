@@ -1,16 +1,19 @@
 // @flow
 import React from 'react';
-import { StyledSelect, Select } from './style';
+import Icon from 'src/components/icons';
+import { Select, Container, IconContainer } from './style';
 
 type Props = {
   children: React$Node,
   onChange: (evt: SyntheticInputEvent<HTMLSelectElement>) => void,
   defaultValue?: ?string,
-  className?: string,
 };
 
 export default (props: Props) => (
-  <StyledSelect className={props.className}>
+  <Container>
     <Select {...props} />
-  </StyledSelect>
+    <IconContainer>
+      <Icon glyph={'down-caret'} size={20} />
+    </IconContainer>
+  </Container>
 );

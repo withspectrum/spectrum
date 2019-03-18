@@ -2,7 +2,7 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { Truncate } from 'src/components/globals';
+import { Truncate, tint } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 import { CardStyles } from 'src/views/viewHelpers';
 
@@ -238,4 +238,43 @@ export const Description = styled.p`
   font-weight: 400;
   line-height: 1.4;
   color: ${theme.text.secondary};
+`;
+
+export const PostsFeedsSelectorContainer = styled.div`
+  padding: 8px 16px;
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.wash};
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const SearchInput = styled.input`
+  font-size: 15px;
+  border: none;
+  border: 1px solid ${theme.bg.border};
+  -webkit-appearance: none;
+  border-radius: 32px;
+  padding: 8px 16px;
+  color: ${theme.text.default};
+  font-weight: 600;
+  width: 120px;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    width: 180px;
+    box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:active {
+    width: 180px;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${tint(theme.bg.border, -24)};
+    transition: box-shadow 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    font-size: 16px;
+  }
 `;
