@@ -18,8 +18,7 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
   const { community } = channel;
   const { isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
-
-  const { channelPermissions } = channel;
+  const { channelPermissions, isArchived } = channel;
 
   const { pathname, search } = getComposerLink({
     communityId: community.id,
@@ -48,9 +47,14 @@ export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
           )}
         />
 
-        <PrimaryOutlineButton to={{ pathname, search, state: { modal: true } }}>
-          New Post
-        </PrimaryOutlineButton>
+        {!isArchived && (
+          <PrimaryOutlineButton
+            data-cy="channel-thread-compose-button"
+            to={{ pathname, search, state: { modal: true } }}
+          >
+            New Post
+          </PrimaryOutlineButton>
+        )}
       </ActionsRowContainer>
     );
   }

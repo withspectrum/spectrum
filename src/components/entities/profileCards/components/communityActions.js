@@ -52,7 +52,10 @@ export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
           </OutlineButton>
         )}
 
-        <PrimaryOutlineButton to={{ pathname, search, state: { modal: true } }}>
+        <PrimaryOutlineButton
+          data-cy="community-thread-compose-button"
+          to={{ pathname, search, state: { modal: true } }}
+        >
           New Post
         </PrimaryOutlineButton>
       </ActionsRowContainer>
