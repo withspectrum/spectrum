@@ -21,7 +21,7 @@ export const StyledLink = styled(Link)`
 export const StyledButton = styled.button`
   font-size: 16px;
   font-weight: 600;
-  color: ${theme.text.secondary};
+  color: ${theme.text.default};
   border-radius: 24px;
   padding: 10px 16px;
   background: ${theme.bg.wash};
@@ -33,6 +33,7 @@ export const StyledButton = styled.button`
   -webkit-display: none;
   opacity: ${props => (props.disabled ? '0.6' : '1')};
   line-height: 1.2;
+  transition: box-shadow 0.2s ease-in-out;
 
   .icon {
     margin-right: 4px;
@@ -40,11 +41,17 @@ export const StyledButton = styled.button`
 
   &:hover {
     background: ${theme.bg.border};
-    color: ${theme.text.default};
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default}, 0 0 0 3px ${theme.bg.border};
+    box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  &:active {
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${tint(theme.bg.border, -24)};
+    transition: box-shadow 0.2s ease-in-out;
   }
 `;
 
@@ -62,6 +69,7 @@ export const StyledPrimaryButton = styled(StyledButton)`
   )})`};
   color: ${theme.text.reverse};
   border: 1px solid ${tint(theme.brand.alt, -8)};
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
     border: 1px solid ${tint(theme.brand.alt, -16)};
@@ -70,8 +78,15 @@ export const StyledPrimaryButton = styled(StyledButton)`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default},
-      0 0 0 3px ${hexa(theme.brand.alt, 0.24)};
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.24)};
+  }
+
+  &:active {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.64)};
   }
 `;
 
@@ -83,6 +98,7 @@ export const StyledSmallPrimaryButton = styled(StyledPrimaryButton)`
 export const StyledOutlineButton = styled(StyledButton)`
   background: transparent;
   border: 1px solid ${theme.bg.border};
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
     background: transparent;
@@ -90,7 +106,14 @@ export const StyledOutlineButton = styled(StyledButton)`
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default}, 0 0 0 3px ${theme.bg.border};
+    box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
+    transition: box-shadow 0.2s ease-in-out;
+  }
+
+  &:active {
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${tint(theme.bg.border, -24)};
+    transition: box-shadow 0.2s ease-in-out;
   }
 `;
 
@@ -98,16 +121,24 @@ export const StyledPrimaryOutlineButton = styled(StyledOutlineButton)`
   background: transparent;
   border: 1px solid ${theme.brand.alt};
   color: ${theme.brand.alt};
+  transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
-    background: transparent;
+    background: ${hexa(theme.brand.alt, 0.04)};
     border: 1px solid ${tint(theme.brand.alt, -8)};
     color: ${tint(theme.brand.alt, -8)};
   }
 
   &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default},
-      0 0 0 3px ${hexa(theme.brand.alt, 0.16)};
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.16)};
+  }
+
+  &:active {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.48)};
   }
 `;
 
@@ -123,9 +154,10 @@ export const StyledHoverWarnOutlineButton = styled(StyledOutlineButton)`
     color: ${theme.text.reverse};
   }
 
-  &:focus {
-    box-shadow: 0 0 0 1px ${theme.bg.default},
-      0 0 0 3px ${hexa(theme.warn.default, 0.12)};
+  &:active {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.warn.default, 0.48)};
   }
 `;
 
