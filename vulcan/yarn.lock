@@ -890,10 +890,10 @@ standard-as-callback@^1.0.0:
   resolved "https://registry.yarnpkg.com/standard-as-callback/-/standard-as-callback-1.0.1.tgz#2e9e1e9d278d7d77580253faaec42269015e3c1d"
   integrity sha512-izxEITSyc7S+5oOiF/URiYaNkemPUxIndCNv66jJ548Y1TVxhBvioNMSPrZIQdaZDlhnguOdUzHA/7hJ3xFhuQ==
 
-stopword@^0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/stopword/-/stopword-0.1.15.tgz#e5a9ac5a3936eb2c54deb2615847f49619f41fcd"
-  integrity sha512-UoattsZj2D6D00p5K1yKss/rIULftvUp8yrNKm76suiBjzCC6ER0V+IBJvMO3CJwUpaooy3GPgUeHU4CHn/9mA==
+stopword@^0.1.17:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/stopword/-/stopword-0.1.17.tgz#658ce1532b257700ec909178b05f4142730be16f"
+  integrity sha512-RSml9ta7Ce0LyN8VUsbIxtwtg4S5suyeXMg2KNFX6xFTtMes3ICNj7EiG0xdaMn+j5oD00lZvO8VPqRpWMP1dQ==
 
 strip-json-comments@~2.0.1:
   version "2.0.1"
