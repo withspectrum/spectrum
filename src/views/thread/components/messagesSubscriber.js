@@ -211,7 +211,6 @@ class Messages extends React.Component<Props> {
           <NextPageButton
             isFetchingMore={isFetchingMore}
             fetchMore={this.props.loadNextPage}
-            automatic={!thread.watercooler}
             href={{
               pathname: this.props.location.pathname,
               search: queryString.stringify({
