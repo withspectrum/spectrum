@@ -165,7 +165,7 @@ export const ThreadWrapper = styled(FlexCol)`
 
 export const ThreadContent = styled.div`
   height: 100%;
-  padding: ${props => (props.isEditing ? '0' : '32px')};
+  padding: ${props => (props.isEditing ? '0' : '16px')};
 
   ${props =>
     props.isEditing &&
@@ -289,7 +289,6 @@ export const Byline = styled.div`
   font-weight: 400;
   color: ${theme.brand.alt};
   display: flex;
-  margin-bottom: 24px;
   align-items: center;
   flex: auto;
   font-size: 14px;
@@ -629,7 +628,7 @@ export const ActionBarContainer = styled.div`
   border: 1px solid ${theme.bg.border};
   border-left: 0;
   border-right: 0;
-  padding: 6px 32px;
+  padding: 6px 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     margin: 0;

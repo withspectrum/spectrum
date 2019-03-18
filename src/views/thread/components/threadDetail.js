@@ -446,6 +446,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 </ConditionalWrap>
               </ErrorBoundary>
 
+              <div style={{ height: '16px' }} />
+
               <ThreadHeading>{thread.content.title}</ThreadHeading>
 
               <ThreadSubtitle>
