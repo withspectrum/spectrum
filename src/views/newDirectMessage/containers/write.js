@@ -81,6 +81,7 @@ const Write = (props: Props) => {
   return (
     <React.Fragment>
       <DesktopTitlebar
+        data-cy="write-direct-message-titlebar"
         title={titlebarTitle}
         titleIcon={titleIcon}
         rightAction={

@@ -79,7 +79,7 @@
     "cors": "^2.8.3",
     "cryptr": "^3.0.0",
     "css.escape": "^1.5.1",
-    "cypress": "3.1.5",
+    "cypress": "^3.2.0",
     "datadog-metrics": "^0.8.1",
     "dataloader": "^1.4.0",
     "debounce": "^1.2.0",

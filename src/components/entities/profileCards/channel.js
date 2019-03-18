@@ -16,7 +16,7 @@ export const ChannelProfileCard = (props: Props) => {
   const { channel, hideActions, hideCommunityMeta } = props;
 
   return (
-    <ProfileContainer>
+    <ProfileContainer data-cy="channel-profile-card">
       {!hideCommunityMeta && <ChannelCommunityMeta channel={channel} />}
       <ChannelMeta channel={channel} />
       {!hideActions ? (
