@@ -229,9 +229,11 @@ export const canViewChannel = async (user: DBUser, channelId: string, loaders: a
 
   const community = await communityExists(channel.communityId, loaders);
   if (!community) return false
-
   
-  if (!user) return false
+  if (!user) {
+    if (!community.isPrivate && !channel.isPrivate) return true
+    return false
+  }
   
   const [
     communityPermissions,
