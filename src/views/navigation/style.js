@@ -25,7 +25,7 @@ export const NavigationWrapper = styled.div`
   width: ${NAVBAR_WIDTH}px;
   height: 100vh;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   
   ${isDesktopApp() &&
     css`
@@ -57,7 +57,7 @@ export const NavigationGrid = styled.div`
   width: 100%;
   max-width: ${NAVBAR_WIDTH}px;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 12px 0 16px;
 
   ${isDesktopApp() &&
