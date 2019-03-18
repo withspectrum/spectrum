@@ -1,8 +1,9 @@
 // @flow
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { Truncate } from 'src/components/globals';
-import { MEDIA_BREAK } from 'src/components/layout';
+import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const TitlebarContainer = styled.div`
   display: flex;
@@ -15,15 +16,27 @@ export const TitlebarContainer = styled.div`
   padding-right: 16px;
   padding-left: 8px;
   flex: none;
-  height: 62px;
-  max-height: 62px;
+  height: ${TITLEBAR_HEIGHT}px;
+  max-height: ${TITLEBAR_HEIGHT}px;
   grid-area: titlebar;
+
+  ${isDesktopApp() &&
+    css`
+      -webkit-app-region: drag;
+      user-select: none;
+    `}
 
   @media (min-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.desktop ? 'flex' : 'none')};
   }
   @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.desktop ? 'none' : 'flex')};
+    
+    ${isDesktopApp() &&
+      css`
+        align-items: flex-end;
+        padding-bottom: 12px;
+      `}
   }
 `;
 

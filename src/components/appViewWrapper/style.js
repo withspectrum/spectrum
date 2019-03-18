@@ -1,11 +1,16 @@
 import styled from 'styled-components';
-import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
+import {
+  MEDIA_BREAK,
+  TITLEBAR_HEIGHT,
+  NAVBAR_WIDTH,
+} from 'src/components/layout';
 
 export const StyledAppViewWrapper = styled.div`
   display: grid;
   width: 100%;
   min-height: 100vh;
-  grid-template-columns: ${props => (props.isTwoColumn ? '72px 1fr' : '1fr')};
+  grid-template-columns: ${props =>
+    props.isTwoColumn ? `${NAVBAR_WIDTH}px 1fr` : '1fr'};
   grid-template-areas: ${props =>
     props.isTwoColumn ? "'navigation main'" : "'main'"};
 

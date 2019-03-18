@@ -79,6 +79,11 @@ export const NavigationGrid = styled.div`
     max-width: 256px;
     grid-gap: 0px;
     padding: 12px 0;
+
+    ${isDesktopApp() &&
+      css`
+        padding-top: 40px;
+      `}
   }
 `;
 

@@ -7,7 +7,7 @@ export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
 export const PRIMARY_COLUMN_WIDTH = 600;
 export const SECONDARY_COLUMN_WIDTH = 340;
 export const COL_GAP = 16;
-export const TITLEBAR_HEIGHT = 62;
+export const TITLEBAR_HEIGHT = isDesktopApp() ? 82 : 62;
 export const MAX_WIDTH =
   PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP;
 export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
