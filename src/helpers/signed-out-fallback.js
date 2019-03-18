@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
+import queryString from 'query-string';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import AuthViewHandler from 'src/views/authViewHandler';
 
@@ -10,16 +11,8 @@ const Switch = props => {
 
   if (searchParamException) {
     const searchParamsString = (props.location && props.location.search) || '';
-    const searchParams = new Map(
-      searchParamsString
-        .substring(1)
-        .split('&')
-        .map(kv => kv.split('='))
-    );
-
-    isException =
-      searchParams.has(searchParamException) &&
-      searchParams.get(searchParamException) !== 'false';
+    const searchParams = queryString.parse(searchParamsString);
+    isException = !!searchParams[searchParamException];
   }
 
   return (
