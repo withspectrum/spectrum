@@ -1,14 +1,16 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const HasNextPage = styled.div`
+export const HasNextPage = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 `;
 
-export const NextPageButton = styled.div`
+export const NextPageButton = styled.span`
   display: flex;
   flex: 1;
   justify-content: center;

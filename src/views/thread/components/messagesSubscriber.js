@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 import compose from 'recompose/compose';
 import getThreadMessages, {
   type GetThreadMessageConnectionType,
@@ -185,8 +187,16 @@ class Messages extends React.Component<Props> {
           <NextPageButton
             isFetchingMore={isFetchingMore}
             fetchMore={this.props.loadPreviousPage}
+            href={{
+              pathname: this.props.location.pathname,
+              search: queryString.stringify({
+                ...queryString.parse(this.props.location.search),
+                msgsbefore: messageConnection.edges[0].cursor,
+                msgsafter: undefined,
+              }),
+            }}
           >
-            Load more
+            Previous Page
           </NextPageButton>
         )}
         <ChatMessages
@@ -200,8 +210,18 @@ class Messages extends React.Component<Props> {
           <NextPageButton
             isFetchingMore={isFetchingMore}
             fetchMore={this.props.loadNextPage}
+            href={{
+              pathname: this.props.location.pathname,
+              search: queryString.stringify({
+                ...queryString.parse(this.props.location.search),
+                msgsafter:
+                  messageConnection.edges[messageConnection.edges.length - 1]
+                    .cursor,
+                msgsbefore: undefined,
+              }),
+            }}
           >
-            Load more
+            Next Page
           </NextPageButton>
         )}
       </React.Fragment>
@@ -210,6 +230,7 @@ class Messages extends React.Component<Props> {
 }
 
 export default compose(
+  withRouter,
   getThreadMessages,
   viewNetworkHandler
 )(Messages);
