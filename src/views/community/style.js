@@ -89,6 +89,7 @@ export const SidebarSectionHeader = styled.div`
 
   a {
     display: flex;
+    flex: none;
     align-items: center;
     color: ${theme.text.alt};
 
@@ -110,6 +111,9 @@ export const SidebarSectionHeading = styled.div`
   font-size: 16px;
   font-weight: 700;
   color: ${theme.text.default};
+  display: flex;
+  flex: 1 0 auto;
+  padding-right: 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 14px;

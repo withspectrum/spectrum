@@ -59,6 +59,10 @@ export const StyledWhiteIconButton = styled(StyledButton)`
   background-color: ${theme.bg.default};
   padding: 0;
   color: ${theme.text.default};
+
+  .icon {
+    margin-right: 0;
+  }
 `;
 
 export const StyledPrimaryButton = styled(StyledButton)`

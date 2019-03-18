@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import Icon from 'src/components/icons';
@@ -12,6 +11,7 @@ import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
+import { WhiteIconButton } from 'src/views/community/components/button';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
 
 type Props = {
@@ -75,9 +75,9 @@ class Component extends React.Component<Props> {
             {isOwner && (
               <Tooltip content={'Manage channels'}>
                 <span>
-                  <Link to={`/${community.slug}/settings`}>
+                  <WhiteIconButton to={`/${community.slug}/settings`}>
                     <Icon glyph={'settings'} size={24} />
-                  </Link>
+                  </WhiteIconButton>
                 </span>
               </Tooltip>
             )}

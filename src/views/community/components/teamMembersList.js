@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMembers';
@@ -12,6 +11,7 @@ import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { TeamMemberListType } from '../types';
 import Tooltip from 'src/components/tooltip';
+import { WhiteIconButton } from 'src/views/community/components/button';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 class Component extends React.Component<TeamMemberListType> {
@@ -59,9 +59,9 @@ class Component extends React.Component<TeamMemberListType> {
           {isOwner && (
             <Tooltip content={'Manage team'}>
               <span>
-                <Link to={`/${community.slug}/settings/members`}>
+                <WhiteIconButton to={`/${community.slug}/settings/members`}>
                   <Icon glyph={'settings'} size={24} />
-                </Link>
+                </WhiteIconButton>
               </span>
             </Tooltip>
           )}
