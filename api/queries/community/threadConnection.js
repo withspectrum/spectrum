@@ -41,10 +41,18 @@ export default async (root: DBCommunity, args: CommunityThreadConnectionPaginati
   // if the user is signed in, only return stories for the channels
   // the user is a member of -> this will ensure that they don't see
   // stories in private channels that they aren't a member of.
-  // if the user is *not* signed in, only get threads from public channels
-  // within the community
+  // if the user is *not* signed in or not a member, only get threads
+  // from public channels within the community
   let channels;
+  let isMember = false;
   if (user) {
+    const permissions = await loaders.userPermissionsInCommunity.load([
+      user.id,
+      id,
+    ]);
+    isMember = permissions.isMember;
+  }
+  if (user && isMember) {
     channels = await getChannelsByUserAndCommunity(id, currentUser.id);
   } else {
     channels = await getPublicChannelsByCommunity(id);
