@@ -55,7 +55,7 @@ export const RoundProfileAvatarContainer = styled.div`
   border-radius: 34px;
   background: ${theme.bg.default};
   border: 4px solid ${theme.bg.default};
-  margin-bottom: -56px;
+  margin-bottom: -48px;
 `;
 
 export const ActionsRowContainer = styled.div`

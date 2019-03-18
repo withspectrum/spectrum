@@ -31,7 +31,7 @@ const InitDirectMessage = (props: Props) => {
   if (currentUser && currentUser.id === user.id) return null;
 
   return (
-    <span style={{ display: 'flex' }} onClick={init}>
+    <span style={{ display: 'flex', flex: '1 0 auto' }} onClick={init}>
       {render}
     </span>
   );

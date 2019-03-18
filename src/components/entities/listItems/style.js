@@ -73,18 +73,6 @@ export const Description = styled.p`
   word-break: break-word;
 `;
 
-export const MessageIcon = styled.div`
-  color: ${theme.text.secondary};
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    color: ${theme.text.default};
-  }
-`;
-
 export const Actions = styled.div`
   display: flex;
   flex-direction: column;

@@ -66,7 +66,6 @@ export const NewThreadReactionNotification = ({
 export const MiniNewThreadReactionNotification = ({
   notification,
   currentUser,
-  history,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);

@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from '../icons';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import { hexa, FlexRow, FlexCol, zIndex } from '../globals';
 import { MAX_WIDTH, MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const DropzoneWrapper = styled.div`

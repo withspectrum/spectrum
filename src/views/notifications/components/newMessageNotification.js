@@ -71,7 +71,6 @@ export const NewMessageNotification = ({
 export const MiniNewMessageNotification = ({
   notification,
   currentUser,
-  history,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);

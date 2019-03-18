@@ -18,12 +18,6 @@ type Props = {
   dispatch: Dispatch<Object>,
 };
 
-type State = {
-  plugins: Array<mixed>,
-  body: string,
-  isSavingEdit: boolean,
-};
-
 const EditingChatInput = (props: Props) => {
   const initialState =
     props.message.messageType === 'text' ? props.message.content.body : null;
@@ -34,23 +28,20 @@ const EditingChatInput = (props: Props) => {
   let input = null;
 
   // $FlowIssue
-  React.useEffect(
-    () => {
-      if (props.message.messageType === 'text') return;
+  React.useEffect(() => {
+    if (props.message.messageType === 'text') return;
 
-      setText(null);
-      fetch('https://convert.spectrum.chat/to', {
-        method: 'POST',
-        body: props.message.content.body,
-      })
-        .then(res => res.text())
-        .then(md => {
-          setText(md);
-          input && input.focus();
-        });
-    },
-    [props.message.id]
-  );
+    setText(null);
+    fetch('https://convert.spectrum.chat/to', {
+      method: 'POST',
+      body: props.message.content.body,
+    })
+      .then(res => res.text())
+      .then(md => {
+        setText(md);
+        input && input.focus();
+      });
+  }, [props.message.id]);
 
   const onChange = e => {
     const text = e.target.value;

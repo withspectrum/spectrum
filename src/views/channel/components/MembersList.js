@@ -27,21 +27,7 @@ type Props = {
   currentUser: ?Object,
 };
 
-type State = {
-  scrollElement: any,
-};
-
-class MembersList extends React.Component<Props, State> {
-  state = { scrollElement: null };
-
-  componentDidMount() {
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement: document.getElementById('app-view-scroller'),
-    });
-  }
-
+class MembersList extends React.Component<Props> {
   shouldComponentUpdate(nextProps) {
     const curr = this.props;
     // fetching more
@@ -56,7 +42,6 @@ class MembersList extends React.Component<Props, State> {
       isLoading,
       currentUser,
     } = this.props;
-    const { scrollElement } = this.state;
 
     if (channel) {
       const { edges: members, pageInfo } = channel.memberConnection;

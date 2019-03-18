@@ -11,7 +11,6 @@ import viewNetworkHandler, {
 } from 'src/components/viewNetworkHandler';
 import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
-import InfiniteScroller from 'src/components/infiniteScroll';
 import NullMessages from './nullMessages';
 
 type Props = {
@@ -142,6 +141,9 @@ class Messages extends React.Component<Props> {
         case 'persist': {
           elem.scrollTop =
             elem.scrollHeight - snapshot.values.height + snapshot.values.top;
+          return;
+        }
+        default: {
           return;
         }
       }

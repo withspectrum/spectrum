@@ -118,6 +118,9 @@ class MessagesWithData extends React.Component<Props, State> {
               elem.scrollHeight - snapshot.values.height + snapshot.values.top;
             break;
           }
+          default: {
+            break;
+          }
         }
       }
     }

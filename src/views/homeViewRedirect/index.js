@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { withRouter } from 'react-router';
-import querystring from 'query-string';
 import compose from 'recompose/compose';
 import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { SERVER_URL } from 'src/api/constants';

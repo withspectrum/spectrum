@@ -3,7 +3,7 @@ import React from 'react';
 import { ChannelActions } from './components/channelActions';
 import { ChannelMeta } from './components/channelMeta';
 import { ChannelCommunityMeta } from './components/channelCommunityMeta';
-import { ProfileContainer, ActionsRowContainer } from './style';
+import { ProfileContainer } from './style';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 
 type Props = {

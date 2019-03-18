@@ -4,7 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import ThreadFeed from 'src/components/threadFeed';
-import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 
 const CommunityThreadFeed = compose(
   connect(),
@@ -13,7 +12,7 @@ const CommunityThreadFeed = compose(
 
 export const PostsFeeds = (props: Props) => {
   const { community } = props;
-  const [activeFeed, setActiveFeed] = useState('latest');
+  const [activeFeed] = useState('latest');
 
   return (
     <React.Fragment>
