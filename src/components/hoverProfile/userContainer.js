@@ -106,7 +106,7 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
           {this.state.visible &&
             document.body &&
             createPortal(
-              <Popper>
+              <Popper placement="bottom-start">
                 {({ style, ref, placement }) => (
                   <span ref={ref} data-placement={placement}>
                     <MentionHoverProfile
