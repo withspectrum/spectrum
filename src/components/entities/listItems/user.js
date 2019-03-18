@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserAvatar } from 'src/components/avatar';
@@ -19,6 +18,7 @@ import {
   Sublabel,
   Description,
   Actions,
+  CardLink,
 } from './style';
 
 type Props = {
@@ -68,7 +68,7 @@ const User = (props: Props) => {
     <ConditionalWrap
       condition={isLink}
       wrap={children => (
-        <Link to={`/users/${userObject.username}`}>{children}</Link>
+        <CardLink to={`/users/${userObject.username}`}>{children}</CardLink>
       )}
     >
       <Row onClick={() => onClick(userObject)}>

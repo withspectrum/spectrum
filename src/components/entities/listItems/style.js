@@ -2,6 +2,12 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Truncate } from 'src/components/globals';
+import { Link } from 'react-router-dom';
+
+export const CardLink = styled(Link)`
+  display: block;
+  position: relative;
+`;
 
 export const Row = styled.div`
   display: flex;
