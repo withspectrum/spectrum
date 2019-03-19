@@ -13,7 +13,6 @@ import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMess
 import {
   NotificationCard,
   TextContent,
-  NotificationListRow,
   SuccessContext,
   Content,
 } from '../style';
@@ -62,36 +61,5 @@ export const NewMessageNotification = ({
         </Content>
       </CardContent>
     </NotificationCard>
-  );
-};
-
-export const MiniNewMessageNotification = ({
-  notification,
-  currentUser,
-}: Props) => {
-  const actors = parseActors(notification.actors, currentUser, true);
-  const event = parseEvent(notification.event);
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context, currentUser);
-
-  return (
-    <NotificationListRow isSeen={notification.isSeen}>
-      <CardLink
-        to={{
-          pathname: getThreadLink(notification.context.payload),
-        }}
-      />
-      <CardContent>
-        <SuccessContext>
-          <Icon glyph="message-fill" />
-          <ActorsRow actors={actors.asObjects} />
-        </SuccessContext>
-        <Content>
-          <TextContent pointer={false}>
-            {actors.asString} {event} {context.asString} {date}
-          </TextContent>
-        </Content>
-      </CardContent>
-    </NotificationListRow>
   );
 };

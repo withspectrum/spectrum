@@ -10,12 +10,10 @@ import { ActorsRow } from './actorsRow';
 import {
   NotificationCard,
   TextContent,
-  NotificationListRow,
   ThreadReactionContext,
   Content,
 } from '../style';
 import Icon from 'src/components/icon';
-import { truncate } from 'src/helpers/utils';
 import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 import getThreadLink from 'src/helpers/get-thread-link';
 
@@ -57,45 +55,5 @@ export const NewThreadReactionNotification = ({
         </Content>
       </CardContent>
     </NotificationCard>
-  );
-};
-
-export const MiniNewThreadReactionNotification = ({
-  notification,
-  currentUser,
-}: Props) => {
-  const actors = parseActors(notification.actors, currentUser, true);
-  const event = parseEvent(notification.event);
-  const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(
-    { ...notification.context, type: 'THREAD_REACTION' },
-    currentUser
-  );
-  const isText = notification.context.payload.messageType === 'text';
-  const messageStr = isText
-    ? truncate(notification.context.payload.content.body, 40)
-    : null;
-
-  return (
-    <NotificationListRow isSeen={notification.isSeen}>
-      <CardLink
-        to={{
-          pathname: getThreadLink(notification.context.payload),
-        }}
-      />
-      <CardContent>
-        <ThreadReactionContext>
-          <Icon glyph="thumbsup-fill" />
-          <ActorsRow actors={actors.asObjects} />
-        </ThreadReactionContext>
-        <Content>
-          <TextContent pointer={false}>
-            {' '}
-            {actors.asString} {event} {context.asString}{' '}
-            {messageStr && `"${messageStr}"`} {date}{' '}
-          </TextContent>
-        </Content>
-      </CardContent>
-    </NotificationListRow>
   );
 };

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { ActorsRow } from './actorsRow';
 import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { displayLoadingCard } from 'src/components/loading';
@@ -13,13 +12,9 @@ import {
   TextContent,
   AttachmentsWash,
   ContentWash,
-  NotificationListRow,
   SpecialContext,
   ThreadContext,
-  Content,
 } from '../style';
-import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
-import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
@@ -84,48 +79,6 @@ export class MentionThreadNotification extends React.Component<Props, State> {
           </AttachmentsWash>
         </ContentWash>
       </SegmentedNotificationCard>
-    );
-  }
-}
-
-export class MiniMentionThreadNotification extends React.Component<
-  Props,
-  State
-> {
-  constructor() {
-    super();
-
-    this.state = {
-      communityName: '',
-    };
-  }
-
-  render() {
-    const { notification, currentUser } = this.props;
-
-    const actors = parseActors(notification.actors, currentUser, false);
-    const date = parseNotificationDate(notification.modifiedAt);
-    const context = parseContext(notification.context, currentUser);
-
-    return (
-      <NotificationListRow isSeen={notification.isSeen}>
-        <CardLink
-          to={{
-            pathname: getThreadLink(notification.context.payload),
-          }}
-        />
-        <CardContent>
-          <SpecialContext>
-            <Icon glyph="mention" />
-            <ActorsRow actors={actors.asObjects} />
-          </SpecialContext>
-          <Content>
-            <TextContent pointer={false}>
-              {actors.asString} mentioned you in {context.asString} {date}
-            </TextContent>
-          </Content>
-        </CardContent>
-      </NotificationListRow>
     );
   }
 }
