@@ -1,7 +1,8 @@
 // @flow
 import styled, { css } from 'styled-components';
-import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
+import theme from 'shared/theme';
+import { hexa, Truncate } from 'src/components/globals';
 import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/layout';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
@@ -16,6 +17,34 @@ export const Overlay = styled.div`
   bottom: 0;
   z-index: 9998 /* on top of titlebar */;
   background: rgba(0, 0, 0, 0.4);
+`;
+
+export const RedDot = styled.span`
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  border: 3px solid ${theme.bg.default};
+  position: absolute;
+  background: ${theme.warn.alt};
+  top: 0;
+  right: 0px;
+`;
+
+export const BlackDot = styled.span`
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  border: 3px solid ${theme.bg.default};
+  position: absolute;
+  background: ${theme.text.placeholder};
+  top: 2px;
+  right: 10px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    background: ${theme.warn.alt};
+    left: 40px;
+    top: 0px;
+  }
 `;
 
 export const NavigationWrapper = styled.div`
@@ -91,8 +120,10 @@ export const AvatarGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
-  color: ${props => (props.isActive ? theme.text.default : theme.text.alt)};
-  background: ${props => (props.isActive ? theme.bg.wash : theme.bg.default)};
+  color: ${props => (props.isActive ? theme.brand.default : theme.text.alt)};
+  font-weight: ${props => (props.isActive ? '600' : '500')};
+  background: ${props =>
+    props.isActive ? hexa(theme.brand.default, 0.04) : theme.bg.default};
 
   a img {
     opacity: ${props => (props.isActive ? '1' : '0.4')};
@@ -102,7 +133,7 @@ export const AvatarGrid = styled.div`
   ${props =>
     props.isActive &&
     css`
-      box-shadow: inset 3px 0 0 ${theme.text.secondary};
+      box-shadow: inset 3px 0 0 ${theme.brand.default};
 
       img,
       a img {
@@ -113,11 +144,24 @@ export const AvatarGrid = styled.div`
 
   &:hover {
     box-shadow: inset 3px 0 0
-      ${props => (props.isActive ? theme.text.secondary : theme.bg.border)};
-    background: ${props => (props.isActive ? theme.bg.wash : theme.bg.wash)};
+      ${props => (props.isActive ? theme.brand.default : theme.bg.border)};
+    background: ${props =>
+      props.isActive ? hexa(theme.brand.default, 0.04) : theme.bg.wash};
     color: ${props =>
-      props.isActive ? theme.text.default : theme.text.secondary};
+      props.isActive ? theme.brand.default : theme.text.secondary};
 
+    img,
+    a img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+
+    ${BlackDot} {
+      background-color: ${theme.warn.alt};
+    }
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
     img,
     a img {
       filter: grayscale(0%);
@@ -131,7 +175,7 @@ export const AvatarLink = styled(Link)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px 6px;
+  padding: 8px 12px;
   position: relative;
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -166,11 +210,10 @@ export const Shortcut = styled.span`
 `;
 
 export const Label = styled.span`
-  font-size: 14px;
-  font-weight: ${props => (props.isActive ? '600' : '500')};
-  color: ${props =>
-    props.isActive ? theme.text.default : theme.text.secondary};
+  font-size: 15px;
   margin-left: 12px;
+  padding-right: 12px;
+  ${Truncate};
 
   @media (min-width: ${MEDIA_BREAK}px) {
     display: none;
@@ -194,28 +237,6 @@ export const Divider = styled.div`
   height: 1px;
   background: ${theme.bg.border};
   margin: 8px 0;
-`;
-
-export const RedDot = styled.span`
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  border: 3px solid ${theme.bg.default};
-  position: absolute;
-  background: ${theme.warn.alt};
-  top: 0;
-  right: 0px;
-`;
-
-export const BlackDot = styled.span`
-  width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  border: 3px solid ${theme.bg.default};
-  position: absolute;
-  background: ${theme.brand.default};
-  top: 2px;
-  right: 10px;
 `;
 
 // We make it a real link element because anchor links don’t work properly with React Router.

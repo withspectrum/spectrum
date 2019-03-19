@@ -1,6 +1,5 @@
 // @flow
 import type { DBCommunity } from 'shared/types';
-import type { PaginationOptions } from '../../utils/paginate-arrays';
 import type { GraphQLContext } from '../../';
 import { encode, decode } from '../../utils/base64';
 import {
