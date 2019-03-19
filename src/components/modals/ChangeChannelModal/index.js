@@ -141,8 +141,8 @@ class ChangeChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({ isOpen: state.modals.isOpen });
-// $FlowIssue
 export default compose(
+  // $FlowIssue
   connect(map),
   moveThreadMutation
 )(ChangeChannelModal);

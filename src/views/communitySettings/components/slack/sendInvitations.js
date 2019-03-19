@@ -120,7 +120,7 @@ class SendSlackInvitations extends React.Component<Props, State> {
           <Button
             onClick={this.sendInvitations}
             loading={isLoading}
-            disabled={customMessageError}
+            disabled={!!customMessageError}
           >
             Send invitations
           </Button>

@@ -457,9 +457,9 @@ class UserWithData extends React.Component<Props, State> {
                 !name ||
                 nameError ||
                 !username ||
-                usernameError ||
+                !!usernameError ||
                 isLoading ||
-                emailError
+                !!emailError
               }
               loading={isLoading}
               onClick={this.save}

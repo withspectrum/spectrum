@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { OutlineButton, PrimaryButton } from '../components/button';
+import { OutlineButton, PrimaryButton } from 'src/components/button';
 import RequestJoinCommunity from '../components/requestJoinCommunity';
 import {
   Emoji,

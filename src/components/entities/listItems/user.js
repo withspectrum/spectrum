@@ -44,7 +44,8 @@ type Props = {
   onClick?: (user: UserInfoType) => any,
 };
 
-const noop = () => {};
+// eslint-disable-next-line
+const noop = (user: UserInfoType) => {};
 
 const User = (props: Props) => {
   const {
