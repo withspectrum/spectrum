@@ -45,7 +45,7 @@ class MembersList extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    if (channel) {
+    if (channel && channel.memberConnection) {
       const { edges: members, pageInfo } = channel.memberConnection;
       const nodes = members.map(member => member && member.node);
       const uniqueNodes = deduplicateChildren(nodes, 'id');
