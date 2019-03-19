@@ -41,10 +41,10 @@ type Props = {
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
   isLink?: boolean,
-  onClick?: Function<UserInfoType>,
+  onClick?: (user: UserInfoType) => any,
 };
 
-const noop = () => {};
+const noop = user => {};
 
 const User = (props: Props) => {
   const {
@@ -95,6 +95,7 @@ const User = (props: Props) => {
           {username && <Sublabel>@{username}</Sublabel>}
 
           {typeof reputation === 'number' && (
+            // $FlowIssue
             <Reputation reputation={reputation} />
           )}
 

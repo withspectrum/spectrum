@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
 import Icon from 'src/components/icons';
@@ -15,7 +16,10 @@ import {
 } from '../style';
 
 type Props = {
-  community: CommunityInfoType,
+  community: {
+    ...$Exact<CommunityInfoType>,
+    ...$Exact<CommunityMetaDataType>,
+  },
 };
 
 export const CommunityMeta = (props: Props) => {

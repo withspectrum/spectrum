@@ -1,14 +1,18 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import { CommunityAvatar } from 'src/components/avatar';
 import { CommunityActions } from './components/communityActions';
 import { CommunityMeta } from './components/communityMeta';
 import { ProfileContainer, CoverPhoto, ProfileAvatarContainer } from './style';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 
 type Props = {
-  community: CommunityInfoType,
+  community: {
+    ...$Exact<CommunityInfoType>,
+    ...$Exact<CommunityMetaDataType>,
+  },
 };
 
 export const CommunityProfileCard = (props: Props) => {

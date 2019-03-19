@@ -14,7 +14,6 @@ import {
 
 type Props = {
   communityObject: Object,
-  id: string,
   avatarSize?: number,
   profilePhoto?: string,
   name?: string,
