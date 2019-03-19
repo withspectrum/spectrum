@@ -1,7 +1,7 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
-import { throttle } from 'src/helpers/utils';
+import { debounce } from 'src/helpers/utils';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
@@ -46,6 +46,23 @@ const useScrollPersistance = (key: string) => {
   }, []);
 };
 
+// @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value]);
+
+  return debouncedValue;
+}
+
 export const PostsFeeds = withCurrentUser((props: Props) => {
   const { community, currentUser } = props;
   const defaultFeed = !currentUser ? 'trending' : 'latest';
@@ -53,16 +70,16 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
   const [clientSearchQuery, setClientSearchQuery] = useState('');
   const [serverSearchQuery, setServerSearchQuery] = useState('');
 
+  const debouncedServerSearchQuery = useDebounce(serverSearchQuery, 500);
+
   const search = (query: string) => {
     const sanitized = query.toLowerCase().trim();
     setServerSearchQuery(sanitized);
   };
 
-  const throttledSearch = (query: string) => throttle(search(query), 500);
-
   const handleClientSearch = (e: any) => {
     setClientSearchQuery(e.target.value);
-    throttledSearch(e.target.value);
+    search(e.target.value);
   };
 
   useScrollPersistance('last-community-post-feed-scroll-position');
@@ -89,19 +106,19 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
           value={clientSearchQuery}
         />
       </PostsFeedsSelectorContainer>
-      {serverSearchQuery && (
+      {debouncedServerSearchQuery && (
         <SearchThreadFeed
           search
           viewContext="communityProfile"
           communityId={community.id}
-          queryString={serverSearchQuery}
+          queryString={debouncedServerSearchQuery}
           filter={{ communityId: community.id }}
           community={community}
           pinnedThreadId={community.pinnedThreadId}
         />
       )}
 
-      {!serverSearchQuery && (
+      {!debouncedServerSearchQuery && (
         <CommunityThreadFeed
           viewContext="communityProfile"
           slug={community.slug}
