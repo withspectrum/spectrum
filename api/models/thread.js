@@ -753,27 +753,12 @@ export const decrementReactionCount = (threadId: string) => {
     .run();
 };
 
-const hasChanged = (field: string) =>
-  db
-    .row('old_val')(field)
-    .ne(db.row('new_val')(field));
-const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
-const REACTION_COUNT_CHANGED = hasChanged('reactionCount');
-const MESSAGE_COUNT_CHANGED = hasChanged('messageCount');
-const CONTENT_CHANGED = hasChanged('content');
-
 const getUpdatedThreadsChangefeed = () =>
   db
     .table('threads')
     .changes({
       includeInitial: false,
-    })
-    .filter(
-      NEW_DOCUMENTS.or(REACTION_COUNT_CHANGED)
-        .or(LAST_ACTIVE_CHANGED)
-        .or(MESSAGE_COUNT_CHANGED)
-        .or(CONTENT_CHANGED)
-    )('new_val')
+    })('new_val')
     .run();
 
 export const listenToUpdatedThreads = (cb: Function): Function => {
