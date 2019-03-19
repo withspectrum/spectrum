@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { throttle } from 'src/helpers/utils';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -17,6 +17,33 @@ const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 type Props = {
   community: GetCommunityType,
   currentUser: ?UserInfoType,
+};
+
+const useScrollPersistance = (key: string) => {
+  useEffect(() => {
+    // On mount, if we have a last scroll position scroll there
+    const last = sessionStorage ? sessionStorage.getItem(key) : null;
+    if (last) {
+      const elem = document.getElementById('main');
+      if (elem) {
+        elem.scrollTop = Number(last);
+        setTimeout(() => {
+          elem.scrollTop = Number(last);
+        });
+      }
+    }
+
+    // On unmount, store the current scroll position and set it to 0
+    return () => {
+      const elem = document.getElementById('main');
+      if (elem) {
+        if (sessionStorage) {
+          sessionStorage.setItem(key, elem.scrollTop.toString());
+        }
+        elem.scrollTop = 0;
+      }
+    };
+  }, []);
 };
 
 export const PostsFeeds = withCurrentUser((props: Props) => {
@@ -37,6 +64,8 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
     setClientSearchQuery(e.target.value);
     throttledSearch(e.target.value);
   };
+
+  useScrollPersistance('last-community-post-feed-scroll-position');
 
   return (
     <React.Fragment>
