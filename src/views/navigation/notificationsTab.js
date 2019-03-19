@@ -82,7 +82,7 @@ const NotificationsTab = (props: Props) => {
           <AvatarGrid isActive={isActive}>
             <AvatarLink
               to={'/notifications'}
-              data-cy="navbar-notifications"
+              data-cy="navigation-notifications"
               onClick={() => setNavigationIsOpen(false)}
               {...getAccessibilityActiveState(
                 match && match.url.includes('/notifications')

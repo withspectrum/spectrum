@@ -3,51 +3,53 @@ import data from '../../shared/testing/data';
 const user = data.users[0];
 
 const coreSplashPageNavbarLinksVisible = () => {
-  cy.get('[data-cy="navbar-splash"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-splash-features"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash-features"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-splash-apps"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash-apps"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-splash-support"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash-support"]').should('be.visible');
 };
 
 const checkSignedOutSplashNavbarLinksRender = () => {
   coreSplashPageNavbarLinksVisible();
 
-  cy.get('[data-cy="navbar-splash-signin"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash-signin"]').should('be.visible');
 };
 
 const checkSignedInSplashNavbarLinksRender = () => {
   coreSplashPageNavbarLinksVisible();
 
-  cy.get('[data-cy="navbar-splash-profile"]').should('be.visible');
+  cy.get('[data-cy="navigation-splash-profile"]').should('be.visible');
 };
 
 const checkProductNavbarLinksRender = () => {
-  cy.get('[data-cy="navbar"]').should('be.visible');
+  cy.get('[data-cy="navigation-bar"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-logo"]').should('be.visible');
+  cy.get('[data-cy="navigation-composer"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-home"]').should('be.visible');
+  cy.get('[data-cy="navigation-messages"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-messages"]').should('be.visible');
+  cy.get('[data-cy="navigation-notifications"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-explore"]').should('be.visible');
+  cy.get('[data-cy="navigation-explore"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-notifications"]').should('be.visible');
-
-  cy.get('[data-cy="navbar-profile"]').should('be.visible');
+  cy.get('[data-cy="navigation-profile"]').should('be.visible');
 };
 
 const checkSignedOutNavbarRenders = () => {
-  cy.get('[data-cy="navbar"]').should('be.visible');
+  cy.get('[data-cy="navigation-bar"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-logo"]').should('be.visible');
+  cy.get('[data-cy="navigation-explore"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-explore"]').should('be.visible');
+  cy.get('[data-cy="navigation-support"]').should('be.visible');
 
-  cy.get('[data-cy="navbar-support"]').should('be.visible');
+  cy.get('[data-cy="navigation-apps"]').should('be.visible');
+
+  cy.get('[data-cy="navigation-features"]').should('be.visible');
+
+  cy.get('[data-cy="navigation-login"]').should('be.visible');
 };
 
 const checkSignedOutSplashNavbarRenders = () => {
@@ -98,6 +100,12 @@ describe('Navbar logged in', () => {
     checkProductNavbarLinksRender();
 
     cy.visit(`/users/${user.username}`);
+    checkProductNavbarLinksRender();
+
+    cy.visit(`/spectrum`);
+    checkProductNavbarLinksRender();
+
+    cy.visit(`/spectrum/general`);
     checkProductNavbarLinksRender();
   });
 

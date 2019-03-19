@@ -39,7 +39,7 @@ const Navigation = (props: Props) => {
     return (
       <NavigationContext.Consumer>
         {({ navigationIsOpen, setNavigationIsOpen }) => (
-          <NavigationWrapper isOpen={navigationIsOpen}>
+          <NavigationWrapper data-cy="navigation-bar" isOpen={navigationIsOpen}>
             <Overlay
               isOpen={navigationIsOpen}
               onClick={() => setNavigationIsOpen(false)}
@@ -52,7 +52,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/about'}
-                        data-cy="navbar-home"
+                        data-cy="navigation-home"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -73,7 +73,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/features'}
-                        data-cy="navbar-features"
+                        data-cy="navigation-features"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -94,7 +94,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/support'}
-                        data-cy="navbar-support"
+                        data-cy="navigation-support"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -115,7 +115,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/apps'}
-                        data-cy="navbar-apps"
+                        data-cy="navigation-apps"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -136,7 +136,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/explore'}
-                        data-cy="navbar-explore"
+                        data-cy="navigation-explore"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -159,7 +159,7 @@ const Navigation = (props: Props) => {
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/login'}
-                        data-cy="navbar-login"
+                        data-cy="navigation-login"
                         onClick={() => setNavigationIsOpen(false)}
                         {...getAccessibilityActiveState(!!match)}
                       >
@@ -183,7 +183,7 @@ const Navigation = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ navigationIsOpen, setNavigationIsOpen }) => (
-        <NavigationWrapper isOpen={navigationIsOpen}>
+        <NavigationWrapper data-cy="navigation-bar" isOpen={navigationIsOpen}>
           <NavHead {...props} />
           <Skip />
 
@@ -211,7 +211,7 @@ const Navigation = (props: Props) => {
                   >
                     <AvatarLink
                       to={'/explore'}
-                      data-cy="navbar-explore"
+                      data-cy="navigation-explore"
                       onClick={() => setNavigationIsOpen(false)}
                       {...getAccessibilityActiveState(
                         match && match.url === '/explore' && match.isExact
@@ -241,7 +241,7 @@ const Navigation = (props: Props) => {
                   >
                     <AvatarLink
                       to={'/me'}
-                      data-cy="navbar-profile"
+                      data-cy="navigation-profile"
                       onClick={() => setNavigationIsOpen(false)}
                       {...getAccessibilityActiveState(
                         history.location.pathname ===
@@ -285,7 +285,7 @@ const Navigation = (props: Props) => {
                       >
                         <AvatarLink
                           to={'/new/community'}
-                          data-cy="navbar-new-community"
+                          data-cy="navigation-new-community"
                           {...getAccessibilityActiveState(
                             match &&
                               match.url === '/new/community' &&

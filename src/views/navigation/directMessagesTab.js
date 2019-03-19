@@ -73,7 +73,7 @@ const DirectMessagesTab = (props: Props) => {
               <AvatarGrid isActive={match && match.url.includes('/messages')}>
                 <AvatarLink
                   to={'/messages'}
-                  data-cy="navbar-messages"
+                  data-cy="navigation-messages"
                   onClick={() => setNavigationIsOpen(false)}
                   {...getAccessibilityActiveState(
                     match && match.url.includes('/messages')

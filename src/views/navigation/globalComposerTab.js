@@ -13,7 +13,7 @@ const GlobalComposerTab = () => {
           <AvatarGrid>
             <AvatarLink
               to={{ pathname: '/new/thread', state: { modal: true } }}
-              data-cy="navbar-composer"
+              data-cy="navigation-composer"
               onClick={() => setNavigationIsOpen(false)}
             >
               <IconWrapper>
