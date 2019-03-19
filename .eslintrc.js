@@ -25,5 +25,9 @@ module.exports = {
     'react/no-deprecated': 0,
     'react/display-name': 0,
     'react/no-find-dom-node': 1,
+    'react/no-unescaped-entities': 'warn',
+    'react/no-string-refs': 'warn',
+    'react/jsx-no-target-blank': 'warn',
+    'react/no-children-prop': 0,
   },
 };
