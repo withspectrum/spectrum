@@ -14,7 +14,7 @@ import {
 import { HorizontalRule } from 'src/components/globals';
 import Card from 'src/components/card';
 import { SingleColumnGrid } from 'src/components/layout';
-import { IconButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -283,7 +283,7 @@ export const RequestCard = styled.div`
   }
 `;
 
-export const CloseRequest = styled(IconButton)`
+export const CloseRequest = styled(Icon)`
   margin-left: 8px;
   color: ${theme.text.placeholder};
 `;

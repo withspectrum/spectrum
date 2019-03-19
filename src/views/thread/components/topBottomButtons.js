@@ -1,7 +1,7 @@
 // @flow
 import React, { useEffect, useState } from 'react';
 import { useAppScroller } from 'src/hooks/useAppScroller';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { TopBottomButtonContainer, TopButton, BottomButton } from '../style';
 
 const TopBottomButtons = () => {

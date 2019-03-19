@@ -18,7 +18,7 @@ import {
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { TextButton, OutlineButton } from 'src/components/button';
 import enableCommunityWatercooler from 'shared/graphql/mutations/community/enableCommunityWatercooler';
 import disableCommunityWatercooler from 'shared/graphql/mutations/community/disableCommunityWatercooler';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -82,16 +82,16 @@ const Watercooler = (props: Props) => {
               style={{ marginRight: '8px' }}
               to={`/${community.slug}/general/${community.watercoolerId}`}
             >
-              <OutlineButton>Go to open chat</OutlineButton>
+              <TextButton>Go to open chat</TextButton>
             </Link>
           )}
-          <Button
+          <OutlineButton
             loading={saving}
             onClick={community.watercoolerId ? disable : enable}
             type="submit"
           >
             {community && community.watercoolerId ? 'Disable' : 'Enable'}
-          </Button>
+          </OutlineButton>
         </SectionCardFooter>
       </SectionCard>
     );

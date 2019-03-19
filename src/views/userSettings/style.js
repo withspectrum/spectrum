@@ -99,7 +99,7 @@ export const ImageInputWrapper = styled(FlexCol)`
   > label:nth-of-type(2) {
     position: absolute;
     bottom: -24px;
-    left: 24px;
+    left: 16px;
   }
 `;
 

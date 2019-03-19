@@ -7,9 +7,9 @@ import { CLIENT_URL } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import Tooltip from 'src/components/tooltip';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import compose from 'recompose/compose';
-import { Button, TextButton, IconButton } from 'src/components/buttons';
+import { Button, TextButton } from 'src/components/button';
 import Flyout from 'src/components/flyout';
 import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -410,15 +410,18 @@ class ActionBar extends React.Component<Props, State> {
             {currentUser && (
               <FollowButton
                 currentUser={currentUser}
-                icon={
-                  thread.receiveNotifications
-                    ? 'notification-fill'
-                    : 'notification'
-                }
                 loading={notificationStateLoading}
                 onClick={this.toggleNotification}
                 dataCy="thread-notifications-toggle"
               >
+                <Icon
+                  glyph={
+                    thread.receiveNotifications
+                      ? 'notification-fill'
+                      : 'notification'
+                  }
+                  size={24}
+                />
                 {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
               </FollowButton>
             )}
@@ -430,7 +433,7 @@ class ActionBar extends React.Component<Props, State> {
                     {({ ref }) => {
                       return (
                         <span ref={ref}>
-                          <IconButton
+                          <Icon
                             glyph="settings"
                             onClick={this.toggleFlyout}
                             dataCy="thread-actions-dropdown-trigger"
@@ -466,15 +469,17 @@ class ActionBar extends React.Component<Props, State> {
                               >
                                 <FlyoutRow hideAbove={768}>
                                   <TextButton
-                                    icon={
-                                      thread.receiveNotifications
-                                        ? 'notification-fill'
-                                        : 'notification'
-                                    }
-                                    hoverColor={'brand.alt'}
                                     onClick={this.toggleNotification}
                                     dataCy={'thread-dropdown-notifications'}
                                   >
+                                    <Icon
+                                      size={24}
+                                      glyph={
+                                        thread.receiveNotifications
+                                          ? 'notification-fill'
+                                          : 'notification'
+                                      }
+                                    />
                                     {thread.receiveNotifications
                                       ? 'Subscribed'
                                       : 'Notify me'}
@@ -484,11 +489,10 @@ class ActionBar extends React.Component<Props, State> {
                                 {shouldRenderEditThreadAction && (
                                   <FlyoutRow>
                                     <TextButton
-                                      icon="edit"
                                       onClick={this.props.toggleEdit}
-                                      hoverColor={'space.default'}
                                       dataCy={'thread-dropdown-edit'}
                                     >
+                                      <Icon size={24} glyph={'edit'} />
                                       <Label>Edit post</Label>
                                     </TextButton>
                                   </FlyoutRow>
@@ -497,17 +501,15 @@ class ActionBar extends React.Component<Props, State> {
                                 {shouldRenderPinThreadAction && (
                                   <FlyoutRow>
                                     <TextButton
-                                      icon={isPinned ? 'pin-fill' : 'pin'}
-                                      hoverColor={
-                                        isPinned
-                                          ? 'warn.default'
-                                          : 'special.default'
-                                      }
                                       onClick={this.props.togglePinThread}
                                       dataCy={'thread-dropdown-pin'}
                                       loading={isPinningThread}
                                       disabled={isPinningThread}
                                     >
+                                      <Icon
+                                        size={24}
+                                        glyph={isPinned ? 'pin-fill' : 'pin'}
+                                      />
                                       <Label>
                                         {isPinned
                                           ? 'Unpin thread'
@@ -520,11 +522,10 @@ class ActionBar extends React.Component<Props, State> {
                                 {shouldRenderMoveThreadAction && (
                                   <FlyoutRow hideBelow={1024}>
                                     <TextButton
-                                      icon={'channel'}
-                                      hoverColor={'special.default'}
                                       onClick={this.triggerChangeChannel}
                                       dataCy={'thread-dropdown-move'}
                                     >
+                                      <Icon size={24} glyph={'channel'} />
                                       Move thread
                                     </TextButton>
                                   </FlyoutRow>
@@ -533,21 +534,19 @@ class ActionBar extends React.Component<Props, State> {
                                 {shouldRenderLockThreadAction && (
                                   <FlyoutRow>
                                     <TextButton
-                                      icon={
-                                        thread.isLocked
-                                          ? 'private'
-                                          : 'private-unlocked'
-                                      }
-                                      hoverColor={
-                                        thread.isLocked
-                                          ? 'success.default'
-                                          : 'warn.alt'
-                                      }
                                       onClick={this.props.threadLock}
                                       dataCy={'thread-dropdown-lock'}
                                       loading={isLockingThread}
                                       disabled={isLockingThread}
                                     >
+                                      <Icon
+                                        size={24}
+                                        glyph={
+                                          thread.isLocked
+                                            ? 'private'
+                                            : 'private-unlocked'
+                                        }
+                                      />
                                       <Label>
                                         {thread.isLocked
                                           ? 'Unlock chat'
@@ -560,11 +559,10 @@ class ActionBar extends React.Component<Props, State> {
                                 {shouldRenderDeleteThreadAction && (
                                   <FlyoutRow>
                                     <TextButton
-                                      icon="delete"
-                                      hoverColor="warn.default"
                                       onClick={this.props.triggerDelete}
                                       dataCy={'thread-dropdown-delete'}
                                     >
+                                      <Icon size={24} glyph={'delete'} />
                                       <Label>Delete</Label>
                                     </TextButton>
                                   </FlyoutRow>

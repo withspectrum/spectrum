@@ -53,11 +53,13 @@ class Pages extends React.Component<Props> {
 
     return (
       <StyledViewGrid>
-        <Nav
-          dark={dark ? 'true' : undefined}
-          location={this.props.match.path.substr(1)}
-        />
-        {this.renderPage()}
+        <div style={{ position: 'relative' }}>
+          <Nav
+            dark={dark ? 'true' : undefined}
+            location={this.props.match.path.substr(1)}
+          />
+          {this.renderPage()}
+        </div>
       </StyledViewGrid>
     );
   }

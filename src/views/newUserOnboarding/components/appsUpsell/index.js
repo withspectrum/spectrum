@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { Button, TextButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { Button, TextButton } from 'src/components/button';
 import { track, events } from 'src/helpers/analytics';
 import { ActionsContainer } from './style';
 import { DESKTOP_APP_MAC_URL } from 'src/helpers/desktop-app-utils';
@@ -43,11 +44,10 @@ class AppsUpsell extends React.Component<Props, State> {
 
     return (
       <ActionsContainer>
-        <a href={DESKTOP_APP_MAC_URL}>
-          <Button large icon="apple" onClick={this.onDownload}>
-            Download for Mac
-          </Button>
-        </a>
+        <Button href={DESKTOP_APP_MAC_URL} onClick={this.onDownload}>
+          <Icon glyph="apple" />
+          Download for Mac
+        </Button>
 
         <TextButton onClick={nextStep} large>
           Skip for now

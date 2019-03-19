@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
-import { Button } from '../buttons';
+import { Button } from 'src/components/button';
 import { Input, Error } from '../formElements';
 import isEmail from 'validator/lib/isEmail';
 import { EmailForm } from './style';

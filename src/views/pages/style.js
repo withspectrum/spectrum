@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import { ViewGrid } from 'src/components/layout';
 import {
   H2,
@@ -671,12 +671,10 @@ export const MenuOverlay = styled.div`
 
 export const MenuTab = styled.div`
   grid-area: menu;
+  color: ${props =>
+    props.dark ? props.theme.brand.border : props.theme.brand.alt};
 
   > button {
-    color: ${props =>
-      props.dark ? props.theme.brand.border : props.theme.brand.alt};
-    transform: none;
-
     &:hover {
       color: ${props =>
         props.dark ? props.theme.text.reverse : props.theme.brand.default};

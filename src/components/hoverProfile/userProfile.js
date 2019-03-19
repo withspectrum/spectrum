@@ -6,10 +6,7 @@ import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
-import {
-  PrimaryOutlineButton,
-  OutlineButton,
-} from 'src/views/community/components/button';
+import { PrimaryOutlineButton, OutlineButton } from 'src/components/button';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';

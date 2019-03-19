@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Route, withRouter } from 'react-router-dom';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import Tooltip from 'src/components/tooltip';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';

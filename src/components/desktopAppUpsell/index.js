@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { track, events } from 'src/helpers/analytics';
 import {
   hasDismissedDesktopAppUpsell,
@@ -9,7 +9,7 @@ import {
   DESKTOP_APP_MAC_URL,
 } from 'src/helpers/desktop-app-utils';
 import { isMac } from 'src/helpers/is-os';
-import { OutlineButton } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
 import {
   Container,
   Card,

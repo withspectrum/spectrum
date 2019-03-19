@@ -4,12 +4,12 @@ import compose from 'recompose/compose';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   WhiteIconButton,
-  SmallPrimaryButton,
-  SmallOutlineButton,
-} from 'src/views/community/components/button';
+  PrimaryButton,
+  OutlineButton,
+} from 'src/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import getComposerLink from 'src/helpers/get-composer-link';
 import JoinChannel from 'src/components/joinCommunityWrapper';
@@ -42,9 +42,9 @@ export const MobileCommunityAction = (props: CommunityProps) => {
     <JoinCommunity
       community={community}
       render={({ isLoading }) => (
-        <SmallPrimaryButton isLoading={isLoading} icon={'door-enter'}>
+        <PrimaryButton size={'small'} isLoading={isLoading}>
           {isLoading ? 'Joining...' : 'Join'}
-        </SmallPrimaryButton>
+        </PrimaryButton>
       )}
     />
   );
@@ -79,9 +79,9 @@ export const MobileChannelAction = (props: ChannelProps) => {
     <JoinChannel
       channelId={channel.id}
       render={({ isLoading }) => (
-        <SmallPrimaryButton isLoading={isLoading} icon={'door-enter'}>
+        <PrimaryButton size={'small'} isLoading={isLoading}>
           {isLoading ? 'Joining...' : 'Join'}
-        </SmallPrimaryButton>
+        </PrimaryButton>
       )}
     />
   );
@@ -97,9 +97,12 @@ const User = (props: UserProps) => {
 
   if (currentUser && currentUser.id === user.id) {
     return (
-      <SmallOutlineButton to={`/users/${currentUser.username}/settings`}>
+      <OutlineButton
+        size={'small'}
+        to={`/users/${currentUser.username}/settings`}
+      >
         Settings
-      </SmallOutlineButton>
+      </OutlineButton>
     );
   }
 

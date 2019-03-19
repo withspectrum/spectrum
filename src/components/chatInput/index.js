@@ -2,7 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
@@ -17,7 +17,7 @@ import {
   PreviewWrapper,
   RemovePreviewButton,
 } from './style';
-import { PrimaryButton } from 'src/views/community/components/button';
+import { PrimaryButton } from 'src/components/button';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
 import { getMessageById } from 'shared/graphql/queries/message/getMessage';

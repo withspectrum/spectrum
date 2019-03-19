@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import type { Location, History, Match } from 'react-router';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ThreadView } from 'src/views/thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';

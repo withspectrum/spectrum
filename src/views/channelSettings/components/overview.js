@@ -1,9 +1,6 @@
 // @flow
 import * as React from 'react';
-import {
-  SectionsContainer,
-  Column,
-} from '../../../components/settingsViews/style';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';

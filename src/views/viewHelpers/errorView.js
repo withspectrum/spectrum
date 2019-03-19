@@ -1,9 +1,6 @@
 // @flow
 import React from 'react';
-import {
-  OutlineButton,
-  PrimaryButton,
-} from 'src/views/community/components/button';
+import { OutlineButton, PrimaryButton } from 'src/components/button';
 import { Emoji, Heading, Description, ActionsRow, Card } from './style';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
 

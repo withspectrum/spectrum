@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
 import { MEDIA_BREAK } from 'src/components/layout';
 import {
@@ -228,7 +228,8 @@ export const DropWrap = styled(FlexCol)`
   margin: 0 8px;
 
   &:hover {
-    color: ${theme.bg.border};
+    color: ${theme.text.secondary};
+    cursor: pointer;
     transition: ${Transition.hover.on};
   }
 
@@ -245,13 +246,14 @@ export const FlyoutRow = styled(FlexRow)`
   button {
     width: 100%;
     justify-content: flex-start;
-    border-top: 1px solid ${theme.bg.wash};
+    border-top: 1px solid ${theme.bg.divider};
     border-radius: 0;
     transition: none;
   }
 
   button:hover {
     background: ${theme.bg.wash};
+    border-top: 1px solid ${theme.bg.divider};
     transition: none;
   }
 
@@ -647,18 +649,8 @@ export const FixedBottomActionBarContainer = styled(ActionBarContainer)`
   position: sticky;
 `;
 
-export const FollowButton = styled(Button)`
+export const FollowButton = styled(OutlineButton)`
   background: ${theme.bg.default};
-  border: 1px solid ${theme.bg.border};
-  color: ${theme.text.alt};
-  padding: 4px;
-  margin-left: 24px;
-
-  &:hover {
-    background: ${theme.bg.default};
-    color: ${theme.text.default};
-  }
-
   @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.currentUser ? 'none' : 'flex')};
   }
@@ -835,6 +827,10 @@ export const LockedWrapper = styled.div`
   color: ${theme.text.secondary};
   background: ${theme.bg.wash};
   border-top: 1px solid ${theme.bg.border};
+
+  button {
+    flex: 1;
+  }
 `;
 
 export const LockedText = styled.div`

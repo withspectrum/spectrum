@@ -5,13 +5,10 @@ import { Link } from 'react-router-dom';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import JoinChannelWrapper from 'src/components/joinChannelWrapper';
 import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
-import {
-  SmallOutlineButton,
-  SmallPrimaryButton,
-} from 'src/views/community/components/button';
+import { OutlineButton, PrimaryOutlineButton } from 'src/components/button';
 import { Row, Content, Label, Description, Actions } from './style';
 
 type Props = {
@@ -43,9 +40,9 @@ const Channel = (props: Props) => {
         <LeaveChannelWrapper
           channel={channel}
           render={({ isLoading, isHovering }) => (
-            <SmallOutlineButton style={{ width: '100px' }}>
+            <OutlineButton size={'small'} style={{ width: '100px' }}>
               {isLoading ? 'Leaving...' : isHovering ? 'Leave' : 'Member'}
-            </SmallOutlineButton>
+            </OutlineButton>
           )}
         />
       );
@@ -54,9 +51,9 @@ const Channel = (props: Props) => {
       <JoinChannelWrapper
         channel={channel}
         render={({ isLoading }) => (
-          <SmallPrimaryButton>
+          <PrimaryOutlineButton size={'small'}>
             {isLoading ? 'Joining...' : 'Join'}
-          </SmallPrimaryButton>
+          </PrimaryOutlineButton>
         )}
       />
     );

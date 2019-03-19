@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { CountWrapper } from './style';
 
 type Props = {

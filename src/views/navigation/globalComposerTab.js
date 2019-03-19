@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import Tooltip from 'src/components/tooltip';
 import { NavigationContext } from 'src/routes';
 import { AvatarGrid, AvatarLink, Label, IconWrapper } from './style';

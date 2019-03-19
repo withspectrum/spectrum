@@ -14,7 +14,7 @@ import {
   ReactionContext,
   Content,
 } from '../style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 
 type Props = {
@@ -61,7 +61,6 @@ export const NewReactionNotification = ({
 export const MiniNewReactionNotification = ({
   notification,
   currentUser,
-  history,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);

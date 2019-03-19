@@ -5,7 +5,7 @@ import searchCommunityMembers from 'shared/graphql/queries/search/searchCommunit
 import type { SearchCommunityMembersType } from 'shared/graphql/queries/search/searchCommunityMembers';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 
 type Props = {
   data: {
@@ -26,4 +26,7 @@ class Search extends React.Component<Props> {
   }
 }
 
-export default compose(searchCommunityMembers, viewNetworkHandler)(Search);
+export default compose(
+  searchCommunityMembers,
+  viewNetworkHandler
+)(Search);

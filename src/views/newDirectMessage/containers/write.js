@@ -8,7 +8,7 @@ import { setTitlebarProps } from 'src/actions/titlebar';
 import ChatInput from 'src/components/chatInput';
 import { DesktopTitlebar } from 'src/components/titlebar';
 import { UserAvatar } from 'src/components/avatar';
-import { SmallOutlineButton } from 'src/views/community/components/button';
+import { OutlineButton } from 'src/components/button';
 import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { ErrorBoundary } from 'src/components/error';
 import MessagesCheck from '../components/messagesCheck';
@@ -95,7 +95,9 @@ const Write = (props: Props) => {
         titleIcon={titleIcon}
         rightAction={
           !hadInitialUser && (
-            <SmallOutlineButton onClick={toSearch}>Edit</SmallOutlineButton>
+            <OutlineButton size={'small'} onClick={toSearch}>
+              Edit
+            </OutlineButton>
           )
         }
       />

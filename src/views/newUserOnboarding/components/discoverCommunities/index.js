@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { getCommunitiesByCuratedContentType } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
-import { displayLoadingState } from '../../../../components/loading';
+import { displayLoadingState } from 'src/components/loading';
 import { Row } from './style';
 import { track, events } from 'src/helpers/analytics';
 

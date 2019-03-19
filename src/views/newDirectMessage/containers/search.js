@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { DesktopTitlebar } from 'src/components/titlebar';
-import { SmallPrimaryButton } from 'src/views/community/components/button';
+import { PrimaryButton } from 'src/components/button';
 import UsersSearch from '../components/usersSearch';
 import SelectedUserPill from '../components/selectedUserPill';
 import { SelectedPillsWrapper } from '../style';
@@ -32,12 +32,13 @@ const Search = (props: Props) => {
         title: 'New message',
         leftAction: 'view-back',
         rightAction: (
-          <SmallPrimaryButton
+          <PrimaryButton
+            size={'small'}
             disabled={!usersForMessage || usersForMessage.length === 0}
             onClick={toWrite}
           >
             Next
-          </SmallPrimaryButton>
+          </PrimaryButton>
         ),
       })
     );
@@ -48,12 +49,13 @@ const Search = (props: Props) => {
       <DesktopTitlebar
         title={'New message'}
         rightAction={
-          <SmallPrimaryButton
+          <PrimaryButton
+            size={'small'}
             disabled={!usersForMessage || usersForMessage.length === 0}
             onClick={toWrite}
           >
             Next
-          </SmallPrimaryButton>
+          </PrimaryButton>
         }
       />
       {usersForMessage && usersForMessage.length > 0 && (

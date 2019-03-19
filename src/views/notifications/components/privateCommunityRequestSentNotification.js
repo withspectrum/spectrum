@@ -5,7 +5,7 @@ import { parseActors, parseEvent, parseNotificationDate } from '../utils';
 import { ActorsRow } from './actorsRow';
 import approvePendingCommunityMember from 'shared/graphql/mutations/communityMember/approvePendingCommunityMember';
 import blockPendingCommunityMember from 'shared/graphql/mutations/communityMember/blockPendingCommunityMember';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import {
   SegmentedNotificationCard,
   TextContent,
@@ -16,8 +16,8 @@ import {
   AttachmentsWash,
   ButtonsRow,
 } from '../style';
-import Icon from '../../../components/icons';
-import { CardContent } from '../../../components/threadFeedCard/style';
+import Icon from 'src/components/icon';
+import { CardContent } from 'src/components/threadFeedCard/style';
 import compose from 'recompose/compose';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import MutationWrapper from 'src/views/communityMembers/components/mutationWrapper';
@@ -117,9 +117,7 @@ export const PrivateCommunityRequestSent = compose(
   blockPendingCommunityMember
 )(PrivateCommunityRequestSentComponent);
 
-class MiniPrivateCommunityRequestSentWithMutation extends React.Component<
-  Props
-> {
+class MiniPrivateCommunityRequestSentWithMutation extends React.Component<Props> {
   markAsSeen = () => {
     const {
       markSingleNotificationSeen,

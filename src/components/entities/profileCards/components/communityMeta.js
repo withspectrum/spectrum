@@ -5,7 +5,7 @@ import type { CommunityInfoType } from 'shared/graphql/fragments/community/commu
 import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   MetaContainer,
   Name,

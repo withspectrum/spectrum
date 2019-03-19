@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from 'src/components/tooltip';
 import compose from 'recompose/compose';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import {
   updateNotificationsCount,

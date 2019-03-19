@@ -8,7 +8,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import restoreChannel from 'shared/graphql/mutations/channel/restoreChannel';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import { modalStyles, Description } from '../styles';
 import { Form, Actions } from './style';
 import type { Dispatch } from 'redux';
@@ -83,12 +83,10 @@ class RestoreChannelModal extends React.Component<Props, State> {
             </Description>
 
             <Actions>
-              <TextButton onClick={this.close} color={'warn.alt'}>
-                Cancel
-              </TextButton>
-              <Button loading={isLoading} onClick={this.restore}>
+              <TextButton onClick={this.close}>Cancel</TextButton>
+              <PrimaryOutlineButton loading={isLoading} onClick={this.restore}>
                 Restore Channel
-              </Button>
+              </PrimaryOutlineButton>
             </Actions>
           </Form>
         </ModalContainer>

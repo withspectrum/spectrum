@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import getComposerLink from 'src/helpers/get-composer-link';
 import {
-  PrimaryButton,
   OutlineButton,
   PrimaryOutlineButton,
   HoverWarnOutlineButton,
-} from 'src/views/community/components/button';
+} from 'src/components/button';
 import JoinChannel from 'src/components/joinChannelWrapper';
 import LeaveChannel from 'src/components/leaveChannelWrapper';
 import { ActionsRowContainer } from '../style';
@@ -77,9 +76,9 @@ export const UnconnectedChannelActions = (props: Props) => {
       <JoinChannel
         channel={channel}
         render={({ isLoading }) => (
-          <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
+          <PrimaryOutlineButton isLoading={isLoading} icon={'door-enter'}>
             {isLoading ? 'Joining...' : 'Join channel'}
-          </PrimaryButton>
+          </PrimaryOutlineButton>
         )}
       />
     </ActionsRowContainer>

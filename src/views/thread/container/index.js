@@ -15,8 +15,8 @@ import viewNetworkHandler, {
 } from 'src/components/viewNetworkHandler';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
-import Icon from 'src/components/icons';
-import { PrimaryButton } from 'src/views/community/components/button';
+import Icon from 'src/components/icon';
+import { PrimaryOutlineButton } from 'src/components/button';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -229,9 +229,12 @@ const ThreadContainer = (props: Props) => {
                   community={community}
                   render={({ isLoading }) => (
                     <LockedMessages>
-                      <PrimaryButton isLoading={isLoading} icon={'door-enter'}>
+                      <PrimaryOutlineButton
+                        isLoading={isLoading}
+                        icon={'door-enter'}
+                      >
                         {isLoading ? 'Joining...' : 'Join community to chat'}
-                      </PrimaryButton>
+                      </PrimaryOutlineButton>
                     </LockedMessages>
                   )}
                 />

@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { hexa } from 'src/components/globals';
-import { OutlineButton } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled.div`
@@ -64,6 +64,10 @@ export const NullColumn = styled.div`
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.border};
   min-height: calc(100vh - 56px);
+
+  button {
+    flex: 1;
+  }
 `;
 
 export const NullColumnHeading = styled.h3`

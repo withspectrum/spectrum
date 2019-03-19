@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -15,8 +15,8 @@ import uploadImage, {
   type UploadImageInput,
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
-import { TextButton } from '../buttons';
-import { PrimaryButton } from 'src/views/community/components/button';
+import { TextButton } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import Tooltip from 'src/components/tooltip';
 import {
   MediaLabel,
@@ -506,7 +506,6 @@ class ComposerWithData extends React.Component<Props, State> {
             <ButtonRow>
               <TextButton
                 data-cy="composer-cancel-button"
-                hoverColor="warn.alt"
                 onClick={this.closeComposer}
               >
                 Cancel

@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
-} from '../../../components/viewNetworkHandler';
+} from 'src/components/viewNetworkHandler';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
@@ -34,6 +34,7 @@ class CommunityMembers extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMembersQuery, viewNetworkHandler)(
-  CommunityMembers
-);
+export default compose(
+  getCommunityMembersQuery,
+  viewNetworkHandler
+)(CommunityMembers);

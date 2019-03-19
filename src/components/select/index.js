@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Select, Container, IconContainer } from './style';
 
 type Props = {

@@ -14,7 +14,7 @@ import {
   DropdownSectionTitle,
   DropdownAction,
 } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Spinner } from 'src/components/globals';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import OutsideClickHandler from 'src/components/outsideClickHandler';

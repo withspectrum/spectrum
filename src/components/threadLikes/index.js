@@ -8,7 +8,7 @@ import addThreadReactionMutation from 'shared/graphql/mutations/thread/addThread
 import removeThreadReactionMutation from 'shared/graphql/mutations/thread/removeThreadReaction';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { LikeButtonWrapper, LikeCountWrapper, CurrentCount } from './style';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -53,11 +53,8 @@ class LikeButtonPure extends React.Component<LikeButtonProps> {
     const { hasReacted, count } = thread.reactions;
 
     return (
-      <LikeButtonWrapper
-        hasReacted={hasReacted}
-        onClick={this.handleClick}
-        icon={'thumbsup'}
-      >
+      <LikeButtonWrapper hasReacted={hasReacted} onClick={this.handleClick}>
+        <Icon glyph="thumbsup" size={24} />
         {hasReacted ? 'Liked' : 'Like'}
         <CurrentCount>{count}</CurrentCount>
       </LikeButtonWrapper>

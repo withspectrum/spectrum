@@ -7,11 +7,8 @@ import {
   parseContext,
 } from '../utils';
 import { ActorsRow } from './actorsRow';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
-import Icon from '../../../components/icons';
+import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
+import Icon from 'src/components/icon';
 import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
 import {
   NotificationCard,

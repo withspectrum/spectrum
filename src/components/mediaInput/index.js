@@ -1,6 +1,6 @@
 import React from 'react';
 import { MediaLabel, MediaInput } from './style';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 
 export default ({
   onChange,

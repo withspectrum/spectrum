@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FlexCol, FlexRow, Shadow, hexa, zIndex } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 import { CommunityAvatar } from 'src/components/avatar';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 
 export const SearchWrapper = styled.div`
   position: relative;

@@ -11,8 +11,9 @@ import {
   Shadow,
   hexa,
 } from 'src/components/globals';
-import { Button, OutlineButton, IconButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import { ReputationWrapper } from 'src/components/reputation/style';
+import Icon from 'src/components/icon';
 import Card from 'src/components/card';
 import { MEDIA_BREAK } from 'src/components/layout';
 
@@ -57,7 +58,7 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   min-width: 0;
 `;
 
-export const ProfileHeaderAction = styled(IconButton)`
+export const ProfileHeaderAction = styled(Icon)`
   margin-left: 16px;
   flex: 0 0 auto;
 `;

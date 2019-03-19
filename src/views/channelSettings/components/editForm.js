@@ -12,7 +12,8 @@ import { openModal } from 'src/actions/modals';
 import Tooltip from 'src/components/tooltip';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Notice } from 'src/components/listItems/style';
-import { Button, IconButton } from 'src/components/buttons';
+import { PrimaryOutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { NullCard } from 'src/components/upsell';
 import { Input, UnderlineInput, TextArea } from 'src/components/formElements';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
@@ -173,7 +174,7 @@ class ChannelWithData extends React.Component<Props, State> {
           copy={'Want to make it?'}
         >
           {/* TODO: wire up button */}
-          <Button>Create</Button>
+          <PrimaryOutlineButton>Create</PrimaryOutlineButton>
         </NullCard>
       );
     } else {
@@ -240,18 +241,18 @@ class ChannelWithData extends React.Component<Props, State> {
             )}
 
             <Actions>
-              <Button
+              <PrimaryOutlineButton
                 onClick={this.save}
                 loading={isLoading}
                 dataCy="save-button"
               >
                 Save
-              </Button>
+              </PrimaryOutlineButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
                   <Tooltip content={`Delete ${name}`}>
                     <span>
-                      <IconButton
+                      <Icon
                         glyph="delete"
                         color="text.placeholder"
                         hoverColor="warn.alt"

@@ -2,10 +2,10 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { sortAndGroupMessages } from 'shared/clients/group-messages';
-import ChatMessages from '../../../components/messageGroup';
-import { Loading } from '../../../components/loading';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import NextPageButton from '../../../components/nextPageButton';
+import ChatMessages from 'src/components/messageGroup';
+import { Loading } from 'src/components/loading';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import NextPageButton from 'src/components/nextPageButton';
 import getDirectMessageThreadMessages from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';

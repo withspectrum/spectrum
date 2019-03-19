@@ -18,7 +18,7 @@ import archiveChannel from 'shared/graphql/mutations/channel/archiveChannel';
 import removeCommunityMember from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, WarnButton } from 'src/components/button';
 import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 import type { Dispatch } from 'redux';
@@ -278,17 +278,14 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           <Message>{message ? message : 'Are you sure?'}</Message>
 
           <Actions>
-            <TextButton onClick={this.close} color={'warn.alt'}>
-              Cancel
-            </TextButton>
-            <Button
+            <TextButton onClick={this.close}>Cancel</TextButton>
+            <WarnButton
               loading={this.state.isLoading}
-              color="warn"
               onClick={this.triggerDelete}
               dataCy={'delete-button'}
             >
               {buttonLabel || 'Delete'}
-            </Button>
+            </WarnButton>
           </Actions>
         </ModalContainer>
       </Modal>

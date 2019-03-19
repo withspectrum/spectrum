@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';

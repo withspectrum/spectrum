@@ -5,10 +5,7 @@ import type { Dispatch } from 'redux';
 import type { Match } from 'react-router';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
-import {
-  PrimaryButton,
-  SmallPrimaryButton,
-} from 'src/views/community/components/button';
+import { PrimaryOutlineButton } from 'src/components/button';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   ViewGrid,
@@ -38,7 +35,9 @@ class DirectMessages extends React.Component<Props, State> {
       setTitlebarProps({
         title: 'Messages',
         rightAction: (
-          <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
+          <PrimaryOutlineButton size={'small'} to={'/new/message'}>
+            New
+          </PrimaryOutlineButton>
         ),
       })
     );
@@ -52,7 +51,9 @@ class DirectMessages extends React.Component<Props, State> {
         setTitlebarProps({
           title: 'Messages',
           rightAction: (
-            <SmallPrimaryButton to={'/new/message'}>New</SmallPrimaryButton>
+            <PrimaryOutlineButton size={'small'} to={'/new/message'}>
+              New
+            </PrimaryOutlineButton>
           ),
         })
       );
@@ -82,14 +83,14 @@ class DirectMessages extends React.Component<Props, State> {
                   <NoCommunitySubheading>
                     Choose from an existing conversation, or start a new one.
                   </NoCommunitySubheading>
-                  <PrimaryButton
+                  <PrimaryOutlineButton
                     to={{
                       pathname: '/new/message',
                       state: { modal: true },
                     }}
                   >
                     New message
-                  </PrimaryButton>
+                  </PrimaryOutlineButton>
                 </div>
               </NoCommunitySelected>
             )}

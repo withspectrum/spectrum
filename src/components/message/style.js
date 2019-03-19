@@ -2,7 +2,7 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { SvgWrapper } from '../icons';
+import { SvgWrapper } from 'src/components/icon';
 import { Truncate, monoStack, hexa } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
 import { MEDIA_BREAK } from 'src/components/layout';

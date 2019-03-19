@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from 'src/components/entities';
 import { Loading } from 'src/components/loading';
-import { OutlineButton } from 'src/views/community/components/button';
+import { OutlineButton } from 'src/components/button';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 

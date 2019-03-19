@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter, type History } from 'react-router-dom';
 import { NavigationContext } from 'src/routes';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { RedDot } from '../../views/navigation/style';
 import {
   TitlebarContainer,

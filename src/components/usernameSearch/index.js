@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { getUserByUsernameQuery } from 'shared/graphql/queries/user/getUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
-import { debounce } from '../../helpers/utils';
+import { debounce } from 'src/helpers/utils';
 import { Spinner } from '../globals';
 import { Input, Loading } from './style';
 

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Pill, PillAvatar } from '../style';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 

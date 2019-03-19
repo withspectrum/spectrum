@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import JoinCommunityWrapper from 'src/components/joinCommunityWrapper';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
@@ -72,15 +72,7 @@ class HoverProfile extends Component<ProfileProps> {
               <JoinCommunityWrapper
                 community={community}
                 render={({ isLoading }) => {
-                  return (
-                    <Button
-                      loading={isLoading}
-                      icon={'plus-fill'}
-                      gradientTheme="success"
-                    >
-                      Join
-                    </Button>
-                  );
+                  return <Button loading={isLoading}>Join</Button>;
                 }}
               />
             )}

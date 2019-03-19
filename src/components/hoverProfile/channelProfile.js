@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
@@ -88,14 +88,7 @@ class HoverProfile extends Component<ProfileProps> {
                     );
                   } else {
                     return (
-                      <Button
-                        isMember={false}
-                        icon={'plus-fill'}
-                        loading={state.isLoading}
-                        gradientTheme={'success'}
-                      >
-                        Join channel
-                      </Button>
+                      <Button loading={state.isLoading}>Join channel</Button>
                     );
                   }
                 }}

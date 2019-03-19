@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import getComposerLink from 'src/helpers/get-composer-link';
-import { OutlineButton } from 'src/views/community/components/button';
-import Icon from 'src/components/icons';
+import { PrimaryOutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { NullColumn, NullColumnHeading, NullColumnSubheading } from './style';
 
 type Props = {
@@ -58,10 +58,11 @@ const NullState = ({
         {hd && <NullColumnHeading>{hd}</NullColumnHeading>}
         {cp && <NullColumnSubheading>{cp}</NullColumnSubheading>}
         {(communityId || channelId) && (
-          <OutlineButton to={{ pathname, search, state: { modal: true } }}>
-            <Icon glyph={'post'} size={24} />
+          <PrimaryOutlineButton
+            to={{ pathname, search, state: { modal: true } }}
+          >
             New post
-          </OutlineButton>
+          </PrimaryOutlineButton>
         )}
       </span>
     </NullColumn>

@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import Card from '../../components/card';
+import Card from 'src/components/card';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled(Card)`

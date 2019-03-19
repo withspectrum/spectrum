@@ -41,7 +41,7 @@ import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { ViewGrid } from 'src/components/layout';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { StyledSingleColumn } from './style';
-import { updateNotificationsCount } from '../../actions/notifications';
+import { updateNotificationsCount } from 'src/actions/notifications';
 
 type Props = {
   markAllNotificationsSeen?: Function,

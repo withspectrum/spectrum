@@ -10,7 +10,7 @@ import {
   hexa,
   zIndex,
 } from 'src/components/globals';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 export const Title = styled.p`
   color: ${theme.text.default};

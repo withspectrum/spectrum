@@ -9,7 +9,7 @@ import {
   hexa,
   zIndex,
 } from 'src/components/globals';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Title = styled.h1`

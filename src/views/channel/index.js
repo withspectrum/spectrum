@@ -24,10 +24,7 @@ import { ChannelProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { MobileChannelAction } from 'src/components/titlebar/actions';
 import { CommunityAvatar } from 'src/components/avatar';
-import {
-  PrimaryButton,
-  OutlineButton,
-} from 'src/views/community/components/button';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import ToggleChannelMembership from 'src/components/toggleChannelMembership';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';

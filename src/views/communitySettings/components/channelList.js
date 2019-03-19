@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { openModal } from 'src/actions/modals';
 import { Loading } from 'src/components/loading';
-import { IconButton, Button } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import Tooltip from 'src/components/tooltip';
@@ -55,7 +56,7 @@ class ChannelList extends React.Component<Props> {
                     >
                       <Tooltip content={'Manage channel'}>
                         <span>
-                          <IconButton glyph="settings" />
+                          <Icon glyph="settings" />
                         </span>
                       </Tooltip>
                     </Link>
@@ -65,7 +66,7 @@ class ChannelList extends React.Component<Props> {
           </ListContainer>
 
           <SectionCardFooter>
-            <Button
+            <OutlineButton
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
               onClick={() =>
@@ -79,7 +80,7 @@ class ChannelList extends React.Component<Props> {
               data-cy="create-channel-button"
             >
               Create Channel
-            </Button>
+            </OutlineButton>
           </SectionCardFooter>
         </SectionCard>
       );

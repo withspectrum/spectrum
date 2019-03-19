@@ -9,9 +9,9 @@ import type { GetCommunityType } from 'shared/graphql/queries/community/getCommu
 import { openModal } from 'src/actions/modals';
 import Tooltip from 'src/components/tooltip';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { Button, IconButton } from 'src/components/buttons';
+import { PrimaryOutlineButton } from 'src/components/button';
 import { Notice } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   Input,
   UnderlineInput,
@@ -296,7 +296,7 @@ class EditForm extends React.Component<Props, State> {
           <FormTitle>This community doesn’t exist yet.</FormTitle>
           <Description>Want to make it?</Description>
           <Actions>
-            <Button>Create</Button>
+            <PrimaryOutlineButton>Create</PrimaryOutlineButton>
           </Actions>
         </SectionCard>
       );
@@ -360,7 +360,7 @@ class EditForm extends React.Component<Props, State> {
           </Input>
 
           <Actions>
-            <Button
+            <PrimaryOutlineButton
               loading={isLoading}
               onClick={this.save}
               disabled={photoSizeError}
@@ -368,12 +368,12 @@ class EditForm extends React.Component<Props, State> {
               dataCy="community-settings-edit-save-button"
             >
               Save
-            </Button>
+            </PrimaryOutlineButton>
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (
                 <Tooltip content={`Delete ${name}`}>
                   <span>
-                    <IconButton
+                    <Icon
                       glyph="delete"
                       color="text.placeholder"
                       hoverColor={'warn.alt'}

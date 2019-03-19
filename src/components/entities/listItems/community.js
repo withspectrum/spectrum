@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityAvatar } from 'src/components/avatar';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   Row,
   CommunityAvatarContainer,

@@ -2,16 +2,9 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import MentionsInput from '../mentionsInput';
-import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
 import { MEDIA_BREAK } from 'src/components/layout';
-import {
-  FlexRow,
-  hexa,
-  Transition,
-  zIndex,
-  monoStack,
-} from 'src/components/globals';
+import { FlexRow, hexa, zIndex, monoStack } from 'src/components/globals';
 
 export const ChatInputContainer = styled(FlexRow)`
   flex: none;
@@ -167,16 +160,6 @@ export const Input = styled(MentionsInput).attrs({
     `};
 `;
 
-export const SendButton = styled(IconButton)`
-  height: 32px;
-  width: 32px;
-  bottom: 4px;
-  margin-left: 4px;
-  background-color: transparent;
-  transition: ${Transition.hover.off};
-  align-self: flex-end;
-`;
-
 export const MediaInput = styled.input`
   width: 0.1px;
   height: 0.1px;
@@ -200,17 +183,6 @@ export const MediaLabel = styled.label`
   &:hover {
     cursor: pointer;
     color: ${theme.brand.default};
-  }
-`;
-
-export const EmojiToggle = styled(IconButton)`
-  position: absolute;
-  left: 56px;
-  background-color: transparent;
-  top: calc(50% - 16px);
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
   }
 `;
 

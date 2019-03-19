@@ -94,6 +94,10 @@ export const NoCommunitySelected = styled.div`
   text-align: center;
   padding: 24px;
 
+  button {
+    flex: 1;
+  }
+
   @media (min-width: ${MEDIA_BREAK}px) {
     ${props =>
       props.hideOnDesktop &&

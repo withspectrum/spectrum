@@ -17,11 +17,10 @@ import {
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import BrandedLoginToggle from './brandedLoginToggle';
-import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { TextButton, OutlineButton } from 'src/components/button';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -133,7 +132,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   justifyContent: 'flex-start',
                 }}
               >
-                <Button
+                <OutlineButton
                   style={{ alignSelf: 'flex-start', marginLeft: '8px' }}
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
@@ -142,20 +141,15 @@ class BrandedLogin extends React.Component<Props, State> {
                   data-cy="community-settings-branded-login-save"
                 >
                   Save
-                </Button>
+                </OutlineButton>
 
-                <Link
+                <TextButton
                   to={`/${community.slug}/login`}
-                  style={{ marginRight: '8px' }}
+                  style={{ alignSelf: 'flex-start', marginRight: '8px' }}
+                  data-cy="community-settings-branded-login-preview"
                 >
-                  <OutlineButton
-                    color={'text.alt'}
-                    style={{ alignSelf: 'flex-start' }}
-                    data-cy="community-settings-branded-login-preview"
-                  >
-                    Preview
-                  </OutlineButton>
-                </Link>
+                  Preview
+                </TextButton>
               </SectionCardFooter>
             )}
           </form>

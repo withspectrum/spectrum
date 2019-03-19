@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ErrorBoundary } from 'src/components/error';
 import { NotificationListContainer } from '../style';
 import { parseNotification } from '../utils';
-import { sortByDate } from '../../../helpers/utils';
+import { sortByDate } from 'src/helpers/utils';
 import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
 import { MiniNewThreadReactionNotification } from './newThreadReactionNotification';

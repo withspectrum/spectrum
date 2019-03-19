@@ -6,7 +6,7 @@ import {
   type History,
   type Match,
 } from 'react-router-dom';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
 import { Container, Overlay, ComposerContainer, CloseButton } from '../style';

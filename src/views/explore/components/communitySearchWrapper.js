@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import theme from 'shared/theme';
 import { Primary } from 'src/components/themedSection';
 import { Constellations } from 'src/components/illustrations';
-import { Button } from 'src/views/community/components/button';
+import { Button } from 'src/components/button';
 import { Tagline, Copy } from 'src/views/pages/style';
 import { track, events } from 'src/helpers/analytics';
 import { MEDIA_BREAK } from 'src/components/layout';
@@ -39,6 +39,10 @@ const CommunitySearchWrapper = props => {
     margin-top: 32px;
     margin-bottom: 0;
     padding: 0;
+
+    button {
+      flex: 1;
+    }
   `;
 
   const ThisTagline = styled(Tagline)`
@@ -89,13 +93,12 @@ const CommunitySearchWrapper = props => {
             Building communities on Spectrum is easy and free!
           </SecondaryCopy>
 
-          <Link
-            style={{ display: 'flex' }}
+          <Button
             to={'/new/community'}
             onClick={() => track(events.EXPLORE_PAGE_CREATE_COMMUNITY_CLICKED)}
           >
-            <Button>Create a community</Button>
-          </Link>
+            Create a community
+          </Button>
         </SecondaryContent>
       </ThisContent>
       <Constellations />

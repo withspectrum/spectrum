@@ -238,7 +238,8 @@ export const PhotoInputImage = styled.img`
 
 export const CoverInputLabel = styled.label`
   position: relative;
-  height: 96px;
+  height: 114px;
+  max-width: 342px;
   z-index: ${zIndex.form};
   width: 100%;
   margin-top: 8px;
@@ -273,7 +274,7 @@ export const CoverImage = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 96px;
+  height: 114px;
   border-radius: 8px;
 `;
 

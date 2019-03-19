@@ -3,10 +3,10 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { getCommunityById } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingCard } from 'src/components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import {
   SegmentedNotificationCard,
   TextContent,

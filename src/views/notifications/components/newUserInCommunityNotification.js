@@ -14,11 +14,8 @@ import {
   JoinContext,
   Content,
 } from '../style';
-import Icon from '../../../components/icons';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
+import Icon from 'src/components/icon';
+import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 import compose from 'recompose/compose';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 
@@ -60,9 +57,7 @@ export class NewUserInCommunityNotification extends React.Component<Props> {
   }
 }
 
-class MiniNewUserInCommunityNotificationWithMutation extends React.Component<
-  Props
-> {
+class MiniNewUserInCommunityNotificationWithMutation extends React.Component<Props> {
   markAsSeen = () => {
     const {
       markSingleNotificationSeen,

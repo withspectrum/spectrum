@@ -5,13 +5,16 @@ import {
   StyledLink,
   StyledButton,
   StyledWhiteIconButton,
+  StyledWhiteButton,
   StyledPrimaryButton,
-  StyledSmallPrimaryButton,
+  StyledWarnButton,
   StyledOutlineButton,
-  StyledSmallOutlineButton,
-  StyledSmallHoverWarnOutlineButton,
   StyledHoverWarnOutlineButton,
   StyledPrimaryOutlineButton,
+  StyledWhiteOutlineButton,
+  StyledTextButton,
+  StyledFacebookButton,
+  StyledTwitterButton,
 } from './style';
 
 const handleLinkWrapping = (Component, props) => {
@@ -44,6 +47,7 @@ type Props = {
   children: React$Node,
   disabled?: boolean,
   isLoading?: boolean,
+  size?: 'small',
 };
 
 export const Button = (props: Props) => handleLinkWrapping(StyledButton, props);
@@ -51,11 +55,14 @@ export const Button = (props: Props) => handleLinkWrapping(StyledButton, props);
 export const WhiteIconButton = (props: Props) =>
   handleLinkWrapping(StyledWhiteIconButton, props);
 
+export const WhiteButton = (props: Props) =>
+  handleLinkWrapping(StyledWhiteButton, props);
+
 export const PrimaryButton = (props: Props) =>
   handleLinkWrapping(StyledPrimaryButton, props);
 
-export const SmallPrimaryButton = (props: Props) =>
-  handleLinkWrapping(StyledSmallPrimaryButton, props);
+export const WarnButton = (props: Props) =>
+  handleLinkWrapping(StyledWarnButton, props);
 
 export const OutlineButton = (props: Props) =>
   handleLinkWrapping(StyledOutlineButton, props);
@@ -63,11 +70,17 @@ export const OutlineButton = (props: Props) =>
 export const PrimaryOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledPrimaryOutlineButton, props);
 
-export const SmallOutlineButton = (props: Props) =>
-  handleLinkWrapping(StyledSmallOutlineButton, props);
-
-export const SmallHoverWarnOutlineButton = (props: Props) =>
-  handleLinkWrapping(StyledSmallHoverWarnOutlineButton, props);
+export const WhiteOutlineButton = (props: Props) =>
+  handleLinkWrapping(StyledWhiteOutlineButton, props);
 
 export const HoverWarnOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledHoverWarnOutlineButton, props);
+
+export const TextButton = (props: Props) =>
+  handleLinkWrapping(StyledTextButton, props);
+
+export const FacebookButton = (props: Props) =>
+  handleLinkWrapping(StyledFacebookButton, props);
+
+export const TwitterButton = (props: Props) =>
+  handleLinkWrapping(StyledTwitterButton, props);

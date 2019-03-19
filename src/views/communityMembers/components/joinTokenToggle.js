@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import enableTokenJoinMutation from 'shared/graphql/mutations/community/enableCommunityTokenJoin';
 import disableTokenJoinMutation from 'shared/graphql/mutations/community/disableCommunityTokenJoin';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 
 type Props = {
   id: string,

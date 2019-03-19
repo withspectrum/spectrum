@@ -3,7 +3,7 @@ import React from 'react';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import GithubProfile from 'src/components/githubProfile';
 import {
   MetaContainer,

@@ -4,9 +4,9 @@ import slugg from 'slugg';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
-import { Error, Success } from '../../../../components/formElements';
-import UsernameSearch from '../../../../components/usernameSearch';
-import { addToastWithTimeout } from '../../../../actions/toasts';
+import { Error, Success } from 'src/components/formElements';
+import UsernameSearch from 'src/components/usernameSearch';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import { Form, Row, InputLabel, InputSubLabel } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
@@ -41,8 +41,8 @@ class SetUsername extends React.Component<Props, State> {
       ? user.name
         ? slugg(user.name)
         : user.firstName && user.lastName
-          ? `${user.firstName}-${user.lastName}`
-          : ''
+        ? `${user.firstName}-${user.lastName}`
+        : ''
       : '';
 
     this.state = {

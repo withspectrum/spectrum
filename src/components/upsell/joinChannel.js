@@ -9,7 +9,7 @@ import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { JoinChannelContainer, JoinChannelContent } from './style';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 type Props = {
   channel: Object,
@@ -95,9 +95,6 @@ class JoinChannel extends React.Component<Props, State> {
         <JoinChannelContent>
           <Button
             loading={isLoading}
-            color={'success.default'}
-            hoverColor={'success.default'}
-            gradientTheme={'success'}
             onClick={currentUser ? this.toggleSubscription : this.login}
             dataCy={
               currentUser

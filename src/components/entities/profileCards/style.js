@@ -65,6 +65,10 @@ export const ActionsRowContainer = styled.div`
   padding: 16px 16px 20px;
   margin-top: 8px;
 
+  button {
+    flex: 1;
+  }
+
   @media (max-width: ${MEDIA_BREAK}px) {
     border-bottom: 1px solid ${theme.bg.border};
     margin-top: 0;

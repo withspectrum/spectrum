@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 export const CurrentCount = styled.b`
   font-size: 13px;
@@ -12,10 +12,11 @@ export const LikeButtonWrapper = styled(Button)`
   border: 1px solid ${theme.bg.border};
   color: ${props =>
     props.hasReacted ? props.theme.brand.alt : props.theme.text.alt};
-  padding: 4px 0 4px 8px;
   display: flex;
   align-items: center;
   overflow: hidden;
+  padding: 0;
+  padding-left: 16px;
 
   div + span {
     margin: 0;
@@ -26,6 +27,7 @@ export const LikeButtonWrapper = styled(Button)`
     background: ${theme.bg.wash};
     border-left: 1px solid ${theme.bg.border};
     padding: 12px;
+    padding-right: 16px;
     margin-left: 12px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;

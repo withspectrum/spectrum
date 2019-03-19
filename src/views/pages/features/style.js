@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
-import { SvgWrapper } from 'src/components/icons';
+import { SvgWrapper } from 'src/components/icon';
 
 /* eslint no-eval: 0 */
 
@@ -34,15 +34,6 @@ export const TextContent = styled.div`
 
   > a {
     display: inline-block;
-
-    > button {
-      padding: 8px 16px 8px 8px;
-
-      > span {
-        font-size: 16px;
-        margin-left: 16px;
-      }
-    }
   }
 
   @media (max-width: 1480px) {
@@ -268,7 +259,7 @@ export const EtcCTA = styled.div`
   flex-direction: column;
   align-self: stretch;
   align-items: center;
-  margin-bottom: 80px;
+  margin-bottom: 108px;
 
   > span {
     margin-top: 32px;
@@ -278,15 +269,6 @@ export const EtcCTA = styled.div`
 
   > a {
     display: inline-block;
-
-    > button {
-      padding: 8px 16px 8px 8px;
-
-      > span {
-        font-size: 16px;
-        margin-left: 16px;
-      }
-    }
   }
 `;
 

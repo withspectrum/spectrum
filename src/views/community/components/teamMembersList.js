@@ -13,10 +13,10 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { UserListItem } from 'src/components/entities';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/tooltip';
-import { WhiteIconButton } from 'src/views/community/components/button';
+import { WhiteIconButton } from 'src/components/button';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
 type Props = {

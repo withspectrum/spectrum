@@ -2,7 +2,7 @@ import React from 'react';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 
-import Icon from '../components/icons';
+import Icon from '../components/icon';
 import { HorizontalRuleWithIcon } from '../components/globals';
 import { ChatMessage } from '../views/notifications/style';
 

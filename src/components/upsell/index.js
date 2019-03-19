@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { storeItem } from 'src/helpers/localStorage';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { Button, OutlineButton } from 'src/components/button';
 import Login from 'src/views/login';
 import {
   Title,
@@ -84,7 +84,7 @@ export const UpsellMiniCreateCommunity = () => {
       copy="Building communities on Spectrum is easy and free forever"
     >
       <Link to="/new/community">
-        <Button icon="plus">Get Started</Button>
+        <Button>Get Started</Button>
       </Link>
     </MiniNullCard>
   );
@@ -290,7 +290,7 @@ export const UpsellNullNotifications = () => {
   return (
     <NullCard bg="notification" heading="You don't have any notifications yet.">
       <Link to="/">
-        <Button icon="home">Take Me Home</Button>
+        <Button>Take Me Home</Button>
       </Link>
     </NullCard>
   );
@@ -302,8 +302,6 @@ export const UpsellReload = () => (
     heading={'Whoops!'}
     copy={'Something went wrong on our end... Mind reloading?'}
   >
-    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-      Reload
-    </Button>
+    <Button onClick={() => window.location.reload(true)}>Reload</Button>
   </NullCard>
 );

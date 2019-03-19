@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
@@ -11,7 +11,7 @@ import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
-import { WhiteIconButton } from 'src/views/community/components/button';
+import { WhiteIconButton } from 'src/components/button';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
 
 type Props = {

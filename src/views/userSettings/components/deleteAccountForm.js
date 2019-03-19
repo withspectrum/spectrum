@@ -15,7 +15,11 @@ import {
   type GetUserCommunityConnectionType,
 } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { Button, TextButton, OutlineButton } from 'src/components/buttons';
+import {
+  HoverWarnOutlineButton,
+  WarnButton,
+  OutlineButton,
+} from 'src/components/button';
 import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurrentUser';
 import { SERVER_URL } from 'src/api/constants';
 import { Link } from 'react-router-dom';
@@ -125,24 +129,23 @@ class DeleteAccountForm extends React.Component<Props, State> {
                     Cancel
                   </OutlineButton>
                 )}
-                <Button
+                <WarnButton
                   dataCy="delete-account-confirm-button"
                   loading={isLoading}
                   disabled={isLoading}
-                  gradientTheme={'warn'}
                   onClick={this.confirmDelete}
                 >
                   Confirm and delete my account
-                </Button>
+                </WarnButton>
               </div>
             ) : (
-              <TextButton
+              <HoverWarnOutlineButton
                 dataCy="delete-account-init-button"
                 color={'warn.default'}
                 onClick={this.initDelete}
               >
                 Delete my account
-              </TextButton>
+              </HoverWarnOutlineButton>
             )}
           </SectionCardFooter>
         </SectionCard>

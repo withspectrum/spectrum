@@ -16,7 +16,7 @@ import {
   IconWrapper,
   Divider,
 } from './style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import NavHead from './navHead';
 import DirectMessagesTab from './directMessagesTab';
 import NotificationsTab from './notificationsTab';

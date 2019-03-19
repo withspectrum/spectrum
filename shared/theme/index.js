@@ -64,10 +64,10 @@ export const theme = {
   },
   text: {
     default: '#24292E',
-    alt: '#96A0A8',
+    secondary: '#384047',
+    alt: '#67717A',
+    placeholder: '#7C8894',
     reverse: '#FFFFFF',
-    placeholder: '#A4AAB1',
-    secondary: '#606D7A',
   },
   warn: {
     default: '#E22F2F',

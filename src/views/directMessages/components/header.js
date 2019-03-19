@@ -1,6 +1,6 @@
 import React from 'react';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Head from '../../../components/head';
+import Head from 'src/components/head';
 import {
   StyledHeader,
   PhotosContainer,

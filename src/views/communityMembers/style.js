@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { TextButton } from 'src/components/buttons';
+import { TextButton } from 'src/components/button';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Heading = styled.h1`

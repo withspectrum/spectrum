@@ -6,7 +6,7 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 class SettingsFallback extends React.Component<{}> {
   render() {
@@ -28,11 +28,7 @@ class SettingsFallback extends React.Component<{}> {
         </SectionSubtitle>
 
         <SectionCardFooter>
-          <Button
-            large={false}
-            icon="view-reload"
-            onClick={() => window.location.reload(true)}
-          >
+          <Button onClick={() => window.location.reload(true)}>
             Refresh the page
           </Button>
         </SectionCardFooter>

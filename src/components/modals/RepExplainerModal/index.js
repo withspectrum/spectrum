@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import Reputation from 'src/components/reputation';
 import { UserAvatar } from 'src/components/avatar';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import ModalContainer from '../modalContainer';
 import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';

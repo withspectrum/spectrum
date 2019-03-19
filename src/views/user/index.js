@@ -44,8 +44,8 @@ import {
   NullColumnHeading,
   NullColumnSubheading,
 } from 'src/components/threadFeed/style';
-import { PrimaryButton } from 'src/views/community/components/button';
-import Icon from 'src/components/icons';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
 
 const ThreadFeedWithData = compose(

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import Tooltip from 'src/components/tooltip';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,

@@ -5,7 +5,7 @@ import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import { openModal } from 'src/actions/modals';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   SidebarSectionHeader,
   SidebarSectionHeading,

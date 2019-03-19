@@ -20,10 +20,7 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { DesktopTitlebar } from 'src/components/titlebar';
-import {
-  PrimaryButton,
-  SmallPrimaryButton,
-} from 'src/views/community/components/button';
+import { PrimaryOutlineButton } from 'src/components/button';
 import {
   NoCommunitySelected,
   NoCommunityHeading,
@@ -174,14 +171,14 @@ class ThreadsList extends React.Component<Props, State> {
               <NoCommunitySubheading>
                 Choose from an existing conversation, or start a new one.
               </NoCommunitySubheading>
-              <PrimaryButton
+              <PrimaryOutlineButton
                 to={{
                   pathname: '/new/message',
                   state: { modal: true },
                 }}
               >
                 New message
-              </PrimaryButton>
+              </PrimaryOutlineButton>
             </div>
           </NoCommunitySelected>
         </ThreadsListScrollContainer>
@@ -193,11 +190,12 @@ class ThreadsList extends React.Component<Props, State> {
         <DesktopTitlebar
           title={'Messages'}
           rightAction={
-            <SmallPrimaryButton
+            <PrimaryOutlineButton
+              size={'small'}
               to={{ pathname: '/new/message', state: { modal: true } }}
             >
               New
-            </SmallPrimaryButton>
+            </PrimaryOutlineButton>
           }
         />
         <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>

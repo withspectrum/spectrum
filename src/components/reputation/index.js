@@ -5,7 +5,7 @@ import type { Dispatch } from 'redux';
 import Tooltip from 'src/components/tooltip';
 import { openModal } from 'src/actions/modals';
 import { truncateNumber } from 'src/helpers/utils';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ReputationWrapper, ReputationLabel } from './style';
 
 type Props = {

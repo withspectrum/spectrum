@@ -3,10 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  PrimaryOutlineButton,
-  OutlineButton,
-} from 'src/views/community/components/button';
+import { PrimaryOutlineButton, OutlineButton } from 'src/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import { ActionsRowContainer } from '../style';
 

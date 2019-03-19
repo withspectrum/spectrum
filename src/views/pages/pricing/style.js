@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Button, TextButton } from 'src/components/buttons';
+import { Button, TextButton } from 'src/components/button';
 import { hexa, zIndex } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 

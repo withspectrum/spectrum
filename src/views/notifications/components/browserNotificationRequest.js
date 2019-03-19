@@ -1,7 +1,7 @@
 import React from 'react';
 import { RequestCard, CloseRequest } from '../style';
 import { FlexRow } from 'src/components/globals';
-import { PrimaryButton } from 'src/views/community/components/button';
+import { PrimaryButton } from 'src/components/button';
 
 const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
   <RequestCard>

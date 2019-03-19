@@ -15,7 +15,7 @@ import {
   SectionTitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   Filters,
   Filter,

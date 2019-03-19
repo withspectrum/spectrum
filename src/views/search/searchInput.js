@@ -1,7 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from './style';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icon';
 
 type Props = {};
 type State = {

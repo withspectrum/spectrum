@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import redraft from 'redraft';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 import {
   Text,
   Emoji,

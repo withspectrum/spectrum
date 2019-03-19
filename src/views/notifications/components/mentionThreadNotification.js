@@ -6,7 +6,7 @@ import { getThreadById } from 'shared/graphql/queries/thread/getThread';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { displayLoadingCard } from 'src/components/loading';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ThreadProfile } from 'src/components/profile';
 import {
   SegmentedNotificationCard,

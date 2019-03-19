@@ -2,9 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Button, IconButton } from 'src/components/buttons';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
 import { Logo } from 'src/components/logo';
 import { UserAvatar } from 'src/components/avatar';
 import Head from 'src/components/head';
@@ -109,7 +109,7 @@ class Nav extends React.Component<Props, State> {
                 to="/login"
                 onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
               >
-                <Button
+                <PrimaryButton
                   data-cy="navigation-splash-signin"
                   style={{
                     fontWeight: '700',
@@ -117,13 +117,13 @@ class Nav extends React.Component<Props, State> {
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Sign In
-                </Button>
+                  Log in or sign up
+                </PrimaryButton>
               </Link>
             )}
           </AuthTab>
           <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
-            <IconButton
+            <Icon
               glyph={this.state.menuIsOpen ? 'view-close' : 'menu'}
               onClick={() => this.toggleMenu()}
             />

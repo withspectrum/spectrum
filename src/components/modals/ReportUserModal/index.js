@@ -10,7 +10,7 @@ import reportUserMutation from 'shared/graphql/mutations/user/reportUser';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, Button } from 'src/components/button';
 import { modalStyles } from '../styles';
 import { TextArea, Error } from '../../formElements';
 import { Form, Actions } from './style';

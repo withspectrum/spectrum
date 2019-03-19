@@ -17,7 +17,7 @@ import {
 } from 'src/components/globals';
 import Card from 'src/components/card';
 import { StyledCard } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { CommunityAvatar } from 'src/components/avatar';
 import ScrollRow from 'src/components/scrollRow';
 import { MEDIA_BREAK } from 'src/components/layout';
