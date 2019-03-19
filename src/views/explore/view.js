@@ -34,14 +34,11 @@ export const Charts = () => {
   return <ChartGrid>{collections && <CollectionSwitcher />}</ChartGrid>;
 };
 
-type Props = {
-  dispatch: Dispatch<Object>,
-};
 type State = {
   selectedView: string,
 };
 
-class CollectionSwitcher extends React.Component<Props, State> {
+class CollectionSwitcher extends React.Component<{}, State> {
   state = {
     selectedView: 'top-communities-by-members',
   };
