@@ -68,11 +68,11 @@ type State = {
 };
 
 class Message extends React.Component<Props, State> {
-  wrapperRef: React.Node;
+  wrapperRef: React$Node;
 
   state = { isEditing: false };
 
-  setWrapperRef = (node: React.Node) => {
+  setWrapperRef = (node: React$Node) => {
     this.wrapperRef = node;
   };
 

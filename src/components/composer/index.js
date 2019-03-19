@@ -185,7 +185,7 @@ class ComposerWithData extends React.Component<Props, State> {
 
   changeTitle = e => {
     const title = e.target.value;
-    this.persistTitleToLocalStorageWithDebounce(title);
+    this.persistTitleToLocalStorageWithDebounce();
     if (/\n$/g.test(title)) {
       this.bodyEditor.focus && this.bodyEditor.focus();
       return;
@@ -197,15 +197,15 @@ class ComposerWithData extends React.Component<Props, State> {
 
   changeBody = evt => {
     const body = evt.target.value;
-    this.persistBodyToLocalStorageWithDebounce(body);
+    this.persistBodyToLocalStorageWithDebounce();
     this.setState({
       body,
     });
   };
 
   closeComposer = (clear?: string) => {
-    this.persistBodyToLocalStorage(this.state.body);
-    this.persistTitleToLocalStorage(this.state.title);
+    this.persistBodyToLocalStorage();
+    this.persistTitleToLocalStorage();
 
     // we will clear the composer if it unmounts as a result of a post
     // being published, that way the next composer open will start fresh
@@ -384,8 +384,8 @@ class ComposerWithData extends React.Component<Props, State> {
     };
 
     // one last save to localstorage
-    this.persistBodyToLocalStorage(this.state.body);
-    this.persistTitleToLocalStorage(this.state.title);
+    this.persistBodyToLocalStorage();
+    this.persistTitleToLocalStorage();
 
     this.props
       .publishThread(thread)

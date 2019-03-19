@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import FullscreenView from '../../components/fullscreenView';
-import { UpsellCreateCommunity } from '../../components/upsell';
+import FullscreenView from 'src/components/fullscreenView';
+import { UpsellCreateCommunity } from 'src/components/upsell';
 import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
 import TopCommunities from './components/discoverCommunities';

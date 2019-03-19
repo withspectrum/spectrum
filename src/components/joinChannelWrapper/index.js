@@ -2,7 +2,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import toggleChannelSubscriptionMutation, {
+  type ToggleChannelSubscriptionType,
+} from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { openModal } from 'src/actions/modals';
@@ -38,7 +40,7 @@ const JoinChannel = (props: Props) => {
     setIsLoading(true);
 
     return toggleChannelSubscription({ channelId: channel.id })
-      .then(({ data }: Props) => {
+      .then(({ data }: ToggleChannelSubscriptionType) => {
         const { toggleChannelSubscription: channel } = data;
         dispatch(
           addToastWithTimeout('success', `Joined the ${channel.name} channel!`)

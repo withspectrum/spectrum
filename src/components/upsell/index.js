@@ -26,7 +26,7 @@ type NullCardProps = {
   bg?: ?string,
   heading?: string,
   copy?: string,
-  children?: React.Node,
+  children?: React$Node,
   repeat?: boolean,
   emoji?: string,
 };
@@ -65,7 +65,7 @@ type NullStateProps = {
   heading?: string,
   copy?: string,
   icon?: string,
-  children?: React.Node,
+  children?: React$Node,
 };
 export const NullState = (props: NullStateProps) => (
   <NullCol bg={props.bg}>

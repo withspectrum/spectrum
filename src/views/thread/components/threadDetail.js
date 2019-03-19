@@ -73,7 +73,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   };
 
   bodyEditor: any;
-  titleTextarea: React.Node;
+  titleTextarea: React$Node;
 
   componentWillMount() {
     this.setThreadState();

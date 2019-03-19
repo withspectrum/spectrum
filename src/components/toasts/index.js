@@ -8,7 +8,7 @@ import {
   NeutralToast,
 } from './style';
 
-const ToastsPure = ({ toasts }): React$Element<any> => {
+const ToastsPure = ({ toasts }): ?React$Element<any> => {
   if (!toasts || toasts.length === 0) {
     return null;
   }

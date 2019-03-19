@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { withRouter } from 'react-router';
-import getChannelMembersQuery from 'shared/graphql/queries/channel/getChannelMemberConnection';
+import getChannelMembersQuery, {
+  type GetChannelMemberConnectionType,
+} from 'shared/graphql/queries/channel/getChannelMemberConnection';
 import { Card } from 'src/components/card';
 import { Loading, LoadingListItem } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -16,7 +18,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
-    community: GetCommunityMembersType,
+    channel: GetChannelMemberConnectionType,
     fetchMore: Function,
     networkStatus: number,
   },

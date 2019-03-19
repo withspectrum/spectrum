@@ -32,28 +32,42 @@ const handleLinkWrapping = (Component, props) => {
   return button;
 };
 
-export const Button = props => handleLinkWrapping(StyledButton, props);
+type To = {
+  pathname?: string,
+  search?: string,
+  state?: Object,
+};
 
-export const WhiteIconButton = props =>
+type Props = {
+  href?: string,
+  to?: string | To,
+  children: React$Node,
+  disabled?: boolean,
+  isLoading?: boolean,
+};
+
+export const Button = (props: Props) => handleLinkWrapping(StyledButton, props);
+
+export const WhiteIconButton = (props: Props) =>
   handleLinkWrapping(StyledWhiteIconButton, props);
 
-export const PrimaryButton = props =>
+export const PrimaryButton = (props: Props) =>
   handleLinkWrapping(StyledPrimaryButton, props);
 
-export const SmallPrimaryButton = props =>
+export const SmallPrimaryButton = (props: Props) =>
   handleLinkWrapping(StyledSmallPrimaryButton, props);
 
-export const OutlineButton = props =>
+export const OutlineButton = (props: Props) =>
   handleLinkWrapping(StyledOutlineButton, props);
 
-export const PrimaryOutlineButton = props =>
+export const PrimaryOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledPrimaryOutlineButton, props);
 
-export const SmallOutlineButton = props =>
+export const SmallOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledSmallOutlineButton, props);
 
-export const SmallHoverWarnOutlineButton = props =>
+export const SmallHoverWarnOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledSmallHoverWarnOutlineButton, props);
 
-export const HoverWarnOutlineButton = props =>
+export const HoverWarnOutlineButton = (props: Props) =>
   handleLinkWrapping(StyledHoverWarnOutlineButton, props);

@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import type { Dispatch } from 'redux';
+import { withRouter, type Location } from 'react-router-dom';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
@@ -10,7 +13,6 @@ import { CommunityProfileCard } from 'src/components/entities';
 import { CommunityAvatar } from 'src/components/avatar';
 import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import type { SignedInMemberType } from '../types';
 import { TeamMembersList } from '../components/teamMembersList';
 import { CommunityFeeds } from '../components/communityFeeds';
 import { ChannelsList } from '../components/channelsList';
@@ -23,7 +25,15 @@ import {
 } from 'src/components/layout';
 import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 
-const Component = (props: SignedInMemberType) => {
+type Props = {
+  community: CommunityInfoType,
+  currentUser: ?UserInfoType,
+  dispatch: Dispatch<Object>,
+  location: Location,
+  setCommunityLastSeen: Function,
+};
+
+const Component = (props: Props) => {
   const {
     community,
     currentUser,

@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import InboxThread from 'src/components/inboxThread';
 import { Spinner } from 'src/components/globals';
 import { LoadingInboxThread } from 'src/components/loading';
-import NewActivityIndicator from 'src/components/newActivityIndicator';
 import ViewError from 'src/components/viewError';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
@@ -42,7 +41,6 @@ type Props = {
     | 'userProfile',
   slug: string,
   pinnedThreadId: ?string,
-  newActivityIndicator: ?boolean,
   dispatch: Dispatch<Object>,
   search?: boolean,
   networkOnline: boolean,
@@ -119,7 +117,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
     const {
       data: { threads, networkStatus, error },
       viewContext,
-      newActivityIndicator,
     } = this.props;
 
     const threadNodes =
@@ -170,10 +167,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
     if (uniqueThreads && uniqueThreads.length > 0) {
       return (
         <Container data-cy="thread-feed">
-          {newActivityIndicator && (
-            <NewActivityIndicator elem="app-scroll-boundary" />
-          )}
-
           <LoadingPill isVisible={networkStatus === 2 || networkStatus === 1}>
             <Spinner color={'text.reverse'} size={12} />
           </LoadingPill>
@@ -254,7 +247,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
 }
 
 const map = state => ({
-  newActivityIndicator: state.newActivityIndicator.hasNew,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
 });

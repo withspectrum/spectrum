@@ -8,16 +8,20 @@ import { MobileTitlebar } from 'src/components/titlebar';
 import { ErrorBoundary } from 'src/components/error';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 
-export type TitlebarProps = {
+export type TitlebarPayloadProps = {
   title: string,
   titleIcon?: React$Node,
   rightAction?: React$Node,
   leftAction?: React$Node,
+};
+
+type TitlebarProps = {
+  ...$Exact<TitlebarPayloadProps>,
   history: History,
   currentUser: ?Object,
 };
 
-const GlobalTitlebar = (props: Props): React.Node => {
+const GlobalTitlebar = (props: TitlebarProps): React$Node => {
   const {
     title = 'Spectrum',
     titleIcon = null,
@@ -32,7 +36,7 @@ const GlobalTitlebar = (props: Props): React.Node => {
   }
 
   return (
-    <ErrorBoundary fallbackComponent={<MobileTitlebar />}>
+    <ErrorBoundary fallbackComponent={<MobileTitlebar title="Error" />}>
       <MobileTitlebar
         title={title}
         titleIcon={titleIcon}

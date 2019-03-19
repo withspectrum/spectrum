@@ -3,6 +3,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { UserAvatar } from 'src/components/avatar';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
@@ -22,7 +23,7 @@ import {
 } from './style';
 
 type Props = {
-  userObject: Object,
+  userObject: UserInfoType,
   id: string,
   avatarSize?: number,
   profilePhoto?: string,
@@ -35,12 +36,12 @@ type Props = {
   reputation?: number,
   messageButton?: boolean,
   multiAction?: boolean,
-  children?: React.Node,
+  children?: React$Node,
   history: Object,
   dispatch: Dispatch<Object>,
   showHoverProfile?: boolean,
   isLink?: boolean,
-  onClick?: Function,
+  onClick?: Function<UserInfoType>,
 };
 
 const noop = () => {};

@@ -5,7 +5,24 @@ import { OutlineButton } from 'src/views/community/components/button';
 import Icon from 'src/components/icons';
 import { NullColumn, NullColumnHeading, NullColumnSubheading } from './style';
 
-const NullState = ({ viewContext, isSearch, communityId, channelId }) => {
+type Props = {
+  viewContext:
+    | ?'communityInbox'
+    | 'communityProfile'
+    | 'channelInbox'
+    | 'channelProfile'
+    | 'userProfile',
+  isSearch: boolean,
+  communityId: ?string,
+  channelId: ?string,
+};
+
+const NullState = ({
+  viewContext,
+  isSearch,
+  communityId,
+  channelId,
+}: Props) => {
   let hd;
   let cp;
 

@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { ChannelActions } from './components/channelActions';
 import { ChannelMeta } from './components/channelMeta';
 import { ChannelCommunityMeta } from './components/channelCommunityMeta';
 import { ProfileContainer } from './style';
-import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 
 type Props = {
   channel: ChannelInfoType,

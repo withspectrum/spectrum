@@ -43,7 +43,7 @@ type Props = {
 };
 
 class Search extends React.Component<Props, State> {
-  input: React.Node;
+  input: React$Node;
 
   constructor() {
     super();

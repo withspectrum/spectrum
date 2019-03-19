@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import compose from 'recompose/compose';
 import { throttle } from 'src/helpers/utils';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import searchThreads from 'shared/graphql/queries/search/searchThreads';
 import ThreadFeed from 'src/components/threadFeed';
@@ -11,6 +13,11 @@ import { PostsFeedsSelectorContainer, SearchInput } from '../style';
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
+
+type Props = {
+  community: GetCommunityType,
+  currentUser: ?UserInfoType,
+};
 
 export const PostsFeeds = withCurrentUser((props: Props) => {
   const { community, currentUser } = props;
@@ -24,9 +31,11 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
     setServerSearchQuery(sanitized);
   };
 
+  const throttledSearch = (query: string) => throttle(search(query), 500);
+
   const handleClientSearch = (e: any) => {
     setClientSearchQuery(e.target.value);
-    throttle(search(e.target.value), 500);
+    throttledSearch(e.target.value);
   };
 
   return (

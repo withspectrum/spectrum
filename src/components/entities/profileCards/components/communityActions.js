@@ -1,7 +1,8 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import type { CommunityActionsRowType } from '../types';
+import type { Dispatch } from 'redux';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
@@ -12,10 +13,15 @@ import { openModal } from 'src/actions/modals';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
 
-export const UnconnectedCommunityActions = (props: CommunityActionsRowType) => {
+type Props = {
+  community: CommunityInfoType,
+  dispatch: Dispatch<Object>,
+};
+
+export const UnconnectedCommunityActions = (props: Props) => {
   const { community, dispatch } = props;
 
-  const [isHovering, setHover] = React.useState(false);
+  const [isHovering, setHover] = useState(false);
   const onMouseEnter = () => setHover(true);
   const onMouseLeave = () => setHover(false);
 

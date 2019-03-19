@@ -7,7 +7,7 @@ type Props = {
   hasNavBar?: boolean,
   darkContext?: boolean,
   hasTabBar?: boolean,
-  children: React.Node,
+  children: React$Node,
 };
 
 type State = {

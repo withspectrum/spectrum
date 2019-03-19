@@ -2,11 +2,8 @@
 import { UserListItem, CommunityListItem, ChannelListItem } from './listItems';
 import {
   ChannelProfileCard,
-  MobileChannelProfileCard,
   CommunityProfileCard,
-  MobileCommunityProfileCard,
   UserProfileCard,
-  MobileUserProfileCard,
 } from './profileCards';
 
 export {
@@ -14,9 +11,6 @@ export {
   CommunityListItem,
   ChannelListItem,
   ChannelProfileCard,
-  MobileChannelProfileCard,
   CommunityProfileCard,
-  MobileCommunityProfileCard,
   UserProfileCard,
-  MobileUserProfileCard,
 };

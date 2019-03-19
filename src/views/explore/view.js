@@ -2,6 +2,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import compose from 'recompose/compose';
 import { collections } from './collections';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -33,7 +34,9 @@ export const Charts = () => {
   return <ChartGrid>{collections && <CollectionSwitcher />}</ChartGrid>;
 };
 
-type Props = {};
+type Props = {
+  dispatch: Dispatch<Object>,
+};
 type State = {
   selectedView: string,
 };
@@ -151,13 +154,16 @@ class CategoryList extends React.Component<CategoryListProps> {
         <ListWithTitle>
           {title ? <ListTitle>{title}</ListTitle> : null}
           <ListWrapper>
-            {filteredCommunities.map((community, i) => (
-              <ErrorBoundary key={i}>
-                <ProfileCardWrapper>
-                  <CommunityProfileCard community={community} />
-                </ProfileCardWrapper>
-              </ErrorBoundary>
-            ))}
+            {filteredCommunities.map(
+              (community, i) =>
+                community && (
+                  <ErrorBoundary key={i}>
+                    <ProfileCardWrapper>
+                      <CommunityProfileCard community={community} />
+                    </ProfileCardWrapper>
+                  </ErrorBoundary>
+                )
+            )}
           </ListWrapper>
         </ListWithTitle>
       );

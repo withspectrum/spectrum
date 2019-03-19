@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { UserAvatar } from 'src/components/avatar';
 import { UserActions } from './components/userActions';
 import { UserMeta } from './components/userMeta';
@@ -9,6 +10,10 @@ import {
   CoverPhoto,
   RoundProfileAvatarContainer,
 } from './style';
+
+type Props = {
+  user: UserInfoType,
+};
 
 export const UserProfileCard = (props: Props) => {
   const { user } = props;

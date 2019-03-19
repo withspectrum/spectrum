@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import { OutlineButton, PrimaryButton } from '../components/button';
 import RequestJoinCommunity from '../components/requestJoinCommunity';
 import {
@@ -10,6 +11,10 @@ import {
   PrivateCommunityWrapper,
 } from '../style';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
+
+type Props = {
+  community: GetCommunityType,
+};
 
 export const PrivateCommunity = (props: Props) => {
   const { community } = props;

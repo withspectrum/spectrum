@@ -1,6 +1,9 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import Icon from 'src/components/icons';
 import {
   WhiteIconButton,
@@ -13,7 +16,11 @@ import JoinChannel from 'src/components/joinCommunityWrapper';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
-export const MobileCommunityAction = (props: Props) => {
+type CommunityProps = {
+  community: CommunityInfoType,
+};
+
+export const MobileCommunityAction = (props: CommunityProps) => {
   const { community } = props;
   const { isMember } = community.communityPermissions;
   const { pathname, search } = getComposerLink({ communityId: community.id });
@@ -43,7 +50,11 @@ export const MobileCommunityAction = (props: Props) => {
   );
 };
 
-export const MobileChannelAction = (props: Props) => {
+type ChannelProps = {
+  channel: ChannelInfoType,
+};
+
+export const MobileChannelAction = (props: ChannelProps) => {
   const { channel } = props;
   const { isMember } = channel.channelPermissions;
   const { pathname, search } = getComposerLink({
@@ -76,7 +87,12 @@ export const MobileChannelAction = (props: Props) => {
   );
 };
 
-const User = (props: Props) => {
+type UserProps = {
+  user: UserInfoType,
+  currentUser: ?UserInfoType,
+};
+
+const User = (props: UserProps) => {
   const { user, currentUser } = props;
 
   if (currentUser && currentUser.id === user.id) {

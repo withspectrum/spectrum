@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
 import Icon from 'src/components/icons';
@@ -13,7 +14,11 @@ import {
   OnlineDot,
 } from '../style';
 
-export const CommunityMeta = (props: CommunityMetaType) => {
+type Props = {
+  community: CommunityInfoType,
+};
+
+export const CommunityMeta = (props: Props) => {
   const { community } = props;
   const { description, website, metaData } = community;
   const { members, onlineMembers } = metaData;

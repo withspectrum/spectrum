@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   PrimaryOutlineButton,
@@ -8,6 +9,11 @@ import {
 } from 'src/views/community/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import { ActionsRowContainer } from '../style';
+
+type Props = {
+  user: UserInfoType,
+  currentUser: ?UserInfoType,
+};
 
 export const UnconnectedUserActions = (props: Props) => {
   const { user, currentUser } = props;

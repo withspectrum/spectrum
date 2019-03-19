@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import type { Match } from 'react-router';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
@@ -23,6 +24,7 @@ import {
 
 type Props = {
   match: Match,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {

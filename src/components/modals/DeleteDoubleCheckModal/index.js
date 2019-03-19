@@ -3,9 +3,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { withRouter, type History } from 'react-router';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import type { DeleteCommunityType } from 'shared/graphql/mutations/community/deleteCommunity';
 import deleteChannelMutation from 'shared/graphql/mutations/channel/deleteChannel';
@@ -49,7 +49,7 @@ type Props = {
     redirect?: ?string,
     message?: ?string,
     buttonLabel?: string,
-    extraProps?: Object,
+    extraProps?: any,
   },
   deleteMessage: Function,
   deleteCommunity: Function,
@@ -59,6 +59,7 @@ type Props = {
   removeCommunityMember: Function,
   dispatch: Dispatch<Object>,
   isOpen: boolean,
+  history: History,
 };
 
 export const deleteMessageWithToast = (

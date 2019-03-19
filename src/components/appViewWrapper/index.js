@@ -1,12 +1,22 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withRouter } from 'react-router';
+import { withRouter, type History } from 'react-router';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
 import { StyledAppViewWrapper } from './style';
 
+type Props = {
+  isModal: boolean,
+  currentUser: ?UserInfoType,
+  history: History,
+};
+
 class AppViewWrapper extends React.Component<Props> {
+  ref: ?HTMLElement;
+  prevScrollOffset: number;
+
   constructor(props: Props) {
     super(props);
     this.ref = null;
@@ -22,7 +32,7 @@ class AppViewWrapper extends React.Component<Props> {
       offset of the main view the user is on and save it for now; we'll use
       the value to restore the scroll position after the user closes the modal
     */
-    if (!prevModal && currModal) {
+    if (!prevModal && currModal && this.ref) {
       const offset = this.ref.scrollTop;
       this.prevScrollOffset = offset;
       return null;

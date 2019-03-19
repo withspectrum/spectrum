@@ -10,7 +10,7 @@ import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelIn
 import { ChannelHoverProfile } from 'src/components/hoverProfile';
 
 type Props = {
-  children: React.Node,
+  children: React$Node,
   channel: ChannelInfoType,
 };
 

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
@@ -38,6 +39,7 @@ type Props = {
   threadSliderIsOpen: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  dispatch: Dispatch<Object>,
 };
 
 class ExistingThread extends React.Component<Props> {

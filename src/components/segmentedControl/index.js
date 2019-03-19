@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 type ControlProps = {
   sticky?: boolean,
   stickyOffset?: number,
+  mobileSticky?: boolean,
   mobileStickyOffset?: number,
 };
 

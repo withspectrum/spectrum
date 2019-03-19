@@ -5,7 +5,7 @@ import BaseTitlebar from './base';
 
 type Props = {
   title: string,
-  leftAction: 'menu' | 'view-back' | $React.Element,
+  leftAction?: 'menu' | 'view-back' | React$Element<any>,
   titleIcon?: any,
   rightAction?: any,
 };

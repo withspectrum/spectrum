@@ -3,18 +3,32 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import getCommunityMembersQuery from 'shared/graphql/queries/community/getCommunityMembers';
+import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import getCommunityMembersQuery, {
+  type GetCommunityMembersType,
+} from 'shared/graphql/queries/community/getCommunityMembers';
 import { Loading } from 'src/components/loading';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
 import { UserListItem } from 'src/components/entities';
 import Icon from 'src/components/icons';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import type { TeamMemberListType } from '../types';
 import Tooltip from 'src/components/tooltip';
 import { WhiteIconButton } from 'src/views/community/components/button';
 import { List, SidebarSectionHeader, SidebarSectionHeading } from '../style';
 
-class Component extends React.Component<TeamMemberListType> {
+type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
+  currentUser: ?UserInfoType,
+  community: GetCommunityType,
+  data: {
+    community: GetCommunityMembersType,
+  },
+};
+
+class Component extends React.Component<Props> {
   render() {
     const {
       isLoading,

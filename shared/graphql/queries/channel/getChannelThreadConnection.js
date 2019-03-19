@@ -79,8 +79,7 @@ const getChannelThreadConnectionOptions = {
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.channel.threadConnection.edges,
-                  updatedThread,
-                  ownProps.dispatch
+                  updatedThread
                 ).filter(thread => thread.node.channel.id === thisChannelId)
               : [...prev.channel.threadConnection.edges];
 

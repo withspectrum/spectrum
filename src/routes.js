@@ -183,7 +183,11 @@ type Props = {
   history: History,
 };
 
-class Routes extends React.Component<Props> {
+type State = {
+  navigationIsOpen: boolean,
+};
+
+class Routes extends React.Component<Props, State> {
   previousLocation = this.props.location;
   state = { navigationIsOpen: false };
 

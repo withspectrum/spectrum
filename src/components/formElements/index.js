@@ -23,7 +23,7 @@ import {
 } from './style';
 
 type InputProps = {
-  children?: React.Node,
+  children?: React$Node,
   inputType?: string,
   defaultValue?: ?string,
   value?: ?any,

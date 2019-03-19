@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import querystring from 'query-string';
-import { withRouter } from 'react-router-dom';
+import { withRouter, type History, type Location } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Head from 'src/components/head';
@@ -60,9 +60,11 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   dispatch: Dispatch<Object>,
+  history: History,
+  location: Location,
 };
 
-class ChannelView extends React.Component<Props, State> {
+class ChannelView extends React.Component<Props> {
   constructor(props) {
     super(props);
     const { location, history } = props;

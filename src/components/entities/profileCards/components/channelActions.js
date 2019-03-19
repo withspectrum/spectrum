@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import type { ChannelActionsRowType } from '../types';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import getComposerLink from 'src/helpers/get-composer-link';
 import {
   PrimaryButton,
@@ -13,7 +13,11 @@ import JoinChannel from 'src/components/joinChannelWrapper';
 import LeaveChannel from 'src/components/leaveChannelWrapper';
 import { ActionsRowContainer } from '../style';
 
-export const UnconnectedChannelActions = (props: ChannelActionsRowType) => {
+type Props = {
+  channel: ChannelInfoType,
+};
+
+export const UnconnectedChannelActions = (props: Props) => {
   const { channel } = props;
   const { community } = channel;
   const { isOwner, isModerator } = community.communityPermissions;

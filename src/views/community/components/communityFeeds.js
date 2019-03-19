@@ -2,10 +2,10 @@
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import theme from 'shared/theme';
-import { withRouter } from 'react-router-dom';
+import { withRouter, type History, type Location } from 'react-router-dom';
 import querystring from 'query-string';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import MembersList from './membersList';
-import type { CommunityFeedsType } from '../types';
 import { TeamMembersList } from './teamMembersList';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions';
 import { ChannelsList } from './channelsList';
@@ -19,7 +19,13 @@ import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
 import { FeedsContainer, SidebarSection } from '../style';
 
-const Feeds = (props: CommunityFeedsType) => {
+type Props = {
+  community: CommunityInfoType,
+  location: Location,
+  history: History,
+};
+
+const Feeds = (props: Props) => {
   const { community, location, history } = props;
   const { search } = location;
   const { tab } = querystring.parse(search);

@@ -4,6 +4,7 @@ import Tippy from '@tippy.js/react';
 
 type Props = {
   content: string,
+  style?: Object,
 };
 
 const Tip = (props: Props) => {

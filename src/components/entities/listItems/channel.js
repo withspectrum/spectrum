@@ -2,7 +2,7 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
-import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelIfno';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Icon from 'src/components/icons';
@@ -20,7 +20,7 @@ type Props = {
   name?: string,
   description?: ?string,
   currentUser: ?Object,
-  children?: React.Node,
+  children?: React$Node,
 };
 
 const Channel = (props: Props) => {

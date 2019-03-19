@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
 import Icon from 'src/components/icons';
@@ -14,7 +15,11 @@ import {
   Username,
 } from '../style';
 
-export const UserMeta = (props: UserMetaType) => {
+type Props = {
+  user: UserInfoType,
+};
+
+export const UserMeta = (props: Props) => {
   const { user } = props;
   const { description, website, isOnline } = user;
   const formattedDescription = description && renderTextWithLinks(description);

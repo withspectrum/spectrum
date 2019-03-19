@@ -46,7 +46,13 @@ export const SvgWrapper = styled.div`
   }
 `;
 
-class Goop extends React.Component {
+type Props = {
+  color: string,
+  goop: number,
+  goopHeight: number,
+};
+
+class Goop extends React.Component<Props> {
   returnGoop() {
     switch (this.props.goop) {
       default:
@@ -102,12 +108,13 @@ class Goop extends React.Component {
   }
 
   render() {
+    const { color = 'bg.default', goopHeight, goop } = this.props;
     return (
       <SvgWrapper
         className={'goop'}
-        goopHeight={this.props.goopHeight}
-        goop={this.props.goop}
-        color={this.props.color}
+        goopHeight={goopHeight}
+        goop={goop}
+        color={color}
       >
         <InlineSvg
           fillRule="evenodd"
@@ -124,9 +131,5 @@ class Goop extends React.Component {
     );
   }
 }
-
-Goop.defaultProps = {
-  color: 'bg.default',
-};
 
 export default Goop;

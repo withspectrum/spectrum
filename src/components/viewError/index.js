@@ -19,7 +19,7 @@ type Props = {
   subheading?: string,
   clearStorage?: boolean,
   refresh?: boolean,
-  children?: React.Node,
+  children?: React$Node,
   small?: boolean,
   dataCy?: string,
 };

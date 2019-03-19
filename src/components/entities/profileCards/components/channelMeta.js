@@ -1,10 +1,15 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import { MetaContainer, Name, Description, Username } from '../style';
 
-export const ChannelMeta = (props: ChannelMetaType) => {
+type Props = {
+  channel: ChannelInfoType,
+};
+
+export const ChannelMeta = (props: Props) => {
   const { channel } = props;
   const { description, community, isArchived } = channel;
   const formattedDescription = description && renderTextWithLinks(description);

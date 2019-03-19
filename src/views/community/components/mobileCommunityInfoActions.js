@@ -1,7 +1,9 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
+import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import { openModal } from 'src/actions/modals';
 import Icon from 'src/components/icons';
 import {
@@ -14,6 +16,11 @@ import {
   ListItemContent,
   NameWarn,
 } from '../style';
+
+type Props = {
+  dispatch: Dispatch<Object>,
+  community: CommunityInfoType,
+};
 
 const Component = (props: Props) => {
   const { community, dispatch } = props;

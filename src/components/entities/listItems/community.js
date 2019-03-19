@@ -19,7 +19,7 @@ type Props = {
   profilePhoto?: string,
   name?: string,
   description?: ?string,
-  children?: React.Node,
+  children?: React$Node,
 };
 
 export const CommunityListItem = (props: Props) => {

@@ -3,7 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import Thread from './thread';
 
-const ProfilePure = (props: Object): React$Element<any> => {
+const ProfilePure = (props: Object): ?React$Element<any> => {
   const { type } = props;
   switch (type) {
     case 'thread': {

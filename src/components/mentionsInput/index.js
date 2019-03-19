@@ -19,6 +19,7 @@ type Props = {
   onKeyDown?: Function,
   inputRef?: Function,
   dataCy?: string,
+  networkDisabled?: boolean,
 };
 
 const cleanSuggestionUserObject = (user: ?Object) => {

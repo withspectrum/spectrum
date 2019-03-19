@@ -1,17 +1,32 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
+import type { Match } from 'react-router-dom';
 import { connect } from 'react-redux';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { getCommunityByMatch } from 'shared/graphql/queries/community/getCommunity';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
+import {
+  getCommunityByMatch,
+  type GetCommunityType,
+} from 'shared/graphql/queries/community/getCommunity';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { CLIENT_URL } from 'src/api/constants';
-import type { Props } from './types';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { SignedIn } from './containers/signedIn';
 import { PrivateCommunity } from './containers/privateCommunity';
+
+type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
+  currentUser: ?UserInfoType,
+  match: Match,
+  data: {
+    community: GetCommunityType,
+  },
+};
 
 const CommunityView = (props: Props) => {
   const { isLoading, queryVarIsChanging, hasError, currentUser, match } = props;

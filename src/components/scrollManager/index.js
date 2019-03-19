@@ -6,7 +6,7 @@ type Props = {
   scrollCaptureDebounce: number,
   scrollSyncDebounce: number,
   scrollSyncAttemptLimit: number,
-  children: React.Node,
+  children: React$Node,
   history: Object,
   location: Object,
   onLocationChange: Function,
