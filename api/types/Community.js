@@ -351,6 +351,10 @@ const Community = /* GraphQL */ `
     ): Community
     setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
   }
+
+  extend type Subscription {
+    communityUpdated(communityIds: [ID!]): Community
+  }
 `;
 
 module.exports = Community;

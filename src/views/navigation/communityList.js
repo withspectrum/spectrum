@@ -80,6 +80,8 @@ const CommunityList = (props: Props) => {
       }
     };
 
+    props.subscribeToUpdatedCommunities();
+
     isDesktopApp() &&
       window.addEventListener('keydown', handleCommunitySwitch, false);
     return () =>

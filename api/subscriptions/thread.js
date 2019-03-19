@@ -9,7 +9,6 @@ import asyncify from '../utils/asyncify';
 import UserError from '../utils/UserError';
 import Raven from 'shared/raven';
 import type { GraphQLContext } from '../';
-import type { GraphQLResolveInfo } from 'graphql';
 
 const addThreadListener = asyncify(listenToUpdatedThreads);
 
@@ -20,8 +19,7 @@ module.exports = {
       subscribe: async (
         _: any,
         { channelIds }: { channelIds: Array<string> },
-        { user }: GraphQLContext,
-        info: GraphQLResolveInfo
+        { user }: GraphQLContext
       ) => {
         if (!channelIds && (!user || !user.id))
           return new UserError(
