@@ -18,7 +18,7 @@ import {
 } from './style';
 
 const handleLinkWrapping = (Component, props) => {
-  const { href, to, children, disabled, isLoading, ...rest } = props;
+  const { href, to, target, children, disabled, isLoading, ...rest } = props;
   const button = (
     <Component disabled={disabled || isLoading} {...rest}>
       {children}
@@ -27,7 +27,11 @@ const handleLinkWrapping = (Component, props) => {
 
   if (href)
     return (
-      <A href={href} target="_blank" rel="noopener noreferrer">
+      <A
+        href={href}
+        target={target || '_blank'}
+        rel={!target && 'noopener noreferrer'}
+      >
         {button}
       </A>
     );

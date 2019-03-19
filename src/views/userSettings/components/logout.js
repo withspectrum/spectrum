@@ -8,7 +8,9 @@ import { SectionCard } from 'src/components/settingsViews/style';
 export default () => (
   <LogoutWrapper>
     <SectionCard>
-      <OutlineButton href={`${SERVER_URL}/auth/logout`}>Log out</OutlineButton>
+      <OutlineButton href={`${SERVER_URL}/auth/logout`} target="_self">
+        Log out
+      </OutlineButton>
     </SectionCard>
   </LogoutWrapper>
 );

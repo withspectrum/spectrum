@@ -27,9 +27,8 @@ export const SigninButton = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: ${theme.text.reverse};
-  border-radius: 8px;
-  padding: 8px;
-  padding-right: 16px;
+  border-radius: 32px;
+  padding: 8px 16px;
   font-size: 15px;
   font-weight: 600;
   position: relative;
