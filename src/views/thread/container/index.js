@@ -157,7 +157,7 @@ const ThreadContainer = (props: Props) => {
     <React.Fragment>
       <ThreadHead thread={thread} />
       <TopBottomButtons />
-      <ViewGrid>
+      <ViewGrid data-cy="thread-view">
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <SidebarSection>

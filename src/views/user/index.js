@@ -250,6 +250,7 @@ class UserView extends React.Component<Props, State> {
                   <Segment
                     onClick={() => this.handleSegmentClick('posts')}
                     isActive={selectedView === 'posts'}
+                    data-cy="user-posts-tab"
                   >
                     Posts
                   </Segment>
@@ -257,6 +258,7 @@ class UserView extends React.Component<Props, State> {
                   <Segment
                     onClick={() => this.handleSegmentClick('activity')}
                     isActive={selectedView === 'activity'}
+                    data-cy="user-activity-tab"
                   >
                     Activity
                   </Segment>
@@ -264,6 +266,7 @@ class UserView extends React.Component<Props, State> {
                   <Segment
                     onClick={() => this.handleSegmentClick('search')}
                     isActive={selectedView === 'search'}
+                    data-cy="user-search-tab"
                   >
                     Search
                   </Segment>
