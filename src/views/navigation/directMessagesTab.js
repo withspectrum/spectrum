@@ -25,6 +25,7 @@ type Props = {
   subscribeToDMs: Function,
   markDirectMessageNotificationsSeen: Function,
   dispatch: Function,
+  refetch: Function,
 };
 
 const DirectMessagesTab = (props: Props) => {

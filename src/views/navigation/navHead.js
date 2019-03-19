@@ -4,6 +4,13 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Head from 'src/components/head';
 
+type Props = {
+  notificationCounts: {
+    notifications: number,
+    directMessageNotifications: number,
+  },
+};
+
 const NavHead = (props: Props) => {
   const { notificationCounts } = props;
   const { directMessageNotifications, notifications } = notificationCounts;
@@ -30,7 +37,7 @@ const NavHead = (props: Props) => {
   );
 };
 
-const map = state => ({
+const map = (state): * => ({
   notificationCounts: state.notifications,
 });
 

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import { withRouter, Route } from 'react-router-dom';
+import { withRouter, Route, type History } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
 import { UserAvatar } from 'src/components/avatar';
 import { isViewingMarketingPage } from 'src/helpers/is-viewing-marketing-page';
@@ -24,6 +24,11 @@ import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
 import { NavigationContext } from 'src/routes';
+
+type Props = {
+  history: History,
+  currentUser?: Object,
+};
 
 const Navigation = (props: Props) => {
   const { currentUser, history } = props;

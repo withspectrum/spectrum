@@ -29,6 +29,7 @@ type Props = {
   },
   markAllNotificationsSeen: Function,
   dispatch: Function,
+  match: Object,
 };
 
 const NotificationsTab = (props: Props) => {
