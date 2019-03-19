@@ -80,8 +80,12 @@ class MessagesWithData extends React.Component<Props, State> {
         };
       }
 
-      const prevEdges = prev.data.directMessageThread.messageConnection.edges;
-      const currEdges = curr.data.directMessageThread.messageConnection.edges;
+      const prevEdges = prev.data.directMessageThread.messageConnection.edges.filter(
+        Boolean
+      );
+      const currEdges = curr.data.directMessageThread.messageConnection.edges.filter(
+        Boolean
+      );
       // If messages were added at the end, keep the scroll position the same
       if (
         currEdges[currEdges.length - 1].node.id ===
