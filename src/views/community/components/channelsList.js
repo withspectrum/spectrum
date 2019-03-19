@@ -49,7 +49,14 @@ class Component extends React.Component<Props> {
     } = this.props;
 
     if (isLoading) {
-      return <Loading style={{ padding: '32px' }} />;
+      return (
+        <React.Fragment>
+          <SidebarSectionHeader>
+            <SidebarSectionHeading>Channels</SidebarSectionHeading>
+          </SidebarSectionHeader>
+          <Loading style={{ padding: '32px' }} />
+        </React.Fragment>
+      );
     }
 
     if (community && community.channelConnection) {
