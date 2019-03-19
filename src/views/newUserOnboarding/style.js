@@ -1,8 +1,8 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Button } from 'src/components/button';
-import { Shadow, hexa, zIndex } from 'src/components/globals';
+import { PrimaryButton } from 'src/components/button';
+import { zIndex } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const OnboardingContainer = styled.div`
@@ -78,15 +78,13 @@ export const Emoji = styled.h3`
   margin-bottom: 16px;
 `;
 
-export const ContinueButton = styled(Button)`
+export const ContinueButton = styled(PrimaryButton)`
   font-size: 18px;
   font-weight: 700;
-  color: ${theme.text.reverse};
   padding: 16px 88px;
   max-width: 100%;
-  box-shadow: ${props =>
-    `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
   margin: 32px auto 0;
+  flex: 1;
 `;
 
 export const CreateUpsellContainer = styled.div`

@@ -134,7 +134,7 @@ class SetUsername extends React.Component<Props, State> {
             disabled={!username || error}
             loading={isLoading}
           >
-            Save and Continue
+            {isLoading ? 'Saving...' : 'Save and Continue'}
           </ContinueButton>
         </Row>
       </Form>
