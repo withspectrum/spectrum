@@ -42,6 +42,7 @@ type State = {
 };
 
 type Props = {
+  dispatch: Function,
   ...$Exact<ViewNetworkHandlerType>,
   client: Object,
   history: Object,
@@ -267,7 +268,12 @@ class NewCommunity extends React.Component<Props, State> {
 
     if (isLoading) return <LoadingView />;
 
-    return <Login redirectPath={`${window.location.href}`} />;
+    return (
+      <Login
+        dispatch={this.props.dispatch}
+        redirectPath={`${window.location.href}`}
+      />
+    );
   }
 }
 
