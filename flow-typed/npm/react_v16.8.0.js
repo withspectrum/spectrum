@@ -161,6 +161,7 @@ declare type React$StatelessFunctionalComponent<Props> = {
  * - ES6 class component. Components with state defined either using the ES6
  *   class syntax, or with the legacy `React.createClass()` helper.
  */
+// $FlowIssue
 declare type React$ComponentType<-Config> = React$AbstractComponent<Config, any>;
 
 /**
@@ -275,6 +276,7 @@ declare module react {
   declare export type ElementProps<C> = React$ElementProps<C>;
   declare export type ElementConfig<C> = React$ElementConfig<C>;
   declare export type ElementRef<C> = React$ElementRef<C>;
+  // $FlowIssue
   declare export type Config<Props, DefaultProps> = React$Config<Props, DefaultProps>;
 
   declare export type ChildrenArray<+T> = $ReadOnlyArray<ChildrenArray<T>> | T;

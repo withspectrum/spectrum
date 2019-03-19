@@ -67,7 +67,7 @@ class Badge extends React.Component<Props> {
         );
       default:
         return (
-          <Tooltip content={this.props.tipText || label}>
+          <Tooltip content={this.props.tipText || label || ''}>
             <Span
               type={type}
               onClick={this.props.onClick && this.props.onClick}

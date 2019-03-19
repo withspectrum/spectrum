@@ -647,7 +647,7 @@ export const checkUserPermissionsInCommunity = (communityId: string, userId: str
     .run();
 };
 
-type UserIdAndCommunityId = [string, string];
+type UserIdAndCommunityId = [?string, string];
 
 // prettier-ignore
 export const getUsersPermissionsInCommunities = (input: Array<UserIdAndCommunityId>) => {

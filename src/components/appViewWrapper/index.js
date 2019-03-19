@@ -11,6 +11,7 @@ type Props = {
   isModal: boolean,
   currentUser: ?UserInfoType,
   history: History,
+  location: Object,
 };
 
 class AppViewWrapper extends React.Component<Props> {
@@ -52,7 +53,7 @@ class AppViewWrapper extends React.Component<Props> {
       to return the user to where they were previously scrolled in the primary
       view
     */
-    if (snapshot !== null) {
+    if (snapshot !== null && this.ref) {
       this.ref.scrollTop = snapshot;
     }
   }
