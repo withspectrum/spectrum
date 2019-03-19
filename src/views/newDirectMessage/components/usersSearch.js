@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { SearchInput, SearchInputWrapper } from '../style';
 import UsersSearchResults from './usersSearchResults';
 
-const UsersSearch = (props: Props) => {
+const UsersSearch = (props: *) => {
   let ref = null;
   const [searchQuery, setSearchQuery] = useState('');
 

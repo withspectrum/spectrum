@@ -4,6 +4,10 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Search, Write, ViewContainer } from './containers';
 
+type Props = {
+  initialUsers: Array<?string>,
+};
+
 const NewDirectMessage = (props: Props) => {
   const { initialUsers } = props;
   const [usersForMessage, setUsersForMessage] = useState(initialUsers);
@@ -43,7 +47,7 @@ const NewDirectMessage = (props: Props) => {
   }
 };
 
-const map = state => ({
+const map = (state): * => ({
   initialUsers: state.directMessageThreads.initNewThreadWithUser,
 });
 

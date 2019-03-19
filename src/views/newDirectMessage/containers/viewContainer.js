@@ -15,6 +15,8 @@ type Props = {
   previousLocation: Location,
   history: History,
   match: Match,
+  isModal?: boolean,
+  children: React$Node,
 };
 
 const NewDirectMessage = (props: Props) => {

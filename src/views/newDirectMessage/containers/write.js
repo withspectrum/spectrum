@@ -14,6 +14,15 @@ import { ErrorBoundary } from 'src/components/error';
 import MessagesCheck from '../components/messagesCheck';
 import { ChatInputWrapper } from 'src/components/layout';
 import MessagesSubscriber from '../components/messagesSubscriber';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  usersForMessage: Array<UserInfoType>,
+  hadInitialUser?: boolean,
+  setActiveStep: Function,
+  dispatch: Function,
+  createDirectMessageThread: Function,
+};
 
 const Write = (props: Props) => {
   const {

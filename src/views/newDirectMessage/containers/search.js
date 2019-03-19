@@ -7,6 +7,14 @@ import { SmallPrimaryButton } from 'src/views/community/components/button';
 import UsersSearch from '../components/usersSearch';
 import SelectedUserPill from '../components/selectedUserPill';
 import { SelectedPillsWrapper } from '../style';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  usersForMessage: Array<UserInfoType>,
+  setUsersForMessage: Function,
+  setActiveStep: Function,
+  dispatch: Function,
+};
 
 const Search = (props: Props) => {
   const {

@@ -2,6 +2,13 @@
 import React from 'react';
 import Icon from 'src/components/icons';
 import { Pill, PillAvatar } from '../style';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  user: UserInfoType,
+  usersForMessage: Array<UserInfoType>,
+  setUsersForMessage: Function,
+};
 
 const SelectedUserPill = (props: Props) => {
   const { user, usersForMessage, setUsersForMessage } = props;

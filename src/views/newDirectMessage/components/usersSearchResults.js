@@ -1,12 +1,29 @@
 // @flow
 import React from 'react';
 import compose from 'recompose/compose';
-import searchUsers from 'shared/graphql/queries/search/searchUsers';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import searchUsers, {
+  type SearchUsersType,
+} from 'shared/graphql/queries/search/searchUsers';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { UserListItem } from 'src/components/entities';
 import { SearchResultsWrapper } from '../style';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
+
+type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
+  data: {
+    search: SearchUsersType,
+  },
+  queryVarIsChanging: boolean,
+  currentUser?: Object,
+  usersForMessage: Array<UserInfoType>,
+  setUsersForMessage: Function,
+  onUserSelected: Function,
+};
 
 const UsersSearchResults = (props: Props) => {
   const {
@@ -32,6 +49,7 @@ const UsersSearchResults = (props: Props) => {
 
   const results = edges
     .map(edge => edge && edge.node)
+    .filter(Boolean)
     .filter(user => user.username)
     .filter(Boolean);
 

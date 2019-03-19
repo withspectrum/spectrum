@@ -52,8 +52,7 @@ const MessagesSubscriber = (props: Props) => {
   useEffect(() => {
     setLastSeen(id);
     scrollToBottom();
-    subscribeToNewMessages();
-    return () => Promise.resolve(subscribeToNewMessages());
+    return subscribeToNewMessages();
   }, [id]);
 
   const refHeight = ref && ref.scrollHeight;
