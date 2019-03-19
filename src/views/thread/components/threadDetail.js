@@ -214,10 +214,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
           isEditing,
           body: '',
         });
-        this.props.toggleEdit();
+        this.props.toggleEdit && this.props.toggleEdit();
       });
 
-    this.props.toggleEdit();
+    this.props.toggleEdit && this.props.toggleEdit();
 
     if (!isEditing) {
       track(events.THREAD_EDITED_INITED, {
