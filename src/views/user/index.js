@@ -2,7 +2,12 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import querystring from 'query-string';
-import { withRouter, type History, type Match } from 'react-router';
+import {
+  withRouter,
+  type History,
+  type Location,
+  type Match,
+} from 'react-router';
 import { connect } from 'react-redux';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
@@ -62,6 +67,7 @@ type Props = {
   queryVarIsChanging: boolean,
   dispatch: Dispatch<Object>,
   history: History,
+  location: Location,
 };
 
 type State = {
