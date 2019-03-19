@@ -12,7 +12,7 @@ export type TitlebarPayloadProps = {
   title: string,
   titleIcon?: React$Node,
   rightAction?: React$Node,
-  leftAction?: React$Node,
+  leftAction?: React$Element<*> | 'menu' | 'view-back',
 };
 
 type TitlebarProps = {
@@ -47,7 +47,7 @@ const GlobalTitlebar = (props: TitlebarProps): React$Node => {
   );
 };
 
-const map = state => state.titlebar;
+const map = (state): * => state.titlebar;
 
 export default compose(
   withRouter,
