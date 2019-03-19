@@ -16,6 +16,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch = (error: any, errorInfo: any) => {
     this.setState({ error });
+    console.error({ error });
     window.Raven && window.Raven.captureException(error, { extra: errorInfo });
   };
 

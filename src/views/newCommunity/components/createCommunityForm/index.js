@@ -681,7 +681,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
               !agreeCoC
             }
             loading={isLoading}
-            dataCy="community-create-button"
+            data-cy="community-create-button"
           >
             Create Community & Continue
           </PrimaryOutlineButton>

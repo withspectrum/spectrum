@@ -198,7 +198,7 @@ class ChannelView extends React.Component<Props> {
                   return (
                     <OutlineButton
                       loading={state.isLoading}
-                      dataCy={'channel-leave-button'}
+                      data-cy={'channel-leave-button'}
                     >
                       Leave channel
                     </OutlineButton>
@@ -207,7 +207,7 @@ class ChannelView extends React.Component<Props> {
                   return (
                     <PrimaryButton
                       loading={state.isLoading}
-                      dataCy="channel-join-button"
+                      data-cy="channel-join-button"
                     >
                       Join {channel.name}
                     </PrimaryButton>
@@ -238,7 +238,7 @@ class ChannelView extends React.Component<Props> {
               return (
                 <OutlineButton
                   loading={state.isLoading}
-                  dataCy={'channel-leave-button'}
+                  data-cy={'channel-leave-button'}
                 >
                   Leave channel
                 </OutlineButton>
@@ -247,7 +247,7 @@ class ChannelView extends React.Component<Props> {
               return (
                 <PrimaryButton
                   loading={state.isLoading}
-                  dataCy="channel-join-button"
+                  data-cy="channel-join-button"
                 >
                   Join {channel.name}
                 </PrimaryButton>

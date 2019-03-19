@@ -292,7 +292,7 @@ class ActionBar extends React.Component<Props, State> {
                 loading={isSavingEdit}
                 disabled={title.trim().length === 0 || isSavingEdit}
                 onClick={this.props.saveEdit}
-                dataCy="save-thread-edit-button"
+                data-cy="save-thread-edit-button"
               >
                 Save
               </Button>
@@ -412,7 +412,7 @@ class ActionBar extends React.Component<Props, State> {
                 currentUser={currentUser}
                 loading={notificationStateLoading}
                 onClick={this.toggleNotification}
-                dataCy="thread-notifications-toggle"
+                data-cy="thread-notifications-toggle"
               >
                 <Icon
                   glyph={
@@ -470,7 +470,7 @@ class ActionBar extends React.Component<Props, State> {
                                 <FlyoutRow hideAbove={768}>
                                   <TextButton
                                     onClick={this.toggleNotification}
-                                    dataCy={'thread-dropdown-notifications'}
+                                    data-cy={'thread-dropdown-notifications'}
                                   >
                                     <Icon
                                       size={24}
@@ -490,7 +490,7 @@ class ActionBar extends React.Component<Props, State> {
                                   <FlyoutRow>
                                     <TextButton
                                       onClick={this.props.toggleEdit}
-                                      dataCy={'thread-dropdown-edit'}
+                                      data-cy={'thread-dropdown-edit'}
                                     >
                                       <Icon size={24} glyph={'edit'} />
                                       <Label>Edit post</Label>
@@ -502,7 +502,7 @@ class ActionBar extends React.Component<Props, State> {
                                   <FlyoutRow>
                                     <TextButton
                                       onClick={this.props.togglePinThread}
-                                      dataCy={'thread-dropdown-pin'}
+                                      data-cy={'thread-dropdown-pin'}
                                       loading={isPinningThread}
                                       disabled={isPinningThread}
                                     >
@@ -523,7 +523,7 @@ class ActionBar extends React.Component<Props, State> {
                                   <FlyoutRow hideBelow={1024}>
                                     <TextButton
                                       onClick={this.triggerChangeChannel}
-                                      dataCy={'thread-dropdown-move'}
+                                      data-cy={'thread-dropdown-move'}
                                     >
                                       <Icon size={24} glyph={'channel'} />
                                       Move thread
@@ -535,7 +535,7 @@ class ActionBar extends React.Component<Props, State> {
                                   <FlyoutRow>
                                     <TextButton
                                       onClick={this.props.threadLock}
-                                      dataCy={'thread-dropdown-lock'}
+                                      data-cy={'thread-dropdown-lock'}
                                       loading={isLockingThread}
                                       disabled={isLockingThread}
                                     >
@@ -560,7 +560,7 @@ class ActionBar extends React.Component<Props, State> {
                                   <FlyoutRow>
                                     <TextButton
                                       onClick={this.props.triggerDelete}
-                                      dataCy={'thread-dropdown-delete'}
+                                      data-cy={'thread-dropdown-delete'}
                                     >
                                       <Icon size={24} glyph={'delete'} />
                                       <Label>Delete</Label>

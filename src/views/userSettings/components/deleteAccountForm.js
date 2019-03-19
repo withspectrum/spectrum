@@ -122,7 +122,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
               >
                 {!isLoading && (
                   <OutlineButton
-                    dataCy="delete-account-cancel-button"
+                    data-cy="delete-account-cancel-button"
                     onClick={this.cancelDelete}
                     style={{ marginBottom: '16px', alignSelf: 'stretch' }}
                   >
@@ -130,7 +130,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
                   </OutlineButton>
                 )}
                 <WarnButton
-                  dataCy="delete-account-confirm-button"
+                  data-cy="delete-account-confirm-button"
                   loading={isLoading}
                   disabled={isLoading}
                   onClick={this.confirmDelete}
@@ -140,7 +140,7 @@ class DeleteAccountForm extends React.Component<Props, State> {
               </div>
             ) : (
               <HoverWarnOutlineButton
-                dataCy="delete-account-init-button"
+                data-cy="delete-account-init-button"
                 color={'warn.default'}
                 onClick={this.initDelete}
               >

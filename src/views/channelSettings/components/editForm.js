@@ -244,7 +244,7 @@ class ChannelWithData extends React.Component<Props, State> {
               <PrimaryOutlineButton
                 onClick={this.save}
                 loading={isLoading}
-                dataCy="save-button"
+                data-cy="save-button"
               >
                 Save
               </PrimaryOutlineButton>

@@ -96,7 +96,7 @@ class JoinChannel extends React.Component<Props, State> {
           <Button
             loading={isLoading}
             onClick={currentUser ? this.toggleSubscription : this.login}
-            dataCy={
+            data-cy={
               currentUser
                 ? 'thread-join-channel-upsell-button'
                 : 'join-channel-login-upsell'

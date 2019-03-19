@@ -50,7 +50,7 @@ export default async (root: DBCommunity, args: CommunityThreadConnectionPaginati
       user.id,
       id,
     ]);
-    isMember = permissions.isMember;
+    isMember = permissions && permissions.isMember;
   }
   if (user && isMember) {
     channels = await getChannelsByUserAndCommunity(id, currentUser.id);

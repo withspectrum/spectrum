@@ -463,7 +463,7 @@ class UserWithData extends React.Component<Props, State> {
               }
               loading={isLoading}
               onClick={this.save}
-              dataCy="save-button"
+              data-cy="save-button"
             >
               Save
             </PrimaryOutlineButton>

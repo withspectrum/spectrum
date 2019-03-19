@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
-import { TextButton, Button } from 'src/components/button';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import type { Dispatch } from 'redux';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
@@ -121,9 +121,13 @@ const EditingChatInput = (props: Props) => {
             Cancel
           </TextButton>
         )}
-        <Button loading={saving} dataCy="edit-message-save" onClick={submit}>
+        <PrimaryOutlineButton
+          loading={saving}
+          data-cy="edit-message-save"
+          onClick={submit}
+        >
           Save
-        </Button>
+        </PrimaryOutlineButton>
       </EditActions>
     </React.Fragment>
   );
