@@ -11,7 +11,7 @@ import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Stepper from './components/stepper';
 import Share from './components/share';
-import { Login } from 'src/views/login';
+import Login from 'src/views/login';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';

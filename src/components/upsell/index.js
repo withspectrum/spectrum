@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Icon from 'src/components/icons';
 import { storeItem } from 'src/helpers/localStorage';
 import { Button, OutlineButton } from 'src/components/buttons';
-import { Login } from 'src/views/login';
+import Login from 'src/views/login';
 import {
   Title,
   MiniTitle,

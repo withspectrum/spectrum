@@ -27,7 +27,7 @@ type Props = {
   dispatch: Function,
 };
 
-export class Login extends React.Component<Props> {
+class Login extends React.Component<Props> {
   componentDidMount() {
     let redirectPath;
     const { dispatch } = this.props;
