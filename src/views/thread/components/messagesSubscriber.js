@@ -14,17 +14,20 @@ import viewNetworkHandler, {
 import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
 import NullMessages from './nullMessages';
+import type { Location } from 'react-router';
 
 type Props = {
   // Used by getThreadMessages query
   isWatercooler: boolean,
   data: {
+    loading: boolean,
     thread: ?GetThreadMessageConnectionType,
   },
   loadPreviousPage: Function,
   loadNextPage: Function,
   subscribeToNewMessages: Function,
   onMessagesLoaded?: Function,
+  location: Location,
   ...$Exact<ViewNetworkHandlerType>,
 };
 
@@ -73,7 +76,7 @@ class Messages extends React.Component<Props> {
         curr.data.thread.messageConnection.edges.length
     ) {
       const elem = document.getElementById('main');
-      if (!elem) return null;
+      if (!elem || !curr.data.thread) return null;
 
       // If new messages were added at the top, persist the scroll position
       if (
@@ -120,17 +123,19 @@ class Messages extends React.Component<Props> {
     const hasPrevThread = prevData && prevData.thread;
     const hasCurrThread = currData && currData.thread;
     const previousMessageConnection =
+      // $FlowIssue
       hasPrevThread && prevData.thread.messageConnection;
     const currMessageConnection =
+      // $FlowIssue
       hasCurrThread && currData.thread.messageConnection;
     // thread loaded for the first time
-    if (!hasPrevThread && hasCurrThread) {
+    if (!hasPrevThread && hasCurrThread && currMessageConnection) {
       if (currMessageConnection.edges.length > 0) {
         onMessagesLoaded && onMessagesLoaded(currData.thread);
       }
     }
     // new messages arrived
-    if (previousMessageConnection && hasCurrThread) {
+    if (previousMessageConnection && hasCurrThread && currMessageConnection) {
       if (
         currMessageConnection.edges.length >
         previousMessageConnection.edges.length

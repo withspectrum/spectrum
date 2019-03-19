@@ -10,7 +10,9 @@ import {
 } from 'shared/graphql/queries/thread/getThread';
 import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icons';
@@ -39,6 +41,18 @@ import TopBottomButtons from '../components/topBottomButtons';
 import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+
+type Props = {
+  ...$Exact<ViewNetworkHandlerType>,
+  data: {
+    thread: GetThreadType,
+  },
+  client: Object,
+  currentUser?: Object,
+  dispatch: Function,
+  notifications: Array<Object>,
+};
 
 const ThreadContainer = (props: Props) => {
   const { data, isLoading, client, currentUser, dispatch } = props;
@@ -90,7 +104,7 @@ const ThreadContainer = (props: Props) => {
   const [mentionSuggestions, setMentionSuggestions] = useState([
     thread.author.user,
   ]);
-  const updateMentionSuggestions = (thread: Thread) => {
+  const updateMentionSuggestions = (thread: GetThreadType) => {
     const { messageConnection, author } = thread;
 
     if (!messageConnection || messageConnection.edges.length === 0)
@@ -239,7 +253,7 @@ const ThreadContainer = (props: Props) => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state): * => ({
   notifications: state.notifications.notificationsData,
 });
 

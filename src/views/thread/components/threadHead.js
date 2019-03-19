@@ -3,6 +3,11 @@ import React from 'react';
 import Head from 'src/components/head';
 import getThreadLink from 'src/helpers/get-thread-link';
 import generateMetaInfo from 'shared/generate-meta-info';
+import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
+
+type Props = {
+  thread: ThreadInfoType,
+};
 
 const ThreadHead = (props: Props) => {
   const { thread } = props;
