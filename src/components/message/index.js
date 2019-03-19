@@ -194,7 +194,7 @@ class Message extends React.Component<Props, State> {
 
     return (
       <ConditionalWrap
-        condition={isSelected}
+        condition={!!isSelected}
         wrap={children => (
           <OutsideClickHandler
             onOutsideClick={this.clearSelectedMessage}

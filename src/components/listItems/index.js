@@ -46,6 +46,7 @@ export class CommunityListItem extends React.Component<CommunityProps> {
               {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
               {typeof reputation === 'number' && reputation > -1 && (
                 <Meta>
+                  {/* $FlowIssue */}
                   <Reputation size={'default'} reputation={reputation} />
                 </Meta>
               )}
@@ -127,6 +128,7 @@ export const UserListItem = ({
           {!hideRep && (
             <Meta>
               {(user.totalReputation || user.contextPermissions) && (
+                /* $FlowIssue */
                 <Reputation reputation={reputation} />
               )}
             </Meta>

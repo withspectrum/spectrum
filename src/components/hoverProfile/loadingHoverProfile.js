@@ -4,7 +4,7 @@ import { Loading } from 'src/components/loading';
 import { HoverWrapper, ProfileCard } from './style';
 
 type Props = {
-  ref: (?HTMLElement) => void,
+  ref?: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 

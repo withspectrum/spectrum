@@ -14,6 +14,7 @@ type Props = {
   staticSuggestions?: Array<UserInfoType>,
   client: ApolloClient,
   placeholder?: string,
+  hasAttachment?: boolean,
   onFocus?: Function,
   onBlur?: Function,
   onKeyDown?: Function,
