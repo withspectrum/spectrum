@@ -239,7 +239,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
       <NullState
         communityId={nullComposerCommunityId}
         channelId={this.props.data.channel && this.props.data.channel.id}
-        isSearch={this.props.search}
+        isSearch={!!this.props.search}
         viewContext={viewContext}
       />
     );

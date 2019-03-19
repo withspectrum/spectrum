@@ -117,6 +117,7 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
           this.close();
         });
       case 'thread': {
+        if (!extraProps) return;
         const { community } = extraProps.thread;
         return this.props
           .deleteThread(id)

@@ -6,6 +6,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ErrorBoundary } from 'src/components/error';
 import Message from 'src/components/message';
 import MessageErrorFallback from '../message/messageErrorFallback';
+import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import type { Props } from './';
 import {
   MessagesWrapper,
@@ -16,8 +17,9 @@ import {
   UnseenTime,
 } from './style';
 
-const ChatMessages = (props: Props) => {
+const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
   const { messages, thread, threadType, currentUser } = props;
+  if (!thread || !messages) return null;
   const { currentUserLastSeen, community } = thread;
   const { communityPermissions } = community;
   const { isOwner, isModerator } = communityPermissions;
@@ -28,7 +30,7 @@ const ChatMessages = (props: Props) => {
     <MessagesWrapper data-cy="message-group">
       {messages.map(group => {
         // eliminate groups where there are no messages
-        if (group.length === 0) return null;
+        if (!Array.isArray(group) || group.length === 0) return null;
         // Since all messages in the group have the same Author and same initial timestamp, we only need to pull that data from the first message in the group. So let's get that message and then check who sent it.
         const initialMessage = group[0];
         const { author } = initialMessage;

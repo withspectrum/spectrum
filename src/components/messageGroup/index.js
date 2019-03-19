@@ -9,20 +9,27 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import ThreadMessages from './thread';
 import DirectMessages from './directMessage';
 
-export type Props = {
-  threadType: 'story' | 'directMessageThread',
-  thread?: GetThreadType | GetDirectMessageThreadType,
+type DirectMessageThreadProps = {
+  threadType: 'directMessageThread',
+  thread?: GetDirectMessageThreadType,
   messages: Array<?MessageInfoType>,
   currentUser: ?UserInfoType,
 };
 
-const ChatMessages = (props: Props) => {
-  const { threadType } = props;
+type StoryProps = {
+  threadType: 'story',
+  thread?: GetThreadType,
+  messages: Array<?MessageInfoType>,
+  currentUser: ?UserInfoType,
+};
 
-  if (threadType === 'story') return <ThreadMessages {...props} />;
-  if (threadType === 'directMessageThread')
-    return <DirectMessages {...props} />;
-  return <p>Invalid threadType sent to messageGroup component</p>;
+export type Props = DirectMessageThreadProps | StoryProps;
+
+const ChatMessages = (props: Props) => {
+  if (props.threadType === 'story') return <ThreadMessages {...props} />;
+
+  // $FlowIssue
+  return <DirectMessages {...props} />;
 };
 
 export default compose(withCurrentUser)(ChatMessages);
