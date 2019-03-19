@@ -13,7 +13,9 @@ const SearchThreadFeed = compose(
   searchThreadsQuery
 )(ThreadFeed);
 
-type Props = {};
+type Props = {
+  dispatch: Function,
+};
 type State = {
   searchQueryString: ?string,
 };
