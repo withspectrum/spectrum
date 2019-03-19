@@ -41,7 +41,15 @@ class Component extends React.Component<Props> {
     const isOwner = this.props.community.communityPermissions.isOwner;
 
     if (isLoading || queryVarIsChanging)
-      return <Loading style={{ padding: '32px' }} />;
+      return (
+        <React.Fragment>
+          <SidebarSectionHeader>
+            <SidebarSectionHeading>Team</SidebarSectionHeading>
+          </SidebarSectionHeader>
+          <Loading style={{ padding: '32px' }} />
+        </React.Fragment>
+      );
+
     if (hasError) return null;
 
     const { community } = data;
