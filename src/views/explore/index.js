@@ -15,6 +15,7 @@ import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   currentUser?: Object,
+  dispatch: Function,
 };
 
 class Explore extends React.Component<Props> {
