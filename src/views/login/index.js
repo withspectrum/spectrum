@@ -24,6 +24,7 @@ type Props = {
   signinType?: ?string,
   close?: Function,
   location?: Object,
+  dispatch: Function,
 };
 
 export class Login extends React.Component<Props> {
