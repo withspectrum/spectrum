@@ -9,7 +9,7 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import banUserMutation from 'shared/graphql/mutations/user/banUser';
 import type { Dispatch } from 'redux';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from 'src/components/button';
+import { TextButton, WarnButton } from 'src/components/button';
 import { modalStyles } from '../styles';
 import { TextArea, Error } from '../../formElements';
 import { Form, Actions, Subtitle } from './style';
@@ -122,13 +122,13 @@ class BanUserModal extends React.Component<Props, State> {
 
             <Actions>
               <TextButton onClick={this.close}>Cancel</TextButton>
-              <Button
+              <WarnButton
                 disabled={!reason || reason.length === 0}
                 loading={isLoading}
                 onClick={this.submit}
               >
                 Ban User
-              </Button>
+              </WarnButton>
             </Actions>
           </Form>
         </ModalContainer>

@@ -27,7 +27,6 @@ import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import type { Dispatch } from 'redux';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import { openModal } from 'src/actions/modals';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -165,22 +164,6 @@ class UserView extends React.Component<Props, State> {
       ...location,
       search: querystring.stringify({ tab }),
     });
-  };
-
-  initReport = () => {
-    const {
-      data: { user },
-      dispatch,
-    } = this.props;
-    return dispatch(openModal('REPORT_USER_MODAL', { user }));
-  };
-
-  initBan = () => {
-    const {
-      data: { user },
-      dispatch,
-    } = this.props;
-    return dispatch(openModal('BAN_USER_MODAL', { user }));
   };
 
   render() {

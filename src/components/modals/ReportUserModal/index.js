@@ -10,7 +10,7 @@ import reportUserMutation from 'shared/graphql/mutations/user/reportUser';
 import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from 'src/components/button';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import { modalStyles } from '../styles';
 import { TextArea, Error } from '../../formElements';
 import { Form, Actions } from './style';
@@ -136,13 +136,13 @@ class ReportUserModal extends React.Component<Props, State> {
 
             <Actions>
               <TextButton onClick={this.close}>Cancel</TextButton>
-              <Button
+              <PrimaryOutlineButton
                 disabled={!reason || reason.length === 0}
                 loading={isLoading}
                 onClick={this.submit}
               >
                 Send report
-              </Button>
+              </PrimaryOutlineButton>
             </Actions>
           </Form>
         </ModalContainer>
