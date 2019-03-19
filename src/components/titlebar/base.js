@@ -51,7 +51,13 @@ const MobileTitlebar = (props: Props) => {
   const leftActionComponent = setNavigationIsOpen => {
     if (typeof leftAction === 'string') {
       return (
-        <div style={{ position: 'relative' }}>
+        <div
+          style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Icon
             onClick={handleMenuClick(setNavigationIsOpen)}
             glyph={leftAction}
