@@ -1,10 +1,13 @@
 // @flow
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
-import { Route } from 'react-router-dom';
+import { Route, type History } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import { getCurrentUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
+import {
+  getCurrentUserCommunityConnection,
+  type GetUserCommunityConnectionType,
+} from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { getAccessibilityActiveState } from './accessibility';
 import {
@@ -15,6 +18,16 @@ import {
   Label,
   BlackDot,
 } from './style';
+
+type Props = {
+  data: {
+    user: GetUserCommunityConnectionType,
+  },
+  history: History,
+  sidenavIsOpen: boolean,
+  setNavigationIsOpen: Function,
+  subscribeToUpdatedCommunities: Function,
+};
 
 const CommunityList = (props: Props) => {
   const { data, history, sidenavIsOpen, setNavigationIsOpen } = props;
@@ -123,10 +136,12 @@ const CommunityList = (props: Props) => {
                   src={community.profilePhoto}
                   size={sidenavIsOpen ? 32 : 36}
                 />
-                {new Date(community.lastActive) >
-                  new Date(community.communityPermissions.lastSeen) && (
-                  <BlackDot />
-                )}
+                {community.lastActive &&
+                  community.communityPermissions.lastSeen &&
+                  new Date(community.lastActive) >
+                    new Date(community.communityPermissions.lastSeen) && (
+                    <BlackDot />
+                  )}
 
                 <Label>{community.name}</Label>
 

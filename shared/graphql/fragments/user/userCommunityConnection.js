@@ -21,7 +21,7 @@ export type UserCommunityConnectionType = {
       hasNextPage: boolean,
       hasPreviousPage: boolean,
     },
-    edges: Array<?Edge>,
+    edges: Array<Edge>,
   },
 };
 
