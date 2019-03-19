@@ -759,6 +759,7 @@ const hasChanged = (field: string) =>
     .ne(db.row('new_val')(field));
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 const REACTION_COUNT_CHANGED = hasChanged('reactionCount');
+const MESSAGE_COUNT_CHANGED = hasChanged('messageCount');
 
 const getUpdatedThreadsChangefeed = () =>
   db
@@ -766,9 +767,11 @@ const getUpdatedThreadsChangefeed = () =>
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(REACTION_COUNT_CHANGED).or(LAST_ACTIVE_CHANGED))(
-      'new_val'
-    )
+    .filter(
+      NEW_DOCUMENTS.or(REACTION_COUNT_CHANGED)
+        .or(LAST_ACTIVE_CHANGED)
+        .or(MESSAGE_COUNT_CHANGED)
+    )('new_val')
     .run();
 
 export const listenToUpdatedThreads = (cb: Function): Function => {
