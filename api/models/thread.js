@@ -760,6 +760,7 @@ const hasChanged = (field: string) =>
 const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 const REACTION_COUNT_CHANGED = hasChanged('reactionCount');
 const MESSAGE_COUNT_CHANGED = hasChanged('messageCount');
+const CONTENT_CHANGED = hasChanged('content');
 
 const getUpdatedThreadsChangefeed = () =>
   db
@@ -771,6 +772,7 @@ const getUpdatedThreadsChangefeed = () =>
       NEW_DOCUMENTS.or(REACTION_COUNT_CHANGED)
         .or(LAST_ACTIVE_CHANGED)
         .or(MESSAGE_COUNT_CHANGED)
+        .or(CONTENT_CHANGED)
     )('new_val')
     .run();
 
