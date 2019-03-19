@@ -16,16 +16,13 @@ import {
 } from '../style';
 
 type Props = {
-  community: {
-    ...$Exact<CommunityInfoType>,
-    ...$Exact<CommunityMetaDataType>,
-  },
+  // TODO: Properly type this
+  community: Object,
 };
 
 export const CommunityMeta = (props: Props) => {
   const { community } = props;
-  const { description, website, metaData } = community;
-  const { members, onlineMembers } = metaData;
+  const { description, website } = community;
   const formattedDescription = description && renderTextWithLinks(description);
   const formattedWebsite = website && addProtocolToString(website);
 
@@ -52,13 +49,19 @@ export const CommunityMeta = (props: Props) => {
           </MetaRow>
         )}
 
-        <MetaRow>
-          <Icon glyph={'person'} size={20} /> {members.toLocaleString()} members
-        </MetaRow>
+        {community.metaData && (
+          <React.Fragment>
+            <MetaRow>
+              <Icon glyph={'person'} size={20} />{' '}
+              {community.metaData.members.toLocaleString()} members
+            </MetaRow>
 
-        <MetaRow>
-          <OnlineDot /> {onlineMembers.toLocaleString()} members online
-        </MetaRow>
+            <MetaRow>
+              <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
+              members online
+            </MetaRow>
+          </React.Fragment>
+        )}
       </MetaLinksContainer>
     </MetaContainer>
   );

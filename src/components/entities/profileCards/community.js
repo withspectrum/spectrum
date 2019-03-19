@@ -9,10 +9,7 @@ import type { CommunityInfoType } from 'shared/graphql/fragments/community/commu
 import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 
 type Props = {
-  community: {
-    ...$Exact<CommunityInfoType>,
-    ...$Exact<CommunityMetaDataType>,
-  },
+  community: CommunityInfoType,
 };
 
 export const CommunityProfileCard = (props: Props) => {
