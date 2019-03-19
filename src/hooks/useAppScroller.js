@@ -10,7 +10,7 @@ export const useAppScroller = () => {
 
   const scrollToTop = () => {
     const elem = ref || document.getElementById('main');
-    if (elem) return elem.scrollTo(0, 0);
+    if (elem) return (elem.scrollTop = 0);
   };
 
   const scrollToBottom = () => {
