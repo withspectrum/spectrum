@@ -41,9 +41,11 @@ const signBody = (body?: string, expires?: number): string => {
     // we need to remove all query params from the src, then re-sign in order to avoid duplicate signatures
     // or sending down a url with an expired signature
     if (imageUrlStoredAsSigned) {
-      const pathname = url.parse(src).pathname.replace(/^\//, '');
+      const { pathname } = url.parse(src);
       // always attempt to use the parsed pathname, but fall back to the original src
-      const sanitized = decodeURIComponent(pathname || src);
+      const sanitized = decodeURIComponent(
+        pathname ? pathname.replace(/^\//, '') : src
+      );
       returnBody.entityMap[key].data.src = signImageUrl(sanitized, { expires });
     } else {
       returnBody.entityMap[key].data.src = signImageUrl(src, { expires });
