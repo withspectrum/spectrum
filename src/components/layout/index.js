@@ -51,7 +51,8 @@ export const SingleColumnGrid = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
-    max-width: ${MEDIA_BREAK}px;
+    max-width: 100%;
+    grid-template-columns: 1fr;
     border-left: 0;
     border-right: 0;
   }

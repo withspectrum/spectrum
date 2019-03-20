@@ -156,10 +156,11 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const ActorPhotoItem = styled.div`
-  margin-right: 4px;
+  margin: 2px 4px 2px 0;
 `;
 
 export const ActorPhoto = styled.img`
