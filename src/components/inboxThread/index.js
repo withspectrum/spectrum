@@ -62,6 +62,7 @@ class InboxThread extends React.Component<Props> {
       !active &&
       currentUser &&
       !thread.currentUserLastSeen &&
+      thread.community.communityPermissions.isMember &&
       currentUser.id !== thread.author.user.id;
 
     return (
