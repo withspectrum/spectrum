@@ -84,6 +84,7 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
               createdAt: new Date(),
               isMember: true,
               receiveNotifications: true,
+              lastSeen: new Date(),
             },
             { returnChanges: 'always' }
           )
