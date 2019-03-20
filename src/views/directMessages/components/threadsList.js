@@ -44,13 +44,11 @@ type Props = {
 };
 
 type State = {
-  scrollElement: any,
   subscription: ?Function,
 };
 
 class ThreadsList extends React.Component<Props, State> {
   state = {
-    scrollElement: null,
     subscription: null,
   };
 
@@ -69,13 +67,6 @@ class ThreadsList extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const scrollElement = document.getElementById('scroller-for-dm-threads');
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement,
-    });
-
     this.subscribe();
     track(events.DIRECT_MESSAGES_VIEWED);
   }
@@ -115,7 +106,6 @@ class ThreadsList extends React.Component<Props, State> {
 
   render() {
     const { currentUser, dmData, activeThreadId, isFetchingMore } = this.props;
-    const { scrollElement } = this.state;
 
     if (!dmData) return null;
 
@@ -220,25 +210,20 @@ class ThreadsList extends React.Component<Props, State> {
             </PrimaryOutlineButton>
           }
         />
-        <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
-          <InfiniteList
-            hasMore={hasNextPage}
-            loader={<LoadingDMWithVisibility key={0} />}
-            getScrollParent={() => scrollElement}
-          >
-            {uniqueThreads.map(thread => {
-              if (!thread) return null;
-              return (
-                <ErrorBoundary key={thread.id}>
-                  <DirectMessageListItem
-                    thread={thread}
-                    currentUser={currentUser}
-                    active={activeThreadId === thread.id}
-                  />
-                </ErrorBoundary>
-              );
-            })}
-          </InfiniteList>
+        <ThreadsListScrollContainer>
+          {uniqueThreads.map(thread => {
+            if (!thread) return null;
+            return (
+              <ErrorBoundary key={thread.id}>
+                <DirectMessageListItem
+                  thread={thread}
+                  currentUser={currentUser}
+                  active={activeThreadId === thread.id}
+                />
+              </ErrorBoundary>
+            );
+          })}
+          {hasNextPage && <LoadingDMWithVisibility />}
         </ThreadsListScrollContainer>
       </React.Fragment>
     );
