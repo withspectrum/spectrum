@@ -80,7 +80,7 @@ const Watercooler = (props: Props) => {
           {community && community.watercoolerId && (
             <Link
               style={{ marginRight: '8px' }}
-              to={`/${community.slug}/general/${community.watercoolerId}`}
+              to={`/${community.slug}?tab=chat`}
             >
               <TextButton>Go to open chat</TextButton>
             </Link>
