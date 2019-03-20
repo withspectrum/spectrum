@@ -394,6 +394,10 @@ export const NullMessagesWrapper = styled.div`
   flex-direction: column;
   opacity: 0.8;
 
+  @media (max-width: ${MEDIA_BREAK}px) {
+    padding-bottom: 128px;
+  }
+
   > .icon {
     opacity: 0.4;
   }
