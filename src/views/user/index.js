@@ -43,7 +43,7 @@ import {
   NullColumnHeading,
   NullColumnSubheading,
 } from 'src/components/threadFeed/style';
-import { PrimaryButton } from 'src/components/button';
+import { PrimaryOutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
 
@@ -80,22 +80,13 @@ class UserView extends React.Component<Props, State> {
     hasThreads: true,
   };
 
-  constructor(props) {
-    super(props);
-    const { location, history } = props;
-    const { search } = location;
-    const { tab } = querystring.parse(search);
-    if (!tab)
-      history.replace({
-        ...location,
-        search: querystring.stringify({ tab: 'posts' }),
-      });
-  }
-
   componentDidMount() {
     const { dispatch } = this.props;
+
     if (this.props.data && this.props.data.user) {
-      dispatch(
+      this.setDefaultTab();
+
+      return dispatch(
         setTitlebarProps({
           title: this.props.data.user.name,
           titleIcon: (
@@ -112,11 +103,25 @@ class UserView extends React.Component<Props, State> {
     }
   }
 
+  setDefaultTab = () => {
+    const { location, history } = this.props;
+    const { search } = location;
+    const { tab } = querystring.parse(search);
+    if (!tab)
+      history.replace({
+        ...location,
+        search: querystring.stringify({ tab: 'posts' }),
+      });
+  };
+
   componentDidUpdate(prevProps: Props) {
     const { dispatch } = this.props;
+
     if (!prevProps.data || !this.props.data) return;
 
     if (!prevProps.data.user && this.props.data.user) {
+      this.setDefaultTab();
+
       return dispatch(
         setTitlebarProps({
           title: this.props.data.user.name,
@@ -138,6 +143,7 @@ class UserView extends React.Component<Props, State> {
       this.props.data.user &&
       prevProps.data.user.id !== this.props.data.user.id
     ) {
+      this.setDefaultTab();
       return dispatch(
         setTitlebarProps({
           title: this.props.data.user.name,
@@ -291,7 +297,7 @@ class UserView extends React.Component<Props, State> {
                         conversations are joined.
                       </NullColumnSubheading>
                       {isCurrentUser && (
-                        <PrimaryButton
+                        <PrimaryOutlineButton
                           to={{
                             pathname: '/new/thread',
                             state: { modal: true },
@@ -299,7 +305,7 @@ class UserView extends React.Component<Props, State> {
                         >
                           <Icon glyph={'post'} size={24} />
                           New post
-                        </PrimaryButton>
+                        </PrimaryOutlineButton>
                       )}
                     </span>
                   </NullColumn>
@@ -314,6 +320,8 @@ class UserView extends React.Component<Props, State> {
     if (isLoading) {
       return <LoadingView />;
     }
+
+    console.log({ props: this.props });
 
     if (!user) {
       return (

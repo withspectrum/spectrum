@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from 'src/components/entities';
 import { Loading } from 'src/components/loading';
-import { OutlineButton } from 'src/components/button';
+import { PrimaryOutlineButton } from 'src/components/button';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
 
@@ -33,7 +33,9 @@ class CommunityList extends React.Component<Props> {
     ) {
       return (
         <div style={{ padding: '16px' }}>
-          <OutlineButton to={'/explore'}>Explore communities</OutlineButton>
+          <PrimaryOutlineButton style={{ flex: '1' }} to={'/explore'}>
+            Explore communities
+          </PrimaryOutlineButton>
         </div>
       );
     }

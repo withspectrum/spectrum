@@ -119,13 +119,19 @@ export const SecondaryPrimaryColumnGrid = styled.div`
 │             │
 └─────────────┘
 */
-export const CenteredGrid = styled(SingleColumnGrid)`
+export const CenteredGrid = styled.div`
+  display: grid;
+  justify-self: center;
+  grid-template-columns: ${MAX_WIDTH}px;
   align-self: center;
   max-width: ${PRIMARY_COLUMN_WIDTH}px;
   grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px;
 
-  @media (max-width: ${PRIMARY_COLUMN_WIDTH + NAVBAR_WIDTH}px) {
-    align-self: start;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: 1fr;
   }
 `;
 

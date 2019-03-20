@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FillSpaceError, LargeEmoji, Heading, Subheading } from './style';
-import { Button } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
 import { removeItemFromStorage } from 'src/helpers/localStorage';
 
 /*
@@ -54,9 +54,9 @@ class ViewError extends React.Component<Props> {
         <Subheading small={small}>{subhead}</Subheading>
 
         {refresh && (
-          <Button large={!small} onClick={() => window.location.reload(true)}>
+          <PrimaryButton onClick={() => window.location.reload(true)}>
             Refresh the page
-          </Button>
+          </PrimaryButton>
         )}
 
         {children}

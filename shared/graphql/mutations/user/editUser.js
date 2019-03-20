@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
 import type { EditUserInput } from 'shared/db/queries/user';
+import { getUserByUsernameQuery } from '../../queries/user/getUser';
 
 export type EditUserType = {
   ...$Exact<UserInfoType>,
@@ -25,12 +26,23 @@ export const editUserMutation = gql`
 `;
 
 const editUserOptions = {
+  options: {
+    refetchQueries: ['getCurrentUser'],
+  },
   props: ({ mutate }) => ({
     editUser: input =>
       mutate({
         variables: {
           input,
         },
+        refetchQueries: [
+          {
+            query: getUserByUsernameQuery,
+            variables: {
+              id: input.username,
+            },
+          },
+        ],
       }),
   }),
 };

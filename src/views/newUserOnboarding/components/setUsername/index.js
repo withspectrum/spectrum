@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import { Error, Success } from 'src/components/formElements';
 import UsernameSearch from 'src/components/usernameSearch';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { Form, Row, InputLabel, InputSubLabel } from './style';
+import { Form, Row } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
 import type { Dispatch } from 'redux';
@@ -111,21 +111,18 @@ class SetUsername extends React.Component<Props, State> {
 
     return (
       <Form onSubmit={this.saveUsername}>
-        <InputLabel>Create your username</InputLabel>
-        <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
-
         <Row>
           <UsernameSearch
-            placeholder={'Set a username...'}
+            placeholder={'Your username...'}
             autoFocus={true}
             username={username}
             onValidationResult={this.handleUsernameValidation}
           />
         </Row>
-        <Row>
-          <Error>{error ? error : <span>&nbsp;</span>}</Error>
 
-          <Success>{success ? success : <span>&nbsp;</span>}</Success>
+        <Row style={{ minHeight: '43px' }}>
+          {error && <Error>{error}</Error>}
+          {success && <Success>{success}</Success>}
         </Row>
 
         <Row>

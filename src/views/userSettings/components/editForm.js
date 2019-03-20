@@ -370,6 +370,7 @@ class UserWithData extends React.Component<Props, State> {
             label="Username"
             size={'small'}
             username={username}
+            placeholder="Set a username..."
             onValidationResult={this.handleUsernameValidation}
             onError={this.handleOnError}
             dataCy="user-username-input"

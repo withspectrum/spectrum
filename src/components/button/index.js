@@ -30,7 +30,7 @@ const handleLinkWrapping = (Component, props) => {
       <A
         href={href}
         target={target || '_blank'}
-        rel={!target && 'noopener noreferrer'}
+        rel={!target ? 'noopener noreferrer' : undefined}
       >
         {button}
       </A>
@@ -46,6 +46,7 @@ type To = {
 };
 
 type Props = {
+  target?: string,
   href?: string,
   to?: string | To,
   children: React$Node,

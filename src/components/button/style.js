@@ -67,7 +67,7 @@ export const StyledPrimaryButton = styled(StyledButton)`
   background-color: ${theme.brand.alt};
   background-image: ${`linear-gradient(to bottom, ${theme.brand.alt}, ${tint(
     theme.brand.alt,
-    -16
+    -8
   )})`};
   color: ${theme.text.reverse};
   border: 1px solid ${tint(theme.brand.alt, -8)};
@@ -96,7 +96,7 @@ export const StyledWarnButton = styled(StyledPrimaryButton)`
   background-color: ${theme.warn.default};
   background-image: ${`linear-gradient(to bottom, ${theme.warn.default}, ${tint(
     theme.warn.default,
-    -16
+    -8
   )})`};
   border: 1px solid ${tint(theme.warn.default, -8)};
 

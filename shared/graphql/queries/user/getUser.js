@@ -43,7 +43,12 @@ const getUserByUsernameOptions = {
 };
 
 const getUserByMatchOptions = {
-  options: ({ match: { params: { username } } }) => ({
+  options: ({
+    match: {
+      params: { username },
+    },
+  }) => ({
+    fetchPolicy: 'cache-and-network',
     variables: {
       username,
     },

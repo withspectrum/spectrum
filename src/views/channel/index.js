@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import querystring from 'query-string';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
-import { addCommunityToOnboarding } from 'src/actions/newUserOnboarding';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Link } from 'react-router-dom';
@@ -119,14 +118,6 @@ class ChannelView extends React.Component<Props> {
           community: transformations.analyticsCommunity(channel.community),
         });
       }
-
-      // if the user is new and signed up through a community page, push
-      // the community data into the store to hydrate the new user experience
-      // with their first community they should join
-      if (this.props.currentUser) return;
-      this.props.dispatch(
-        addCommunityToOnboarding(this.props.data.channel.community)
-      );
     }
   }
 

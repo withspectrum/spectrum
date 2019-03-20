@@ -140,11 +140,13 @@ class UsernameSearch extends React.Component<Props, State> {
 
   render() {
     const { username, isSearching } = this.state;
-    const { label, size, dataCy } = this.props;
+    // eslint-disable-next-line
+    const { label, size, dataCy, onValidationResult, ...rest } = this.props;
     return (
       <React.Fragment>
         <Input
-          {...this.props}
+          {...rest}
+          size={size}
           defaultValue={username}
           onChange={this.handleChange}
           dataCy={dataCy}
