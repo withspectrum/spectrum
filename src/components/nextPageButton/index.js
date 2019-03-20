@@ -11,10 +11,20 @@ type Props = {
   fetchMore: () => any,
   children?: string,
   automatic?: boolean,
+  topOffset?: number,
+  bottomOffset?: number,
 };
 
 const NextPageButtonWrapper = (props: Props) => {
-  const { isFetchingMore, fetchMore, href, children, automatic = true } = props;
+  const {
+    isFetchingMore,
+    fetchMore,
+    href,
+    children,
+    automatic = true,
+    topOffset = -250,
+    bottomOffset = -250,
+  } = props;
   const onChange = (isVisible: boolean) => {
     if (isFetchingMore || !isVisible) return;
     return fetchMore();
@@ -34,11 +44,11 @@ const NextPageButtonWrapper = (props: Props) => {
         delayedCall
         partialVisibility
         scrollCheck
-        intervalDelay={250}
+        intervalDelay={150}
         onChange={onChange}
         offset={{
-          top: -250,
-          bottom: -250,
+          top: topOffset,
+          bottom: bottomOffset,
         }}
       >
         <NextPageButton loading={isFetchingMore}>
