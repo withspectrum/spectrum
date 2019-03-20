@@ -105,13 +105,15 @@ export const getNotificationsOptions = {
           },
         }),
       refetch: () => refetch(),
-      subscribeToNewNotifications: () =>
+      subscribeToNewNotifications: (callback?: Function) =>
         subscribeToMore({
           document: subscribeToNewNotifications,
           updateQuery: (prev, { subscriptionData }) => {
             let newNotification =
               subscriptionData.data && subscriptionData.data.notificationAdded;
             if (!newNotification) return prev;
+
+            if (callback) callback(newNotification);
 
             const notificationNode = {
               ...newNotification,

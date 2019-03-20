@@ -18,6 +18,9 @@ import getNotifications, {
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import formatNotification from 'shared/notification-to-text';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type Props = {
@@ -30,14 +33,21 @@ type Props = {
   markAllNotificationsSeen: Function,
   dispatch: Function,
   match: Object,
+  currentUser?: Object,
 };
 
 const NotificationsTab = (props: Props) => {
-  const { count, data, isActive, match } = props;
+  const { count, data, isActive, match, currentUser } = props;
 
   // $FlowIssue Subscribe on mount
   React.useEffect(() => {
-    const unsubscribe = data.subscribeToNewNotifications();
+    const unsubscribe = data.subscribeToNewNotifications(notification => {
+      const { title } = formatNotification(
+        notification,
+        currentUser && currentUser.id
+      );
+      props.dispatch(addToastWithTimeout('success', title));
+    });
     return unsubscribe;
   }, []);
 
@@ -116,5 +126,6 @@ export default compose(
   getNotifications,
   markNotificationsSeenMutation,
   viewNetworkHandler,
-  withRouter
+  withRouter,
+  withCurrentUser
 )(NotificationsTab);
