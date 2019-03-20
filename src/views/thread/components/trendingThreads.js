@@ -7,6 +7,7 @@ import { getCommunityThreadConnectionQuery } from 'shared/graphql/queries/commun
 import { Container } from './desktopAppUpsell/style';
 import getThreadLink from 'src/helpers/get-thread-link';
 import theme from 'shared/theme';
+import { Truncate } from 'src/components/globals';
 import truncate from 'shared/truncate';
 import { SidebarSectionHeading } from 'src/views/community/style';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
@@ -35,6 +36,7 @@ const ThreadContent = styled.div`
 const ThreadTitle = styled.div`
   font-size: 15px;
   font-weight: 500;
+  ${Truncate};
 `;
 
 const ThreadMeta = styled.div`
@@ -60,7 +62,9 @@ const ThreadListItem = (props: ThreadListItemProps) => {
   return (
     <ThreadListItemContainer to={getThreadLink(thread)}>
       <ThreadContent>
-        <ThreadTitle>{truncate(content.title, 80)}</ThreadTitle>
+        <ThreadTitle title={content.title}>
+          {truncate(content.title, 80)}
+        </ThreadTitle>
         <ThreadMeta>
           @{thread.author.user.username} · {timestamp}
         </ThreadMeta>

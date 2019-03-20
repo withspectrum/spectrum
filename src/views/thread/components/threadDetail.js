@@ -9,7 +9,6 @@ import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
-import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
@@ -17,15 +16,15 @@ import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
 import ActionBar from './actionBar';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import ThreadEditInputs from 'src/components/composer/inputs';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { UserHoverProfile } from 'src/components/hoverProfile';
+import { UserListItem } from 'src/components/entities';
 import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
   ThreadSubtitle,
+  BylineContainer,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
@@ -411,6 +410,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
+    const { author } = thread;
 
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()
@@ -433,18 +433,23 @@ class ThreadDetailPure extends React.Component<Props, State> {
             />
           ) : (
             <React.Fragment>
-              <ErrorBoundary>
-                <ConditionalWrap
-                  condition={!!thread.author.user.username}
-                  wrap={() => (
-                    <UserHoverProfile username={thread.author.user.username}>
-                      <ThreadByline author={thread.author} />
-                    </UserHoverProfile>
-                  )}
-                >
-                  <ThreadByline author={thread.author} />
-                </ConditionalWrap>
-              </ErrorBoundary>
+              <BylineContainer>
+                <UserListItem
+                  userObject={author.user}
+                  name={author.user.name}
+                  username={author.user.username}
+                  profilePhoto={author.user.profilePhoto}
+                  isCurrentUser={
+                    currentUser && author.user.id === currentUser.id
+                  }
+                  isOnline={author.user.isOnline}
+                  avatarSize={40}
+                  showHoverProfile={false}
+                  messageButton={
+                    currentUser && author.user.id !== currentUser.id
+                  }
+                />
+              </BylineContainer>
 
               <div style={{ height: '16px' }} />
 

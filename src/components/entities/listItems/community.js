@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { CommunityAvatar } from 'src/components/avatar';
 import Icon from 'src/components/icon';
 import {
-  Row,
+  RowWithAvatar,
   CommunityAvatarContainer,
   Content,
   Label,
@@ -33,7 +33,7 @@ export const CommunityListItem = (props: Props) => {
 
   return (
     <Link to={`/${communityObject.slug}`}>
-      <Row avatarSize={avatarSize}>
+      <RowWithAvatar>
         {profilePhoto && (
           <CommunityAvatarContainer>
             <CommunityAvatar
@@ -46,7 +46,7 @@ export const CommunityListItem = (props: Props) => {
         )}
 
         <Content>
-          {name && <Label>{name}</Label>}
+          {name && <Label title={name}>{name}</Label>}
 
           {description && <Description>{description}</Description>}
         </Content>
@@ -56,7 +56,7 @@ export const CommunityListItem = (props: Props) => {
 
           {children}
         </Actions>
-      </Row>
+      </RowWithAvatar>
     </Link>
   );
 };

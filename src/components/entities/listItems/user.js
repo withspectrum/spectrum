@@ -12,7 +12,7 @@ import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import { OutlineButton } from 'src/components/button';
 import {
-  Row,
+  RowWithAvatar,
   UserAvatarContainer,
   Content,
   Label,
@@ -73,7 +73,7 @@ const User = (props: Props) => {
         <CardLink to={`/users/${userObject.username}`}>{children}</CardLink>
       )}
     >
-      <Row onClick={() => onClick(userObject)}>
+      <RowWithAvatar onClick={() => onClick(userObject)}>
         {profilePhoto && (
           <UserAvatarContainer>
             <UserAvatar
@@ -87,13 +87,13 @@ const User = (props: Props) => {
 
         <Content>
           {name && (
-            <Label>
+            <Label title={name}>
               {name}
               {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
             </Label>
           )}
 
-          {username && <Sublabel>@{username}</Sublabel>}
+          {username && <Sublabel title={username}>@{username}</Sublabel>}
 
           {typeof reputation === 'number' && (
             // $FlowIssue
@@ -113,7 +113,7 @@ const User = (props: Props) => {
 
           {children}
         </Actions>
-      </Row>
+      </RowWithAvatar>
     </ConditionalWrap>
   );
 };

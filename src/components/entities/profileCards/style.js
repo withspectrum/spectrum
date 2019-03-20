@@ -1,6 +1,7 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
+import { Truncate } from 'src/components/globals';
 import { MEDIA_BREAK, SECONDARY_COLUMN_WIDTH } from 'src/components/layout';
 
 export const ProfileContainer = styled.div`
@@ -88,6 +89,7 @@ export const Name = styled.h1`
   font-weight: 800;
   color: ${theme.text.default};
   word-break: break-word;
+  line-height: 1.2;
 `;
 
 export const Description = styled.p`
@@ -158,6 +160,7 @@ export const ChannelCommunityName = styled.div`
   font-weight: 500;
   color: ${theme.text.alt};
   margin-left: 16px;
+  ${Truncate};
 `;
 
 export const Username = styled.div`
@@ -165,4 +168,6 @@ export const Username = styled.div`
   font-weight: 500;
   color: ${theme.text.alt};
   margin-bottom: 4px;
+  word-break: break-all;
+  margin-top: 2px;
 `;

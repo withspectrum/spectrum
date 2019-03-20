@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
-import { MEDIA_BREAK } from 'src/components/layout';
+import { MEDIA_BREAK, PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,
@@ -801,11 +801,12 @@ export const StickyHeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 2px ${props => hexa(props.theme.bg.reverse, 0.08)};
+  border-bottom: 1px solid ${theme.bg.border};
   flex: 0 0 64px;
   align-self: stretch;
   background: ${theme.bg.wash};
   padding-right: 16px;
+  max-width: ${PRIMARY_COLUMN_WIDTH - 2}px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
@@ -818,6 +819,7 @@ export const Stretch = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  position: relative;
 `;
 
 export const LockedWrapper = styled.div`
@@ -883,4 +885,11 @@ export const TopButton = styled.div`
 `;
 export const BottomButton = styled(TopButton)`
   border-top: 1px solid ${theme.bg.border};
+`;
+
+export const BylineContainer = styled.div`
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-right: -16px;
+  margin-top: -16px;
 `;

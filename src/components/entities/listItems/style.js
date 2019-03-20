@@ -10,13 +10,32 @@ export const CardLink = styled(Link)`
 `;
 
 export const Row = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 12px;
-  flex: 1 1 auto;
+  padding: 12px 16px;
+  align-items: center;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-areas: 'content actions';
+  grid-template-columns: 1fr auto;
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
+  grid-gap: 16px;
+
+  &:hover {
+    background: ${theme.bg.wash};
+    cursor: pointer;
+  }
+`;
+
+export const RowWithAvatar = styled.div`
+  padding: 12px 16px;
+  align-items: center;
+  display: grid;
+  grid-template-areas: 'avatar content actions';
+  grid-template-columns: min-content 1fr auto;
+  grid-template-rows: auto;
+  background: ${theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.divider};
+  grid-gap: 16px;
 
   &:hover {
     background: ${theme.bg.wash};
@@ -25,24 +44,20 @@ export const Row = styled.div`
 `;
 
 export const UserAvatarContainer = styled.div`
-  margin-right: 12px;
   height: 40px;
+  grid-area: avatar;
+  align-self: flex-start;
 `;
 
 export const CommunityAvatarContainer = styled.div`
-  margin-right: 12px;
   height: 32px;
+  grid-area: avatar;
+  align-self: flex-start;
 `;
 
 export const Content = styled.div`
-  display: flex;
-  flex: 1 1 auto;
-  max-width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-self: center;
-  width: 100%;
-  padding-right: 16px;
+  grid-area: content;
+  display: grid;
 `;
 
 export const Label = styled.div`
@@ -80,13 +95,14 @@ export const Description = styled.p`
 `;
 
 export const Actions = styled.div`
+  grid-area: actions;
   display: flex;
   flex-direction: column;
-  align-self: center;
-  align-items: center;
-  justify-content: center;
+  align-self: flex-start;
+  justify-content: flex-start;
   position: relative;
   z-index: 10;
   color: ${theme.text.alt};
-  flex: 1 0 auto;
+  flex: 1;
+  padding-top: 4px;
 `;
