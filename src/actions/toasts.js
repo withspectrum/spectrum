@@ -1,6 +1,6 @@
 // @flow
 import type { Dispatch } from 'redux';
-type Toasts = 'success' | 'error' | 'neutral';
+type Toasts = 'success' | 'error' | 'neutral' | 'notification';
 
 const addToast = (
   id: number,
