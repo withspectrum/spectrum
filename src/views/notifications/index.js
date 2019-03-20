@@ -2,7 +2,6 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
@@ -19,7 +18,6 @@ import { PrivateCommunityRequestApproved } from './components/privateCommunityRe
 import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
 import Head from 'src/components/head';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { LoadingThread } from 'src/components/loading';
 import { sortByDate } from 'src/helpers/utils';
 import WebPushManager from 'src/helpers/web-push-manager';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -42,6 +40,7 @@ import { ViewGrid } from 'src/components/layout';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { StyledSingleColumn } from './style';
 import { updateNotificationsCount } from 'src/actions/notifications';
+import NextPageButton from 'src/components/nextPageButton';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -179,7 +178,14 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentUser, data, isLoading, hasError } = this.props;
+    const {
+      currentUser,
+      data,
+      isLoading,
+      hasError,
+      isFetchingMore,
+    } = this.props;
+
     const { title, description } = generateMetaInfo({
       type: 'notifications',
     });
@@ -207,141 +213,145 @@ class NotificationsPure extends React.Component<Props, State> {
                     loading={this.state.webPushPromptLoading}
                   />
                 )}
-                <InfiniteList
-                  loadMore={data.fetchMore}
-                  hasMore={data.hasNextPage}
-                  loader={<LoadingThread key={0} />}
-                >
-                  {notifications.map(notification => {
-                    switch (notification.event) {
-                      case 'MESSAGE_CREATED': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <NewMessageNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'REACTION_CREATED': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <NewReactionNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'THREAD_REACTION_CREATED': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <NewThreadReactionNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'CHANNEL_CREATED': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <NewChannelNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'USER_JOINED_COMMUNITY': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <NewUserInCommunityNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'THREAD_CREATED': {
-                        // deprecated - we no longer show this notification type in-app
-                        return null;
-                      }
-                      case 'COMMUNITY_INVITE': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <CommunityInviteNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'MENTION_MESSAGE': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <MentionMessageNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'MENTION_THREAD': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <MentionThreadNotification
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'PRIVATE_CHANNEL_REQUEST_SENT': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <PrivateChannelRequestSent
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
-                        return (
-                          <ErrorBoundary key={notification.id}>
-                            <PrivateChannelRequestApproved
-                              notification={notification}
-                              currentUser={currentUser}
-                            />
-                          </ErrorBoundary>
-                        );
-                      }
-                      case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
-                        return (
-                          <PrivateCommunityRequestSent
-                            key={notification.id}
+                {notifications.map(notification => {
+                  switch (notification.event) {
+                    case 'MESSAGE_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewMessageNotification
                             notification={notification}
                             currentUser={currentUser}
                           />
-                        );
-                      }
-                      case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
-                        return (
-                          <PrivateCommunityRequestApproved
-                            key={notification.id}
-                            notification={notification}
-                            currentUser={currentUser}
-                          />
-                        );
-                      }
-                      default: {
-                        return null;
-                      }
+                        </ErrorBoundary>
+                      );
                     }
-                  })}
-                </InfiniteList>
+                    case 'REACTION_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewReactionNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'THREAD_REACTION_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewThreadReactionNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'CHANNEL_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewChannelNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'USER_JOINED_COMMUNITY': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewUserInCommunityNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'THREAD_CREATED': {
+                      // deprecated - we no longer show this notification type in-app
+                      return null;
+                    }
+                    case 'COMMUNITY_INVITE': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <CommunityInviteNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'MENTION_MESSAGE': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <MentionMessageNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'MENTION_THREAD': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <MentionThreadNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_CHANNEL_REQUEST_SENT': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateChannelRequestSent
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateChannelRequestApproved
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                      return (
+                        <PrivateCommunityRequestSent
+                          key={notification.id}
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      );
+                    }
+                    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+                      return (
+                        <PrivateCommunityRequestApproved
+                          key={notification.id}
+                          notification={notification}
+                          currentUser={currentUser}
+                        />
+                      );
+                    }
+                    default: {
+                      return null;
+                    }
+                  }
+                })}
+
+                {data.hasNextPage && (
+                  <NextPageButton
+                    isFetchingMore={isFetchingMore}
+                    fetchMore={data.fetchMore}
+                    bottomOffset={-100}
+                  >
+                    Load more notifications
+                  </NextPageButton>
+                )}
               </div>
             </StyledSingleColumn>
           </ViewGrid>
