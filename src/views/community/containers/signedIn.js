@@ -45,7 +45,12 @@ const Component = (props: Props) => {
 
   const previousCommunity = usePrevious(community);
   useEffect(() => {
-    if (!community.id || !currentUser) return;
+    if (
+      !community.id ||
+      !currentUser ||
+      !community.communityPermissions.isMember
+    )
+      return;
 
     if (
       previousCommunity &&
