@@ -42,7 +42,7 @@ const DirectMessagesTab = (props: Props) => {
         notification,
         currentUser && currentUser.id
       );
-      props.dispatch(addToastWithTimeout('success', `${title}\n\n${body}`));
+      props.dispatch(addToastWithTimeout('success', title));
     });
     return unsubscribe;
   }, []);
