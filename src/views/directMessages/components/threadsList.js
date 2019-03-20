@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import VisibilitySensor from 'react-visibility-sensor';
 import DirectMessageListItem from './messageThreadListItem';
 import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
@@ -107,8 +108,13 @@ class ThreadsList extends React.Component<Props, State> {
     return dmData.fetchMore();
   };
 
+  onLoadMoreVisible = (isVisible: boolean) => {
+    if (this.props.isFetchingMore || !isVisible) return;
+    return this.paginate();
+  };
+
   render() {
-    const { currentUser, dmData, activeThreadId } = this.props;
+    const { currentUser, dmData, activeThreadId, isFetchingMore } = this.props;
     const { scrollElement } = this.state;
 
     if (!dmData) return null;
@@ -185,6 +191,22 @@ class ThreadsList extends React.Component<Props, State> {
       );
     }
 
+    const LoadingDMWithVisibility = () => (
+      <VisibilitySensor
+        active={!isFetchingMore}
+        delayedCall
+        partialVisibility
+        scrollCheck
+        intervalDelay={250}
+        onChange={this.onLoadMoreVisible}
+        offset={{
+          bottom: -250,
+        }}
+      >
+        <LoadingDM key={0} />
+      </VisibilitySensor>
+    );
+
     return (
       <React.Fragment>
         <DesktopTitlebar
@@ -200,9 +222,8 @@ class ThreadsList extends React.Component<Props, State> {
         />
         <ThreadsListScrollContainer id={'scroller-for-dm-threads'}>
           <InfiniteList
-            loadMore={this.paginate}
             hasMore={hasNextPage}
-            loader={<LoadingDM key={0} />}
+            loader={<LoadingDMWithVisibility key={0} />}
             getScrollParent={() => scrollElement}
           >
             {uniqueThreads.map(thread => {
