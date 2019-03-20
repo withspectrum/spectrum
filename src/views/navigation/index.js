@@ -28,15 +28,14 @@ import { NavigationContext } from 'src/routes';
 type Props = {
   history: History,
   currentUser?: Object,
-  currentUserIsLoading: boolean,
+  isLoadingCurrentUser: boolean,
 };
 
 const Navigation = (props: Props) => {
-  const { currentUser, history, currentUserIsLoading } = props;
+  const { currentUser, history, isLoadingCurrentUser } = props;
   const isMarketingPage = isViewingMarketingPage(history, currentUser);
   if (isMarketingPage) return null;
-
-  if (!currentUserIsLoading && !currentUser) {
+  if (!isLoadingCurrentUser && !currentUser) {
     return (
       <NavigationContext.Consumer>
         {({ navigationIsOpen, setNavigationIsOpen }) => (

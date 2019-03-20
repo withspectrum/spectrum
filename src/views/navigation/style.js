@@ -91,7 +91,7 @@ export const NavigationGrid = styled.div`
 
   ${isDesktopApp() &&
     css`
-      padding-top: 48px;
+      padding-top: 40px;
     `}
 
   &::-webkit-scrollbar {
@@ -203,6 +203,7 @@ export const Shortcut = styled.span`
   font-weight: 500;
   margin-top: 2px;
   text-align: center;
+  margin-bottom: -4px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
