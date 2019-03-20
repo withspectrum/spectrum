@@ -17,7 +17,7 @@ export const ViewContent = styled.div`
   justify-content: flex-end;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    min-height: calc(100vh - 58px);
+    min-height: calc(100vh - 76px);
   }
 `;
 

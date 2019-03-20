@@ -810,7 +810,7 @@ export const StickyHeaderContainer = styled.div`
 `;
 
 export const Stretch = styled.div`
-  min-height: calc(100vh - 58px);
+  min-height: calc(100vh - 76px);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     /* account for fixed position chat input */
