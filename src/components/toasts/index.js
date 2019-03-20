@@ -6,6 +6,7 @@ import {
   ErrorToast,
   SuccessToast,
   NeutralToast,
+  NotificationToast,
 } from './style';
 
 const ToastsPure = ({ toasts }): ?React$Element<any> => {
@@ -49,6 +50,13 @@ const ToastsPure = ({ toasts }): ?React$Element<any> => {
               >
                 {message}
               </NeutralToast>
+            );
+          }
+          case 'notification': {
+            return (
+              <NotificationToast key={id} timeout={timeout}>
+                {message}
+              </NotificationToast>
             );
           }
           default: {

@@ -46,7 +46,10 @@ const NotificationsTab = (props: Props) => {
         notification,
         currentUser && currentUser.id
       );
-      props.dispatch(addToastWithTimeout('success', title));
+      // TODO @mxstbr - make this clickable and not show up if the user
+      // is currently viewing the thing the notification is about - mainly
+      // thread view and new user joins on community
+      // props.dispatch(addToastWithTimeout('notification', title));
     });
     return unsubscribe;
   }, []);
