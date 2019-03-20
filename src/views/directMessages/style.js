@@ -10,10 +10,10 @@ export const View = styled.main`
 `;
 
 export const ViewContent = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  flex: 1;
 `;
 
 export const MessagesList = styled.div`
@@ -30,9 +30,9 @@ export const MessagesList = styled.div`
 
 export const MessagesContainer = styled.div`
   display: flex;
-  height: 100%;
   flex-direction: column;
   background: ${theme.bg.default};
+  flex: 1;
 `;
 
 export const NoThreads = styled(MessagesContainer)`

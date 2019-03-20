@@ -146,7 +146,7 @@ class ExistingThread extends React.Component<Props> {
           .map(cleanSuggestionUserObject)
           .filter(user => user && user.username !== currentUser.username);
         return (
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}
