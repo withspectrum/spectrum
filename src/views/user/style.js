@@ -79,34 +79,6 @@ export const SearchInput = styled.input`
   }
 `;
 
-export const Grid = styled.main`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: 240px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  max-width: 1280px;
-  min-height: 100vh;
-  background-color: ${theme.bg.default};
-  box-shadow: inset 1px 0 0 ${theme.bg.border},
-    inset -1px 0 0 ${theme.bg.border};
-
-  @media (max-width: 1028px) {
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: 160px 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
-  }
-`;
-
 const Column = styled.div`
   display: flex;
   flex-direction: column;

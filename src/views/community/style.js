@@ -164,40 +164,6 @@ export const NameWarn = styled.div`
   ${Truncate};
 `;
 
-export const WatercoolerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const WatercoolerMessages = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    overflow-x: hidden;
-  }
-`;
-
-export const WatercoolerChatInput = styled.div`
-  position: sticky;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`;
-
-export const PreviousMessagesLoading = styled.div`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  background: ${theme.bg.default};
-  color: ${theme.text.secondary};
-  min-height: 48px;
-`;
-
 export const List = styled.div`
   display: flex;
   flex-direction: column;

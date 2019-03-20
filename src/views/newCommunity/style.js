@@ -17,7 +17,7 @@ export const Container = styled(Card)`
   border-right: 1px solid ${theme.bg.border};
   max-width: ${MEDIA_BREAK}px;
   height: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   min-height: 160px;
   display: flex;
 

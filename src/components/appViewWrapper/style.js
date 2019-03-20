@@ -8,7 +8,6 @@ import {
 export const StyledAppViewWrapper = styled.div`
   display: grid;
   width: 100%;
-  min-height: 100vh;
   grid-template-columns: ${props =>
     props.isTwoColumn ? `${NAVBAR_WIDTH}px 1fr` : '1fr'};
   grid-template-areas: ${props =>
