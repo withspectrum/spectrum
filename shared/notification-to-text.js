@@ -128,9 +128,7 @@ const formatNotification = (
       );
 
       if (notification.context.type === 'DIRECT_MESSAGE_THREAD') {
-        title = `New ${
-          entities.length > 1 ? 'replies' : 'reply'
-        } in a direct message thread`;
+        title = `${actors} replied in your direct message thread`;
         href = `/messages/${notification.context.id}`;
       } else {
         title = `${notification.context.payload.content.title} (${
