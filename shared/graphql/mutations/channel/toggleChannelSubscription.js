@@ -29,7 +29,7 @@ export const toggleChannelSubscriptionMutation = gql`
 
 const toggleChannelSubscriptionOptions = {
   options: {
-    refetchQueries: ['getCurrentUserCommunityConnection'],
+    refetchQueries: ['getCommunityThreadConnection'],
   },
   props: ({ mutate }) => ({
     toggleChannelSubscription: ({ channelId }: { channelId: string }) =>
