@@ -332,6 +332,8 @@ export const Line = styled.pre`
 `;
 
 export const Paragraph = styled.p`
+  white-space: pre-wrap;
+  
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 8px;
   }
