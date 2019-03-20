@@ -18,6 +18,7 @@ import {
   Label,
   BlackDot,
 } from './style';
+import usePrevious from 'src/hooks/usePrevious';
 
 type Props = {
   data: {
@@ -27,6 +28,47 @@ type Props = {
   sidenavIsOpen: boolean,
   setNavigationIsOpen: Function,
   subscribeToUpdatedCommunities: Function,
+};
+
+const CommunityListItem = props => {
+  const { isActive, community, sidenavIsOpen, index, onClick } = props;
+  // NOTE(@mxstbr): This is a really hacky way to ensure the "new activity" dot
+  // does not show up when switching from a community that new activity was in
+  // while you were looking at it.
+  const previousActive = usePrevious(usePrevious(usePrevious(isActive)));
+
+  const appControlSymbol = '⌘';
+
+  return (
+    <Tooltip content={community.name} placement={'left'}>
+      <AvatarGrid isActive={isActive}>
+        <AvatarLink
+          to={`/${community.slug}?tab=${
+            community.watercoolerId ? 'chat' : 'posts'
+          }`}
+          onClick={onClick}
+          {...getAccessibilityActiveState(isActive)}
+        >
+          <Avatar src={community.profilePhoto} size={sidenavIsOpen ? 32 : 36} />
+          {isActive === false &&
+            previousActive === false &&
+            community.lastActive &&
+            community.communityPermissions.lastSeen &&
+            new Date(community.lastActive) >
+              new Date(community.communityPermissions.lastSeen) && <BlackDot />}
+
+          <Label>{community.name}</Label>
+
+          {index < 9 && isDesktopApp() && (
+            <Shortcut>
+              {appControlSymbol}
+              {index + 1}
+            </Shortcut>
+          )}
+        </AvatarLink>
+      </AvatarGrid>
+    </Tooltip>
+  );
 };
 
 const CommunityList = (props: Props) => {
@@ -101,8 +143,6 @@ const CommunityList = (props: Props) => {
       window.removeEventListener('keydown', handleCommunitySwitch, false);
   }, []);
 
-  const appControlSymbol = '⌘';
-
   return sorted.map((community, index) => {
     if (!community) return null;
 
@@ -119,38 +159,13 @@ const CommunityList = (props: Props) => {
             match.params.communitySlug === community.slug;
 
           return (
-            <Tooltip content={community.name} placement={'left'}>
-              <AvatarGrid isActive={isActive}>
-                <AvatarLink
-                  to={`/${community.slug}?tab=${
-                    community.watercoolerId ? 'chat' : 'posts'
-                  }`}
-                  onClick={() => setNavigationIsOpen(false)}
-                  {...getAccessibilityActiveState(isActive)}
-                >
-                  <Avatar
-                    src={community.profilePhoto}
-                    size={sidenavIsOpen ? 32 : 36}
-                  />
-                  {!isActive &&
-                    community.lastActive &&
-                    community.communityPermissions.lastSeen &&
-                    new Date(community.lastActive) >
-                      new Date(community.communityPermissions.lastSeen) && (
-                      <BlackDot />
-                    )}
-
-                  <Label>{community.name}</Label>
-
-                  {index < 9 && isDesktopApp() && (
-                    <Shortcut>
-                      {appControlSymbol}
-                      {index + 1}
-                    </Shortcut>
-                  )}
-                </AvatarLink>
-              </AvatarGrid>
-            </Tooltip>
+            <CommunityListItem
+              isActive={isActive}
+              community={community}
+              index={index}
+              sidenavIsOpen={sidenavIsOpen}
+              onClick={() => setNavigationIsOpen(false)}
+            />
           );
         }}
       </Route>

@@ -24,6 +24,7 @@ import {
   SecondaryColumn,
 } from 'src/components/layout';
 import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
+import usePrevious from 'src/hooks/usePrevious';
 
 type Props = {
   community: CommunityInfoType,
@@ -32,14 +33,6 @@ type Props = {
   location: Location,
   setCommunityLastSeen: Function,
 };
-
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
 
 const Component = (props: Props) => {
   const {
