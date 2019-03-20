@@ -151,3 +151,8 @@ export const MetadataContainer = styled.div`
     margin-left: 8px;
   }
 `;
+
+export const FeedsContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+`;

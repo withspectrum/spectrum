@@ -123,7 +123,8 @@ export const SidebarSectionHeading = styled.div`
 `;
 
 export const FeedsContainer = styled.section`
-  min-height: calc(100vh);
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Row = styled.div`
@@ -276,5 +277,24 @@ export const SearchInput = styled.input`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
+  }
+`;
+
+export const FeedsStretch = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  display: grid;
+  grid-template-columns: minmax(min-content, 1fr);
+  grid-template-rows: 1fr;
+  width: 100%;
+  align-items: flex-end;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* account for fixed position chat input */
+    padding-bottom: 56px;
+    grid-template-rows: 1fr;
   }
 `;

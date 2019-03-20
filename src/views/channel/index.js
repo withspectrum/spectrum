@@ -36,6 +36,7 @@ import {
   SecondaryColumn,
 } from 'src/components/layout';
 import { SidebarSection } from 'src/views/community/style';
+import { FeedsContainer } from './style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -317,55 +318,57 @@ class ChannelView extends React.Component<Props> {
               </SecondaryColumn>
 
               <PrimaryColumn>
-                <SegmentedControl>
-                  <Segment
-                    onClick={() => this.handleSegmentClick('posts')}
-                    isActive={selectedView === 'posts'}
-                    data-cy="channel-posts-tab"
-                  >
-                    Posts
-                  </Segment>
+                <FeedsContainer>
+                  <SegmentedControl>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('posts')}
+                      isActive={selectedView === 'posts'}
+                      data-cy="channel-posts-tab"
+                    >
+                      Posts
+                    </Segment>
 
-                  <Segment
-                    onClick={() => this.handleSegmentClick('members')}
-                    isActive={selectedView === 'members'}
-                    data-cy="channel-members-tab"
-                  >
-                    Members
-                  </Segment>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('members')}
+                      isActive={selectedView === 'members'}
+                      data-cy="channel-members-tab"
+                    >
+                      Members
+                    </Segment>
 
-                  <Segment
-                    onClick={() => this.handleSegmentClick('search')}
-                    isActive={selectedView === 'search'}
-                    data-cy="channel-search-tab"
-                  >
-                    Search
-                  </Segment>
-                </SegmentedControl>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('search')}
+                      isActive={selectedView === 'search'}
+                      data-cy="channel-search-tab"
+                    >
+                      Search
+                    </Segment>
+                  </SegmentedControl>
 
-                {// thread list
-                selectedView === 'posts' && (
-                  <ThreadFeedWithData
-                    viewContext="channelProfile"
-                    id={channel.id}
-                    currentUser={isLoggedIn}
-                    channelId={channel.id}
-                  />
-                )}
+                  {// thread list
+                  selectedView === 'posts' && (
+                    <ThreadFeedWithData
+                      viewContext="channelProfile"
+                      id={channel.id}
+                      currentUser={isLoggedIn}
+                      channelId={channel.id}
+                    />
+                  )}
 
-                {//search
-                selectedView === 'search' && (
-                  <ErrorBoundary>
-                    <Search channel={channel} />
-                  </ErrorBoundary>
-                )}
+                  {//search
+                  selectedView === 'search' && (
+                    <ErrorBoundary>
+                      <Search channel={channel} />
+                    </ErrorBoundary>
+                  )}
 
-                {// members grid
-                selectedView === 'members' && (
-                  <ErrorBoundary>
-                    <MembersList id={channel.id} />
-                  </ErrorBoundary>
-                )}
+                  {// members grid
+                  selectedView === 'members' && (
+                    <ErrorBoundary>
+                      <MembersList id={channel.id} />
+                    </ErrorBoundary>
+                  )}
+                </FeedsContainer>
               </PrimaryColumn>
             </SecondaryPrimaryColumnGrid>
           </ViewGrid>

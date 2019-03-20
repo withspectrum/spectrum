@@ -15,6 +15,7 @@ import ChatMessages from 'src/components/messageGroup';
 import { Loading } from 'src/components/loading';
 import NullMessages from './nullMessages';
 import type { Location } from 'react-router';
+import { NullMessagesWrapper } from '../style';
 
 type Props = {
   // Used by getThreadMessages query
@@ -171,7 +172,12 @@ class Messages extends React.Component<Props> {
   render() {
     const { data, isLoading, isFetchingMore, hasError } = this.props;
 
-    if (isLoading) return <Loading style={{ padding: '32px' }} />;
+    if (isLoading)
+      return (
+        <NullMessagesWrapper>
+          <Loading />
+        </NullMessagesWrapper>
+      );
 
     const { thread } = data;
     if (!thread || hasError) return null;

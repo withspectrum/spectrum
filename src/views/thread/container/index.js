@@ -211,44 +211,44 @@ const ThreadContainer = (props: Props) => {
                 isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
                 onMessagesLoaded={updateMentionSuggestions}
               />
+
+              {canChat && (
+                <ChatInputWrapper>
+                  <ChatInput
+                    threadType="story"
+                    threadId={thread.id}
+                    participants={mentionSuggestions}
+                  />
+                </ChatInputWrapper>
+              )}
+
+              {!canChat && !isLocked && (
+                <ChatInputWrapper>
+                  <JoinCommunity
+                    community={community}
+                    render={({ isLoading }) => (
+                      <LockedMessages>
+                        <PrimaryOutlineButton
+                          isLoading={isLoading}
+                          icon={'door-enter'}
+                        >
+                          {isLoading ? 'Joining...' : 'Join community to chat'}
+                        </PrimaryOutlineButton>
+                      </LockedMessages>
+                    )}
+                  />
+                </ChatInputWrapper>
+              )}
+
+              {isLocked && (
+                <ChatInputWrapper>
+                  <LockedMessages>
+                    <Icon glyph={'private'} size={24} />
+                    <LockedText>This conversation has been locked</LockedText>
+                  </LockedMessages>
+                </ChatInputWrapper>
+              )}
             </Stretch>
-
-            {canChat && (
-              <ChatInputWrapper>
-                <ChatInput
-                  threadType="story"
-                  threadId={thread.id}
-                  participants={mentionSuggestions}
-                />
-              </ChatInputWrapper>
-            )}
-
-            {!canChat && !isLocked && (
-              <ChatInputWrapper>
-                <JoinCommunity
-                  community={community}
-                  render={({ isLoading }) => (
-                    <LockedMessages>
-                      <PrimaryOutlineButton
-                        isLoading={isLoading}
-                        icon={'door-enter'}
-                      >
-                        {isLoading ? 'Joining...' : 'Join community to chat'}
-                      </PrimaryOutlineButton>
-                    </LockedMessages>
-                  )}
-                />
-              </ChatInputWrapper>
-            )}
-
-            {isLocked && (
-              <ChatInputWrapper>
-                <LockedMessages>
-                  <Icon glyph={'private'} size={24} />
-                  <LockedText>This conversation has been locked</LockedText>
-                </LockedMessages>
-              </ChatInputWrapper>
-            )}
           </PrimaryColumn>
         </SecondaryPrimaryColumnGrid>
       </ViewGrid>

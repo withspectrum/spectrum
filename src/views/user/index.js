@@ -46,6 +46,7 @@ import {
 import { PrimaryOutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
+import { FeedsContainer } from './style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -241,75 +242,78 @@ class UserView extends React.Component<Props, State> {
                 </SidebarSection>
               </SecondaryColumn>
               <PrimaryColumn>
-                <SegmentedControl>
-                  <Segment
-                    onClick={() => this.handleSegmentClick('posts')}
-                    isActive={selectedView === 'posts'}
-                    data-cy="user-posts-tab"
-                  >
-                    Posts
-                  </Segment>
+                <FeedsContainer>
+                  <SegmentedControl>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('posts')}
+                      isActive={selectedView === 'posts'}
+                      data-cy="user-posts-tab"
+                    >
+                      Posts
+                    </Segment>
 
-                  <Segment
-                    onClick={() => this.handleSegmentClick('activity')}
-                    isActive={selectedView === 'activity'}
-                    data-cy="user-activity-tab"
-                  >
-                    Activity
-                  </Segment>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('activity')}
+                      isActive={selectedView === 'activity'}
+                      data-cy="user-activity-tab"
+                    >
+                      Activity
+                    </Segment>
 
-                  <Segment
-                    onClick={() => this.handleSegmentClick('search')}
-                    isActive={selectedView === 'search'}
-                    data-cy="user-search-tab"
-                  >
-                    Search
-                  </Segment>
-                </SegmentedControl>
+                    <Segment
+                      onClick={() => this.handleSegmentClick('search')}
+                      isActive={selectedView === 'search'}
+                      data-cy="user-search-tab"
+                    >
+                      Search
+                    </Segment>
+                  </SegmentedControl>
 
-                {hasThreads &&
-                  (selectedView === 'posts' || selectedView === 'activity') && (
-                    <Feed
-                      userId={user.id}
-                      username={username}
-                      viewContext={
-                        selectedView === 'activity'
-                          ? 'userProfileReplies'
-                          : 'userProfile'
-                      }
-                      hasNoThreads={this.hasNoThreads}
-                      hasThreads={this.hasThreads}
-                      kind={
-                        selectedView === 'posts' ? 'creator' : 'participant'
-                      }
-                      id={user.id}
-                    />
+                  {hasThreads &&
+                    (selectedView === 'posts' ||
+                      selectedView === 'activity') && (
+                      <Feed
+                        userId={user.id}
+                        username={username}
+                        viewContext={
+                          selectedView === 'activity'
+                            ? 'userProfileReplies'
+                            : 'userProfile'
+                        }
+                        hasNoThreads={this.hasNoThreads}
+                        hasThreads={this.hasThreads}
+                        kind={
+                          selectedView === 'posts' ? 'creator' : 'participant'
+                        }
+                        id={user.id}
+                      />
+                    )}
+
+                  {selectedView === 'search' && <Search user={user} />}
+
+                  {!hasThreads && (
+                    <NullColumn>
+                      <span>
+                        <NullColumnHeading>No posts yet</NullColumnHeading>
+                        <NullColumnSubheading>
+                          Posts will show up here as they are published and when
+                          conversations are joined.
+                        </NullColumnSubheading>
+                        {isCurrentUser && (
+                          <PrimaryOutlineButton
+                            to={{
+                              pathname: '/new/thread',
+                              state: { modal: true },
+                            }}
+                          >
+                            <Icon glyph={'post'} size={24} />
+                            New post
+                          </PrimaryOutlineButton>
+                        )}
+                      </span>
+                    </NullColumn>
                   )}
-
-                {selectedView === 'search' && <Search user={user} />}
-
-                {!hasThreads && (
-                  <NullColumn>
-                    <span>
-                      <NullColumnHeading>No posts yet</NullColumnHeading>
-                      <NullColumnSubheading>
-                        Posts will show up here as they are published and when
-                        conversations are joined.
-                      </NullColumnSubheading>
-                      {isCurrentUser && (
-                        <PrimaryOutlineButton
-                          to={{
-                            pathname: '/new/thread',
-                            state: { modal: true },
-                          }}
-                        >
-                          <Icon glyph={'post'} size={24} />
-                          New post
-                        </PrimaryOutlineButton>
-                      )}
-                    </span>
-                  </NullColumn>
-                )}
+                </FeedsContainer>
               </PrimaryColumn>
             </SecondaryPrimaryColumnGrid>
           </ViewGrid>

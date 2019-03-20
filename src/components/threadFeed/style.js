@@ -54,19 +54,22 @@ export const Divider = styled.div`
 `;
 
 export const NullColumn = styled.div`
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: stretch;
   text-align: center;
   flex-direction: column;
   padding: 24px;
   background: ${theme.bg.default};
-  border-bottom: 1px solid ${theme.bg.border};
-  min-height: calc(100vh - 56px);
+  flex: 1;
 
   button {
     flex: 1;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border-bottom: 1px solid ${theme.bg.border};
   }
 `;
 

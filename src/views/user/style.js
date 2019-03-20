@@ -158,3 +158,8 @@ export const ColumnHeading = styled.div`
   margin-top: 24px;
   border-bottom: 2px solid ${theme.bg.border};
 `;
+
+export const FeedsContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+`;

@@ -142,9 +142,11 @@ export const ThreadWrapper = styled(FlexCol)`
   position: relative;
   z-index: 4;
   background: ${theme.bg.default};
+  width: 100%;
+  max-width: 100%;
   /* manually nudge up 60px to cover the sliding header in the thread view */
-  top: -60px;
-  margin-bottom: -60px;
+  top: -70px;
+  margin-bottom: -70px;
 
   ${props =>
     props.isEditing &&
@@ -326,6 +328,7 @@ export const AuthorUsername = styled.span`
   font-weight: 400;
   margin-right: 4px;
   align-self: flex-end;
+  word-break: break-all;
 `;
 
 export const ReputationRow = styled.div``;
@@ -810,12 +813,11 @@ export const StickyHeaderContainer = styled.div`
 `;
 
 export const Stretch = styled.div`
-  min-height: calc(100vh - 76px);
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    /* account for fixed position chat input */
-    padding-bottom: 72px;
-  }
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export const LockedWrapper = styled.div`

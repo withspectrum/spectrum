@@ -9,6 +9,7 @@ export const HasNextPage = styled(Link)`
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  width: 100%;
 `;
 
 export const NextPageButton = styled.span`
@@ -25,6 +26,7 @@ export const NextPageButton = styled.span`
   font-weight: 500;
   position: relative;
   min-height: 40px;
+  width: 100%;
 
   &:hover {
     color: ${theme.brand.default};

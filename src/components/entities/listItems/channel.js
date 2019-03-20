@@ -69,8 +69,7 @@ const Channel = (props: Props) => {
                 {channel.isPrivate && (
                   <Icon glyph="private-outline" size={14} />
                 )}
-
-                {name}
+                # {name}
               </Label>
             )}
 

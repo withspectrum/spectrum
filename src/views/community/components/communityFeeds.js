@@ -10,14 +10,13 @@ import { TeamMembersList } from './teamMembersList';
 import { MobileCommunityInfoActions } from './mobileCommunityInfoActions';
 import { ChannelsList } from './channelsList';
 import { CommunityMeta } from 'src/components/entities/profileCards/components/communityMeta';
-import { Stretch } from 'src/views/thread/style';
 import MessagesSubscriber from 'src/views/thread/components/messagesSubscriber';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
-import { FeedsContainer, SidebarSection } from '../style';
+import { FeedsContainer, SidebarSection, FeedsStretch } from '../style';
 
 type Props = {
   community: CommunityInfoType,
@@ -61,9 +60,7 @@ const Feeds = (props: Props) => {
         if (!community.watercoolerId) return null;
         return (
           <React.Fragment>
-            <Stretch>
-              <MessagesSubscriber isWatercooler id={community.watercoolerId} />
-            </Stretch>
+            <MessagesSubscriber isWatercooler id={community.watercoolerId} />
             <ChatInputWrapper>
               <ChatInput
                 threadType="story"

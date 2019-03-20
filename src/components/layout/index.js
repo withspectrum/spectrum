@@ -104,7 +104,7 @@ export const SecondaryPrimaryColumnGrid = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: 1fr;
-    grid-template-rows: min-content 1fr;
+    grid-template-rows: 1fr;
     grid-gap: 0;
     min-width: 100%;
     max-width: 100%;
@@ -143,14 +143,17 @@ export const PrimaryColumn = styled.section`
   border-bottom: 1px solid ${theme.bg.border};
   border-radius: 0 0 4px 4px;
   height: 100%;
-  min-width: 100%;
+  max-width: ${PRIMARY_COLUMN_WIDTH}px;
   grid-area: primary;
+  display: grid;
+  grid-template-rows: 1fr;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
     grid-column-start: 1;
+    max-width: 100%;
   }
 `;
 

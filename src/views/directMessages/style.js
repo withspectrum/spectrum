@@ -11,14 +11,9 @@ export const View = styled.main`
 
 export const ViewContent = styled.div`
   height: 100%;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    min-height: calc(100vh - 76px);
-  }
 `;
 
 export const MessagesList = styled.div`
@@ -34,15 +29,10 @@ export const MessagesList = styled.div`
 `;
 
 export const MessagesContainer = styled.div`
-  min-height: 100vh;
   display: flex;
+  height: 100%;
   flex-direction: column;
   background: ${theme.bg.default};
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    /* account for fixed bottom chatinput */
-    padding-bottom: 72px;
-  }
 `;
 
 export const NoThreads = styled(MessagesContainer)`

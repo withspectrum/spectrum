@@ -9,10 +9,12 @@ export const MessagesWrapper = styled.div`
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 100%;
+  justify-content: flex-end;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    padding-bottom: 16px;
+    padding-bottom: 72px;
   }
 `;
 

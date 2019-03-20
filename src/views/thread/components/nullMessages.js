@@ -1,11 +1,13 @@
 // @flow
 import React from 'react';
-import { NullMessagesWrapper, NullCopy } from '../style';
+import { NullMessagesWrapper, NullCopy, Stretch } from '../style';
 
 const NullMessages = () => (
-  <NullMessagesWrapper>
-    <NullCopy>No messages yet</NullCopy>
-  </NullMessagesWrapper>
+  <Stretch>
+    <NullMessagesWrapper>
+      <NullCopy>No messages yet</NullCopy>
+    </NullMessagesWrapper>
+  </Stretch>
 );
 
 export default NullMessages;

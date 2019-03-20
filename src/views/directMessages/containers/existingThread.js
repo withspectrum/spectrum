@@ -146,7 +146,7 @@ class ExistingThread extends React.Component<Props> {
           .map(cleanSuggestionUserObject)
           .filter(user => user && user.username !== currentUser.username);
         return (
-          <React.Fragment>
+          <div>
             <DesktopTitlebar
               title={names}
               titleIcon={titleIcon}
@@ -181,7 +181,7 @@ class ExistingThread extends React.Component<Props> {
                 />
               </ChatInputWrapper>
             </MessagesContainer>
-          </React.Fragment>
+          </div>
         );
       }
 
