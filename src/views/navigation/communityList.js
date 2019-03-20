@@ -112,49 +112,47 @@ const CommunityList = (props: Props) => {
 
     return (
       <Route path="/:communitySlug" key={community.id}>
-        {({ match }) => (
-          <Tooltip content={community.name} placement={'left'}>
-            <AvatarGrid
-              isActive={
-                match &&
-                match.params &&
-                match.params.communitySlug === community.slug
-              }
-            >
-              <AvatarLink
-                to={`/${community.slug}?tab=${
-                  community.watercoolerId ? 'chat' : 'posts'
-                }`}
-                onClick={() => setNavigationIsOpen(false)}
-                {...getAccessibilityActiveState(
-                  match &&
-                    match.params &&
-                    match.params.communitySlug === community.slug
-                )}
-              >
-                <Avatar
-                  src={community.profilePhoto}
-                  size={sidenavIsOpen ? 32 : 36}
-                />
-                {community.lastActive &&
-                  community.communityPermissions.lastSeen &&
-                  new Date(community.lastActive) >
-                    new Date(community.communityPermissions.lastSeen) && (
-                    <BlackDot />
+        {({ match }) => {
+          const isActive =
+            match &&
+            match.params &&
+            match.params.communitySlug === community.slug;
+
+          return (
+            <Tooltip content={community.name} placement={'left'}>
+              <AvatarGrid isActive={isActive}>
+                <AvatarLink
+                  to={`/${community.slug}?tab=${
+                    community.watercoolerId ? 'chat' : 'posts'
+                  }`}
+                  onClick={() => setNavigationIsOpen(false)}
+                  {...getAccessibilityActiveState(isActive)}
+                >
+                  <Avatar
+                    src={community.profilePhoto}
+                    size={sidenavIsOpen ? 32 : 36}
+                  />
+                  {!isActive &&
+                    community.lastActive &&
+                    community.communityPermissions.lastSeen &&
+                    new Date(community.lastActive) >
+                      new Date(community.communityPermissions.lastSeen) && (
+                      <BlackDot />
+                    )}
+
+                  <Label>{community.name}</Label>
+
+                  {index < 9 && isDesktopApp() && (
+                    <Shortcut>
+                      {appControlSymbol}
+                      {index + 1}
+                    </Shortcut>
                   )}
-
-                <Label>{community.name}</Label>
-
-                {index < 9 && isDesktopApp() && (
-                  <Shortcut>
-                    {appControlSymbol}
-                    {index + 1}
-                  </Shortcut>
-                )}
-              </AvatarLink>
-            </AvatarGrid>
-          </Tooltip>
-        )}
+                </AvatarLink>
+              </AvatarGrid>
+            </Tooltip>
+          );
+        }}
       </Route>
     );
   });
