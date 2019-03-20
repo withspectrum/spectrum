@@ -28,14 +28,15 @@ import { NavigationContext } from 'src/routes';
 type Props = {
   history: History,
   currentUser?: Object,
+  currentUserIsLoading: boolean,
 };
 
 const Navigation = (props: Props) => {
-  const { currentUser, history } = props;
+  const { currentUser, history, currentUserIsLoading } = props;
   const isMarketingPage = isViewingMarketingPage(history, currentUser);
   if (isMarketingPage) return null;
 
-  if (!currentUser) {
+  if (!currentUserIsLoading && !currentUser) {
     return (
       <NavigationContext.Consumer>
         {({ navigationIsOpen, setNavigationIsOpen }) => (
@@ -180,135 +181,139 @@ const Navigation = (props: Props) => {
     );
   }
 
-  return (
-    <NavigationContext.Consumer>
-      {({ navigationIsOpen, setNavigationIsOpen }) => (
-        <NavigationWrapper data-cy="navigation-bar" isOpen={navigationIsOpen}>
-          <NavHead {...props} />
-          <Skip />
+  if (currentUser) {
+    return (
+      <NavigationContext.Consumer>
+        {({ navigationIsOpen, setNavigationIsOpen }) => (
+          <NavigationWrapper data-cy="navigation-bar" isOpen={navigationIsOpen}>
+            <NavHead {...props} />
+            <Skip />
 
-          <Overlay
-            isOpen={navigationIsOpen}
-            onClick={() => setNavigationIsOpen(false)}
-          />
-
-          <NavigationGrid isOpen={navigationIsOpen}>
-            <GlobalComposerTab />
-            <Route path="/messages">
-              {({ match }) => <DirectMessagesTab isActive={!!match} />}
-            </Route>
-            <Route path="/notifications">
-              {({ match }) => <NotificationsTab isActive={!!match} />}
-            </Route>
-
-            <Route path="/explore">
-              {({ match }) => (
-                <Tooltip content="Explore" placement={'left'}>
-                  <AvatarGrid
-                    isActive={
-                      match && match.url === '/explore' && match.isExact
-                    }
-                  >
-                    <AvatarLink
-                      to={'/explore'}
-                      data-cy="navigation-explore"
-                      onClick={() => setNavigationIsOpen(false)}
-                      {...getAccessibilityActiveState(
-                        match && match.url === '/explore' && match.isExact
-                      )}
-                    >
-                      <IconWrapper>
-                        <Icon glyph="explore" />
-                      </IconWrapper>
-
-                      <Label>Explore</Label>
-                    </AvatarLink>
-                  </AvatarGrid>
-                </Tooltip>
-              )}
-            </Route>
-
-            <Route path="/users/:username">
-              {({ match }) => (
-                <Tooltip content="Profile" placement={'left'}>
-                  <AvatarGrid
-                    isActive={
-                      match &&
-                      match.params &&
-                      match.params.username === currentUser.username
-                    }
-                    style={{ marginTop: '4px' }}
-                  >
-                    <AvatarLink
-                      to={'/me'}
-                      data-cy="navigation-profile"
-                      onClick={() => setNavigationIsOpen(false)}
-                      {...getAccessibilityActiveState(
-                        history.location.pathname ===
-                          `/users/${currentUser.username}`
-                      )}
-                    >
-                      <UserAvatar
-                        size={32}
-                        showOnlineStatus={false}
-                        user={currentUser}
-                        isClickable={false}
-                        showHoverProfile={false}
-                      />
-                      <Label>Profile</Label>
-                    </AvatarLink>
-                  </AvatarGrid>
-                </Tooltip>
-              )}
-            </Route>
-
-            <Divider />
-
-            <CommunityList
-              setNavigationIsOpen={setNavigationIsOpen}
-              navigationIsOpen={navigationIsOpen}
-              {...props}
+            <Overlay
+              isOpen={navigationIsOpen}
+              onClick={() => setNavigationIsOpen(false)}
             />
 
-            {currentUser && (
-              <React.Fragment>
-                <Divider />
-                <Route path="/new/community">
-                  {({ match }) => (
-                    <Tooltip content="Create a community" placement={'left'}>
-                      <AvatarGrid
-                        isActive={
-                          match &&
-                          match.url === '/new/community' &&
-                          match.isExact
-                        }
-                      >
-                        <AvatarLink
-                          to={'/new/community'}
-                          data-cy="navigation-new-community"
-                          {...getAccessibilityActiveState(
-                            match &&
-                              match.url === '/new/community' &&
-                              match.isExact
-                          )}
-                        >
-                          <IconWrapper>
-                            <Icon glyph="plus" />
-                          </IconWrapper>
+            <NavigationGrid isOpen={navigationIsOpen}>
+              <GlobalComposerTab />
+              <Route path="/messages">
+                {({ match }) => <DirectMessagesTab isActive={!!match} />}
+              </Route>
+              <Route path="/notifications">
+                {({ match }) => <NotificationsTab isActive={!!match} />}
+              </Route>
 
-                          <Label>Create a community</Label>
-                        </AvatarLink>
-                      </AvatarGrid>
-                    </Tooltip>
-                  )}
-                </Route>
-              </React.Fragment>
-            )}
-          </NavigationGrid>
-        </NavigationWrapper>
-      )}
-    </NavigationContext.Consumer>
-  );
+              <Route path="/explore">
+                {({ match }) => (
+                  <Tooltip content="Explore" placement={'left'}>
+                    <AvatarGrid
+                      isActive={
+                        match && match.url === '/explore' && match.isExact
+                      }
+                    >
+                      <AvatarLink
+                        to={'/explore'}
+                        data-cy="navigation-explore"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(
+                          match && match.url === '/explore' && match.isExact
+                        )}
+                      >
+                        <IconWrapper>
+                          <Icon glyph="explore" />
+                        </IconWrapper>
+
+                        <Label>Explore</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Route path="/users/:username">
+                {({ match }) => (
+                  <Tooltip content="Profile" placement={'left'}>
+                    <AvatarGrid
+                      isActive={
+                        match &&
+                        match.params &&
+                        match.params.username === currentUser.username
+                      }
+                      style={{ marginTop: '4px' }}
+                    >
+                      <AvatarLink
+                        to={'/me'}
+                        data-cy="navigation-profile"
+                        onClick={() => setNavigationIsOpen(false)}
+                        {...getAccessibilityActiveState(
+                          history.location.pathname ===
+                            `/users/${currentUser.username}`
+                        )}
+                      >
+                        <UserAvatar
+                          size={32}
+                          showOnlineStatus={false}
+                          user={currentUser}
+                          isClickable={false}
+                          showHoverProfile={false}
+                        />
+                        <Label>Profile</Label>
+                      </AvatarLink>
+                    </AvatarGrid>
+                  </Tooltip>
+                )}
+              </Route>
+
+              <Divider />
+
+              <CommunityList
+                setNavigationIsOpen={setNavigationIsOpen}
+                navigationIsOpen={navigationIsOpen}
+                {...props}
+              />
+
+              {currentUser && (
+                <React.Fragment>
+                  <Divider />
+                  <Route path="/new/community">
+                    {({ match }) => (
+                      <Tooltip content="Create a community" placement={'left'}>
+                        <AvatarGrid
+                          isActive={
+                            match &&
+                            match.url === '/new/community' &&
+                            match.isExact
+                          }
+                        >
+                          <AvatarLink
+                            to={'/new/community'}
+                            data-cy="navigation-new-community"
+                            {...getAccessibilityActiveState(
+                              match &&
+                                match.url === '/new/community' &&
+                                match.isExact
+                            )}
+                          >
+                            <IconWrapper>
+                              <Icon glyph="plus" />
+                            </IconWrapper>
+
+                            <Label>Create a community</Label>
+                          </AvatarLink>
+                        </AvatarGrid>
+                      </Tooltip>
+                    )}
+                  </Route>
+                </React.Fragment>
+              )}
+            </NavigationGrid>
+          </NavigationWrapper>
+        )}
+      </NavigationContext.Consumer>
+    );
+  }
+
+  return <NavigationWrapper />;
 };
 
 export default compose(
