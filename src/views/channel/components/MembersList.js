@@ -2,14 +2,14 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { withRouter } from 'react-router';
 import getChannelMembersQuery, {
   type GetChannelMemberConnectionType,
 } from 'shared/graphql/queries/channel/getChannelMemberConnection';
 import { Card } from 'src/components/card';
-import { Loading, LoadingListItem } from 'src/components/loading';
+import { Loading } from 'src/components/loading';
+import NextPageButton from 'src/components/nextPageButton';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { UserListItem } from 'src/components/entities';
@@ -43,6 +43,7 @@ class MembersList extends React.Component<Props> {
       data: { channel },
       isLoading,
       currentUser,
+      isFetchingMore,
     } = this.props;
 
     if (channel && channel.memberConnection) {
@@ -52,15 +53,7 @@ class MembersList extends React.Component<Props> {
       const { hasNextPage } = pageInfo;
 
       return (
-        <InfiniteList
-          pageStart={0}
-          loadMore={this.props.data.fetchMore}
-          hasMore={hasNextPage}
-          loader={<LoadingListItem key={0} />}
-          useWindow={false}
-          initialLoad={false}
-          threshold={750}
-        >
+        <React.Fragment>
           {uniqueNodes.map(user => {
             if (!user) return null;
 
@@ -80,7 +73,16 @@ class MembersList extends React.Component<Props> {
               />
             );
           })}
-        </InfiniteList>
+          {hasNextPage && (
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={this.props.data.fetchMore}
+              bottomOffset={-100}
+            >
+              Load more members
+            </NextPageButton>
+          )}
+        </React.Fragment>
       );
     }
 

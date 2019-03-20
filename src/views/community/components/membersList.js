@@ -2,14 +2,14 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { withRouter } from 'react-router';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
 import { Card } from 'src/components/card';
-import { Loading, LoadingListItem } from 'src/components/loading';
+import NextPageButton from 'src/components/nextPageButton';
+import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { UserListItem } from 'src/components/entities';
@@ -43,6 +43,7 @@ class MembersList extends React.Component<Props> {
       data: { community },
       isLoading,
       currentUser,
+      isFetchingMore,
     } = this.props;
 
     if (community) {
@@ -52,15 +53,7 @@ class MembersList extends React.Component<Props> {
       const hasNextPage = community.members.pageInfo.hasNextPage;
 
       return (
-        <InfiniteList
-          pageStart={0}
-          loadMore={this.props.data.fetchMore}
-          hasMore={hasNextPage}
-          loader={<LoadingListItem key={0} />}
-          useWindow={false}
-          initialLoad={false}
-          threshold={750}
-        >
+        <React.Fragment>
           {uniqueNodes.map(node => {
             if (!node) return null;
 
@@ -81,7 +74,16 @@ class MembersList extends React.Component<Props> {
               />
             );
           })}
-        </InfiniteList>
+          {hasNextPage && (
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={this.props.data.fetchMore}
+              bottomOffset={-100}
+            >
+              Load more members
+            </NextPageButton>
+          )}
+        </React.Fragment>
       );
     }
 
