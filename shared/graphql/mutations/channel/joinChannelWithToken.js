@@ -23,7 +23,7 @@ export const joinChannelWithTokenMutation = gql`
 
 const joinChannelWithTokenOptions = {
   options: {
-    refetchQueries: ['getCurrentCommunityConnection'],
+    refetchQueries: ['getCurrentUserCommunityConnection'],
   },
   props: ({ mutate }) => ({
     joinChannelWithToken: input =>
