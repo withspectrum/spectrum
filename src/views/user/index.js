@@ -321,8 +321,6 @@ class UserView extends React.Component<Props, State> {
       return <LoadingView />;
     }
 
-    console.log({ props: this.props });
-
     if (!user) {
       return (
         <ErrorView
