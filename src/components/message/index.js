@@ -208,6 +208,7 @@ class Message extends React.Component<Props, State> {
           data-cy={isSelected ? 'message-selected' : 'message'}
           selected={isSelected}
           ref={this.setWrapperRef}
+          tabIndex={0}
         >
           <GutterContainer>
             {showAuthorContext ? (

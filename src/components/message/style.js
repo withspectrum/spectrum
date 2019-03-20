@@ -152,23 +152,25 @@ export const OuterMessageContainer = styled.div`
       ${GutterTimestamp} {
         opacity: 1;
       }
-    `} &:hover {
-    @media (min-width: ${MEDIA_BREAK}px) {
-      background: ${props =>
-        props.selected
-          ? props.theme.special.wash
-          : props.error
-          ? props.theme.warn.border
-          : props.theme.bg.wash};
+    `}
 
-      ${ActionsContainer} {
-        opacity: 1;
-        pointer-events: auto;
-      }
+  &:hover,
+  &:focus,
+  &:active {
+    background: ${props =>
+      props.selected
+        ? props.theme.special.wash
+        : props.error
+        ? props.theme.warn.border
+        : props.theme.bg.wash};
 
-      ${GutterTimestamp} {
-        opacity: 1;
-      }
+    ${ActionsContainer} {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    ${GutterTimestamp} {
+      opacity: 1;
     }
   }
 `;
