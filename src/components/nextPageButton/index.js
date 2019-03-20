@@ -45,7 +45,7 @@ const NextPageButtonWrapper = (props: Props) => {
           {isFetchingMore ? (
             <Spinner size={16} color={'brand.default'} />
           ) : (
-            children || 'Next page'
+            children || 'Load more'
           )}
         </NextPageButton>
       </VisibilitySensor>

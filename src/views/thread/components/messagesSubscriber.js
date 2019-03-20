@@ -202,7 +202,7 @@ class Messages extends React.Component<Props> {
               }),
             }}
           >
-            Previous Page
+            Show previous messages
           </NextPageButton>
         )}
         <ChatMessages
@@ -227,7 +227,7 @@ class Messages extends React.Component<Props> {
               }),
             }}
           >
-            Next Page
+            Show more messages
           </NextPageButton>
         )}
       </React.Fragment>
