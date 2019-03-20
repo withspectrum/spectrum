@@ -7,7 +7,6 @@ import DirectMessageListItem from './messageThreadListItem';
 import getCurrentUserDMThreadConnection, {
   type GetCurrentUserDMThreadConnectionType,
 } from 'shared/graphql/queries/directMessageThread/getCurrentUserDMThreadConnection';
-import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
