@@ -46,7 +46,7 @@ export const getDirectMessageNotificationsOptions = {
   props: (props: any) => ({
     ...props,
     refetch: () => props.data.refetch(),
-    subscribeToDMs: () => {
+    subscribeToDMs: (callback?: Function) => {
       return props.data.subscribeToMore({
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
@@ -54,8 +54,10 @@ export const getDirectMessageNotificationsOptions = {
             subscriptionData,
             _ => _.data.dmNotificationAdded
           );
-
           if (!newNotification) return prev;
+
+          if (callback) callback(newNotification);
+
           const notificationNode = {
             ...newNotification,
             __typename: 'Notification',

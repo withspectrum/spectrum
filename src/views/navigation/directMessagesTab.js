@@ -14,6 +14,9 @@ import getUnreadDMQuery, {
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import formatNotification from 'shared/notification-to-text';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type Props = {
@@ -26,14 +29,21 @@ type Props = {
   markDirectMessageNotificationsSeen: Function,
   dispatch: Function,
   refetch: Function,
+  currentUser?: Object,
 };
 
 const DirectMessagesTab = (props: Props) => {
-  const { count, data, isActive } = props;
+  const { count, data, isActive, currentUser } = props;
 
   // $FlowIssue
   React.useEffect(() => {
-    const unsubscribe = props.subscribeToDMs();
+    const unsubscribe = props.subscribeToDMs(notification => {
+      const { title, body } = formatNotification(
+        notification,
+        currentUser && currentUser.id
+      );
+      props.dispatch(addToastWithTimeout('success', `${title}\n\n${body}`));
+    });
     return unsubscribe;
   }, []);
 
@@ -107,5 +117,6 @@ export default compose(
   getUnreadDMQuery,
   markDirectMessageNotificationsSeenMutation,
   viewNetworkHandler,
-  withRouter
+  withRouter,
+  withCurrentUser
 )(DirectMessagesTab);
