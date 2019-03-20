@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
@@ -33,6 +33,14 @@ type Props = {
   setCommunityLastSeen: Function,
 };
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const Component = (props: Props) => {
   const {
     community,
@@ -42,9 +50,20 @@ const Component = (props: Props) => {
     setCommunityLastSeen,
   } = props;
 
+  const previousCommunity = usePrevious(community);
   useEffect(() => {
     if (!community.id || !currentUser) return;
 
+    if (
+      previousCommunity &&
+      community &&
+      previousCommunity.id !== community.id
+    ) {
+      setCommunityLastSeen({
+        id: previousCommunity.id,
+        lastSeen: new Date(),
+      });
+    }
     setCommunityLastSeen({
       id: community.id,
       lastSeen: new Date(),

@@ -27,11 +27,24 @@ export const setCommunityLastSeenMutation = gql`
 `;
 
 const setCommunityLastSeenOptions = {
-  props: ({ mutate }) => ({
+  props: ({ mutate, ownProps }) => ({
     setCommunityLastSeen: (input: SetCommunityLastSeenInput) =>
       mutate({
         variables: {
           input,
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          setCommunityLastSeen: {
+            __typename: 'Community',
+            id: input.id,
+            ...ownProps.community,
+            communityPermissions: {
+              ...ownProps.community.communityPermissions,
+              __typename: 'CommunityPermissions',
+              lastSeen: input.lastSeen,
+            },
+          },
         },
       }),
   }),
