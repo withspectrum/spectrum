@@ -12,7 +12,6 @@ import {
   H3,
   Transition,
   zIndex,
-  hexa,
   Truncate,
 } from 'src/components/globals';
 

@@ -50,7 +50,6 @@ describe('Thread View', () => {
     });
 
     it('should prompt logged-out users to log in', () => {
-      const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
       cy.get('[data-cy="join-community-chat-upsell"]').should('be.visible');
       cy.get('[data-cy="join-community-chat-upsell"]').click();
