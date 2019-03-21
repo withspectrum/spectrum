@@ -3,6 +3,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { ErrorBoundary } from 'src/components/error';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import getCommunityMembersQuery, {
@@ -91,18 +92,19 @@ class Component extends React.Component<Props> {
 
         <List>
           {nodes.map(({ user }) => (
-            <UserListItem
-              key={user.id}
-              userObject={user}
-              name={user.name}
-              username={user.username}
-              profilePhoto={user.profilePhoto}
-              isCurrentUser={currentUser && user.id === currentUser.id}
-              isOnline={user.isOnline}
-              avatarSize={40}
-              showHoverProfile={false}
-              messageButton={currentUser && user.id !== currentUser.id}
-            />
+            <ErrorBoundary key={user.id}>
+              <UserListItem
+                userObject={user}
+                name={user.name}
+                username={user.username}
+                profilePhoto={user.profilePhoto}
+                isCurrentUser={currentUser && user.id === currentUser.id}
+                isOnline={user.isOnline}
+                avatarSize={40}
+                showHoverProfile={false}
+                messageButton={currentUser && user.id !== currentUser.id}
+              />
+            </ErrorBoundary>
           ))}
         </List>
       </React.Fragment>

@@ -42,6 +42,7 @@ import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
   ...$Exact<ViewNetworkHandlerType>,
@@ -178,19 +179,25 @@ const ThreadContainer = (props: Props) => {
               <CommunityProfileCard community={community} />
             </SidebarSection>
 
-            <SidebarSection>
-              <ChannelProfileCard
-                hideActions
-                hideCommunityMeta
-                channel={channel}
-              />
-            </SidebarSection>
+            <ErrorBoundary>
+              <SidebarSection>
+                <ChannelProfileCard
+                  hideActions
+                  hideCommunityMeta
+                  channel={channel}
+                />
+              </SidebarSection>
+            </ErrorBoundary>
 
-            <SidebarSection>
-              <TrendingThreads id={community.id} />
-            </SidebarSection>
+            <ErrorBoundary>
+              <SidebarSection>
+                <TrendingThreads id={community.id} />
+              </SidebarSection>
+            </ErrorBoundary>
 
-            <DesktopAppUpsell />
+            <ErrorBoundary>
+              <DesktopAppUpsell />
+            </ErrorBoundary>
           </SecondaryColumn>
 
           <PrimaryColumn>
@@ -202,7 +209,10 @@ const ThreadContainer = (props: Props) => {
               into thinking that its preceeding sibling is full-height.
             */}
             <Stretch>
-              <StickyHeader thread={thread} />
+              <ErrorBoundary>
+                <StickyHeader thread={thread} />
+              </ErrorBoundary>
+
               <ThreadDetail thread={thread} />
 
               <MessagesSubscriber

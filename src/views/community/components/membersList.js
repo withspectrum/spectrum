@@ -2,8 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { withRouter } from 'react-router';
+import { ErrorBoundary } from 'src/components/error';
+import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import getCommunityMembersQuery, {
   type GetCommunityMembersType,
 } from 'shared/graphql/queries/community/getCommunityMembers';
@@ -59,19 +60,20 @@ class MembersList extends React.Component<Props> {
 
             const { user } = node;
             return (
-              <UserListItem
-                key={user.id}
-                userObject={user}
-                name={user.name}
-                username={user.username}
-                description={user.description}
-                profilePhoto={user.profilePhoto}
-                isCurrentUser={currentUser && user.id === currentUser.id}
-                isOnline={user.isOnline}
-                avatarSize={40}
-                showHoverProfile={false}
-                messageButton={currentUser && user.id !== currentUser.id}
-              />
+              <ErrorBoundary key={user.id}>
+                <UserListItem
+                  userObject={user}
+                  name={user.name}
+                  username={user.username}
+                  description={user.description}
+                  profilePhoto={user.profilePhoto}
+                  isCurrentUser={currentUser && user.id === currentUser.id}
+                  isOnline={user.isOnline}
+                  avatarSize={40}
+                  showHoverProfile={false}
+                  messageButton={currentUser && user.id !== currentUser.id}
+                />
+              </ErrorBoundary>
             );
           })}
           {hasNextPage && (

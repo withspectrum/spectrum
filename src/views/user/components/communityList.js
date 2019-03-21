@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { CommunityListItem } from 'src/components/entities';
+import { ErrorBoundary } from 'src/components/error';
 import { Loading } from 'src/components/loading';
 import { PrimaryOutlineButton } from 'src/components/button';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
@@ -61,12 +62,13 @@ class CommunityList extends React.Component<Props> {
         {sortedCommunities.map(community => {
           if (!community) return null;
           return (
-            <CommunityListItem
-              key={community.id}
-              communityObject={community}
-              profilePhoto={community.profilePhoto}
-              name={community.name}
-            />
+            <ErrorBoundary key={community.id}>
+              <CommunityListItem
+                communityObject={community}
+                profilePhoto={community.profilePhoto}
+                name={community.name}
+              />
+            </ErrorBoundary>
           );
         })}
       </div>

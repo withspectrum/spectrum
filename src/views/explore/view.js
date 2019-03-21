@@ -2,7 +2,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import type { Dispatch } from 'redux';
 import compose from 'recompose/compose';
 import { collections } from './collections';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';

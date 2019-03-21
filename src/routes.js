@@ -268,6 +268,10 @@ class Routes extends React.Component<Props, State> {
             <ErrorBoundary>
               <QueryParamToastDispatcher />
             </ErrorBoundary>
+            <ErrorBoundary>
+              <AnalyticsTracking />
+            </ErrorBoundary>
+
             {/* 
               while users should be able to browse communities/threads
               if they are signed out (eg signedOutFallback), they should not
@@ -278,30 +282,25 @@ class Routes extends React.Component<Props, State> {
               that people can report or link to.
 
               this global component simply listens for users without a username
-              to be authenticated, and if so forces a full screen set username
-              view takeover
+              to be authenticated, and if so forces a redirect to /new/user 
+              prompting them to set a username
             */}
             <ErrorBoundary>
               <NoUsernameHandler currentUser={currentUser} />
             </ErrorBoundary>
 
-            {/* gathering analytics shouldn't ever affect app performance */}
-            <ErrorBoundary>
-              <AnalyticsTracking />
-            </ErrorBoundary>
-
             {/*
-                this context provider allows children views to determine
-                how they should behave if a modal is open. For example,
-                you could tell a community view to not paginate the thread
-                feed if a thread modal is open.
-              */}
+              this context provider allows children views to determine
+              how they should behave if a modal is open. For example,
+              you could tell a community view to not paginate the thread
+              feed if a thread modal is open.
+            */}
             <RouteModalContext.Provider value={routeModalContext}>
               {/*
-                  we tell the app view wrapper any time the modal state
-                  changes so that we can restore the scroll position to where
-                  it was before the modal was opened
-                */}
+                we tell the app view wrapper any time the modal state
+                changes so that we can restore the scroll position to where
+                it was before the modal was opened
+              */}
               <AppViewWrapper {...routeModalContext}>
                 <Route component={Navigation} />
                 <Route component={GlobalTitlebar} />

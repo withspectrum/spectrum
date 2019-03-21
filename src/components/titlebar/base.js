@@ -3,9 +3,10 @@ import React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter, type History } from 'react-router-dom';
+import { ErrorBoundary } from 'src/components/error';
 import { NavigationContext } from 'src/routes';
 import Icon from 'src/components/icon';
-import { RedDot } from '../../views/navigation/style';
+import { RedDot } from 'src/views/navigation/style';
 import {
   TitlebarContainer,
   Content,
@@ -96,7 +97,11 @@ const MobileTitlebar = (props: Props) => {
             {title && <Title>{title}</Title>}
           </Content>
 
-          {rightAction && <Actions>{rightAction}</Actions>}
+          {rightAction && (
+            <ErrorBoundary>
+              <Actions>{rightAction}</Actions>
+            </ErrorBoundary>
+          )}
         </TitlebarContainer>
       )}
     </NavigationContext.Consumer>

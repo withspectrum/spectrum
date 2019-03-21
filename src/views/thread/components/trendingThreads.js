@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import { getCommunityThreadConnectionQuery } from 'shared/graphql/queries/community/getCommunityThreadConnection';
 import { Container } from './desktopAppUpsell/style';
+import { ErrorBoundary } from 'src/components/error';
 import getThreadLink from 'src/helpers/get-thread-link';
 import theme from 'shared/theme';
 import { Truncate } from 'src/components/globals';
@@ -106,7 +107,9 @@ const TrendingThreads = (props: Props) => {
                 </SidebarSectionHeading>
               </Container>
               {threads.map(thread => (
-                <ThreadListItem thread={thread} key={thread.id} />
+                <ErrorBoundary key={thread.id}>
+                  <ThreadListItem thread={thread} />
+                </ErrorBoundary>
               ))}
             </React.Fragment>
           );

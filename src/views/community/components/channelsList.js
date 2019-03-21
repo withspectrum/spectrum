@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
 import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
-import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
@@ -94,11 +95,9 @@ class Component extends React.Component<Props> {
             {sortedChannels.map(channel => {
               if (!channel) return null;
               return (
-                <ChannelListItem
-                  key={channel.id}
-                  channel={channel}
-                  name={channel.name}
-                />
+                <ErrorBoundary key={channel.id}>
+                  <ChannelListItem channel={channel} name={channel.name} />
+                </ErrorBoundary>
               );
             })}
           </List>

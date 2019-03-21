@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
@@ -11,6 +11,7 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import { CommunityProfileCard } from 'src/components/entities';
 import { CommunityAvatar } from 'src/components/avatar';
+import { ErrorBoundary } from 'src/components/error';
 import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { TeamMembersList } from '../components/teamMembersList';
@@ -136,18 +137,25 @@ const Component = (props: Props) => {
               <CommunityProfileCard community={community} />
             </SidebarSection>
 
-            <SidebarSection>
-              <ChannelsList id={community.id} communitySlug={community.slug} />
-            </SidebarSection>
+            <ErrorBoundary>
+              <SidebarSection>
+                <ChannelsList
+                  id={community.id}
+                  communitySlug={community.slug}
+                />
+              </SidebarSection>
+            </ErrorBoundary>
 
-            <SidebarSection>
-              <TeamMembersList
-                community={community}
-                id={community.id}
-                first={100}
-                filter={{ isModerator: true, isOwner: true }}
-              />
-            </SidebarSection>
+            <ErrorBoundary>
+              <SidebarSection>
+                <TeamMembersList
+                  community={community}
+                  id={community.id}
+                  first={100}
+                  filter={{ isModerator: true, isOwner: true }}
+                />
+              </SidebarSection>
+            </ErrorBoundary>
           </SecondaryColumn>
 
           <PrimaryColumn>

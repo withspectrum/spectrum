@@ -4,6 +4,7 @@ import compose from 'recompose/compose';
 import { Route, type History } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { ErrorBoundary } from 'src/components/error';
 import {
   getCurrentUserCommunityConnection,
   type GetUserCommunityConnectionType,
@@ -151,24 +152,26 @@ const CommunityList = (props: Props) => {
     if (!isMember || isBlocked) return null;
 
     return (
-      <Route path="/:communitySlug" key={community.id}>
-        {({ match }) => {
-          const isActive =
-            match &&
-            match.params &&
-            match.params.communitySlug === community.slug;
+      <ErrorBoundary key={community.id}>
+        <Route path="/:communitySlug">
+          {({ match }) => {
+            const isActive =
+              match &&
+              match.params &&
+              match.params.communitySlug === community.slug;
 
-          return (
-            <CommunityListItem
-              isActive={isActive}
-              community={community}
-              index={index}
-              sidenavIsOpen={sidenavIsOpen}
-              onClick={() => setNavigationIsOpen(false)}
-            />
-          );
-        }}
-      </Route>
+            return (
+              <CommunityListItem
+                isActive={isActive}
+                community={community}
+                index={index}
+                sidenavIsOpen={sidenavIsOpen}
+                onClick={() => setNavigationIsOpen(false)}
+              />
+            );
+          }}
+        </Route>
+      </ErrorBoundary>
     );
   });
 };

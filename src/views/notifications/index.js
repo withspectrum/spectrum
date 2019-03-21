@@ -321,20 +321,22 @@ class NotificationsPure extends React.Component<Props, State> {
                     }
                     case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
                       return (
-                        <PrivateCommunityRequestSent
-                          key={notification.id}
-                          notification={notification}
-                          currentUser={currentUser}
-                        />
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateCommunityRequestSent
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
                       );
                     }
                     case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
                       return (
-                        <PrivateCommunityRequestApproved
-                          key={notification.id}
-                          notification={notification}
-                          currentUser={currentUser}
-                        />
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateCommunityRequestApproved
+                            notification={notification}
+                            currentUser={currentUser}
+                          />
+                        </ErrorBoundary>
                       );
                     }
                     default: {
