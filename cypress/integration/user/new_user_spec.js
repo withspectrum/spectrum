@@ -132,10 +132,10 @@ describe('post username creation redirects', () => {
   });
 
   it('should persist channel join token', () => {
-    cy.visit('/spectrum/private/join/abc');
+    cy.visit('/payments/private/join/abc');
     setUsernameIsVisible();
     saveUsername();
-    cy.url().should('include', '/spectrum/private');
+    cy.url().should('include', '/payments/private');
     cy.get('[data-cy="channel-profile-card"]').should('be.visible');
   });
 
