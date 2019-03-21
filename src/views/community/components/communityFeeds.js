@@ -3,6 +3,7 @@ import React, { useEffect, useLayoutEffect } from 'react';
 import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import querystring from 'query-string';
+import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import MembersList from './membersList';
 import { TeamMembersList } from './teamMembersList';
@@ -15,17 +16,22 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
-import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
+import { PrimaryOutlineButton } from 'src/components/button';
 import usePrevious from 'src/hooks/usePrevious';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import JoinCommunity from 'src/components/joinCommunityWrapper';
+import LockedMessages from 'src/views/thread/components/lockedMessages';
+import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
 
 type Props = {
   community: CommunityInfoType,
   location: Location,
   history: History,
+  currentUser: UserInfoType,
 };
 
 const Feeds = (props: Props) => {
-  const { community, location, history } = props;
+  const { community, location, history, currentUser } = props;
   const { search } = location;
   const { tab } = querystring.parse(search);
 
@@ -62,10 +68,28 @@ const Feeds = (props: Props) => {
           <React.Fragment>
             <MessagesSubscriber isWatercooler id={community.watercoolerId} />
             <ChatInputWrapper>
-              <ChatInput
-                threadType="story"
-                threadId={community.watercoolerId}
-              />
+              {currentUser && community.communityPermissions.isMember && (
+                <ChatInput
+                  threadType="story"
+                  threadId={community.watercoolerId}
+                />
+              )}
+              {(!currentUser || !community.communityPermissions.isMember) && (
+                <JoinCommunity
+                  community={community}
+                  render={({ isLoading }) => (
+                    <LockedMessages>
+                      <PrimaryOutlineButton
+                        isLoading={isLoading}
+                        icon={'door-enter'}
+                        data-cy="join-community-chat-upsell"
+                      >
+                        {isLoading ? 'Joining...' : 'Join community to chat'}
+                      </PrimaryOutlineButton>
+                    </LockedMessages>
+                  )}
+                />
+              )}
             </ChatInputWrapper>
           </React.Fragment>
         );
@@ -177,4 +201,7 @@ const Feeds = (props: Props) => {
   );
 };
 
-export const CommunityFeeds = compose(withRouter)(Feeds);
+export const CommunityFeeds = compose(
+  withRouter,
+  withCurrentUser
+)(Feeds);
