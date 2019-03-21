@@ -96,7 +96,10 @@ const TrendingThreads = (props: Props) => {
           if (threads.length === 0) return null;
           return (
             <React.Fragment>
-              <Container style={{ paddingBottom: '4px' }}>
+              <Container
+                data-cy="trending-conversations"
+                style={{ paddingBottom: '4px' }}
+              >
                 <SidebarSectionHeading>
                   Trending conversations
                 </SidebarSectionHeading>

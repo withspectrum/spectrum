@@ -83,7 +83,7 @@ describe('Thread View', () => {
     });
 
     it("should not allow logged-in users to send private messages if they don't have permission", () => {
-      cy.get('[data-cy="no-thread-error-view"]').should('be.visible');
+      cy.get('[data-cy="null-thread-view"]').should('be.visible');
     });
   });
 

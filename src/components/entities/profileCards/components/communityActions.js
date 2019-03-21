@@ -70,7 +70,11 @@ export const UnconnectedCommunityActions = (props: Props) => {
       <JoinCommunity
         community={community}
         render={({ isLoading }) => (
-          <PrimaryOutlineButton isLoading={isLoading} icon={'door-enter'}>
+          <PrimaryOutlineButton
+            data-cy="profile-join-button"
+            isLoading={isLoading}
+            icon={'door-enter'}
+          >
             {isLoading ? 'Joining...' : 'Join community'}
           </PrimaryOutlineButton>
         )}

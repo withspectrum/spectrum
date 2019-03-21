@@ -16,7 +16,7 @@ export const CommunityProfileCard = (props: Props) => {
   const { community } = props;
 
   return (
-    <ProfileContainer>
+    <ProfileContainer data-cy="community-profile-card">
       <Link to={`/${community.slug}`}>
         <CoverPhoto src={community.coverPhoto} />
       </Link>

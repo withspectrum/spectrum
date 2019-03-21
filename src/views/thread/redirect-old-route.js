@@ -31,7 +31,7 @@ export default getThreadByMatch(props => {
       return <ErrorView />;
     }
 
-    return <ErrorView data-cy="no-thread-error-view" />;
+    return <ErrorView data-cy="null-thread-view" />;
   }
 
   return null;

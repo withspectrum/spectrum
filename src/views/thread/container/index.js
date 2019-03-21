@@ -60,7 +60,7 @@ const ThreadContainer = (props: Props) => {
   if (isLoading) return <LoadingView />;
 
   const { thread } = data;
-  if (!thread) return <ErrorView />;
+  if (!thread) return <ErrorView data-cy="null-thread-view" />;
 
   const { id } = thread;
 
