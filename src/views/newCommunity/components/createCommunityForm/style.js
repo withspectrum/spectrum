@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
-import { FlexCol, FlexRow } from '../../../../components/globals';
+import { FlexCol, FlexRow } from 'src/components/globals';
 
 export const DeleteCoverWrapper = styled(FlexRow)`
   justify-content: flex-end;
@@ -37,7 +37,7 @@ export const ImageInputWrapper = styled(FlexCol)`
   > label:nth-of-type(2) {
     position: absolute;
     bottom: -24px;
-    left: 24px;
+    left: 16px;
   }
 `;
 

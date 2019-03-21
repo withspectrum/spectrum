@@ -1,10 +1,8 @@
 // @flow
-import theme from 'shared/theme';
 import * as React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { CommunityProfile } from 'src/components/profile';
 import { collections } from './collections';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -12,17 +10,18 @@ import {
   ListWithTitle,
   ListTitle,
   ListWrapper,
-  CategoryWrapper,
   Collections,
   CollectionWrapper,
-  LoadingContainer,
+  ProfileCardWrapper,
 } from './style';
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
-import { Loading } from 'src/components/loading';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
+import { Loading } from 'src/components/loading';
+import { ErrorView } from 'src/views/viewHelpers';
+import { CommunityProfileCard } from 'src/components/entities';
 
 const ChartGrid = styled.div`
   display: flex;
@@ -30,31 +29,25 @@ const ChartGrid = styled.div`
   flex: auto;
 `;
 
-const ThisSegment = styled(Segment)`
-  @media (max-width: 768px) {
-    &:first-of-type {
-      color: ${theme.text.alt};
-      border-bottom: 2px solid ${theme.bg.border};
-    }
-    &:not(:first-of-type) {
-      display: none;
-    }
-  }
-`;
-
 export const Charts = () => {
   return <ChartGrid>{collections && <CollectionSwitcher />}</ChartGrid>;
 };
 
-type Props = {};
 type State = {
   selectedView: string,
 };
 
-class CollectionSwitcher extends React.Component<Props, State> {
+class CollectionSwitcher extends React.Component<{}, State> {
   state = {
     selectedView: 'top-communities-by-members',
   };
+
+  parentRef = null;
+  ref = null;
+
+  componentDidMount() {
+    this.parentRef = document.getElementById('main');
+  }
 
   handleSegmentClick(selectedView) {
     if (this.state.selectedView === selectedView) return;
@@ -66,44 +59,45 @@ class CollectionSwitcher extends React.Component<Props, State> {
     return this.setState({ selectedView });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const currState = this.state;
+    if (prevState.selectedView !== currState.selectedView) {
+      if (!this.parentRef || !this.ref) return;
+      return (this.parentRef.scrollTop = this.ref.offsetTop);
+    }
+  }
+
   render() {
     return (
-      <Collections>
+      <Collections ref={el => (this.ref = el)}>
         <SegmentedControl>
           {collections.map((collection, i) => (
-            <ThisSegment
+            <Segment
               key={i}
               onClick={() =>
                 this.handleSegmentClick(collection.curatedContentType)
               }
-              selected={
+              isActive={
                 collection.curatedContentType === this.state.selectedView
               }
             >
               {collection.title}
-            </ThisSegment>
+            </Segment>
           ))}
         </SegmentedControl>
 
         <CollectionWrapper>
           {collections.map((collection, index) => {
-            // NOTE(@mxstbr): [].concat.apply([], ...) flattens the array
-            const communitySlugs = collection.categories
-              ? [].concat.apply(
-                  [],
-                  collection.categories.map(({ communities }) => communities)
-                )
-              : collection.communities || [];
+            const communitySlugs = collection.communities;
             return (
-              <CategoryWrapper key={index}>
+              <div key={index}>
                 {collection.curatedContentType === this.state.selectedView && (
                   <Category
-                    categories={collection.categories}
                     slugs={communitySlugs}
                     curatedContentType={collection.curatedContentType}
                   />
                 )}
-              </CategoryWrapper>
+              </div>
             );
           })}
         </CollectionWrapper>
@@ -120,7 +114,6 @@ type CategoryListProps = {
     communities?: GetCommunitiesType,
   },
   isLoading: boolean,
-  categories?: Array<any>,
 };
 class CategoryList extends React.Component<CategoryListProps> {
   onLeave = community => {
@@ -141,8 +134,6 @@ class CategoryList extends React.Component<CategoryListProps> {
       title,
       slugs,
       isLoading,
-      currentUser,
-      categories,
     } = this.props;
 
     if (communities) {
@@ -155,72 +146,30 @@ class CategoryList extends React.Component<CategoryListProps> {
         });
       }
 
-      if (!categories) {
-        return (
-          <ListWithTitle>
-            {title ? <ListTitle>{title}</ListTitle> : null}
-            <ListWrapper>
-              {filteredCommunities.map((community, i) => (
-                // $FlowFixMe
-                <ErrorBoundary fallbackComponent={null} key={i}>
-                  <CommunityProfile
-                    profileSize={'upsell'}
-                    data={{ community }}
-                    currentUser={currentUser}
-                    onLeave={this.onLeave}
-                    onJoin={this.onJoin}
-                    showHoverProfile={false}
-                  />
-                </ErrorBoundary>
-              ))}
-            </ListWrapper>
-          </ListWithTitle>
-        );
-      }
-
       return (
-        <div>
-          {categories.map((cat, i) => {
-            if (cat.communities) {
-              filteredCommunities = communities.filter(c => {
-                if (!c) return null;
-                if (cat.communities.indexOf(c.slug) > -1) return c;
-                return null;
-              });
-            }
-            return (
-              <ListWithTitle key={i}>
-                {cat.title ? <ListTitle>{cat.title}</ListTitle> : null}
-                <ListWrapper>
-                  {filteredCommunities.map((community, i) => (
-                    // $FlowFixMe
-                    <ErrorBoundary fallbackComponent={null}>
-                      <CommunityProfile
-                        key={i}
-                        profileSize={'upsell'}
-                        data={{ community }}
-                        currentUser={currentUser}
-                        showHoverProfile={false}
-                      />
-                    </ErrorBoundary>
-                  ))}
-                </ListWrapper>
-              </ListWithTitle>
-            );
-          })}
-        </div>
+        <ListWithTitle>
+          {title ? <ListTitle>{title}</ListTitle> : null}
+          <ListWrapper>
+            {filteredCommunities.map(
+              (community, i) =>
+                community && (
+                  <ErrorBoundary key={i}>
+                    <ProfileCardWrapper>
+                      <CommunityProfileCard community={community} />
+                    </ProfileCardWrapper>
+                  </ErrorBoundary>
+                )
+            )}
+          </ListWrapper>
+        </ListWithTitle>
       );
     }
 
     if (isLoading) {
-      return (
-        <LoadingContainer>
-          <Loading />
-        </LoadingContainer>
-      );
+      return <Loading style={{ padding: '64px 32px', minHeight: '100vh' }} />;
     }
 
-    return null;
+    return <ErrorView />;
   }
 }
 

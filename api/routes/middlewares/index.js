@@ -2,6 +2,9 @@ import { Router } from 'express';
 
 const middlewares = Router();
 
+import threadParamRedirect from 'shared/middlewares/thread-param';
+middlewares.use(threadParamRedirect);
+
 import bodyParser from 'body-parser';
 middlewares.use(bodyParser.json());
 
@@ -62,9 +65,5 @@ middlewares.use((req, res, next) => {
 
   next();
 });
-
-// This needs to come after passport otherwise we'll always redirect logged-in users
-import threadParamRedirect from 'shared/middlewares/thread-param';
-middlewares.use(threadParamRedirect);
 
 export default middlewares;

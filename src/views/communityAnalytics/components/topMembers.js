@@ -2,17 +2,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Icon from 'src/components/icons';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import compose from 'recompose/compose';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/entities';
 import getCommunityTopMembers from 'shared/graphql/queries/community/getCommunityTopMembers';
 import type { GetCommunityTopMembersType } from 'shared/graphql/queries/community/getCommunityTopMembers';
-import { UserListItemContainer, MessageIconContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -27,11 +25,6 @@ type Props = {
 };
 
 class ConversationGrowth extends React.Component<Props> {
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
-  };
-
   render() {
     const {
       data: { community },
@@ -70,7 +63,7 @@ class ConversationGrowth extends React.Component<Props> {
             if (!member) return null;
             return (
               <UserListItemContainer key={member.user.id}>
-                <GranularUserProfile
+                <UserListItem
                   userObject={member.user}
                   id={member.user.id}
                   name={member.user.name}
@@ -80,21 +73,13 @@ class ConversationGrowth extends React.Component<Props> {
                     currentUser && member.user.id === currentUser.id
                   }
                   isOnline={member.user.isOnline}
-                  reputation={member.reputation}
                   profilePhoto={member.user.profilePhoto}
                   avatarSize={40}
-                  badges={member.roles}
-                >
-                  {currentUser &&
-                    member.user.id !== currentUser.id && (
-                      <MessageIconContainer>
-                        <Icon
-                          glyph={'message'}
-                          onClick={() => this.initMessage(member.user)}
-                        />
-                      </MessageIconContainer>
-                    )}
-                </GranularUserProfile>
+                  showHoverProfile={false}
+                  messageButton={
+                    currentUser && member.user.id !== currentUser.id
+                  }
+                />
               </UserListItemContainer>
             );
           })}

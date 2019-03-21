@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const Logo = styled.img`
   height: 32px;
   object-fit: contain;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     height: 24px;
   }
 `;

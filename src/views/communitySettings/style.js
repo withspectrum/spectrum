@@ -1,8 +1,10 @@
+// @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import Card from '../../components/card';
+import Card from 'src/components/card';
 import { Link } from 'react-router-dom';
-import { FlexCol, H1, H2, H3, Span, Tooltip } from '../../components/globals';
+import { FlexCol, H1, H2, H3, Span } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ListHeader = styled.div`
   display: flex;
@@ -74,7 +76,7 @@ export const EmailInviteInput = styled.input`
     border: 2px solid ${theme.brand.default};
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -205,7 +207,7 @@ export const View = styled.div`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -225,5 +227,4 @@ export const GrowthText = styled.h5`
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;
-  ${Tooltip} top: 2px;
 `;

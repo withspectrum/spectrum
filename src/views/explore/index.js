@@ -3,23 +3,25 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Titlebar from '../titlebar';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import Head from 'src/components/head';
 import Search from './components/search';
 import CommunitySearchWrapper from './components/communitySearchWrapper';
-import { Wrapper } from './style';
 import { Charts } from './view';
 import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { ViewGrid } from 'src/components/layout';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   currentUser?: Object,
+  dispatch: Function,
 };
 
 class Explore extends React.Component<Props> {
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(setTitlebarProps({ title: 'Explore' }));
     track(events.EXPLORE_PAGE_VIEWED);
   }
 
@@ -33,11 +35,10 @@ class Explore extends React.Component<Props> {
     // const featureNotes = `Crypto is a place to discuss crypto-currencies and tokens. As blockchain technology becomes more and more mainstream, communities like Crypto allow more people to get involved, learn, and share what they know. We're all for that, so if you're an existing investor, a newcomer to crypto-currencies, or just interested in learning about blockchain, check out Crypto!`;
 
     return (
-      <AppViewWrapper>
-        <Wrapper data-cy="explore-page" id="main">
-          <Head title={title} description={description} />
-          <Titlebar title={'Explore'} noComposer />
-          <ErrorBoundary fallbackComponent={null}>
+      <React.Fragment>
+        <Head title={title} description={description} />
+        <ViewGrid data-cy="explore-page">
+          <ErrorBoundary>
             <CommunitySearchWrapper
               currentUser={this.props.currentUser}
               redirectPath={window.location}
@@ -49,8 +50,8 @@ class Explore extends React.Component<Props> {
           <ErrorBoundary>
             <Charts />
           </ErrorBoundary>
-        </Wrapper>
-      </AppViewWrapper>
+        </ViewGrid>
+      </React.Fragment>
     );
   }
 }

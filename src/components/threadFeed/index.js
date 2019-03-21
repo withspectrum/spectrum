@@ -1,66 +1,21 @@
 // @flow
 import * as React from 'react';
-import styled from 'styled-components';
 import compose from 'recompose/compose';
-// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
-// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
-import InboxThread from 'src/views/dashboard/components/inboxThread';
-import { NullCard } from '../upsell';
-import { LoadingInboxThread } from '../loading';
-import NewActivityIndicator from '../newActivityIndicator';
-import ViewError from '../viewError';
+import InboxThread from 'src/components/inboxThread';
+import { Spinner } from 'src/components/globals';
+import { LoadingInboxThread } from 'src/components/loading';
+import ViewError from 'src/components/viewError';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
-
-const NullState = ({ viewContext, search }) => {
-  let hd;
-  let cp;
-
-  if (viewContext && viewContext === 'communityProfile') {
-    hd = 'This community’s just getting started...';
-    cp = 'Why don’t you kick things off?';
-  }
-
-  if (viewContext && viewContext === 'channelProfile') {
-    hd = 'There’s nothing in this channel yet';
-    cp = 'But you could be the first person to post something here!';
-  }
-
-  if (viewContext && viewContext === 'userProfile') {
-    hd = 'This user hasn’t posted yet';
-    cp = 'But you could message them!';
-  }
-
-  if (search) {
-    hd = 'Sorry, doesn’t ring a bell';
-    cp = 'You can always try again, though!';
-  }
-
-  return <NullCard bg="post" heading={hd} copy={cp} />;
-};
-
-const Threads = styled.div`
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  align-self: stretch;
-  align-items: stretch;
-
-  > div {
-    display: flex;
-    flex: none;
-    flex-direction: column;
-    align-self: stretch;
-    align-items: stretch;
-  }
-`;
+import { Container, LoadingPill } from './style';
+import NullState from './nullState';
 
 type Props = {
   data: {
@@ -86,7 +41,6 @@ type Props = {
     | 'userProfile',
   slug: string,
   pinnedThreadId: ?string,
-  newActivityIndicator: ?boolean,
   dispatch: Dispatch<Object>,
   search?: boolean,
   networkOnline: boolean,
@@ -94,13 +48,11 @@ type Props = {
 };
 
 type State = {
-  scrollElement: any,
   subscription: ?Function,
 };
 
 class ThreadFeedPure extends React.Component<Props, State> {
   state = {
-    scrollElement: null,
     subscription: null,
   };
 
@@ -135,14 +87,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement,
-    });
-
     this.subscribe();
   }
 
@@ -173,11 +117,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
     const {
       data: { threads, networkStatus, error },
       viewContext,
-      newActivityIndicator,
     } = this.props;
-
-    const { scrollElement } = this.state;
-    const dataExists = threads && threads.length > 0;
 
     const threadNodes =
       threads && threads.length > 0
@@ -212,20 +152,29 @@ class ThreadFeedPure extends React.Component<Props, State> {
         t => t.id !== this.props.data.community.pinnedThread.id
       );
     }
+    if (
+      this.props.data.channel &&
+      this.props.data.channel.community &&
+      this.props.data.channel.community.watercoolerId
+    ) {
+      filteredThreads = filteredThreads.filter(
+        // $FlowIssue
+        t => t.id !== this.props.data.channel.community.watercoolerId
+      );
+    }
 
     const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
-
-    if (dataExists) {
+    if (uniqueThreads && uniqueThreads.length > 0) {
       return (
-        <Threads data-cy="thread-feed">
-          {newActivityIndicator && (
-            <NewActivityIndicator elem="scroller-for-thread-feed" />
-          )}
+        <Container data-cy="thread-feed">
+          <LoadingPill isVisible={networkStatus === 2 || networkStatus === 1}>
+            <Spinner color={'text.reverse'} size={12} />
+          </LoadingPill>
 
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
-              <ErrorBoundary fallbackComponent={null}>
+              <ErrorBoundary>
                 <InboxThread
                   data={this.props.data.community.pinnedThread}
                   viewContext={viewContext}
@@ -234,44 +183,26 @@ class ThreadFeedPure extends React.Component<Props, State> {
               </ErrorBoundary>
             )}
 
-          {this.props.data.community &&
-            this.props.data.community.watercooler &&
-            this.props.data.community.watercooler.id && (
-              <ErrorBoundary fallbackComponent={null}>
-                <InboxThread
-                  data={this.props.data.community.watercooler}
-                  viewContext={viewContext}
-                />
-              </ErrorBoundary>
-            )}
-
           <InfiniteList
-            pageStart={0}
             loadMore={this.props.data.fetchMore}
-            isLoadingMore={this.props.data.networkStatus === 3}
             hasMore={this.props.data.hasNextPage}
-            loader={<LoadingInboxThread />}
-            useWindow={false}
-            initialLoad={false}
-            scrollElement={scrollElement}
-            threshold={750}
-            className={'threadfeed-infinite-scroll-div'}
+            loader={<LoadingInboxThread key={0} />}
           >
             {uniqueThreads.map(thread => {
               return (
-                <ErrorBoundary fallbackComponent={null} key={thread.id}>
+                <ErrorBoundary key={thread.id}>
                   <InboxThread data={thread} viewContext={viewContext} />
                 </ErrorBoundary>
               );
             })}
           </InfiniteList>
-        </Threads>
+        </Container>
       );
     }
 
-    if (networkStatus <= 2) {
+    if (networkStatus === 2 || networkStatus === 1) {
       return (
-        <Threads>
+        <Container>
           <LoadingInboxThread />
           <LoadingInboxThread />
           <LoadingInboxThread />
@@ -282,7 +213,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
           <LoadingInboxThread />
           <LoadingInboxThread />
           <LoadingInboxThread />
-        </Threads>
+        </Container>
       );
     }
 
@@ -298,12 +229,24 @@ class ThreadFeedPure extends React.Component<Props, State> {
       );
     }
 
-    return <NullState search={this.props.search} viewContext={viewContext} />;
+    const nullComposerCommunityId = this.props.data.community
+      ? this.props.data.community.id
+      : this.props.data.channel
+      ? this.props.data.channel.community.id
+      : null;
+
+    return (
+      <NullState
+        communityId={nullComposerCommunityId}
+        channelId={this.props.data.channel && this.props.data.channel.id}
+        isSearch={!!this.props.search}
+        viewContext={viewContext}
+      />
+    );
   }
 }
 
 const map = state => ({
-  newActivityIndicator: state.newActivityIndicator.hasNew,
   networkOnline: state.connectionStatus.networkOnline,
   websocketConnection: state.connectionStatus.websocketConnection,
 });

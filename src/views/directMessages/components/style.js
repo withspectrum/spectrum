@@ -3,6 +3,7 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   Truncate,
   FlexCol,
@@ -12,34 +13,35 @@ import {
   P,
   hexa,
   zIndex,
-} from '../../../components/globals';
+} from 'src/components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 100%;
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+  overflow-y: scroll;
+  background: ${theme.bg.default};
 `;
 
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   justify-content: center;
   max-width: 100%;
-  height: 64px;
+  min-height: 64px;
   position: relative;
-  background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
+  background: ${props =>
+    props.active
+      ? theme.bg.wash
+      : props.isUnread
+      ? hexa(theme.brand.default, 0.04)
+      : theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.divider};
   box-shadow: ${props =>
-    props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none'};
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 16px;
-    width: calc(100% - 16px);
-    border-bottom: 1px solid ${theme.bg.wash};
-  }
+    props.active
+      ? `inset 2px 0 0 ${props.theme.text.placeholder}`
+      : props.isUnread
+      ? `inset 2px 0 0 ${props.theme.brand.default}`
+      : 'none'};
 
   &:hover {
     cursor: pointer;
@@ -51,7 +53,7 @@ export const WrapperLink = styled(Link)`
   height: 100%;
   display: flex;
   align-items: center;
-  padding-left: 16px;
+  padding: 16px 12px 16px 16px;
 `;
 
 export const Col = styled(FlexCol)`
@@ -62,7 +64,6 @@ export const Row = styled(FlexRow)`
   flex: 1 0 auto;
   align-items: center;
   max-width: 100%;
-  padding-right: 16px;
 
   a {
     display: flex;
@@ -75,9 +76,9 @@ export const Heading = styled(H3)`
 `;
 
 export const Meta = styled(H4)`
-  font-weight: ${props => (props.isUnread ? 600 : 400)};
-  color: ${props =>
-    props.isUnread ? props.theme.text.default : props.theme.text.alt};
+  font-size: 15px;
+  font-weight: 400;
+  color: ${theme.text.alt};
 
   ${props => (props.nowrap ? Truncate() : '')};
 `;
@@ -112,10 +113,10 @@ export const Usernames = styled.span`
   white-space: nowrap;
   overflow: hidden;
   color: ${theme.text.default};
-  font-weight: ${props => (props.isUnread ? 800 : 600)};
-  line-height: 1.1;
+  font-weight: 600;
+  line-height: 1.2;
   margin-bottom: 1px;
-  font-size: 14px;
+  font-size: 15px;
   flex: 1 1 100%;
 
   p {
@@ -124,9 +125,9 @@ export const Usernames = styled.span`
 `;
 
 export const Timestamp = styled.span`
-  font-size: 12px;
+  font-size: 14px;
   text-align: right;
-  color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
+  color: ${theme.text.alt};
   padding-right: 4px;
   display: inline-block;
   flex: 1 0 auto;
@@ -134,10 +135,9 @@ export const Timestamp = styled.span`
 `;
 
 export const Snippet = styled.p`
-  font-size: 13px;
-  font-weight: ${props => (props.unread ? 700 : 500)};
-  color: ${props =>
-    props.unread ? props.theme.text.default : props.theme.text.alt};
+  font-size: 15px;
+  font-weight: 400;
+  color: ${theme.text.secondary};
   padding-right: 4px;
   display: inline-block;
   line-height: 1.3;
@@ -259,7 +259,7 @@ export const ComposerInput = styled.input`
   position: relative;
   z-index: ${zIndex.search};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 20px 16px;
   }
 `;
@@ -286,7 +286,7 @@ export const SearchResultsDropdown = styled.ul`
   overflow-y: auto;
   z-index: ${zIndex.dropDown};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
     left: 0;
     border-radius: 0 0 8px 8px;
@@ -417,6 +417,5 @@ export const Username = styled.h3`
 
 export const MessagesScrollWrapper = styled.div`
   width: 100%;
-  flex: 1 0 auto;
   padding-top: 24px;
 `;

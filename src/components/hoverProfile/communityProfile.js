@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
-import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
+import { Button, OutlineButton } from 'src/components/button';
+import JoinCommunityWrapper from 'src/components/joinCommunityWrapper';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
@@ -27,19 +27,19 @@ type ProfileProps = {
   community: GetCommunityType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
-  innerRef: (?HTMLElement) => void,
+  ref: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
   render() {
-    const { community, innerRef, style } = this.props;
+    const { community, ref, style } = this.props;
 
     const { communityPermissions } = community;
-    const { isMember, isOwner, isModerator } = communityPermissions;
+    const { isOwner, isModerator } = communityPermissions;
 
     return (
-      <HoverWrapper popperStyle={style} innerRef={innerRef}>
+      <HoverWrapper popperStyle={style} ref={ref}>
         <ProfileCard>
           <Link to={`/${community.slug}`}>
             <CoverContainer>
@@ -68,30 +68,11 @@ class HoverProfile extends Component<ProfileProps> {
 
           <Actions>
             {!isModerator && !isOwner && (
-              <ToggleCommunityMembership
+              // TODO @Brian
+              <JoinCommunityWrapper
                 community={community}
                 render={({ isLoading }) => {
-                  if (isMember) {
-                    return (
-                      <OutlineButton
-                        loading={isLoading}
-                        icon={'checkmark'}
-                        gradientTheme="success"
-                      >
-                        Member
-                      </OutlineButton>
-                    );
-                  } else {
-                    return (
-                      <Button
-                        loading={isLoading}
-                        icon={'plus-fill'}
-                        gradientTheme="success"
-                      >
-                        Join
-                      </Button>
-                    );
-                  }
+                  return <Button loading={isLoading}>Join</Button>;
                 }}
               />
             )}

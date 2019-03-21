@@ -51,14 +51,7 @@ class ThreadWithData extends React.Component<Props> {
 
     return (
       <ThreadProfileCard>
-        <Link
-          to={{
-            pathname: getThreadLink(thread),
-            state: {
-              modal: true,
-            },
-          }}
-        >
+        <Link to={{ pathname: getThreadLink(thread) }}>
           <ThreadListItem
             contents={thread}
             withDescription={false}

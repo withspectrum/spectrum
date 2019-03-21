@@ -1,14 +1,12 @@
 import * as React from 'react';
-// $FlowFixMe
-import { withRouter } from 'react-router';
-// $FlowFixMe
+import { withRouter } from 'react-router-dom';
 import debounceFn from 'debounce';
 
 type Props = {
   scrollCaptureDebounce: number,
   scrollSyncDebounce: number,
   scrollSyncAttemptLimit: number,
-  children: React.Node,
+  children: React$Node,
   history: Object,
   location: Object,
   onLocationChange: Function,

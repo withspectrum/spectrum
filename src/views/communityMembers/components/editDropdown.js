@@ -13,11 +13,11 @@ import {
   DropdownSectionText,
   DropdownSectionTitle,
   DropdownAction,
-} from '../../../components/settingsViews/style';
-import Icon from '../../../components/icons';
-import { Spinner } from '../../../components/globals';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import OutsideClickHandler from '../../../components/outsideClickHandler';
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icon';
+import { Spinner } from 'src/components/globals';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
+import OutsideClickHandler from 'src/components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
 import blockCommunityMember from 'shared/graphql/mutations/communityMember/blockCommunityMember';
@@ -105,11 +105,6 @@ class EditDropdown extends React.Component<Props, State> {
     },
   };
 
-  initMessage = () => {
-    this.props.dispatch(initNewThreadWithUser(this.props.user));
-    return this.props.history.push('/messages/new');
-  };
-
   getRolesConfiguration = () => {
     const { permissions } = this.props;
 
@@ -191,9 +186,11 @@ class EditDropdown extends React.Component<Props, State> {
   };
 
   toggleOpen = () => this.setState({ isOpen: true });
+
   close = () => this.setState({ isOpen: false });
 
   render() {
+    const { user } = this.props;
     const { isOpen } = this.state;
     const configuration = this.getRolesConfiguration();
 
@@ -204,19 +201,21 @@ class EditDropdown extends React.Component<Props, State> {
         {isOpen && (
           <OutsideClickHandler onOutsideClick={this.close}>
             <Dropdown>
-              <DropdownSection
-                style={{ borderBottom: '0' }}
-                onClick={this.initMessage}
-              >
-                <DropdownAction>
-                  <Icon glyph={'message'} size={'32'} />
-                </DropdownAction>
-                <DropdownSectionText>
-                  <DropdownSectionTitle>
-                    Send Direct Message
-                  </DropdownSectionTitle>
-                </DropdownSectionText>
-              </DropdownSection>
+              <InitDirectMessageWrapper
+                user={user}
+                render={
+                  <DropdownSection style={{ borderBottom: '0' }}>
+                    <DropdownAction>
+                      <Icon glyph={'message-simple-new'} size={'32'} />
+                    </DropdownAction>
+                    <DropdownSectionText>
+                      <DropdownSectionTitle>
+                        Send Direct Message
+                      </DropdownSectionTitle>
+                    </DropdownSectionText>
+                  </DropdownSection>
+                }
+              />
 
               <DropdownSectionDivider />
 

@@ -2,15 +2,27 @@
 import genKey from 'draft-js/lib/generateRandomKey';
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState.js';
 
-const FIGMA_URLS = /\b((?:https?\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
-const YOUTUBE_URLS = /\b(?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/gi;
-const VIMEO_URLS = /\b(?:\/\/)?(?:www\.)?vimeo.com\/(?:channels\/[0-9a-z-_]+\/)?([0-9a-z\-_]+)/gi;
+const FIGMA_URLS = /\b((?:https?:\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
+const YOUTUBE_URLS = /\b(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/gi;
+const VIMEO_URLS = /\b(?:https?:\/\/)?(?:www\.)?vimeo.com\/(?:channels\/[0-9a-z-_]+\/)?([0-9a-z\-_]+)/gi;
 const IFRAME_TAG = /<iframe.+?src=['"](.+?)['"]/gi;
-const FRAMER_URLS = /\b((?:https?\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerjs\.com)(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gi;
-const CODEPEN_URLS = /\b(?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
-const CODESANDBOX_URLS = /\b(?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
-const SIMPLECAST_URLS = /\b(?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const FRAMER_URLS = /\b(?:https?:\/\/)?(?:www\.)?(?:framer\.cloud|share\.framerjs\.com)\/([A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const CODEPEN_URLS = /\b(?:https?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const CODESANDBOX_URLS = /\b(?:https?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
+const SIMPLECAST_URLS = /\b(?:https?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
+
+const REGEXPS = {
+  figma: FIGMA_URLS,
+  youtube: YOUTUBE_URLS,
+  vimeo: VIMEO_URLS,
+  iframe: IFRAME_TAG,
+  framer: FRAMER_URLS,
+  codepen: CODEPEN_URLS,
+  codesandbox: CODESANDBOX_URLS,
+  simplecast: SIMPLECAST_URLS,
+  internal: THREAD_URLS,
+};
 
 export type InternalEmbedData = {
   type: 'internal',
@@ -20,6 +32,15 @@ export type InternalEmbedData = {
 
 export type ExternalEmbedData = {
   url: string,
+  type:
+    | 'figma'
+    | 'youtube'
+    | 'vimeo'
+    | 'iframe'
+    | 'framer'
+    | 'codepen'
+    | 'codesandbox'
+    | 'simplecast',
   aspectRatio?: string,
   width?: number,
   height?: number,
@@ -38,7 +59,7 @@ export const addEmbedsToEditorState = (
 
   // Detect the embeds and add an atomic block and an entity to the
   // raw content state for each one
-  input.blocks.forEach((block, index) => {
+  input.blocks.forEach((block, blockIndex) => {
     newBlocks.push(block);
 
     if (block.type !== 'unstyled') return;
@@ -49,22 +70,6 @@ export const addEmbedsToEditorState = (
     embeds.forEach(embed => {
       lastEntityKey++;
       const entityKey = lastEntityKey;
-      newBlocks.push({
-        type: 'atomic',
-        data: {},
-        text: ' ',
-        depth: 0,
-        // TODO
-        entityRanges: [
-          {
-            offset: 0,
-            length: 1,
-            key: entityKey,
-          },
-        ],
-        inlineStyleRanges: [],
-        key: genKey(),
-      });
       newEntityMap[entityKey] = {
         data: {
           ...embed,
@@ -73,6 +78,20 @@ export const addEmbedsToEditorState = (
         mutability: 'MUTABLE',
         type: 'embed',
       };
+      const regexp = new RegExp(REGEXPS[embed.type], 'i');
+      var match;
+      while ((match = regexp.exec(block.text)) !== null) {
+        // Replace the URL with a space
+        newBlocks[blockIndex].text = `${newBlocks[blockIndex].text.substr(
+          0,
+          match.index
+        )} ${newBlocks[blockIndex].text.substr(match.index + match[0].length)}`;
+        newBlocks[blockIndex].entityRanges.push({
+          offset: match.index,
+          length: 1,
+          key: entityKey,
+        });
+      }
     });
   });
 
@@ -97,11 +116,12 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
   let embeds = [];
 
   match(IFRAME_TAG, text).forEach(url => {
-    embeds.push({ url });
+    embeds.push({ type: 'iframe', url });
   });
 
   match(FIGMA_URLS, text).forEach(url => {
     embeds.push({
+      type: 'figma',
       url: `https://www.figma.com/embed?embed_host=spectrum&url=${url}`,
       aspectRatio: '56.25%', // 16:9 aspect ratio
     });
@@ -109,6 +129,7 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
 
   match(YOUTUBE_URLS, text).forEach(id => {
     embeds.push({
+      type: 'youtube',
       url: `https://www.youtube.com/embed/${id}`,
       aspectRatio: '56.25%', // 16:9 aspect ratio
     });
@@ -116,14 +137,16 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
 
   match(VIMEO_URLS, text).forEach(id => {
     embeds.push({
+      type: 'vimeo',
       url: `https://player.vimeo.com/video/${id}`,
       aspectRatio: '56.25%', // 16:9 aspect ratio
     });
   });
 
-  match(FRAMER_URLS, text).forEach(url => {
+  match(FRAMER_URLS, text).forEach(id => {
     embeds.push({
-      url: `https://${url}`,
+      type: 'framer',
+      url: `https://share.framerjs.com/${id}`,
       width: 600,
       height: 800,
     });
@@ -131,6 +154,7 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
 
   match(CODEPEN_URLS, text).forEach(path => {
     embeds.push({
+      type: 'codepen',
       url: `https://codepen.io${path.replace(/(pen|full|details)/, 'embed')}`,
       height: 300,
     });
@@ -138,6 +162,7 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
 
   match(CODESANDBOX_URLS, text).forEach(path => {
     embeds.push({
+      type: 'codesandbox',
       url: `https://codesandbox.io${path.replace('/s/', '/embed/')}`,
       height: 500,
     });
@@ -145,6 +170,7 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
 
   match(SIMPLECAST_URLS, text).forEach(path => {
     embeds.push({
+      type: 'simplecast',
       url: `https://embed.simplecast.com/${path
         .replace('/s/', '')
         .replace('/', '')}`,

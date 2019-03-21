@@ -2,6 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const EmailListItem = styled.div`
   padding: 8px 0 16px;
@@ -27,7 +28,7 @@ export const View = styled.div`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -98,7 +99,7 @@ export const ImageInputWrapper = styled(FlexCol)`
   > label:nth-of-type(2) {
     position: absolute;
     bottom: -24px;
-    left: 24px;
+    left: 16px;
   }
 `;
 
@@ -122,7 +123,7 @@ export const Location = styled(FlexRow)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -139,13 +140,9 @@ export const GithubSignin = styled.div`
 `;
 
 export const LogoutWrapper = styled.div`
-  display: none;
+  display: block;
 
   button {
     width: 100%;
-  }
-
-  @media (max-width: 768px) {
-    display: block;
   }
 `;

@@ -1,5 +1,7 @@
+// @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const EmailInviteForm = styled.div`
   display: flex;
@@ -35,7 +37,7 @@ export const EmailInviteInput = styled.input`
     border: 2px solid ${theme.brand.default};
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.hideOnMobile ? 'none' : 'auto')};
   }
 `;

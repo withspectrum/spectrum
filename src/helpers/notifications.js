@@ -1,8 +1,6 @@
 import React from 'react';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
-
-import Icon from '../components/icons';
+import Icon from '../components/icon';
 import { HorizontalRuleWithIcon } from '../components/globals';
 import { ChatMessage } from '../views/notifications/style';
 
@@ -44,15 +42,7 @@ export const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender.username}`}>{sender.name}</Link> replied to your{' '}
-          <Link
-            to={{
-              pathname: getThreadLink(thread),
-              state: { modal: true },
-            }}
-          >
-            thread
-          </Link>
-          :
+          <Link to={{ pathname: getThreadLink(thread) }}>thread</Link>:
         </span>
       );
     default:

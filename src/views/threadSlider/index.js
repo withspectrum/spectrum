@@ -1,84 +1,70 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { openThreadSlider, closeThreadSlider } from 'src/actions/threadSlider';
+import type { Location, History, Match } from 'react-router';
+import Icon from 'src/components/icon';
+import { ThreadView } from 'src/views/thread';
+import { ErrorBoundary } from 'src/components/error';
+import { ESC } from 'src/helpers/keycodes';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   Container,
   Overlay,
-  Thread,
-  Close,
+  ThreadContainer,
   CloseButton,
-  CloseLabel,
+  ThreadContainerBackground,
 } from './style';
-import Icon from 'src/components/icons';
-import { SliderThreadView } from '../thread';
-import { ErrorBoundary } from 'src/components/error';
-import { ESC } from 'src/helpers/keycodes';
 
-class ThreadSlider extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyPress, false);
-    this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
-  }
+type Props = {
+  previousLocation: Location,
+  history: History,
+  match: Match,
+};
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyPress, false);
-    this.props.dispatch(closeThreadSlider());
-  }
+const ThreadSlider = (props: Props) => {
+  const { previousLocation, history, match, titlebar, dispatch } = props;
+  const prevTitlebarProps = useRef(titlebar);
+  const { params } = match;
+  const { threadId } = params;
 
-  // Sync the currently open thread to the Redux state
-  componentDidUpdate(prev) {
-    const curr = this.props;
-
-    const prevId = prev.match.params.threadId;
-    const currId = curr.match.params.threadId;
-
-    if (prevId !== currId)
-      this.props.dispatch(openThreadSlider(this.props.match.params.threadId));
-  }
-
-  handleKeyPress = e => {
-    if (e.keyCode === ESC) {
-      this.closeSlider(e);
-    }
-  };
-
-  closeSlider = e => {
+  const closeSlider = (e: any) => {
     e && e.stopPropagation();
-    this.props.history.push(this.props.previousLocation);
-    this.props.dispatch(closeThreadSlider());
+    history.push({ ...previousLocation, state: { modal: false } });
   };
 
-  render() {
-    const { threadId } = this.props.match.params;
-    const { threadSlider } = this.props;
+  useEffect(() => {
+    const handleKeyPress = (e: any) => {
+      if (e.keyCode === ESC) {
+        e.stopPropagation();
+        closeSlider();
+      }
+    };
 
-    if (!threadSlider.isOpen) return null;
+    document.addEventListener('keydown', handleKeyPress, false);
+    return () => {
+      const prev = prevTitlebarProps.current;
+      dispatch(setTitlebarProps({ ...prev }));
+      document.removeEventListener('keydown', handleKeyPress, false);
+    };
+  }, []);
 
-    return (
-      <ErrorBoundary>
-        <Container data-cy="thread-slider">
-          <div onClick={this.closeSlider}>
-            <Overlay data-cy="thread-slider-overlay" entered />
-          </div>
-          <Thread entered>
-            <Close data-cy="thread-slider-close" onClick={this.closeSlider}>
-              <CloseLabel>Close</CloseLabel>
-              <CloseButton>
-                <Icon glyph="view-forward" size={24} />
-              </CloseButton>
-            </Close>
+  return (
+    <ErrorBoundary>
+      <Container data-cy="thread-slider">
+        <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
 
-            <SliderThreadView
-              threadId={threadId}
-              threadViewContext={'slider'}
-              slider
-            />
-          </Thread>
-        </Container>
-      </ErrorBoundary>
-    );
-  }
-}
+        <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>
+          <Icon glyph="view-close" size={32} />
+        </CloseButton>
 
-const map = state => ({ threadSlider: state.threadSlider });
+        <ThreadContainerBackground />
+
+        <ThreadContainer>
+          <ThreadView threadId={threadId} />
+        </ThreadContainer>
+      </Container>
+    </ErrorBoundary>
+  );
+};
+
+const map = state => ({ titlebar: state.titlebar });
 export default connect(map)(ThreadSlider);

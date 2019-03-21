@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Tooltip } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const View = styled.main`
   display: flex;
@@ -9,7 +9,7 @@ export const View = styled.main`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -22,7 +22,7 @@ export const SectionsContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 8px 0;
   }
 `;
@@ -34,7 +34,7 @@ export const Column = styled.div`
   flex: 1 0 ${props => (props.fullWidth ? '100%' : '33%')};
   max-width: ${props => (props.fullWidth ? '1200px' : '600px')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: 1 0 100%;
     padding: 0;
     max-width: 100%;
@@ -53,7 +53,7 @@ export const SectionCard = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
   }
 `;
@@ -123,7 +123,7 @@ export const StyledHeader = styled.div`
   align-items: center;
   flex: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -136,7 +136,7 @@ export const StyledSubnav = styled.div`
   width: 100%;
   flex: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0 16px;
     display: block;
     justify-content: center;
@@ -180,8 +180,8 @@ export const GrowthText = styled.span`
     props.positive
       ? props.theme.success.default
       : props.negative
-        ? props.theme.warn.alt
-        : props.theme.text.alt};
+      ? props.theme.warn.alt
+      : props.theme.text.alt};
   display: inline-block;
   margin-right: 6px;
   font-size: 14px;
@@ -190,12 +190,11 @@ export const GrowthText = styled.span`
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;
-  ${Tooltip} top: 2px;
 `;
 
 export const EditDropdownContainer = styled.div`
   position: relative;
-  color: ${theme.text.alt};
+  color: ${theme.text.secondary};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -209,7 +208,8 @@ export const Dropdown = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  background: ${theme.bg.default};
   width: 320px;
   overflow: hidden;
 `;
@@ -226,6 +226,7 @@ export const DropdownSection = styled.div`
   padding: 12px 8px;
   background: ${theme.bg.default};
   display: flex;
+  flex: 1 0 auto;
   align-items: center;
   justify-content: flex-start;
   border-bottom: 1px solid ${theme.bg.border};

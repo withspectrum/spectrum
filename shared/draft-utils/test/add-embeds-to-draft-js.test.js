@@ -17,6 +17,7 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           url,
+          type: 'iframe',
         },
       ]);
     });
@@ -27,6 +28,7 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           url,
+          type: 'iframe',
         },
       ]);
     });
@@ -40,6 +42,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://player.vimeo.com/video/${id}`,
+          type: 'vimeo',
         },
       ]);
     });
@@ -51,6 +54,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://player.vimeo.com/video/${id}`,
+          type: 'vimeo',
         },
       ]);
     });
@@ -62,6 +66,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://player.vimeo.com/video/${id}`,
+          type: 'vimeo',
         },
       ]);
     });
@@ -73,6 +78,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://player.vimeo.com/video/${id}`,
+          type: 'vimeo',
         },
       ]);
     });
@@ -84,6 +90,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://player.vimeo.com/video/${id}`,
+          type: 'vimeo',
         },
       ]);
     });
@@ -96,6 +103,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.figma.com/embed?embed_host=spectrum&url=${text}`,
+          type: 'figma',
         },
       ]);
     });
@@ -107,6 +115,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.figma.com/embed?embed_host=spectrum&url=${text}`,
+          type: 'figma',
         },
       ]);
     });
@@ -117,6 +126,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.figma.com/embed?embed_host=spectrum&url=${text}`,
+          type: 'figma',
         },
       ]);
     });
@@ -128,6 +138,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.figma.com/embed?embed_host=spectrum&url=${text}`,
+          type: 'figma',
         },
       ]);
     });
@@ -137,10 +148,8 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           aspectRatio: '56.25%',
-          url: `https://www.figma.com/embed?embed_host=spectrum&url=${text.replace(
-            'https://',
-            ''
-          )}`,
+          url: `https://www.figma.com/embed?embed_host=spectrum&url=${text}`,
+          type: 'figma',
         },
       ]);
     });
@@ -154,6 +163,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.youtube.com/embed/${id}`,
+          type: 'youtube',
         },
       ]);
     });
@@ -165,6 +175,7 @@ describe('sites', () => {
         {
           aspectRatio: '56.25%',
           url: `https://www.youtube.com/embed/${id}`,
+          type: 'youtube',
         },
       ]);
     });
@@ -175,7 +186,8 @@ describe('sites', () => {
       const text = 'https://framer.cloud/asdf123';
       expect(getEmbedsFromText(text)).toEqual([
         {
-          url: 'https://framer.cloud/asdf123',
+          url: 'https://share.framerjs.com/asdf123',
+          type: 'framer',
           width: 600,
           height: 800,
         },
@@ -187,6 +199,7 @@ describe('sites', () => {
       expect(getEmbedsFromText(text)).toEqual([
         {
           url: 'https://share.framerjs.com/478kta5wx0wn',
+          type: 'framer',
           width: 600,
           height: 800,
         },
@@ -201,6 +214,7 @@ describe('sites', () => {
         {
           height: 300,
           url: 'https://codepen.io/jcoulterdesign/embed/NeOQzX',
+          type: 'codepen',
         },
       ]);
     });
@@ -211,6 +225,7 @@ describe('sites', () => {
         {
           height: 300,
           url: 'https://codepen.io/jcoulterdesign/embed/NeOQzX',
+          type: 'codepen',
         },
       ]);
     });
@@ -221,6 +236,7 @@ describe('sites', () => {
         {
           height: 300,
           url: 'https://codepen.io/jcoulterdesign/embed/NeOQzX',
+          type: 'codepen',
         },
       ]);
     });
@@ -231,6 +247,7 @@ describe('sites', () => {
         {
           height: 300,
           url: 'https://codepen.io/jcoulterdesign/embed/NeOQzX',
+          type: 'codepen',
         },
       ]);
     });
@@ -243,6 +260,7 @@ describe('sites', () => {
         {
           height: 500,
           url: 'https://codesandbox.io/embed/8lz7276xz2',
+          type: 'codesandbox',
         },
       ]);
     });
@@ -253,6 +271,7 @@ describe('sites', () => {
         {
           height: 500,
           url: 'https://codesandbox.io/embed/8lz7276xz2?autoresize=true',
+          type: 'codesandbox',
         },
       ]);
     });
@@ -263,6 +282,7 @@ describe('sites', () => {
         {
           height: 500,
           url: 'https://codesandbox.io/embed/8lz7276xz2',
+          type: 'codesandbox',
         },
       ]);
     });
@@ -275,6 +295,7 @@ describe('sites', () => {
         {
           height: 200,
           url: 'https://embed.simplecast.com/8fb96767',
+          type: 'simplecast',
         },
       ]);
     });
@@ -285,6 +306,7 @@ describe('sites', () => {
         {
           height: 200,
           url: 'https://embed.simplecast.com/8fb96767?color=000000',
+          type: 'simplecast',
         },
       ]);
     });
@@ -295,6 +317,7 @@ describe('sites', () => {
         {
           height: 200,
           url: 'https://embed.simplecast.com/8fb96767',
+          type: 'simplecast',
         },
       ]);
     });
@@ -406,6 +429,7 @@ describe('complex text', () => {
       {
         url: 'https://player.vimeo.com/video/123456',
         aspectRatio: '56.25%',
+        type: 'vimeo',
       },
     ]);
   });
@@ -416,6 +440,7 @@ describe('complex text', () => {
       {
         url: 'https://player.vimeo.com/video/123456',
         aspectRatio: '56.25%',
+        type: 'vimeo',
       },
     ]);
   });
@@ -427,10 +452,12 @@ describe('complex text', () => {
       {
         aspectRatio: '56.25%',
         url: 'https://www.youtube.com/embed/asdf123',
+        type: 'youtube',
       },
       {
         aspectRatio: '56.25%',
         url: 'https://player.vimeo.com/video/123456',
+        type: 'vimeo',
       },
     ]);
   });
@@ -440,10 +467,12 @@ describe('complex text', () => {
     expect(getEmbedsFromText(text)).toEqual([
       {
         url: 'bla.com',
+        type: 'iframe',
       },
       {
         url: 'https://player.vimeo.com/video/123456',
         aspectRatio: '56.25%',
+        type: 'vimeo',
       },
     ]);
   });
@@ -459,6 +488,7 @@ describe('complex text', () => {
       {
         height: 200,
         url: 'https://embed.simplecast.com/a1f11d11',
+        type: 'simplecast',
       },
     ]);
   });
@@ -493,6 +523,25 @@ it('should add embeds', () => {
         inlineStyleRanges: [],
         entityRanges: [],
         text: 'https://simplecast.com/s/a1f11d11',
+      },
+    ],
+    entityMap: {},
+  };
+  expect(addEmbedsToEditorState(input)).toMatchSnapshot();
+});
+
+it('should add multiple embeds to text', () => {
+  const input = {
+    blocks: [
+      {
+        type: 'unstyled',
+        key: 'g0000',
+        data: {},
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [],
+        text:
+          'New podcast! https://simplecast.com/s/a1f11d11 it is really cool https://simplecast.com/s/a1f11d11',
       },
     ],
     entityMap: {},

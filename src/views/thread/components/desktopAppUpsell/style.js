@@ -2,15 +2,13 @@
 import styled from 'styled-components';
 import { theme } from 'shared/theme';
 
-export const Container = styled.div``;
-
-export const Card = styled.div`
+export const Container = styled.div`
   padding: 16px;
-  background: ${theme.bg.default};
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+
+  a,
+  button {
+    width: 100%;
+  }
 `;
 
 export const AppIcon = styled.img`
@@ -32,7 +30,7 @@ export const Title = styled.p`
 `;
 
 export const Subtitle = styled.p`
-  font-size: 14px;
-  color: ${theme.text.alt};
+  font-size: 15px;
+  color: ${theme.text.secondary};
   margin-bottom: 16px;
 `;

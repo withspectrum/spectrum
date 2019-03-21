@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexRow,
   FlexCol,
@@ -10,17 +10,16 @@ import {
   hexa,
   zIndex,
 } from 'src/components/globals';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
-export const Title = styled.h1`
-  color: ${theme.text.alt};
+export const Title = styled.p`
+  color: ${theme.text.default};
   width: 100%;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 1.25;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
   margin-bottom: 8px;
   padding: 0;
-  font-size: 24px;
   text-align: center;
   letter-spacing: 0.2px;
 `;
@@ -46,10 +45,10 @@ export const Actions = styled.div`
   }
 `;
 
-export const Subtitle = styled.h2`
+export const Subtitle = styled.p`
   width: 100%;
-  color: ${theme.text.alt};
-  font-weight: 500;
+  color: ${theme.text.secondary};
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.4;
   margin-bottom: 16px;
@@ -211,7 +210,7 @@ export const SigninLink = styled.span`
 
 export const FullscreenContent = styled.div`
   width: 100%;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -243,7 +242,7 @@ export const SigninButtonsContainer = styled.div`
   padding-top: 48px;
   max-width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 24px;
   }
 `;
@@ -254,7 +253,7 @@ export const Col = styled.div`
   flex-wrap: wrap;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     align-items: center;
   }
@@ -307,7 +306,7 @@ export const SigninButton = styled.a`
     fill: currentColor !important;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 16px 0;
 
     ${props =>
@@ -400,7 +399,7 @@ export const JoinChannelContainer = styled.div`
   background: ${theme.bg.wash};
   position: relative;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     button {
       width: 100%;
     }
@@ -413,4 +412,12 @@ export const JoinChannelContent = styled.div`
   flex: auto;
   align-self: flex-start;
   width: 100%;
+`;
+
+export const HeadingIconWrapper = styled.div`
+  display: flex;
+  padding: 32px;
+  align-items: center;
+  justify-content: center;
+  color: ${theme.text.alt};
 `;

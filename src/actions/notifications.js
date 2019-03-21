@@ -4,3 +4,8 @@ export const updateNotificationsCount = (countType: string, count: number) => ({
   countType,
   count,
 });
+
+export const setNotifications = (notifications: Array<Object>) => ({
+  type: 'SET_NOTIFICATIONS',
+  notifications,
+});

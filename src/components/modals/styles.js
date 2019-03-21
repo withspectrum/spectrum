@@ -1,10 +1,9 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from '../globals';
-import { isMobile } from '../../helpers/utils';
-import { IconButton } from '../buttons';
+import { isMobile } from 'src/helpers/utils';
+import Icon from 'src/components/icon';
 
 /*
   This is the global stylesheet for all modal components. Its styles will wrap
@@ -78,13 +77,14 @@ export const Title = styled.div`
 export const Header = styled.div`
   padding: 20px 24px 0;
   display: ${props => (props.noHeader ? 'none' : 'flex')};
+  justify-content: space-between;
 `;
 
 export const ModalContent = styled.div``;
 
 export const Footer = styled.div``;
 
-export const CloseButton = styled(IconButton)`
+export const CloseButton = styled(Icon)`
   position: absolute;
   right: 8px;
   top: 8px;

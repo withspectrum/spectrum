@@ -2,16 +2,20 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const MessagesWrapper = styled.div`
   flex: 1 0 auto;
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 100%;
+  justify-content: flex-end;
+  background: ${theme.bg.default};
 
-  @media (max-width: 768px) {
-    padding-bottom: 16px;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    padding-bottom: 72px;
   }
 `;
 
@@ -21,16 +25,16 @@ export const MessageGroupContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-  margin-top: 20px;
+  margin-top: 8px;
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-  margin: 20px 0 0;
+  margin: 24px 0;
   text-align: center;
   user-select: none;
 
   hr {
-    border-color: ${theme.bg.wash};
+    border-color: ${theme.bg.divider};
   }
 `;
 
@@ -43,16 +47,10 @@ export const UnseenRobotext = styled(Timestamp)`
 
 export const Time = styled.span`
   text-align: center;
-  color: ${theme.text.placeholder};
+  color: ${theme.text.alt};
   font-size: 14px;
-  font-weight: 400;
-  margin: 0 16px;
-  transition: ${Transition.hover.off};
-
-  &:hover {
-    color: ${theme.text.alt};
-    transiton: ${Transition.hover.on};
-  }
+  font-weight: 500;
+  margin: 0 24px;
 `;
 
 export const UnseenTime = styled(Time)`

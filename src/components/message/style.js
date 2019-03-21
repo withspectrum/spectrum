@@ -2,9 +2,10 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { SvgWrapper } from '../icons';
-import { Truncate, monoStack, hexa, Tooltip } from 'src/components/globals';
+import { SvgWrapper } from 'src/components/icon';
+import { Truncate, monoStack, hexa } from 'src/components/globals';
 import { Wrapper as EditorWrapper } from '../rich-text-editor/style';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Byline = styled.span`
   display: flex;
@@ -95,8 +96,6 @@ export const Action = styled.li`
   &:first-child {
     border-left: 0;
   }
-
-  ${Tooltip};
 `;
 
 export const LikeAction = styled(Action)`
@@ -127,8 +126,9 @@ export const GutterTimestamp = styled(Link)`
 `;
 
 export const OuterMessageContainer = styled.div`
-  display: flex;
-  flex: 1 0 auto;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  padding-right: 16px;
   align-self: stretch;
   position: relative;
   padding-right: 16px;
@@ -137,7 +137,7 @@ export const OuterMessageContainer = styled.div`
       ? props.theme.special.wash
       : props.error
       ? props.theme.warn.wash
-      : props.theme.bg.default};
+      : 'transparent'};
 
   ${props =>
     props.selected &&
@@ -152,23 +152,25 @@ export const OuterMessageContainer = styled.div`
       ${GutterTimestamp} {
         opacity: 1;
       }
-    `} &:hover {
-    @media (min-width: 768px) {
-      background: ${props =>
-        props.selected
-          ? props.theme.special.wash
-          : props.error
-          ? props.theme.warn.border
-          : props.theme.bg.wash};
+    `}
 
-      ${ActionsContainer} {
-        opacity: 1;
-        pointer-events: auto;
-      }
+  &:hover,
+  &:focus,
+  &:active {
+    background: ${props =>
+      props.selected
+        ? props.theme.special.wash
+        : props.error
+        ? props.theme.warn.border
+        : props.theme.bg.wash};
 
-      ${GutterTimestamp} {
-        opacity: 1;
-      }
+    ${ActionsContainer} {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    ${GutterTimestamp} {
+      opacity: 1;
     }
   }
 `;
@@ -237,7 +239,7 @@ const Bubble = styled.div`
 `;
 
 export const Text = styled(Bubble)`
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.4;
   color: ${props =>
     props.error ? props.theme.warn.default : props.theme.text.default};
@@ -337,11 +339,6 @@ export const Paragraph = styled.p`
   &:not(:empty) ~ &:not(:empty) {
     margin-top: 8px;
   }
-
-  /* hack for https://github.com/withspectrum/spectrum/issues/4829 */
-  &:last-of-type:not(:empty) {
-    margin-top: 0px !important;
-  }
 `;
 
 export const BlockQuote = styled.blockquote`
@@ -351,7 +348,7 @@ export const BlockQuote = styled.blockquote`
   padding: 4px 12px 4px 16px;
 `;
 
-export const QuotedParagraph = Paragraph.withComponent('div').extend`
+export const QuotedParagraph = styled.div`
   color: ${theme.text.alt};
 
   code {
@@ -446,7 +443,7 @@ export const EditorInput = styled(EditorWrapper)`
   max-width: 100%;
   word-break: break-all;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
     padding-left: 16px;
   }
@@ -499,7 +496,6 @@ export const EditedIndicator = styled.span`
   display: block;
   font-size: 11px;
   color: ${props => props.theme.text.alt};
-  ${Tooltip};
 `;
 
 export const ThreadAttachmentsContainer = styled.ul``;

@@ -1,16 +1,13 @@
 // @flow
 import * as React from 'react';
-import {
-  SectionsContainer,
-  Column,
-} from '../../../components/settingsViews/style';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
 import EditForm from './editForm';
 import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
 import LoginTokenSettings from './joinTokenSettings';
-import SlackConnection from '../../communitySettings/components/slack';
+import SlackConnection from 'src/views/communitySettings/components/slack';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
@@ -19,11 +16,10 @@ type Props = {
   communitySlug: string,
   togglePending: Function,
   unblock: Function,
-  initMessage: Function,
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { channel, initMessage, community } = this.props;
+    const { channel, community } = this.props;
 
     return (
       <SectionsContainer data-cy="channel-overview">
@@ -55,11 +51,7 @@ class Overview extends React.Component<Props> {
           {channel.isPrivate && (
             <span>
               <ErrorBoundary fallbackComponent={SettingsFallback}>
-                <ChannelMembers
-                  channel={channel}
-                  id={channel.id}
-                  initMessage={initMessage}
-                />
+                <ChannelMembers channel={channel} id={channel.id} />
               </ErrorBoundary>
 
               <ErrorBoundary fallbackComponent={SettingsFallback}>
@@ -67,7 +59,6 @@ class Overview extends React.Component<Props> {
                   togglePending={this.props.togglePending}
                   channel={channel}
                   id={channel.id}
-                  initMessage={initMessage}
                 />
               </ErrorBoundary>
 
@@ -76,7 +67,6 @@ class Overview extends React.Component<Props> {
                   unblock={this.props.unblock}
                   channel={channel}
                   id={channel.id}
-                  initMessage={initMessage}
                 />
               </ErrorBoundary>
             </span>
@@ -84,11 +74,7 @@ class Overview extends React.Component<Props> {
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             {!channel.isPrivate && (
-              <ChannelMembers
-                channel={channel}
-                initMessage={initMessage}
-                id={channel.id}
-              />
+              <ChannelMembers channel={channel} id={channel.id} />
             )}
           </ErrorBoundary>
         </Column>

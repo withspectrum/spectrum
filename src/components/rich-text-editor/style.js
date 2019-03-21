@@ -9,6 +9,7 @@ import { Transition, zIndex } from 'src/components/globals';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import type { Node } from 'react';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const UsernameWrapper = styled.span`
   color: ${props =>
@@ -100,7 +101,7 @@ export const MediaRow = styled.div`
   margin-top: 16px;
   width: calc(100% + 48px);
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     position: absolute;
     top: calc(100% - 90px);
   }

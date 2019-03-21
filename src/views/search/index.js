@@ -2,23 +2,34 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Titlebar from '../titlebar';
-import { View } from './style';
+import { ViewGrid } from 'src/components/layout';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import DashboardThreadFeed from '../dashboard/components/threadFeed';
-import { InboxScroller } from '../dashboard/style';
+import ThreadFeed from 'src/components/threadFeed';
 import SearchInput from './searchInput';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
-const SearchThreadFeed = compose(connect(), searchThreadsQuery)(
-  DashboardThreadFeed
-);
+const SearchThreadFeed = compose(
+  connect(),
+  searchThreadsQuery
+)(ThreadFeed);
 
-type Props = {};
+type Props = {
+  dispatch: Function,
+};
 type State = {
   searchQueryString: ?string,
 };
 class Search extends React.Component<Props, State> {
   state = { searchQueryString: '' };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    return dispatch(
+      setTitlebarProps({
+        title: 'Search',
+      })
+    );
+  }
 
   handleSubmit = (searchQueryString: string) => {
     if (searchQueryString.length > 0) {
@@ -31,27 +42,16 @@ class Search extends React.Component<Props, State> {
     const searchFilter = { everythingFeed: true };
 
     return (
-      <View>
-        <Titlebar
-          provideBack
-          noComposer
-          title={'Search'}
-          style={{ gridArea: 'header' }}
-        />
-
+      <ViewGrid>
         <SearchInput handleSubmit={this.handleSubmit} />
 
-        <InboxScroller id="scroller-for-inbox">
-          {searchQueryString &&
-            searchQueryString.length > 0 &&
-            searchFilter && (
-              <SearchThreadFeed
-                queryString={searchQueryString}
-                filter={searchFilter}
-              />
-            )}
-        </InboxScroller>
-      </View>
+        {searchQueryString && searchQueryString.length > 0 && searchFilter && (
+          <SearchThreadFeed
+            queryString={searchQueryString}
+            filter={searchFilter}
+          />
+        )}
+      </ViewGrid>
     );
   }
 }

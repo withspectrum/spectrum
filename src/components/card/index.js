@@ -1,11 +1,10 @@
 // @flow
 import theme from 'shared/theme';
 import React from 'react';
-// $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
 import { FlexCol } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const StyledCard = styled(FlexCol)`
   background: ${theme.bg.default};
@@ -16,16 +15,7 @@ const StyledCard = styled(FlexCol)`
   overflow: visible;
   flex: none;
 
-  + div,
-  + span {
-    margin-top: 16px;
-
-    @media (max-width: 768px) {
-      margin-top: 2px;
-    }
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     box-shadow: none;
   }

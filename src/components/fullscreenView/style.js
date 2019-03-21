@@ -1,7 +1,8 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const FullscreenViewContainer = styled.div`
   position: fixed;
@@ -24,7 +25,7 @@ export const FullscreenViewContainer = styled.div`
 export const Illustrations = styled.span`
   z-index: ${zIndex.background};
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

@@ -9,7 +9,6 @@ import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
-import ThreadByline from './threadByline';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
@@ -17,19 +16,15 @@ import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
 import ActionBar from './actionBar';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import ThreadEditInputs from 'src/components/composer/inputs';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import {
-  UserHoverProfile,
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { UserListItem } from 'src/components/entities';
 import {
   ThreadWrapper,
   ThreadContent,
   ThreadHeading,
   ThreadSubtitle,
+  BylineContainer,
 } from '../style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
@@ -59,7 +54,7 @@ type Props = {
   currentUser: ?Object,
   toggleEdit: Function,
   uploadImage: Function,
-  innerRef?: any,
+  ref?: any,
 };
 
 class ThreadDetailPure extends React.Component<Props, State> {
@@ -77,7 +72,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   };
 
   bodyEditor: any;
-  titleTextarea: React.Node;
+  titleTextarea: React$Node;
 
   componentWillMount() {
     this.setThreadState();
@@ -218,10 +213,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
           isEditing,
           body: '',
         });
-        this.props.toggleEdit();
+        this.props.toggleEdit && this.props.toggleEdit();
       });
 
-    this.props.toggleEdit();
+    this.props.toggleEdit && this.props.toggleEdit();
 
     if (!isEditing) {
       track(events.THREAD_EDITED_INITED, {
@@ -415,13 +410,14 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
+    const { author } = thread;
 
     const editedTimestamp = thread.modifiedAt
       ? new Date(thread.modifiedAt).getTime()
       : null;
 
     return (
-      <ThreadWrapper isEditing={isEditing} innerRef={this.props.innerRef}>
+      <ThreadWrapper isEditing={isEditing} ref={this.props.ref}>
         <ThreadContent isEditing={isEditing}>
           {isEditing ? (
             <ThreadEditInputs
@@ -437,35 +433,29 @@ class ThreadDetailPure extends React.Component<Props, State> {
             />
           ) : (
             <React.Fragment>
-              {/* $FlowFixMe */}
-              <ErrorBoundary fallbackComponent={null}>
-                <ConditionalWrap
-                  condition={!!thread.author.user.username}
-                  wrap={() => (
-                    <UserHoverProfile username={thread.author.user.username}>
-                      <ThreadByline author={thread.author} />
-                    </UserHoverProfile>
-                  )}
-                >
-                  <ThreadByline author={thread.author} />
-                </ConditionalWrap>
-              </ErrorBoundary>
+              <BylineContainer>
+                <UserListItem
+                  userObject={author.user}
+                  name={author.user.name}
+                  username={author.user.username}
+                  profilePhoto={author.user.profilePhoto}
+                  isCurrentUser={
+                    currentUser && author.user.id === currentUser.id
+                  }
+                  isOnline={author.user.isOnline}
+                  avatarSize={40}
+                  showHoverProfile={false}
+                  messageButton={
+                    currentUser && author.user.id !== currentUser.id
+                  }
+                />
+              </BylineContainer>
+
+              <div style={{ height: '16px' }} />
 
               <ThreadHeading>{thread.content.title}</ThreadHeading>
 
               <ThreadSubtitle>
-                <CommunityHoverProfile id={thread.community.id}>
-                  <Link to={`/${thread.community.slug}`}>
-                    {thread.community.name}
-                  </Link>
-                </CommunityHoverProfile>
-                <span>&nbsp;/&nbsp;</span>
-                <ChannelHoverProfile id={thread.channel.id}>
-                  <Link to={`/${thread.community.slug}/${thread.channel.slug}`}>
-                    {thread.channel.name}
-                  </Link>
-                </ChannelHoverProfile>
-                <span>&nbsp;·&nbsp;</span>
                 <Link to={getThreadLink(thread)}>
                   {timestamp}
                   {thread.modifiedAt && (
@@ -487,7 +477,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
           )}
         </ThreadContent>
 
-        <ErrorBoundary fallbackComponent={null}>
+        <ErrorBoundary>
           <ActionBar
             toggleEdit={this.toggleEdit}
             currentUser={currentUser}

@@ -6,19 +6,17 @@ import { Route } from 'react-router-dom';
 import getCurrentUserSettings, {
   type GetCurrentUserSettingsType,
 } from 'shared/graphql/queries/user/getCurrentUserSettings';
-import { Loading } from 'src/components/loading';
-import AppViewWrapper from 'src/components/appViewWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
-import ViewError from 'src/components/viewError';
 import { View } from './style';
 import Overview from './components/overview';
-import Titlebar from '../titlebar';
 import Header from 'src/components/settingsViews/header';
-import Subnav from 'src/components/settingsViews/subnav';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   data: {
@@ -32,61 +30,33 @@ type Props = {
 class UserSettings extends React.Component<Props> {
   componentDidMount() {
     track(events.USER_SETTINGS_VIEWED);
+    const { dispatch } = this.props;
+    return dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
   }
 
   render() {
     const {
       data: { user },
-      location,
       match,
       isLoading,
-      hasError,
       currentUser,
     } = this.props;
 
-    // this is hacky, but will tell us if we're viewing analytics or the root settings view
-    const pathname = location.pathname;
-    const lastIndex = pathname.lastIndexOf('/');
-    const activeTab = pathname.substr(lastIndex + 1);
-
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
     // the user is logged in but somehow a user wasnt fetched from the server prompt a refresh to reauth the user
     if ((currentUser && !user) || (currentUser && user && !user.id)) {
-      return (
-        <React.Fragment>
-          <Titlebar
-            title={'No User Found'}
-            provideBack={true}
-            backRoute={'/'}
-            noComposer
-          />
-          <AppViewWrapper>
-            <ViewError
-              heading={'We ran into an error finding this user’s settings.'}
-              subheading={
-                'If you are trying to view your own settings, refresh the page below to sign in again.'
-              }
-              clearStorage
-              refresh
-            />
-          </AppViewWrapper>
-        </React.Fragment>
-      );
+      return <ErrorView />;
     }
 
     // user is viewing their own settings, validated on the server
     if (user && user.id && currentUser.id === user.id) {
-      const subnavItems = [
-        {
-          to: `/users/${user.username}/settings`,
-          label: 'Overview',
-          activeLabel: 'settings',
-        },
-      ];
-
       const subheading = {
         to: `/users/${user.username}`,
         label: `Return to profile`,
@@ -98,61 +68,26 @@ class UserSettings extends React.Component<Props> {
       };
 
       return (
-        <AppViewWrapper data-cy="user-settings">
-          <Titlebar
-            title={'Settings'}
-            subtitle={user.name}
-            provideBack={true}
-            backRoute={`/users/${user.username}`}
-            noComposer
-          />
+        <React.Fragment>
           <Head title={`Settings for ${user.name}`} />
+          <ViewGrid>
+            <View data-cy="user-settings">
+              <Header
+                avatar={avatar}
+                subheading={subheading}
+                heading={'My Settings'}
+              />
 
-          <View id="main">
-            <Header
-              avatar={avatar}
-              subheading={subheading}
-              heading={'My Settings'}
-            />
-
-            <Subnav items={subnavItems} activeTab={activeTab} />
-
-            <Route path={`${match.url}`}>
-              {() => <Overview user={user} />}
-            </Route>
-          </View>
-        </AppViewWrapper>
+              <Route path={`${match.url}`}>
+                {() => <Overview user={user} />}
+              </Route>
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 
-    if (hasError) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={'Error fetching user'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            heading={'There was an error fetching this user’s settings.'}
-          />
-        </AppViewWrapper>
-      );
-    }
-
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'No User Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <ViewError heading={'We weren’t able to find this user’s settings.'} />
-      </AppViewWrapper>
-    );
+    return <ErrorView />;
   }
 }
 

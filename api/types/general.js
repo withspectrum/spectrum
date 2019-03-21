@@ -26,6 +26,7 @@ const general = /* GraphQL */ `
     isPending: Boolean
     receiveNotifications: Boolean
     reputation: Int
+    lastSeen: Date
   }
 
   type ContextPermissions

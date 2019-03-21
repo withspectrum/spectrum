@@ -7,7 +7,7 @@ import {
   EmbedContainer,
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
-import ThreadAttachment from 'src/components/message/ThreadAttachment';
+import ThreadAttachment from 'src/components/message/threadAttachment';
 import { getStringElements } from '../utils/getStringElements';
 import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
@@ -63,7 +63,7 @@ const InternalEmbed = (props: InternalEmbedData) => {
 };
 
 const Embed = (props: EmbedData) => {
-  if (typeof props.type === 'string' && props.type === 'internal') {
+  if (props.type === 'internal') {
     return <InternalEmbed {...props} />;
   }
 
@@ -112,9 +112,9 @@ export const createRenderer = (options: Options) => {
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <Line className={className} style={style}>
                 {tokens.map((line, i) => (
-                  <div {...getLineProps({ line, key: i })}>
+                  <div key={i} {...getLineProps({ line, key: i })}>
                     {line.map((token, key) => (
-                      <span {...getTokenProps({ token, key })} />
+                      <span key={key} {...getTokenProps({ token, key })} />
                     ))}
                   </div>
                 ))}
@@ -160,7 +160,12 @@ export const createRenderer = (options: Options) => {
     },
     entities: {
       LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => (
-        <a key={key} href={data.url || data.href} target="_blank">
+        <a
+          key={key}
+          href={data.url || data.href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {children}
         </a>
       ),

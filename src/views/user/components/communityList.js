@@ -1,15 +1,14 @@
 //@flow
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
-import { CommunityListItem } from 'src/components/listItems';
-import Icon from 'src/components/icons';
+import { CommunityListItem } from 'src/components/entities';
+import { ErrorBoundary } from 'src/components/error';
+import { Loading } from 'src/components/loading';
+import { PrimaryOutlineButton } from 'src/components/button';
 import { getUserCommunityConnection } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import type { GetUserCommunityConnectionType } from 'shared/graphql/queries/user/getUserCommunityConnection';
-
-import { ListContainer } from 'src/components/listItems/style';
 
 type Props = {
   data: {
@@ -23,13 +22,23 @@ class CommunityList extends React.Component<Props> {
   render() {
     const { data } = this.props;
 
+    if (data.loading) {
+      return <Loading style={{ padding: '32px' }} />;
+    }
+
     if (
       !data.user ||
       !data.user.communityConnection ||
       !data.user.communityConnection.edges ||
       data.user.communityConnection.edges.length === 0
     ) {
-      return null;
+      return (
+        <div style={{ padding: '16px' }}>
+          <PrimaryOutlineButton style={{ flex: '1' }} to={'/explore'}>
+            Explore communities
+          </PrimaryOutlineButton>
+        </div>
+      );
     }
 
     const communities = data.user.communityConnection.edges.map(
@@ -49,25 +58,20 @@ class CommunityList extends React.Component<Props> {
     }
 
     return (
-      <ListContainer>
+      <div>
         {sortedCommunities.map(community => {
           if (!community) return null;
           return (
-            <Link key={community.id} to={`/${community.slug}`}>
+            <ErrorBoundary key={community.id}>
               <CommunityListItem
-                community={community}
-                reputation={
-                  community.contextPermissions
-                    ? community.contextPermissions.reputation
-                    : 0
-                }
-              >
-                <Icon glyph="view-forward" />
-              </CommunityListItem>
-            </Link>
+                communityObject={community}
+                profilePhoto={community.profilePhoto}
+                name={community.name}
+              />
+            </ErrorBoundary>
           );
         })}
-      </ListContainer>
+      </div>
     );
   }
 }

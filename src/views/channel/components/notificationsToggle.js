@@ -4,9 +4,9 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import toggleChannelNotificationsMutation from 'shared/graphql/mutations/channel/toggleChannelNotifications';
 import type { ToggleChannelNotificationsType } from 'shared/graphql/mutations/channel/toggleChannelNotifications';
-import { Checkbox } from '../../../components/formElements';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { ListContainer } from '../../../components/listItems/style';
+import { Checkbox } from 'src/components/formElements';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { ListContainer } from 'src/components/listItems/style';
 
 type Props = {
   value: boolean,
@@ -37,7 +37,9 @@ class NotificationsTogglePure extends React.Component<Props, State> {
   }
 
   handleChange = () => {
-    const { channel: { id } } = this.props;
+    const {
+      channel: { id },
+    } = this.props;
     const { isReceiving } = this.state;
     this.setState({
       isReceiving: !isReceiving,
@@ -66,7 +68,7 @@ class NotificationsTogglePure extends React.Component<Props, State> {
     const { channel } = this.props;
 
     return (
-      <ListContainer>
+      <ListContainer style={{ padding: '0 16px 16px' }}>
         <Checkbox
           id="isPrivate"
           checked={isReceiving}

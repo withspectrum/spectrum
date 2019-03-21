@@ -6,7 +6,7 @@ import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import RestoreChannelModal from './RestoreChannelModal';
-import ChatInputLoginModal from './ChatInputLoginModal';
+import LoginModal from './LoginModal';
 import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
 
@@ -16,7 +16,7 @@ const MODAL_COMPONENTS = {
   REP_EXPLAINER_MODAL: RepExplainerModal,
   CHANGE_CHANNEL: ChangeChannelModal,
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
-  CHAT_INPUT_LOGIN_MODAL: ChatInputLoginModal,
+  LOGIN_MODAL: LoginModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
 };

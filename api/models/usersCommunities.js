@@ -84,6 +84,7 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
               createdAt: new Date(),
               isMember: true,
               receiveNotifications: true,
+              lastSeen: new Date(),
             },
             { returnChanges: 'always' }
           )
@@ -97,6 +98,7 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
               communityId,
               userId,
               createdAt: new Date(),
+              lastSeen: new Date(),
               isMember: true,
               isOwner: false,
               isModerator: false,
@@ -647,7 +649,7 @@ export const checkUserPermissionsInCommunity = (communityId: string, userId: str
     .run();
 };
 
-type UserIdAndCommunityId = [string, string];
+type UserIdAndCommunityId = [?string, string];
 
 // prettier-ignore
 export const getUsersPermissionsInCommunities = (input: Array<UserIdAndCommunityId>) => {
@@ -705,4 +707,27 @@ export const getUsersTotalReputation = (userIds: Array<string>): Promise<Array<n
           }
       )
     );
+};
+
+export const setCommunityLastSeen = (
+  communityId: string,
+  userId: string,
+  lastSeen: Date
+) => {
+  return db
+    .table('usersCommunities')
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
+    .update(
+      {
+        lastSeen: db.branch(
+          db.row('lastSeen').lt(lastSeen),
+          lastSeen,
+          db.row('lastSeen')
+        ),
+      },
+      {
+        returnChanges: true,
+      }
+    )
+    .run();
 };

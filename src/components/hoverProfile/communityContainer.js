@@ -16,7 +16,7 @@ const CommunityHoverProfile = getCommunityById(props => {
   if (props.data && props.data.community) {
     return (
       <CommunityProfile
-        innerRef={props.innerRef}
+        ref={props.ref}
         community={props.data.community}
         style={props.style}
       />
@@ -24,9 +24,7 @@ const CommunityHoverProfile = getCommunityById(props => {
   }
 
   if (props.data && props.data.loading) {
-    return (
-      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
-    );
+    return <LoadingHoverProfile style={props.style} ref={props.ref} />;
   }
 
   return null;
@@ -103,7 +101,7 @@ class CommunityHoverProfileWrapper extends React.Component<Props, State> {
     //     <Manager>
     //       <Reference>
     //         {({ ref }) => (
-    //           <Span innerRef={ref} style={style}>
+    //           <Span ref={ref} style={style}>
     //             {children}
     //           </Span>
     //         )}
@@ -119,7 +117,7 @@ class CommunityHoverProfileWrapper extends React.Component<Props, State> {
     //             }}
     //           >
     //             {({ style, ref }) => (
-    //               <CommunityHoverProfile id={id} innerRef={ref} style={style} />
+    //               <CommunityHoverProfile id={id} ref={ref} style={style} />
     //             )}
     //           </Popper>,
     //           document.body

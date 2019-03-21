@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import resetJoinTokenMutation from 'shared/graphql/mutations/channel/resetChannelJoinToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { OutlineButton } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -57,7 +57,7 @@ class ResetJoinToken extends React.Component<Props, State> {
         <OutlineButton
           loading={isLoading}
           onClick={this.reset}
-          dataCy="refresh-join-link-token"
+          data-cy="refresh-join-link-token"
         >
           Reset this link
         </OutlineButton>
@@ -66,4 +66,7 @@ class ResetJoinToken extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), resetJoinTokenMutation)(ResetJoinToken);
+export default compose(
+  connect(),
+  resetJoinTokenMutation
+)(ResetJoinToken);

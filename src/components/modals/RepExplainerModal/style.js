@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { zIndex } from '../../globals';
-import { isMobile } from '../../../helpers/utils';
+import { isMobile } from 'src/helpers/utils';
 
 const maxWidth = '460px';
 const mobile = isMobile();

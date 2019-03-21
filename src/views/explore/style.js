@@ -1,8 +1,6 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 import {
   FlexCol,
@@ -12,33 +10,17 @@ import {
   H3,
   P,
   Transition,
-  Gradient,
   Shadow,
   hexa,
   Truncate,
   zIndex,
-} from '../../components/globals';
-import Card from '../../components/card';
-import { StyledCard } from '../../components/listItems/style';
-import Icon from '../../components/icons';
-import { CommunityAvatar } from '../../components/avatar';
-import ScrollRow from '../../components/scrollRow';
-
-import { Button } from '../../components/buttons';
-
-export const Wrapper = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  flex: 1 0 auto;
-  width: 100%;
-  background-color: ${theme.bg.default};
-  overflow: auto;
-  overflow-x: hidden;
-  z-index: ${zIndex.base};
-  align-self: stretch;
-`;
+} from 'src/components/globals';
+import Card from 'src/components/card';
+import { StyledCard } from 'src/components/listItems/style';
+import Icon from 'src/components/icon';
+import { CommunityAvatar } from 'src/components/avatar';
+import ScrollRow from 'src/components/scrollRow';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ViewTitle = styled(H1)`
   margin-left: 48px;
@@ -49,7 +31,7 @@ export const ViewTitle = styled(H1)`
   position: relative;
   z-index: ${zIndex.base};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 16px;
     margin-top: 16px;
   }
@@ -61,7 +43,7 @@ export const ViewSubtitle = styled(H2)`
   position: relative;
   z-index: ${zIndex.base};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 16px;
     font-size: 16px;
     line-height: 20px;
@@ -70,7 +52,7 @@ export const ViewSubtitle = styled(H2)`
 
 export const ListCard = styled(StyledCard)`
   padding: 0;
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: flex;
     margin-bottom: 32px;
   }
@@ -85,10 +67,6 @@ export const Section = styled(FlexCol)`
   position: relative;
   z-index: ${zIndex.base};
   align-self: stretch;
-
-  @media (max-width: 768px) {
-    padding: 0;
-  }
 `;
 
 export const SectionWrapper = styled(FlexRow)`
@@ -96,7 +74,7 @@ export const SectionWrapper = styled(FlexRow)`
   align-items: flex-start;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
   }
 `;
@@ -112,7 +90,7 @@ export const ViewHeader = styled(Section)`
       0.75
     )}, ${theme.space.dark} )`};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 48px 24px 0 24px;
   }
 `;
@@ -121,7 +99,7 @@ export const SectionWithGradientTransition = styled(Section)`
   background-image: ${({ theme }) =>
     `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 32px;
   }
 `;
@@ -133,7 +111,7 @@ export const SectionTitle = styled(H2)`
   margin-bottom: 16px;
   font-weight: 800;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 24px;
   }
 `;
@@ -143,7 +121,7 @@ export const SectionSubtitle = styled(H3)`
   margin-bottom: 8px;
   margin-left: 48px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 16px;
   }
 `;
@@ -202,32 +180,6 @@ export const ItemMeta = styled(ItemCopy)`
   color: ${theme.text.placeholder};
 `;
 
-export const ButtonContainer = styled(FlexRow)`
-  justify-content: ${props => (props.center ? 'center' : 'flex-end')};
-  align-items: center;
-
-  > div {
-    margin-right: 8px;
-  }
-`;
-
-export const ItemButton = styled(Button)`
-  font-weight: 700;
-  color: ${theme.text.reverse};
-  background-color: ${props =>
-    props.joined ? props.theme.bg.inactive : props.theme.brand.default};
-  background-image: ${props =>
-    props.joined
-      ? 'none'
-      : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  box-shadow: none;
-  transition: ${Transition.hover.on};
-
-  &:hover {
-    box-shadow: none;
-  }
-`;
-
 export const Constellations = styled.div`
   background-color: transparent;
   background: url(/img/constellations.svg) center top no-repeat;
@@ -266,7 +218,7 @@ export const SearchWrapper = styled(Card)`
   padding: 12px 16px;
   box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
   transition: ${Transition.hover.off};
-  z-index: ${zIndex.search};
+  z-index: 14;
   border-radius: 8px;
 
   &:hover {
@@ -284,13 +236,10 @@ export const SearchIcon = styled(Icon)``;
 
 export const SearchInput = styled.input`
   font-size: 16px;
-  padding: 4px 20px;
+  padding: 4px 20px 4px 12px;
   flex: auto;
   position: relative;
   z-index: ${zIndex.search};
-
-  &:hover {
-  }
 `;
 
 export const SearchSpinnerContainer = styled.span`
@@ -315,10 +264,7 @@ export const SearchResultsDropdown = styled.ul`
   max-height: 400px;
   overflow-y: auto;
   background: ${theme.bg.default};
-
-  @media (max-width: 768px) {
-    border-radius: 0 0 8px 8px;
-  }
+  z-index: 12;
 `;
 
 export const SearchResultTextContainer = styled.div`
@@ -330,31 +276,12 @@ export const SearchResultTextContainer = styled.div`
 export const SearchResult = styled.li`
   display: flex;
   background: ${props =>
-    props.focused ? props.theme.brand.alt : props.theme.bg.default};
-  border-bottom: 2px solid
-    ${props => (props.focused ? 'transparent' : props.theme.bg.border)};
+    props.focused ? props.theme.bg.wash : props.theme.bg.default};
+  border-bottom: 1px solid ${theme.bg.border};
 
   &:hover {
-    background: ${theme.brand.alt};
+    background: ${theme.bg.wash};
     cursor: pointer;
-
-    h2 {
-      color: ${theme.text.reverse};
-    }
-
-    p {
-      color: ${theme.text.reverse};
-    }
-  }
-
-  h2 {
-    color: ${props =>
-      props.focused ? props.theme.text.reverse : props.theme.text.default};
-  }
-
-  p {
-    color: ${props =>
-      props.focused ? props.theme.text.reverse : props.theme.text.alt};
   }
 
   &:only-child {
@@ -377,18 +304,21 @@ export const SearchResultImage = styled(CommunityAvatar)``;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`
   margin-left: 16px;
+  align-items: flex-start;
 `;
 
 export const SearchResultName = styled.h2`
   font-size: 16px;
   font-weight: 700;
   line-height: 1.4;
+  color: ${theme.text.default};
 `;
 
 export const SearchResultMetadata = styled.p`
   font-size: 14px;
   font-weight: 400;
   line-height: 1.4;
+  color: ${theme.text.secondary};
 `;
 
 export const SearchResultNull = styled.div`
@@ -435,15 +365,25 @@ export const ListTitle = styled(H2)`
   font-size: 18px;
   margin-top: 32px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-left: 32px;
   }
 `;
 
 export const ListWrapper = styled(FlexRow)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(320px, 1fr));
+  align-items: start;
+  grid-gap: 16px;
+  padding-bottom: 32px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ListItem = styled(FlexRow)``;
@@ -457,21 +397,21 @@ export const Collections = styled.div`
 export const CollectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 32px;
+  padding: 32px;
   flex: auto;
 
-  @media (max-width: 768px) {
-    padding: 0;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    padding: 16px;
   }
-`;
-
-export const CategoryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  flex: none;
 `;
 
 export const LoadingContainer = styled.div`
   padding: 32px;
+`;
+
+export const ProfileCardWrapper = styled.section`
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+  border-radius: 4px;
+  overflow: hidden;
 `;

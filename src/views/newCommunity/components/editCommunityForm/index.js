@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import deleteCommunityMutation from 'shared/graphql/mutations/community/deleteCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Button } from '../../../../components/buttons';
-import { Notice } from '../../../../components/listItems/style';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Button } from 'src/components/button';
+import { Notice } from 'src/components/listItems/style';
 import {
   Input,
   UnderlineInput,
@@ -16,8 +16,8 @@ import {
   PhotoInput,
   CoverInput,
   Error,
-} from '../../../../components/formElements';
-import { ImageInputWrapper } from '../../../../components/editForm/style';
+} from 'src/components/formElements';
+import { ImageInputWrapper } from 'src/components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
 import type { Dispatch } from 'redux';
 

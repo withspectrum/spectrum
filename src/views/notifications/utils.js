@@ -153,7 +153,6 @@ const threadToString = (context, currentUser) => {
       <Link
         to={{
           pathname: getThreadLink(context.payload),
-          state: { modal: true },
         }}
       >
         {context.payload.content.title}
@@ -171,7 +170,6 @@ const threadReactionToString = context => {
       <Link
         to={{
           pathname: getThreadLink(context.payload),
-          state: { modal: true },
         }}
       >
         {context.payload.content.title}

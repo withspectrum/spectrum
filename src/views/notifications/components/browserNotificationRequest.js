@@ -1,7 +1,7 @@
 import React from 'react';
 import { RequestCard, CloseRequest } from '../style';
-import { FlexRow } from '../../../components/globals';
-import { Button } from '../../../components/buttons';
+import { FlexRow } from 'src/components/globals';
+import { PrimaryButton } from 'src/components/button';
 
 const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
   <RequestCard>
@@ -12,20 +12,13 @@ const FirstRequest = ({ onSubscribe, onDismiss, loading }) => (
       Enable push notifications
     </p>
     <FlexRow>
-      <Button
-        icon="notification-fill"
-        gradientTheme={'success'}
-        onClick={onSubscribe}
-        loading={loading}
-      >
+      <PrimaryButton onClick={onSubscribe} loading={loading}>
         Enable
-      </Button>
+      </PrimaryButton>
       <CloseRequest
         glyph="view-close"
         color="text.placeholder"
         hoverColor="warn.alt"
-        tipText="Dismiss"
-        tipLocation="top-left"
         onClick={onDismiss}
       />
     </FlexRow>

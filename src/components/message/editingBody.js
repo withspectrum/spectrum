@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo.js';
 import { Input } from '../chatInput/style';
 import { EditorInput, EditActions } from './style';
-import { TextButton, Button } from 'src/components/buttons';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import type { Dispatch } from 'redux';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
@@ -18,12 +18,6 @@ type Props = {
   dispatch: Dispatch<Object>,
 };
 
-type State = {
-  plugins: Array<mixed>,
-  body: string,
-  isSavingEdit: boolean,
-};
-
 const EditingChatInput = (props: Props) => {
   const initialState =
     props.message.messageType === 'text' ? props.message.content.body : null;
@@ -34,23 +28,20 @@ const EditingChatInput = (props: Props) => {
   let input = null;
 
   // $FlowIssue
-  React.useEffect(
-    () => {
-      if (props.message.messageType === 'text') return;
+  React.useEffect(() => {
+    if (props.message.messageType === 'text') return;
 
-      setText(null);
-      fetch('https://convert.spectrum.chat/to', {
-        method: 'POST',
-        body: props.message.content.body,
-      })
-        .then(res => res.text())
-        .then(md => {
-          setText(md);
-          input && input.focus();
-        });
-    },
-    [props.message.id]
-  );
+    setText(null);
+    fetch('https://convert.spectrum.chat/to', {
+      method: 'POST',
+      body: props.message.content.body,
+    })
+      .then(res => res.text())
+      .then(md => {
+        setText(md);
+        input && input.focus();
+      });
+  }, [props.message.id]);
 
   const onChange = e => {
     const text = e.target.value;
@@ -126,13 +117,17 @@ const EditingChatInput = (props: Props) => {
       </EditorInput>
       <EditActions>
         {!saving && (
-          <TextButton dataCy="edit-message-cancel" onClick={props.cancelEdit}>
+          <TextButton data-cy="edit-message-cancel" onClick={props.cancelEdit}>
             Cancel
           </TextButton>
         )}
-        <Button loading={saving} dataCy="edit-message-save" onClick={submit}>
+        <PrimaryOutlineButton
+          loading={saving}
+          data-cy="edit-message-save"
+          onClick={submit}
+        >
           Save
-        </Button>
+        </PrimaryOutlineButton>
       </EditActions>
     </React.Fragment>
   );

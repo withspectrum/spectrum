@@ -5,21 +5,19 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { getCommunitySettingsByMatch } from 'shared/graphql/queries/community/getCommunitySettings';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { Loading } from '../../components/loading';
-import AppViewWrapper from '../../components/appViewWrapper';
-import { Upsell404Community } from '../../components/upsell';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
-import Head from '../../components/head';
-import ViewError from '../../components/viewError';
-import Analytics from '../communityAnalytics';
-import Members from '../communityMembers';
-import Overview from './components/overview';
-import Titlebar from '../titlebar';
-import Header from '../../components/settingsViews/header';
-import Subnav from '../../components/settingsViews/subnav';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import Head from 'src/components/head';
+import Header from 'src/components/settingsViews/header';
+import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events, transformations } from 'src/helpers/analytics';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
+import { setTitlebarProps } from 'src/actions/titlebar';
+import Analytics from '../communityAnalytics';
+import Members from '../communityMembers';
+import Overview from './components/overview';
 
 type Props = {
   data: {
@@ -31,6 +29,15 @@ type Props = {
 };
 
 class CommunitySettings extends React.Component<Props> {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
+  }
+
   componentDidUpdate(prevProps) {
     if (!prevProps.data.community && this.props.data.community) {
       const { community } = this.props.data;
@@ -46,7 +53,6 @@ class CommunitySettings extends React.Component<Props> {
       location,
       match,
       isLoading,
-      hasError,
       history,
     } = this.props;
 
@@ -62,25 +68,7 @@ class CommunitySettings extends React.Component<Props> {
         community.communityPermissions.isModerator;
 
       if (!canViewCommunitySettings) {
-        return (
-          <AppViewWrapper>
-            <Titlebar
-              title={'No Permission'}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
-
-            <ViewError
-              heading={'You don’t have permission to manage this community.'}
-              subheading={
-                'If you want to create your own community, you can get started below.'
-              }
-            >
-              <Upsell404Community />
-            </ViewError>
-          </AppViewWrapper>
-        );
+        return <ErrorView />;
       }
 
       const subnavItems = [
@@ -121,83 +109,56 @@ class CommunitySettings extends React.Component<Props> {
         title += ' Settings';
       }
       return (
-        <AppViewWrapper data-cy="community-settings">
-          <Titlebar
-            title={community.name}
-            subtitle={'Settings'}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
+        <React.Fragment>
           <Head title={title} />
 
-          <View id="main">
-            <Header
-              avatar={avatar}
-              subheading={subheading}
-              heading={'Settings'}
-            />
-            <Subnav items={subnavItems} activeTab={activeTab} />
+          <ViewGrid>
+            <View data-cy="community-settings">
+              <Header
+                avatar={avatar}
+                subheading={subheading}
+                heading={'Settings'}
+              />
 
-            <Switch>
-              <Route path={`${match.url}/analytics`}>
-                {() => <Analytics community={community} id={community.id} />}
-              </Route>
-              <Route path={`${match.url}/members`}>
-                {() => <Members community={community} history={history} />}
-              </Route>
-              <Route path={`${match.url}`}>
-                {() => (
-                  <Overview
-                    community={community}
-                    communitySlug={communitySlug}
-                  />
-                )}
-              </Route>
-            </Switch>
-          </View>
-        </AppViewWrapper>
+              <SegmentedControl>
+                {subnavItems.map(item => (
+                  <Segment
+                    key={item.label}
+                    to={item.to}
+                    isActive={activeTab === item.activeLabel}
+                  >
+                    {item.label}
+                  </Segment>
+                ))}
+              </SegmentedControl>
+
+              <Switch>
+                <Route path={`${match.url}/analytics`}>
+                  {() => <Analytics community={community} id={community.id} />}
+                </Route>
+                <Route path={`${match.url}/members`}>
+                  {() => <Members community={community} history={history} />}
+                </Route>
+                <Route path={`${match.url}`}>
+                  {() => (
+                    <Overview
+                      community={community}
+                      communitySlug={communitySlug}
+                    />
+                  )}
+                </Route>
+              </Switch>
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={'Error fetching community'}
-            provideBack={true}
-            backRoute={`/${communitySlug}`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            error={hasError}
-            heading={'There was an error fetching this community’s settings.'}
-          />
-        </AppViewWrapper>
-      );
-    }
-
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'No Community Found'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={'We weren’t able to find this community.'}
-          subheading={`If you want to start the ${communitySlug} community yourself, you can get started below.`}
-        >
-          <Upsell404Community />
-        </ViewError>
-      </AppViewWrapper>
-    );
+    return <ErrorView />;
   }
 }
 

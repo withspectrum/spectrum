@@ -23,19 +23,10 @@ const channelDropdown = () => cy.get('[data-cy="composer-channel-selector"]');
 const communitySelected = () =>
   cy.get('[data-cy="composer-community-selected"]');
 const channelSelected = () => cy.get('[data-cy="composer-channel-selected"]');
-const inboxComposeButton = () => cy.get('[data-cy="inbox-view-post-button"]');
-const everythingFilter = () =>
-  cy.get('[data-cy="inbox-community-list-item"]').first();
-const firstCommunityFilter = () =>
-  cy.get('[data-cy="inbox-community-list-item"]').eq(1);
-const secondCommunityFilter = () =>
-  cy.get('[data-cy="inbox-community-list-item"]').eq(2);
-const inboxChannelFilter = () =>
-  cy.get('[data-cy="inbox-channel-list-item"]').first();
-const secondInboxChannelFilter = () =>
-  cy.get('[data-cy="inbox-channel-list-item"]').eq(1);
-const composerPlaceholder = () =>
-  cy.get('[data-cy="thread-composer-placeholder"]');
+const communityComposerButton = () =>
+  cy.get('[data-cy="community-thread-compose-button"]');
+const channelComposerButton = () =>
+  cy.get('[data-cy="channel-thread-compose-button"]');
 const titlebarComposeButton = () =>
   cy.get('[data-cy="titlebar-compose-button"]');
 
@@ -213,7 +204,7 @@ describe('community view composer', () => {
 
   it('should lock the community selection', () => {
     cy.visit('/spectrum');
-    composerPlaceholder()
+    communityComposerButton()
       .should('be.visible')
       .click();
     communityIsLocked();
@@ -230,96 +221,13 @@ describe('channel view composer', () => {
 
   it('should lock the community and channel selection', () => {
     cy.visit('/spectrum/general');
-    composerPlaceholder()
+    channelComposerButton()
       .should('be.visible')
       .click();
     communityIsLocked();
     channelIsLocked();
     communitySelected().contains('Spectrum');
     channelSelected().contains('General');
-  });
-});
-
-describe('inbox composer', () => {
-  beforeEach(() => {
-    cy.auth(user.id).then(() => cy.visit('/'));
-  });
-
-  it('does not select a community or channel if the composer is opened from the everything feed', () => {
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityDropdownIsEnabled();
-    channelDropdownIsHidden();
-  });
-
-  it('selects a community if the composer is opened from a community filter', () => {
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    firstCommunityFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Spectrum');
-    channelDropdownIsEnabled();
-  });
-
-  it('selects both a community and channel if the composer is opened from a channel filter', () => {
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    firstCommunityFilter().click();
-    inboxChannelFilter().click();
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Spectrum');
-    channelIsLocked();
-    channelSelected().contains('General');
-  });
-
-  it('updates the community selection in the composer if the community is switched', () => {
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    firstCommunityFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Spectrum');
-    channelDropdownIsEnabled();
-
-    cancelButton().click();
-
-    secondCommunityFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Payments');
-    channelDropdownIsEnabled();
-  });
-
-  it('updates the channel selection in the composer if the channel is switched', () => {
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    firstCommunityFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxChannelFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Spectrum');
-    channelIsLocked();
-    channelSelected().contains('General');
-
-    cancelButton().click();
-
-    secondInboxChannelFilter().click();
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    communityIsLocked();
-    communitySelected().contains('Spectrum');
-    channelIsLocked();
-    channelSelected().contains('Private');
   });
 });
 
@@ -353,49 +261,6 @@ describe.skip('mobile tabbar composer', () => {
     channelIsLocked();
     communitySelected().contains('Spectrum');
     channelSelected().contains('General');
-    cy.url().should(
-      'eq',
-      'http://localhost:3000/new/thread?composerCommunityId=1&composerChannelId=1'
-    );
-  });
-
-  it('does not select anything from the inbox everything view', () => {
-    cy.visit('/');
-    titlebarComposeButton()
-      .should('be.visible')
-      .click();
-    communityDropdownIsEnabled();
-    channelDropdownIsHidden();
-    cy.url().should('eq', 'http://localhost:3000/new/thread');
-  });
-
-  it('selects a community from the inbox view with a community filter', () => {
-    cy.visit('/');
-    openMobileCommunityMenu();
-    firstCommunityFilter().click();
-    closeMobileCommunityMenu();
-    titlebarComposeButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelDropdownIsEnabled();
-    cy.url().should(
-      'eq',
-      'http://localhost:3000/new/thread?composerCommunityId=1'
-    );
-  });
-
-  it('selects a community and channel from the inbox view with a channel filter', () => {
-    cy.visit('/');
-    openMobileCommunityMenu();
-    firstCommunityFilter().click();
-    inboxChannelFilter().click();
-    closeMobileCommunityMenu();
-    titlebarComposeButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelIsLocked();
     cy.url().should(
       'eq',
       'http://localhost:3000/new/thread?composerCommunityId=1&composerChannelId=1'

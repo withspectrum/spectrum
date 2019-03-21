@@ -1,8 +1,9 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Button, TextButton } from 'src/components/buttons';
+import { Button, TextButton } from 'src/components/button';
 import { hexa, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ContentContainer = styled.div`
   padding: 128px 32px 72px;
@@ -12,10 +13,10 @@ export const ContentContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   margin: 0 auto;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   z-index: ${zIndex.card};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 0;
     max-width: 100%;
     padding: 32px;
@@ -40,7 +41,7 @@ export const Heading = styled.h1`
   line-height: 1.2;
   grid-area: heading;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: 48px;
     font-size: 32px;
   }
@@ -105,7 +106,7 @@ export const TwoUp = styled(ContentContainer)`
   grid-column-gap: 32px;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0;
     padding-top: 32px;
     grid-template-columns: 1fr;
@@ -143,7 +144,7 @@ export const FourUp = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0;
     padding-top: 32px;
     grid-template-columns: 1fr;
@@ -156,7 +157,7 @@ export const FourUp = styled.div`
 export const Left = styled.div`
   grid-area: left;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     > a > button {
       margin-left: 32px;
     }
@@ -166,7 +167,7 @@ export const Left = styled.div`
 export const Right = styled.div`
   grid-area: right;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     > a > button {
       margin-left: 32px;
     }
@@ -252,7 +253,7 @@ export const PlanSection = styled.div`
   max-width: 480px;
   z-index: 1;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
     padding: 24px;
     padding-bottom: 32px;
@@ -386,7 +387,7 @@ export const Actions = styled.div`
   margin: 32px;
   margin-left: 0;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-left: 32px;
   }
 `;
@@ -415,7 +416,7 @@ export const Illo = styled.img`
   bottom: ${props => (props.bottom ? `${props.bottom}px` : '0')};
   width: ${props => (props.width ? `${props.width}px` : '200px')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -479,7 +480,7 @@ export const BusinessPlanAction = styled.div`
     margin-top: 0;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: 16px;
     padding-left: 0;
 
@@ -538,7 +539,7 @@ export const FeatureWrapper = styled.div`
     grid-area: icon;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
   }
 `;

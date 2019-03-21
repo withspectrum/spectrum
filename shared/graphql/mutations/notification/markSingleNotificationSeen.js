@@ -10,12 +10,12 @@ export const markSingleNotificationSeenMutation = gql`
 
 const markSingleNotificationSeenOptions = {
   props: ({ mutate }: { mutate: Function }) => ({
-    markSingleNotificationSeen: () => mutate(),
-  }),
-  options: ({ notification: { id } }: { notification: { id: string } }) => ({
-    variables: {
-      id,
-    },
+    markSingleNotificationSeen: (id: string) =>
+      mutate({
+        variables: {
+          id,
+        },
+      }),
   }),
 };
 

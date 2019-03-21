@@ -2,9 +2,9 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { Button, IconButton } from 'src/components/buttons';
+import { PrimaryButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
 import { Logo } from 'src/components/logo';
 import { UserAvatar } from 'src/components/avatar';
 import Head from 'src/components/head';
@@ -48,7 +48,7 @@ class Nav extends React.Component<Props, State> {
 
   render() {
     return (
-      <NavContainer data-cy="navbar-splash">
+      <NavContainer data-cy="navigation-splash">
         <Head
           title={'Spectrum'}
           description={'The community platform for the future.'}
@@ -64,7 +64,7 @@ class Nav extends React.Component<Props, State> {
           <LogoTab
             dark={this.props.dark}
             to="/about"
-            data-cy="navbar-splash-about"
+            data-cy="navigation-splash-about"
           >
             <Logo />
             <Icon glyph={'logo'} />
@@ -73,7 +73,7 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'features'}
             to="/features"
-            data-cy="navbar-splash-features"
+            data-cy="navigation-splash-features"
           >
             Features
           </FeaturesTab>
@@ -81,7 +81,7 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'apps'}
             to="/apps"
-            data-cy="navbar-splash-apps"
+            data-cy="navigation-splash-apps"
           >
             Apps
           </AppsTab>
@@ -89,7 +89,7 @@ class Nav extends React.Component<Props, State> {
             dark={this.props.dark}
             selected={this.props.location === 'support'}
             to="/support"
-            data-cy="navbar-splash-support"
+            data-cy="navigation-splash-support"
           >
             Support
           </SupportTab>
@@ -98,7 +98,10 @@ class Nav extends React.Component<Props, State> {
               <Link to={'/'}>
                 <UserAvatar
                   user={this.props.currentUser}
-                  dataCy="navbar-splash-profile"
+                  dataCy="navigation-splash-profile"
+                  clickable={false}
+                  showOnlineStatus={false}
+                  showHoverProfile={false}
                 />
               </Link>
             ) : (
@@ -106,21 +109,21 @@ class Nav extends React.Component<Props, State> {
                 to="/login"
                 onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
               >
-                <Button
-                  data-cy="navbar-splash-signin"
+                <PrimaryButton
+                  data-cy="navigation-splash-signin"
                   style={{
                     fontWeight: '700',
                     fontSize: '16px',
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Sign In
-                </Button>
+                  Log in or sign up
+                </PrimaryButton>
               </Link>
             )}
           </AuthTab>
           <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
-            <IconButton
+            <Icon
               glyph={this.state.menuIsOpen ? 'view-close' : 'menu'}
               onClick={() => this.toggleMenu()}
             />

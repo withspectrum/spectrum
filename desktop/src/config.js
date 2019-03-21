@@ -22,8 +22,8 @@ module.exports = {
   WINDOW_DEFAULT_HEIGHT: 800,
   WINDOW_DEFAULT_WIDTH: 1300,
   WINDOW_MIN_HEIGHT: 500,
-  WINDOW_MIN_WIDTH: 770,
-  WINDOW_BG_COLOR: '#F5F8FC',
+  WINDOW_MIN_WIDTH: 320,
+  WINDOW_BG_COLOR: '#FAFAFA',
 
   ICON: resolve(__dirname, '../resources/icons/png/icon-512x512.png'),
 };

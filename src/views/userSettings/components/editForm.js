@@ -5,8 +5,8 @@ import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
+import { PrimaryOutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import GithubProfile from 'src/components/githubProfile';
 import { GithubSigninButton } from 'src/components/loginButtonSet/github';
@@ -370,6 +370,7 @@ class UserWithData extends React.Component<Props, State> {
             label="Username"
             size={'small'}
             username={username}
+            placeholder="Set a username..."
             onValidationResult={this.handleUsernameValidation}
             onError={this.handleOnError}
             dataCy="user-username-input"
@@ -452,21 +453,21 @@ class UserWithData extends React.Component<Props, State> {
           />
 
           <Actions>
-            <Button
+            <PrimaryOutlineButton
               disabled={
                 !name ||
                 nameError ||
                 !username ||
-                usernameError ||
+                !!usernameError ||
                 isLoading ||
-                emailError
+                !!emailError
               }
               loading={isLoading}
               onClick={this.save}
-              dataCy="save-button"
+              data-cy="save-button"
             >
               Save
-            </Button>
+            </PrimaryOutlineButton>
           </Actions>
 
           {createError && (

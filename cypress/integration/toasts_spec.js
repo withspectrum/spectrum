@@ -48,18 +48,6 @@ describe('Toasts and url query paramaters', () => {
   });
 
   it('should preserve existing query parameters', () => {
-    const url = new URL('http://localhost:3000/?t=thread-9');
-    url.searchParams.append('toastType', 'success');
-    url.searchParams.append('toastMessage', toastMessage);
-    cy.visit(url.toString());
-    cy.get('[data-cy="toast-success"]', { timeout: 100 }).should(
-      'have.length',
-      1
-    );
-    cy.url().should('eq', 'http://localhost:3000/?t=thread-9');
-  });
-
-  it('should preserve many existing query parameters', () => {
     const url = new URL(
       'http://localhost:3000/spectrum/general/another-thread~thread-2?m=MTQ4MzIyNTIwMDAwMg=='
     );

@@ -1,7 +1,8 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { TextButton } from '../../components/buttons';
+import { TextButton } from 'src/components/button';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Heading = styled.h1`
   margin-left: 16px;
@@ -151,7 +152,7 @@ export const SearchFilter = styled(Filter)`
     background: none;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -211,5 +212,15 @@ export const TokenInputWrapper = styled.div`
     &:after {
       background: ${theme.success.alt};
     }
+  }
+`;
+
+export const Row = styled.div`
+  display: flex;
+  align-items: flex-start;
+
+  a {
+    display: flex;
+    flex: 1 1 auto;
   }
 `;

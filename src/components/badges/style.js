@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Tooltip, Gradient } from '../globals';
+import { Gradient } from 'src/components/globals';
 
 export const Span = styled.span`
   display: flex;
@@ -13,7 +13,6 @@ export const Span = styled.span`
   font-size: 9px;
   font-weight: 800;
   border-radius: 4px;
-  ${props => (props.tipText ? Tooltip(props) : '')};
   letter-spacing: 0.6px;
   line-height: 1;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);

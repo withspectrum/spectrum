@@ -5,8 +5,8 @@ import {
   ClusterTwo,
   ClusterThree,
   ClusterFour,
-} from '../../components/illustrations';
-import Icon from '../../components/icons';
+} from 'src/components/illustrations';
+import Icon from 'src/components/icon';
 import { FullscreenViewContainer, Illustrations, CloseLink } from './style';
 import { ESC } from 'src/helpers/keycodes';
 

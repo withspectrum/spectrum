@@ -2,13 +2,6 @@
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
 import slugg from 'slugg';
-import {
-  convertToRaw,
-  convertFromRaw,
-  EditorState,
-  SelectionState,
-} from 'draft-js';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { addMessage } from '../message/addMessage';
@@ -21,12 +14,9 @@ import {
 } from '../../models/thread';
 import { createParticipantInThread } from '../../models/usersThreads';
 import type { FileUpload, DBThread } from 'shared/types';
-import {
-  toPlainText,
-  toJSON,
-  toState,
-  fromPlainText,
-} from 'shared/draft-utils';
+import { toPlainText, toState } from 'shared/draft-utils';
+import { setCommunityLastActive } from '../../models/community';
+import { setCommunityLastSeen } from '../../models/usersCommunities';
 import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
@@ -344,8 +334,19 @@ export default requireAuth(
       });
     }
 
-    // create a relationship between the thread and the author
-    await createParticipantInThread(dbThread.id, user.id);
+    // create a relationship between the thread and the author and set community lastActive
+    const timestamp = new Date(dbThread.createdAt).getTime();
+    await Promise.all([
+      createParticipantInThread(dbThread.id, user.id),
+      setCommunityLastActive(dbThread.communityId, new Date(timestamp)),
+      // Make sure Community.lastSeen > Community.lastActive by one second
+      // for the author
+      setCommunityLastSeen(
+        dbThread.communityId,
+        user.id,
+        new Date(timestamp + 1000)
+      ),
+    ]);
 
     // Post a new message with a link to the new thread to the watercooler thread if one exists
     if (community.watercoolerId && !channel.isPrivate) {

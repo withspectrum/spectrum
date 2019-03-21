@@ -68,9 +68,17 @@ const getUserThreadConnectionOptions = {
         user && user.threadConnection
           ? user.threadConnection.pageInfo.hasNextPage
           : false,
-      subscribeToUpdatedThreads: () => {
+      subscribeToUpdatedThreads: (channelIds?: Array<string>) => {
+        const variables = channelIds
+          ? {
+              variables: {
+                channelIds,
+              },
+            }
+          : {};
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
+          ...variables,
           updateQuery: (prev, { subscriptionData }) => {
             const updatedThread =
               subscriptionData.data && subscriptionData.data.threadUpdated;
@@ -83,8 +91,7 @@ const getUserThreadConnectionOptions = {
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.user.threadConnection.edges,
-                  updatedThread,
-                  ownProps.dispatch
+                  updatedThread
                 ).filter(thread => thread.node.author.user.id === thisUserId)
               : [...prev.user.threadConnection.edges];
 

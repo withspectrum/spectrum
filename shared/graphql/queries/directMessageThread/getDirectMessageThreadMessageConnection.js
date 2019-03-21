@@ -95,9 +95,6 @@ export const getDMThreadMessageConnectionOptions = {
         }),
     },
     subscribeToNewMessages: () => {
-      if (!directMessageThread) {
-        return;
-      }
       return data.subscribeToMore({
         document: subscribeToNewMessages,
         variables: {

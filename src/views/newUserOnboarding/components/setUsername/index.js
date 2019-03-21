@@ -4,10 +4,10 @@ import slugg from 'slugg';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
-import { Error, Success } from '../../../../components/formElements';
-import UsernameSearch from '../../../../components/usernameSearch';
-import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Form, Row, InputLabel, InputSubLabel } from './style';
+import { Error, Success } from 'src/components/formElements';
+import UsernameSearch from 'src/components/usernameSearch';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Form, Row } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
 import type { Dispatch } from 'redux';
@@ -41,8 +41,8 @@ class SetUsername extends React.Component<Props, State> {
       ? user.name
         ? slugg(user.name)
         : user.firstName && user.lastName
-          ? `${user.firstName}-${user.lastName}`
-          : ''
+        ? `${user.firstName}-${user.lastName}`
+        : ''
       : '';
 
     this.state = {
@@ -111,21 +111,21 @@ class SetUsername extends React.Component<Props, State> {
 
     return (
       <Form onSubmit={this.saveUsername}>
-        <InputLabel>Create your username</InputLabel>
-        <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
-
         <Row>
           <UsernameSearch
-            placeholder={'Set a username...'}
+            placeholder={'Your username...'}
             autoFocus={true}
             username={username}
             onValidationResult={this.handleUsernameValidation}
+            dataCy={'username-search'}
           />
         </Row>
-        <Row>
-          <Error>{error ? error : <span>&nbsp;</span>}</Error>
 
-          <Success>{success ? success : <span>&nbsp;</span>}</Success>
+        <Row style={{ minHeight: '43px' }}>
+          {error && <Error data-cy="username-search-error">{error}</Error>}
+          {success && (
+            <Success data-cy="username-search-success">{success}</Success>
+          )}
         </Row>
 
         <Row>
@@ -133,8 +133,9 @@ class SetUsername extends React.Component<Props, State> {
             onClick={this.saveUsername}
             disabled={!username || error}
             loading={isLoading}
+            data-cy="save-username-button"
           >
-            Save and Continue
+            {isLoading ? 'Saving...' : 'Save and Continue'}
           </ContinueButton>
         </Row>
       </Form>

@@ -2,8 +2,9 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/buttons';
+import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
+import { MEDIA_BREAK, PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,
@@ -11,9 +12,6 @@ import {
   H3,
   Transition,
   zIndex,
-  Tooltip,
-  Shadow,
-  hexa,
   Truncate,
 } from 'src/components/globals';
 
@@ -21,7 +19,6 @@ export const ThreadViewContainer = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
-  max-height: ${props => (props.constrain ? 'calc(100% - 48px)' : '100%')};
   max-width: 1024px;
   background-color: ${theme.bg.wash};
   margin: ${props =>
@@ -92,7 +89,7 @@ export const Input = styled(FlexRow)`
   max-width: 100%;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     z-index: ${zIndex.mobileInput};
   }
 `;
@@ -109,15 +106,6 @@ export const Detail = styled(Column)`
     `}
 `;
 
-export const ChatInputWrapper = styled(FlexCol)`
-  align-self: stretch;
-  align-items: stretch;
-  margin: 0;
-  flex: auto;
-  position: relative;
-  max-width: 100%;
-`;
-
 export const DetailViewWrapper = styled(FlexCol)`
   background-image: ${({ theme }) =>
     `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${
@@ -127,7 +115,7 @@ export const DetailViewWrapper = styled(FlexCol)`
   justify-content: flex-start;
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     background-color: ${theme.bg.default};
     background-image: none;
   }
@@ -141,7 +129,7 @@ export const Container = styled(FlexCol)`
   flex: auto;
   overflow-y: scroll;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 16px;
   }
 `;
@@ -150,6 +138,14 @@ export const ThreadWrapper = styled(FlexCol)`
   font-size: 16px;
   flex: none;
   min-width: 320px;
+  position: relative;
+  z-index: 4;
+  background: ${theme.bg.default};
+  width: 100%;
+  max-width: 100%;
+  /* manually nudge up 60px to cover the sliding header in the thread view */
+  top: -64px;
+  margin-bottom: -64px;
 
   ${props =>
     props.isEditing &&
@@ -161,11 +157,16 @@ export const ThreadWrapper = styled(FlexCol)`
       overflow: hidden;
       overflow-y: scroll;
     `}
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    top: 0;
+    margin-bottom: 0;
+  }
 `;
 
 export const ThreadContent = styled.div`
   height: 100%;
-  padding: ${props => (props.isEditing ? '0' : '32px')};
+  padding: ${props => (props.isEditing ? '0' : '16px')};
 
   ${props =>
     props.isEditing &&
@@ -184,6 +185,7 @@ export const ThreadHeading = styled(H1)`
   font-size: 28px;
   font-weight: 600;
   word-break: break-word;
+  margin-bottom: 16px;
 `;
 
 export const A = styled.a`
@@ -227,7 +229,8 @@ export const DropWrap = styled(FlexCol)`
   margin: 0 8px;
 
   &:hover {
-    color: ${theme.bg.border};
+    color: ${theme.text.secondary};
+    cursor: pointer;
     transition: ${Transition.hover.on};
   }
 
@@ -244,13 +247,14 @@ export const FlyoutRow = styled(FlexRow)`
   button {
     width: 100%;
     justify-content: flex-start;
-    border-top: 1px solid ${theme.bg.wash};
+    border-top: 1px solid ${theme.bg.divider};
     border-radius: 0;
     transition: none;
   }
 
   button:hover {
     background: ${theme.bg.wash};
+    border-top: 1px solid ${theme.bg.divider};
     transition: none;
   }
 
@@ -288,7 +292,6 @@ export const Byline = styled.div`
   font-weight: 400;
   color: ${theme.brand.alt};
   display: flex;
-  margin-bottom: 24px;
   align-items: center;
   flex: auto;
   font-size: 14px;
@@ -324,6 +327,7 @@ export const AuthorUsername = styled.span`
   font-weight: 400;
   margin-right: 4px;
   align-self: flex-end;
+  word-break: break-all;
 `;
 
 export const ReputationRow = styled.div``;
@@ -355,7 +359,7 @@ export const Location = styled(FlexRow)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -374,7 +378,7 @@ export const ChatWrapper = styled.div`
   flex: none;
   margin-top: 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     overflow-x: hidden;
   }
 `;
@@ -383,12 +387,17 @@ export const NullMessagesWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
-  padding-top: 64px;
+  padding: 64px 32px;
   flex: 1;
   color: ${theme.text.alt};
   flex-direction: column;
   opacity: 0.8;
+  width: 100%;
+  background: ${theme.bg.default};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    padding-bottom: 128px;
+  }
 
   > .icon {
     opacity: 0.4;
@@ -419,7 +428,7 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '16px',
+  fontSize: '16px', // has to be 16px to avoid zoom on iOS
   fontWeight: '500',
   width: '100%',
   display: 'inline-block',
@@ -459,25 +468,27 @@ export const ShareButton = styled.span`
         ? props.theme.social.twitter.default
         : props.theme.text.default};
   }
-
-  ${Tooltip};
 `;
 
-export const CommunityHeader = styled.div`
-  display: ${props => (props.hide ? 'none' : 'flex')};
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 32px;
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  flex: 0 0 64px;
-  align-self: stretch;
-  background: ${theme.bg.default};
+export const StickyHeaderContent = styled.div`
+  display: flex;
+  padding: 12px 16px;
+  cursor: pointer;
+  max-width: 70%;
 
   @media (max-width: 728px) {
     padding: 16px;
     display: flex;
   }
 `;
+
+export const StickyHeaderActionsContainer = styled.div`
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+`;
+
 export const CommunityHeaderName = styled.h3`
   font-size: 16px;
   font-weight: 600;
@@ -542,7 +553,7 @@ export const CommunityHeaderChannelTag = styled.div`
 export const CommunityHeaderMeta = styled.div`
   display: flex;
   align-items: center;
-  max-width: 80%;
+  max-width: 100%;
 `;
 
 export const CommunityHeaderMetaCol = styled.div`
@@ -560,7 +571,7 @@ export const PillLink = styled(Link)`
   font-size: 12px;
   box-shadow: 0 0 0 1px ${theme.bg.border};
   background: ${theme.bg.wash};
-  font-weight: ${props => '400'};
+  font-weight: 400;
   color: ${theme.text.alt};
   display: flex;
   flex: none;
@@ -627,9 +638,9 @@ export const ActionBarContainer = styled.div`
   border: 1px solid ${theme.bg.border};
   border-left: 0;
   border-right: 0;
-  padding: 6px 32px;
+  padding: 6px 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 0;
     margin-top: 0;
     border-radius: 0;
@@ -640,29 +651,15 @@ export const ActionBarContainer = styled.div`
   }
 `;
 
-export const WatercoolerActionBarContainer = styled(ActionBarContainer)`
-  margin-bottom: 16px;
-`;
-
 export const FixedBottomActionBarContainer = styled(ActionBarContainer)`
   z-index: 1;
   width: 100%;
   position: sticky;
 `;
 
-export const FollowButton = styled(Button)`
+export const FollowButton = styled(OutlineButton)`
   background: ${theme.bg.default};
-  border: 1px solid ${theme.bg.border};
-  color: ${theme.text.alt};
-  padding: 4px;
-  margin-left: 24px;
-
-  &:hover {
-    background: ${theme.bg.default};
-    color: ${theme.text.default};
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.currentUser ? 'none' : 'flex')};
   }
 `;
@@ -801,46 +798,103 @@ export const Label = styled.p`
   font-size: 14px;
 `;
 
-export const WatercoolerDescription = styled.h4`
-  font-size: 18px;
-  font-weight: 400;
-  color: ${theme.text.alt};
-  text-align: center;
-  line-height: 1.4;
-  margin: 0;
-  max-width: 600px;
+export const StickyHeaderContainer = styled.div`
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: ${zIndex.card};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid ${theme.bg.border};
+  flex: 0 0 64px;
+  align-self: stretch;
+  background: ${theme.bg.wash};
+  padding-right: 16px;
+  max-width: ${PRIMARY_COLUMN_WIDTH - 2}px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
 `;
 
-export const WatercoolerIntroContainer = styled.div`
+export const Stretch = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+`;
+
+export const LockedWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  color: ${theme.text.secondary};
+  background: ${theme.bg.wash};
+  border-top: 1px solid ${theme.bg.border};
+
+  button {
+    flex: 1;
+  }
+`;
+
+export const LockedText = styled.div`
+  font-size: 15px;
+  font-weight: 500;
+  margin-left: 16px;
+`;
+
+export const TopBottomButtonContainer = styled.div`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  opacity: ${props => (props.isVisible ? '1' : '0')};
+  transform: translateY(${props => (props.isVisible ? '0' : '8px')});
+  transition: transform opacity 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.alt};
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  z-index: 3000;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  @media (max-width: ${MEDIA_BREAK + 72}px) {
+    bottom: 84px;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
+export const TopButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 32px 36px;
-  background: ${theme.bg.default};
-  flex: auto;
-  flex-direction: column;
-`;
+  padding: 8px;
 
-export const WatercoolerTitle = styled.h3`
-  text-align: center;
-  font-size: 22px;
-  font-weight: 500;
-  color: ${theme.text.default};
-  margin-bottom: 8px;
-`;
-
-export const AnimatedContainer = styled.div`
-  transform: translateY(${props => (props.isVisible ? '0' : '-64px')});
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: ${zIndex.card};
-
-  @media (max-width: 768px) {
-    display: none;
+  &:hover {
+    color: ${theme.text.secondary};
   }
+`;
+export const BottomButton = styled(TopButton)`
+  border-top: 1px solid ${theme.bg.border};
+`;
+
+export const BylineContainer = styled.div`
+  width: calc(100% + 32px);
+  margin-left: -16px;
+  margin-right: -16px;
+  margin-top: -16px;
 `;

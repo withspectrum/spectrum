@@ -18,7 +18,7 @@ import { Loading } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import ChannelSlackManager from './channelSlackManager';
 import { ChannelListContainer } from './style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import type { Dispatch } from 'redux';
 
 type Props = {

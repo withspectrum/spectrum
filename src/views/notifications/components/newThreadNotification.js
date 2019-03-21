@@ -6,14 +6,12 @@ import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import { sortByDate } from 'src/helpers/utils';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { parseNotificationDate, parseContext } from '../utils';
-import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ThreadProfile } from 'src/components/profile';
 import { LoadingCard } from 'src/components/loading';
 import {
   SegmentedNotificationCard,
   TextContent,
-  SegmentedNotificationListRow,
   AttachmentsWash,
   ThreadContext,
   ContentWash,
@@ -129,87 +127,3 @@ export class NewThreadNotification extends React.Component<Props, State> {
     }
   }
 }
-
-class MiniNewThreadNotificationWithMutation extends React.Component<
-  Props,
-  State
-> {
-  state = {
-    communityName: '',
-    deletedThreads: [],
-  };
-
-  markAsDeleted = (id: string) => {
-    const newArr = this.state.deletedThreads.concat(id);
-    setTimeout(() => {
-      this.setState({ deletedThreads: newArr });
-    }, 0);
-    this.markAsSeen();
-  };
-
-  markAsSeen = () => {
-    const {
-      markSingleNotificationSeen,
-      notification,
-      markSingleNotificationAsSeenInState,
-    } = this.props;
-    if (notification.isSeen) return;
-    markSingleNotificationAsSeenInState &&
-      markSingleNotificationAsSeenInState(notification.id);
-    markSingleNotificationSeen && markSingleNotificationSeen(notification.id);
-  };
-
-  setCommunityName = (name: string) => this.setState({ communityName: name });
-
-  render() {
-    const { notification, currentUser } = this.props;
-    const { communityName, deletedThreads } = this.state;
-
-    const date = parseNotificationDate(notification.modifiedAt);
-    const context = parseContext(notification.context);
-
-    const threads = sortThreads(notification.entities, currentUser).filter(
-      thread => deletedThreads.indexOf(thread.id) < 0
-    );
-
-    const newThreadCount =
-      threads && threads.length > 1 ? 'New threads were' : 'A new thread was';
-
-    if (threads && threads.length > 0) {
-      return (
-        <SegmentedNotificationListRow
-          isSeen={notification.isSeen}
-          onClick={this.markAsSeen}
-        >
-          <ThreadContext>
-            <Icon glyph="post-fill" />
-            <TextContent pointer={false}>
-              {newThreadCount} published in{' '}
-              {communityName && `${communityName}, `} {context.asString} {date}
-            </TextContent>
-          </ThreadContext>
-          <ContentWash mini>
-            <AttachmentsWash>
-              {threads.map(thread => {
-                return (
-                  <ThreadCreated
-                    markAsDeleted={this.markAsDeleted}
-                    setName={this.setCommunityName}
-                    key={thread.id}
-                    id={thread.id}
-                  />
-                );
-              })}
-            </AttachmentsWash>
-          </ContentWash>
-        </SegmentedNotificationListRow>
-      );
-    } else {
-      return null;
-    }
-  }
-}
-
-export const MiniNewThreadNotification = compose(
-  markSingleNotificationSeenMutation
-)(MiniNewThreadNotificationWithMutation);

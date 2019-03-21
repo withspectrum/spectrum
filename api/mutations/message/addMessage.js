@@ -1,6 +1,4 @@
 // @flow
-import { stateFromMarkdown } from 'draft-js-import-markdown';
-import { convertToRaw } from 'draft-js';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
@@ -9,6 +7,8 @@ import { setDirectMessageThreadLastActive } from '../../models/directMessageThre
 import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
+import { setCommunityLastActive } from '../../models/community';
+import { setCommunityLastSeen } from '../../models/usersCommunities';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
@@ -351,48 +351,65 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       );
   }
 
-  return membershipPromise()
-    .then(() => createParticipantInThread(message.threadId, user.id))
-    .then(async () => {
-      const contextPermissions = {
-        communityId: thread.communityId,
-        reputation: communityPermissions ? communityPermissions.reputation : 0,
-        isModerator: communityPermissions
-          ? communityPermissions.isModerator
-          : false,
-        isOwner: communityPermissions ? communityPermissions.isOwner : false,
-      };
+  const timestamp = new Date(dbMessage.timestamp).getTime();
+  return (
+    membershipPromise()
+      .then(() => createParticipantInThread(message.threadId, user.id))
+      .then(() =>
+        setCommunityLastActive(thread.communityId, new Date(timestamp))
+      )
+      // Make sure Community.lastSeen > Community.lastActive by one second
+      // for the author
+      .then(() =>
+        setCommunityLastSeen(
+          thread.communityId,
+          user.id,
+          new Date(timestamp + 10000)
+        )
+      )
+      .then(async () => {
+        const contextPermissions = {
+          communityId: thread.communityId,
+          reputation: communityPermissions
+            ? communityPermissions.reputation
+            : 0,
+          isModerator: communityPermissions
+            ? communityPermissions.isModerator
+            : false,
+          isOwner: communityPermissions ? communityPermissions.isOwner : false,
+        };
 
-      trackUserThreadLastSeenQueue.add({
-        userId: user.id,
-        threadId: message.threadId,
-        timestamp: Date.now(),
-      });
-
-      calculateThreadScoreQueue.add(
-        {
+        trackUserThreadLastSeenQueue.add({
+          userId: user.id,
           threadId: message.threadId,
-        },
-        {
-          jobId: message.threadId,
-        }
-      );
-      return {
-        ...dbMessage,
-        contextPermissions,
-      };
-    })
-    .catch(err => {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          message,
-          reason: 'unknown error',
-          error: err.message,
-        },
-      });
-      console.error('Error sending message', err);
-      return dbMessage;
-    });
+          timestamp,
+        });
+
+        calculateThreadScoreQueue.add(
+          {
+            threadId: message.threadId,
+          },
+          {
+            jobId: message.threadId,
+          }
+        );
+        return {
+          ...dbMessage,
+          contextPermissions,
+        };
+      })
+      .catch(err => {
+        trackQueue.add({
+          userId: user.id,
+          event: eventFailed,
+          properties: {
+            message,
+            reason: 'unknown error',
+            error: err.message,
+          },
+        });
+        console.error('Error sending message', err);
+        return dbMessage;
+      })
+  );
 });

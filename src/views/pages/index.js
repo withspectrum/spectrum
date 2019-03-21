@@ -8,7 +8,7 @@ import Terms from './terms';
 import Privacy from './privacy';
 import Faq from './faq';
 import Apps from './apps';
-import { Page } from './style';
+import { StyledViewGrid } from './style';
 
 type Props = {
   match: Object,
@@ -52,13 +52,15 @@ class Pages extends React.Component<Props> {
     const dark = path === '/' || path === '/about';
 
     return (
-      <Page id="main">
-        <Nav
-          dark={dark ? 'true' : undefined}
-          location={this.props.match.path.substr(1)}
-        />
-        {this.renderPage()}
-      </Page>
+      <StyledViewGrid>
+        <div style={{ position: 'relative' }}>
+          <Nav
+            dark={dark ? 'true' : undefined}
+            location={this.props.match.path.substr(1)}
+          />
+          {this.renderPage()}
+        </div>
+      </StyledViewGrid>
     );
   }
 }

@@ -1,251 +1,135 @@
 // @flow
+import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
-import styled from 'styled-components';
-import { IconButton } from '../../components/buttons';
-import Card from '../../components/card';
-import { Button, OutlineButton } from '../../components/buttons';
-import {
-  FlexCol,
-  Transition,
-  zIndex,
-  Gradient,
-  Tooltip,
-} from '../../components/globals';
-import {
-  DesktopSegment,
-  SegmentedControl,
-} from '../../components/segmentedControl';
+import { Link } from 'react-router-dom';
+import { Truncate, tint } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
+import { CardStyles } from 'src/views/viewHelpers';
 
-export const LoginButton = styled(Button)`
-  width: 100%;
-  margin-top: 16px;
-  background-color: ${props => props.theme.success.default};
-  background-image: ${props =>
-    Gradient(props.theme.success.alt, props.theme.success.default)};
-`;
+const listItemStyles = css`
+  padding: 12px 12px 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid ${theme.bg.divider};
 
-export const LoginOutlineButton = styled(OutlineButton)`
-  width: 100%;
-  margin-top: 16px;
-  color: ${props => props.theme.text.alt};
-  box-shadow: 0 0 1px ${props => props.theme.text.alt};
+  &:last-of-type {
+    border-bottom: 0;
+  }
 
   &:hover {
-    color: ${props => props.theme.warn.default};
-    box-shadow: 0 0 1px ${props => props.theme.warn.default};
+    background: ${theme.bg.wash};
+  }
+
+  .icon {
+    color: ${theme.text.alt};
   }
 `;
-
-export const SettingsButton = styled(LoginOutlineButton)`
-  justify-content: center;
-  &:hover {
-    color: ${props => props.theme.text.secondary};
-    box-shadow: 0 0 1px ${props => props.theme.text.secondary};
-  }
+export const ListItem = styled.div`
+  ${listItemStyles};
+`;
+export const ListItemLink = styled(Link)`
+  ${listItemStyles};
 `;
 
-export const CoverButton = styled(IconButton)`
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  flex: 0 0 auto;
-
-  @media (max-width: 768px) {
-    bottom: 16px;
-    top: auto;
-  }
-`;
-
-export const SearchContainer = styled(Card)`
-  border-bottom: 2px solid ${theme.bg.border};
-  position: relative;
-  z-index: ${zIndex.search};
-  width: 100%;
-  display: block;
-  min-height: 64px;
-  transition: ${Transition.hover.off};
-
-  &:hover {
-    transition: none;
-    border-bottom: 2px solid ${theme.brand.alt};
-  }
-
-  @media (max-width: 768px) {
-    border-radius: 0;
-    pointer-events: all;
-    margin-bottom: 0;
-  }
-`;
-
-export const MidSegment = styled(DesktopSegment)`
-  @media (min-width: 1281px) {
-    display: none;
-  }
-`;
-
-export const SearchInput = styled.input`
-  justify-content: flex-start;
+export const ListItemContent = styled.div`
+  display: flex;
   align-items: center;
-  cursor: pointer;
-  padding: 20px;
+
+  .icon {
+    color: ${theme.text.secondary};
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+  }
+`;
+
+export const ListItemLabel = styled.div`
   color: ${theme.text.default};
-  transition: ${Transition.hover.off};
-  font-size: 20px;
-  font-weight: 800;
-  margin-left: 8px;
-  width: 97%;
-  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  ${Truncate};
 `;
 
-export const StyledButton = styled(Button)`
-  flex: none;
-  align-self: flex-start;
-  background-color: transparent;
-  box-shadow: none;
-  border: none;
-  padding: 0;
-  margin: 24px 0;
-  border-radius: 0;
-  background-image: none;
-  color: ${theme.text.alt};
+export const SidebarSection = styled.section`
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+  margin-top: 16px;
+  border-radius: 4px;
 
-  &:hover {
-    background-color: transparent;
-    color: ${theme.brand.alt};
-    box-shadow: none;
-  }
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border: 0;
+    margin-top: 0;
 
-  @media (max-width: 768px) {
-    margin: 2px 0;
-    padding: 16px 0;
-    width: 100%;
-    border-radius: 0;
+    &:last-of-type {
+      border-bottom: 1px solid ${theme.bg.border};
+    }
+
+    &:not(:first-of-type) {
+      border-top: 1px solid ${theme.bg.border};
+    }
   }
 `;
 
-export const Grid = styled.main`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: 240px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  max-width: 1280px;
-  min-height: 100vh;
-  background-color: ${theme.bg.default};
-  box-shadow: inset 1px 0 0 ${theme.bg.border},
-    inset -1px 0 0 ${theme.bg.border};
+export const SidebarSectionHeader = styled.div`
+  display: flex;
+  border-bottom: 1px solid ${theme.bg.border};
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+  background: ${theme.bg.default};
+  z-index: 11;
+  border-radius: 4px 4px 0 0;
 
-  @media (max-width: 1280px) {
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: 160px auto 1fr;
-    grid-template-areas: 'cover cover' 'meta content' 'extras content';
+  a {
+    display: flex;
+    flex: none;
+    align-items: center;
+    color: ${theme.text.alt};
+
+    &:hover {
+      color: ${theme.text.default};
+    }
   }
 
-  @media (max-width: 768px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
+  @media (max-width: ${MEDIA_BREAK}px) {
+    z-index: 1;
+    background: ${theme.bg.wash};
+    border-bottom: 1px solid ${theme.bg.border};
+    padding: 24px 16px 8px 16px;
+    position: relative;
   }
 `;
 
-const Column = styled.div`
+export const SidebarSectionHeading = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: ${theme.text.default};
+  display: flex;
+  flex: 1 0 auto;
+  padding-right: 16px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    font-size: 14px;
+    font-weight: 600;
+    color: ${theme.text.secondary};
+  }
+`;
+
+export const FeedsContainer = styled.section`
   display: flex;
   flex-direction: column;
+  background: ${theme.bg.default};
 `;
 
-export const ListColumn = styled(Column)`
-  align-items: stretch;
-  overflow: hidden;
-`;
-
-export const Meta = styled(Column)`
-  grid-area: meta;
-
-  > a > button {
-    margin-top: 16px;
-    margin-left: 32px;
-    width: calc(100% - 32px);
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 16px;
-
-    > div {
-      margin-left: 0;
-    }
-  }
-
-  > .member-button {
-    margin-left: 32px;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
-  }
-`;
-
-export const Content = styled(Column)`
-  grid-area: content;
-  min-width: 0;
-  align-items: stretch;
-
-  @media (max-width: 1280px) and (min-width: 768px) {
-    padding-right: 32px;
-  }
-
-  @media (max-width: 768px) {
-    > ${SegmentedControl} > div {
-      margin-top: 0;
-    }
-  }
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  > ${FlexCol} > div {
-    border-top: 0;
-    padding: 0;
-    padding-top: 24px;
-
-    h3 {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-  }
-
-  @media (min-width: 768px) {
-    padding-left: 32px;
-    padding-right: 0;
-  }
-
-  @media (min-width: 1281px) {
-    padding-right: 32px;
-    padding-left: 0;
-  }
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const ColumnHeading = styled.div`
+export const Row = styled.div`
   display: flex;
-  align-items: center;
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 500;
-  padding: 16px;
-  margin-top: 16px;
-  border-bottom: 2px solid ${theme.bg.border};
 `;
 
 export const ToggleNotificationsContainer = styled.div`
@@ -255,21 +139,137 @@ export const ToggleNotificationsContainer = styled.div`
   align-items: center;
   height: 100%;
   cursor: pointer;
-  ${Tooltip};
 `;
 
-export const MessageIconContainer = styled.div`
-  color: ${theme.text.alt};
+export const Name = styled.div`
+  color: ${theme.text.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
   display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  display: inline-block;
+  ${Truncate};
+`;
 
-  &:hover {
-    color: ${theme.brand.alt};
+export const NameWarn = styled.div`
+  color: ${theme.warn.default};
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  display: inline-block;
+  ${Truncate};
+`;
+
+export const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+`;
+
+export const PrivateCommunityWrapper = styled.div`
+  ${CardStyles};
+  padding: 16px;
+`;
+
+export const ActionsRow = styled.div`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 32px;
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+    width: 100%;
   }
 `;
 
-export const UserListItemContainer = styled.div`
-  border-bottom: 1px solid ${theme.bg.wash};
+export const Emoji = styled.span`
+  font-size: 40px;
+  margin-bottom: 16px;
+`;
+
+export const Heading = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+  color: ${theme.text.default};
+`;
+export const Description = styled.p`
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: ${theme.text.secondary};
+`;
+
+export const PostsFeedsSelectorContainer = styled.div`
+  padding: 8px 16px;
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.wash};
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const SearchInput = styled.input`
+  font-size: 15px;
+  border: none;
+  border: 1px solid ${theme.bg.border};
+  -webkit-appearance: none;
+  border-radius: 32px;
+  padding: 8px 16px;
+  color: ${theme.text.default};
+  font-weight: 600;
+  width: 120px;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    width: 180px;
+    box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
+    transition: all 0.2s ease-in-out;
+  }
+
+  &:active {
+    width: 180px;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${tint(theme.bg.border, -24)};
+    transition: box-shadow 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+  }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    font-size: 16px;
+  }
+`;
+
+export const FeedsStretch = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  display: grid;
+  grid-template-columns: minmax(min-content, 1fr);
+  grid-template-rows: 1fr;
+  width: 100%;
+  align-items: flex-end;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* account for fixed position chat input */
+    padding-bottom: 56px;
+    grid-template-rows: 1fr;
+  }
+`;
+
+export const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: ${theme.bg.wash};
+  padding-bottom: 64px;
 `;

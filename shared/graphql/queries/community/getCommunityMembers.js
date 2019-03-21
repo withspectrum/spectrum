@@ -118,7 +118,7 @@ const getcommunityMembersOptions = {
       filter,
       first,
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 

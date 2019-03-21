@@ -15,9 +15,9 @@ import createCommunityMutation from 'shared/graphql/mutations/community/createCo
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
-import { Button } from 'src/components/buttons';
+import { PrimaryOutlineButton } from 'src/components/button';
 import { CommunityHoverProfile } from 'src/components/hoverProfile';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 
 import {
   Input,
@@ -27,7 +27,7 @@ import {
   CoverInput,
   Error,
   Checkbox,
-} from '../../../../components/formElements';
+} from 'src/components/formElements';
 import {
   ImageInputWrapper,
   Spacer,
@@ -668,7 +668,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
         <Actions>
           <div />
-          <Button
+          <PrimaryOutlineButton
             onClick={this.create}
             disabled={
               slugTaken ||
@@ -681,10 +681,10 @@ class CreateCommunityForm extends React.Component<Props, State> {
               !agreeCoC
             }
             loading={isLoading}
-            dataCy="community-create-button"
+            data-cy="community-create-button"
           >
             Create Community & Continue
-          </Button>
+          </PrimaryOutlineButton>
         </Actions>
       </FormContainer>
     );

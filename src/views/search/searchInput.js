@@ -1,7 +1,7 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { SearchWrapper, SearchInput, ClearSearch, SearchForm } from './style';
-import Icon from '../../components/icons';
+import Icon from 'src/components/icon';
 
 type Props = {};
 type State = {
@@ -60,7 +60,7 @@ class SearchViewInput extends React.Component<Props, State> {
             onChange={this.onChange}
             value={value}
             placeholder={placeholder}
-            innerRef={input => {
+            ref={input => {
               this.searchInput = input;
             }}
             autoFocus={true}

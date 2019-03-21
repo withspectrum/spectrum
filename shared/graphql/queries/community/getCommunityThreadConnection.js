@@ -75,9 +75,17 @@ const getCommunityThreadConnectionOptions = {
           ? community.threadConnection.pageInfo.hasNextPage
           : false,
       feed: community && community.id,
-      subscribeToUpdatedThreads: () => {
+      subscribeToUpdatedThreads: (channelIds?: Array<string>) => {
+        const variables = channelIds
+          ? {
+              variables: {
+                channelIds,
+              },
+            }
+          : {};
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
+          ...variables,
           updateQuery: (prev, { subscriptionData }) => {
             const updatedThread =
               subscriptionData.data && subscriptionData.data.threadUpdated;

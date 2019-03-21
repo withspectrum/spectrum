@@ -39,6 +39,7 @@ const sendDirectMessageOptions = {
             timestamp: JSON.parse(JSON.stringify(new Date())),
             messageType: message.messageType,
             modifiedAt: '',
+            bot: false,
             author: {
               user: {
                 ...ownProps.currentUser,
@@ -72,11 +73,12 @@ const sendDirectMessageOptions = {
           },
         },
         update: (store, { data: { addMessage } }) => {
+          const threadId = ownProps.threadId || ownProps.id || ownProps.thread;
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: getDMThreadMessageConnectionQuery,
             variables: {
-              id: ownProps.thread || ownProps.id,
+              id: threadId,
             },
           });
 
@@ -127,7 +129,7 @@ const sendDirectMessageOptions = {
             query: getDMThreadMessageConnectionQuery,
             data,
             variables: {
-              id: ownProps.thread,
+              id: threadId,
             },
           });
         },

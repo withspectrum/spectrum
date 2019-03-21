@@ -8,10 +8,6 @@ const community = data.communities.find(
   community => community.id === publicChannel.communityId
 );
 
-const { userId: blockedInChannelId } = data.usersChannels.find(
-  ({ channelId, isBlocked }) => channelId === publicChannel.id && isBlocked
-);
-
 const { userId: ownerInChannelId } = data.usersChannels.find(
   ({ channelId, isOwner }) => channelId === publicChannel.id && isOwner
 );
@@ -30,21 +26,21 @@ const QUIET_USER_ID = constants.QUIET_USER_ID;
 const leave = () => {
   cy.get('[data-cy="channel-leave-button"]')
     .should('be.visible')
-    .contains('Leave channel');
+    .contains('Member');
 
   cy.get('[data-cy="channel-leave-button"]').click();
 
-  cy.get('[data-cy="channel-join-button"]').contains(`Join `);
+  cy.get('[data-cy="channel-join-button"]').contains(`Join channel`);
 };
 
 const join = () => {
   cy.get('[data-cy="channel-join-button"]')
     .should('be.visible')
-    .contains('Join ');
+    .contains('Join channel');
 
   cy.get('[data-cy="channel-join-button"]').click();
 
-  cy.get('[data-cy="channel-leave-button"]').contains(`Leave channel`);
+  cy.get('[data-cy="channel-leave-button"]').contains(`Member`);
 };
 
 describe('logged out channel membership', () => {
@@ -118,7 +114,7 @@ describe('private channel profile', () => {
     });
 
     it('should render channel not found view', () => {
-      cy.get('[data-cy="channel-not-found"]').should('be.visible');
+      cy.get('[data-cy="channel-view-error"]').should('be.visible');
     });
   });
 });

@@ -1,5 +1,7 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
+import compose from 'recompose/compose';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import { track, events } from 'src/helpers/analytics';
 import {
   hasDismissedDesktopAppUpsell,
@@ -8,15 +10,19 @@ import {
   DESKTOP_APP_MAC_URL,
 } from 'src/helpers/desktop-app-utils';
 import { isMac } from 'src/helpers/is-os';
-import { OutlineButton } from 'src/components/buttons';
-import { SidebarSection } from '../../style';
-import { Container, Card, AppIcon, Content, Title, Subtitle } from './style';
+import { PrimaryOutlineButton } from 'src/components/button';
+import { SidebarSection } from 'src/views/community/style';
+import { Container, AppIcon, Content, Title, Subtitle } from './style';
+
+type Props = {
+  currentUser: ?Object,
+};
 
 type State = {
   isVisible: boolean,
 };
 
-class DesktopAppUpsell extends React.Component<{}, State> {
+class DesktopAppUpsell extends React.Component<Props, State> {
   constructor() {
     super();
 
@@ -38,34 +44,32 @@ class DesktopAppUpsell extends React.Component<{}, State> {
   download = () => {
     track(events.THREAD_VIEW_DOWNLOAD_MAC_CLICKED);
     dismissDesktopAppUpsell();
+    return this.setState({ isVisible: false });
   };
 
   render() {
+    const { currentUser } = this.props;
     const { isVisible } = this.state;
 
-    if (!isVisible) return null;
+    if (!isVisible || !currentUser) return null;
 
     return (
       <SidebarSection>
         <Container>
-          <Card>
-            <AppIcon src={'/img/homescreen-icon-72x72.png'} />
+          <AppIcon src={'/img/homescreen-icon-72x72.png'} />
 
-            <Content>
-              <Title>Download Spectrum for Mac</Title>
-              <Subtitle>
-                A better way to keep up with your communities.
-              </Subtitle>
+          <Content>
+            <Title>Download Spectrum for Mac</Title>
+            <Subtitle>A better way to keep up with your communities.</Subtitle>
 
-              <a href={DESKTOP_APP_MAC_URL} onClick={this.download}>
-                <OutlineButton>Download</OutlineButton>
-              </a>
-            </Content>
-          </Card>
+            <a href={DESKTOP_APP_MAC_URL} onClick={this.download}>
+              <PrimaryOutlineButton>Download</PrimaryOutlineButton>
+            </a>
+          </Content>
         </Container>
       </SidebarSection>
     );
   }
 }
 
-export default DesktopAppUpsell;
+export default compose(withCurrentUser)(DesktopAppUpsell);

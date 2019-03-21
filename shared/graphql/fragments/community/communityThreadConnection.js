@@ -36,7 +36,8 @@ export default gql`
     watercooler {
       ...threadInfo
     }
-    threadConnection(first: 10, after: $after, sort: $sort) {
+    threadConnection(first: 10, after: $after, sort: $sort)
+      @connection(key: "community-thread-connection", filter: ["sort"]) {
       pageInfo {
         hasNextPage
         hasPreviousPage

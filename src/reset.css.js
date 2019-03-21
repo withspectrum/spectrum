@@ -1,13 +1,12 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 // $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
 import theme from 'shared/theme';
 
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;
+export default createGlobalStyle`
+  ${prismGlobalCSS}
 
-injectGlobal`
   * {
     border: 0;
     box-sizing: inherit;
@@ -24,14 +23,12 @@ injectGlobal`
 
   html {
     display: flex;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    max-height: 100%;
-    max-width: 100%;
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.5;
-    background-color: ${theme.bg.default};
+    background-color: ${theme.bg.wash};
     color: #16171a;
     padding: 0;
     margin: 0;
@@ -42,13 +39,16 @@ injectGlobal`
   }
 
   body {
-    display: flex;
     box-sizing: border-box;
-    flex: auto;
-    align-self: stretch;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    height: 100%
+    width: 100%;
   }
 
   a {
@@ -94,20 +94,6 @@ injectGlobal`
     color: ${theme.text.placeholder};
   }
 
-  #root {
-    display: flex;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    flex-direction: column;
-    -ms-flex-direction: column;
-    -moz-flex-direction: column;
-    -webkit-flex-direction: column;
-    height: 100%;
-    width: 100%;
-  }
-
   .fade-enter {
     opacity: 0;
     z-index: 1;
@@ -119,14 +105,18 @@ injectGlobal`
   }
 
   .markdown {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.4;
     color: ${theme.text.default};
   }
 
+  .markdown pre {
+    font-size: 15px;
+  }
+
   .markdown p {
     color: inherit;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     display: block;
   }
@@ -172,7 +162,7 @@ injectGlobal`
 
   .markdown li {
     color: inherit;
-    font-size: 15px;
+    font-size: 16px;
     margin-bottom: 4px;
     line-height: 1.5;
     font-weight: 400;
@@ -183,7 +173,7 @@ injectGlobal`
     border-left: 4px solid ${theme.text.secondary};
     background: ${theme.bg.wash};
     padding: 4px 8px 4px 16px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;
@@ -329,7 +319,10 @@ injectGlobal`
 
   .threadComposer textarea {
     line-height: 1.5;
-    /* account for bottom save bar when editing */
-    height: calc(100% + 52px)!important;
+    height: calc(100% + 48px)!important;
+  }
+  
+  .tippy-backdrop {
+    background-color: ${theme.text.default};
   }
 `;

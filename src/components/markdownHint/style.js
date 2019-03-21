@@ -1,6 +1,12 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
+import { MEDIA_BREAK } from 'src/components/layout';
+
+export const MarkdownHintContainer = styled.div`
+  width: 100%;
+  background: ${theme.bg.default};
+`;
 
 export const StyledMarkdownHint = styled.div`
   display: flex;
@@ -22,7 +28,7 @@ export const StyledMarkdownHint = styled.div`
     margin-right: 3px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

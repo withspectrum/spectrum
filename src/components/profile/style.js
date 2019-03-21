@@ -10,10 +10,12 @@ import {
   zIndex,
   Shadow,
   hexa,
-} from '../globals';
-import { Button, OutlineButton, IconButton } from '../buttons';
-import { ReputationWrapper } from '../reputation/style';
-import Card from '../card';
+} from 'src/components/globals';
+import { Button, OutlineButton } from 'src/components/button';
+import { ReputationWrapper } from 'src/components/reputation/style';
+import Icon from 'src/components/icon';
+import Card from 'src/components/card';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -56,7 +58,7 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   min-width: 0;
 `;
 
-export const ProfileHeaderAction = styled(IconButton)`
+export const ProfileHeaderAction = styled(Icon)`
   margin-left: 16px;
   flex: 0 0 auto;
 `;
@@ -79,7 +81,7 @@ export const FullProfile = styled.div`
   margin-top: -64px;
   background-color: ${theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: -48px;
   }
 `;
@@ -152,30 +154,6 @@ export const FullDescription = styled.div`
   }
 `;
 
-export const ExtLink = styled(FlexRow)`
-  align-items: center;
-  font-weight: 400;
-  transition: ${Transition.hover.off};
-  ${Truncate};
-  font-size: 16px;
-  margin: 12px 0;
-  color: ${theme.text.alt};
-
-  a {
-    color: ${theme.text.secondary};
-  }
-
-  > a:hover {
-    color: ${theme.text.default};
-  }
-
-  > div {
-    color: ${theme.text.alt};
-    margin-right: 4px;
-    margin-top: 1px;
-  }
-`;
-
 export const Actions = styled(FlexRow)`
   padding: 16px;
   padding-top: 0;
@@ -202,7 +180,7 @@ export const Meta = styled.div`
   border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   width: 100%;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 4px 4px;
 `;
 
 export const MetaList = styled.ul``;
@@ -281,7 +259,7 @@ export const ProfileCard = styled(Card)`
 `;
 
 export const ThreadProfileCard = styled(ProfileCard)`
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
 
@@ -294,16 +272,16 @@ export const CoverPhoto = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+  border-radius: ${props => (props.large ? '4px' : '4px 4px 0 0')};
 `;
 
 export const Container = styled.div`
   background: ${theme.bg.default};
-  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   flex: 0 0 22%;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 4px;
   position: relative;
   z-index: ${zIndex.card};
   margin: 16px;
@@ -339,14 +317,4 @@ export const MessageButtonContainer = styled.div`
     justify-content: center;
     text-align: center;
   }
-`;
-
-export const OnlineIndicator = styled.span`
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  background: ${props => (props.offline ? theme.text.alt : theme.success.alt)};
-  margin-right: 12px;
-  display: inline-block;
-  margin-left: 6px;
 `;

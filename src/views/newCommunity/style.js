@@ -1,8 +1,8 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
-import Card from '../../components/card';
+import Card from 'src/components/card';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled(Card)`
   background-image: ${props =>
@@ -13,9 +13,18 @@ export const Container = styled(Card)`
   background-position: ${props =>
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
-  height: auto;
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
+  max-width: ${MEDIA_BREAK}px;
+  height: 100%;
+  min-height: 100%;
   min-height: 160px;
   display: flex;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    border-left: 0;
+    border-right: 0;
+  }
 `;
 
 export const Actions = styled.div`

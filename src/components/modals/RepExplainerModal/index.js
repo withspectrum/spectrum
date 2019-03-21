@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import Reputation from 'src/components/reputation';
 import { UserAvatar } from 'src/components/avatar';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import ModalContainer from '../modalContainer';
 import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
@@ -56,14 +56,14 @@ class RepExplainerModal extends React.Component<Props> {
             </IconContainer>
             <Title>Spectrum Rep</Title>
             <Subtitle>
-              Rep provides context about a person's reputation in a community.
+              Rep provides context about a person’s reputation in a community.
               Rep is earned by starting and joining productive conversations.
             </Subtitle>
 
             {reputation <= 0 ? (
               currentUser ? (
                 <Rep>
-                  You don't have any rep yet. Earn rep by starting a
+                  You don’t have any rep yet. Earn rep by starting a
                   conversation or replying to other people in your communities.
                 </Rep>
               ) : (
@@ -74,7 +74,6 @@ class RepExplainerModal extends React.Component<Props> {
                 <UserAvatar user={currentUser} size={24} />
                 <RepWrapper>
                   <Reputation
-                    tipText={'Your total reputation'}
                     reputation={currentUser.totalReputation}
                     ignoreClick
                   />
