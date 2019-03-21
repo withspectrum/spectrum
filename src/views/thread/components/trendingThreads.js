@@ -12,6 +12,7 @@ import truncate from 'shared/truncate';
 import { SidebarSectionHeading } from 'src/views/community/style';
 import type { ThreadInfoType } from 'shared/graphql/fragments/thread/threadInfo';
 import { timeDifferenceShort } from 'shared/time-difference';
+import { Loading } from 'src/components/loading';
 
 const ThreadListItemContainer = styled(Link)`
   display: block;
@@ -83,8 +84,8 @@ const TrendingThreads = (props: Props) => {
       query={getCommunityThreadConnectionQuery}
       variables={{ id: props.id, sort: 'trending' }}
     >
-      {({ data }) => {
-        if (data.community) {
+      {({ data, loading }) => {
+        if (data.community && data.community.threadConnection) {
           const threads = data.community.threadConnection.edges
             .map(
               ({ node }) => node
@@ -107,6 +108,22 @@ const TrendingThreads = (props: Props) => {
               {threads.map(thread => (
                 <ThreadListItem thread={thread} key={thread.id} />
               ))}
+            </React.Fragment>
+          );
+        }
+
+        if (loading) {
+          return (
+            <React.Fragment>
+              <Container
+                data-cy="trending-conversations"
+                style={{ paddingBottom: '4px' }}
+              >
+                <SidebarSectionHeading>
+                  Trending conversations
+                </SidebarSectionHeading>
+              </Container>
+              <Loading style={{ padding: '32px 16px' }} />
             </React.Fragment>
           );
         }
