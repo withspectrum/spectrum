@@ -63,7 +63,7 @@ const InternalEmbed = (props: InternalEmbedData) => {
 };
 
 const Embed = (props: EmbedData) => {
-  if (typeof props.type === 'string' && props.type === 'internal') {
+  if (props.type === 'internal') {
     return <InternalEmbed {...props} />;
   }
 
