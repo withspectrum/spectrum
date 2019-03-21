@@ -424,6 +424,7 @@ export const ThreadTitle = {
   width: '100%',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
   borderRadius: '12px 12px 0 0',
 };
 
@@ -439,6 +440,7 @@ export const ThreadDescription = {
   boxShadow: 'none',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
 };
 
 export const ShareButtons = styled.div`
