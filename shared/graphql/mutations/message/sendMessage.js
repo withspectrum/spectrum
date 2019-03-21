@@ -4,6 +4,7 @@ import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
 import snarkdown from 'snarkdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
 import { messageTypeObj } from 'shared/draft-utils/message-types';
@@ -154,6 +155,26 @@ const sendMessageOptions = {
             },
             variables: {
               id: message.threadId,
+            },
+          });
+
+          const community = store.readFragment({
+            fragment: communityInfoFragment,
+            fragmentName: 'communityInfo',
+            id: `Community:${data.thread.community.slug}`,
+          });
+
+          store.writeFragment({
+            fragment: communityInfoFragment,
+            fragmentName: 'communityInfo',
+            id: `Community:${data.thread.community.slug}`,
+            data: {
+              ...community,
+              communityPermissions: {
+                ...community.communityPermissions,
+                // Forward-date lastSeen by 10 seconds
+                lastSeen: new Date(Date.now() + 10000).toISOString(),
+              },
             },
           });
         },

@@ -364,7 +364,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         setCommunityLastSeen(
           thread.communityId,
           user.id,
-          new Date(timestamp + 1000)
+          new Date(timestamp + 10000)
         )
       )
       .then(async () => {
@@ -382,7 +382,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         trackUserThreadLastSeenQueue.add({
           userId: user.id,
           threadId: message.threadId,
-          timestamp: Date.now(),
+          timestamp,
         });
 
         calculateThreadScoreQueue.add(

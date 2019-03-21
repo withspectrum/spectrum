@@ -719,7 +719,11 @@ export const setCommunityLastSeen = (
     .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .update(
       {
-        lastSeen,
+        lastSeen: db.branch(
+          db.row('lastSeen').lt(lastSeen),
+          lastSeen,
+          db.row('lastSeen')
+        ),
       },
       {
         returnChanges: true,

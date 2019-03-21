@@ -65,7 +65,7 @@ const Component = (props: Props) => {
     }
     setCommunityLastSeen({
       id: community.id,
-      lastSeen: new Date(),
+      lastSeen: new Date(Date.now() + 10000),
     });
   }, [community.id, currentUser]);
 

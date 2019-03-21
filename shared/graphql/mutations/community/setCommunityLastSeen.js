@@ -42,7 +42,7 @@ const setCommunityLastSeenOptions = {
             communityPermissions: {
               ...ownProps.community.communityPermissions,
               __typename: 'CommunityPermissions',
-              lastSeen: input.lastSeen,
+              lastSeen: input.lastSeen.toISOString(),
             },
           },
         },
