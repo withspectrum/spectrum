@@ -114,7 +114,7 @@ export const Usernames = styled.span`
   overflow: hidden;
   color: ${theme.text.default};
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.2;
   margin-bottom: 1px;
   font-size: 15px;
   flex: 1 1 100%;
