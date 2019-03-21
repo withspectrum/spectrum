@@ -78,17 +78,20 @@ export const addEmbedsToEditorState = (
         mutability: 'MUTABLE',
         type: 'embed',
       };
-      const regexp = new RegExp(REGEXPS[embed.type], 'i');
+      const regexp = new RegExp(REGEXPS[embed.type], 'ig');
+      const text = block.text;
       var match;
-      while ((match = regexp.exec(block.text)) !== null) {
-        // Replace the URL with a space
-        newBlocks[blockIndex].text = `${newBlocks[blockIndex].text.substr(
-          0,
-          match.index
-        )} ${newBlocks[blockIndex].text.substr(match.index + match[0].length)}`;
+      while ((match = regexp.exec(text)) !== null) {
+        const offset = match.index;
+        const length = match[0].length;
+        newBlocks[blockIndex].entityRanges = newBlocks[
+          blockIndex
+        ].entityRanges.filter(
+          entity => entity.offset !== offset || entity.length !== length
+        );
         newBlocks[blockIndex].entityRanges.push({
-          offset: match.index,
-          length: 1,
+          offset,
+          length,
           key: entityKey,
         });
       }

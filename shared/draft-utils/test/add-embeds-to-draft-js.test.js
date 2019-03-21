@@ -548,3 +548,35 @@ it('should add multiple embeds to text', () => {
   };
   expect(addEmbedsToEditorState(input)).toMatchSnapshot();
 });
+
+it('should remove link entities', () => {
+  const input = {
+    blocks: [
+      {
+        type: 'unstyled',
+        key: 'g0000',
+        data: {},
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [
+          {
+            offset: 0,
+            length: 33,
+            key: 0,
+          },
+        ],
+        text: 'https://simplecast.com/s/a1f11d11',
+      },
+    ],
+    entityMap: {
+      0: {
+        type: 'link',
+        mutability: 'MUTABLE',
+        data: {
+          href: 'https://simplecast.com/s/a1f11d11',
+        },
+      },
+    },
+  };
+  expect(addEmbedsToEditorState(input)).toMatchSnapshot();
+});
