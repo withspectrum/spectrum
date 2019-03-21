@@ -3,7 +3,7 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
-import { MEDIA_BREAK } from 'src/components/layout';
+import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 import {
   Truncate,
   FlexCol,
@@ -16,10 +16,7 @@ import {
 } from 'src/components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
-  height: 100%;
-  max-height: 100vh;
-  overflow: hidden;
-  overflow-y: scroll;
+  height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   background: ${theme.bg.default};
 `;
 
