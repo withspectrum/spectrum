@@ -23,6 +23,7 @@ const UsersSearch = (props: *) => {
           type="text"
           placeholder="Search for people..."
           autoFocus
+          data-cy="dm-composer-search"
         />
       </SearchInputWrapper>
 

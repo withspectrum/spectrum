@@ -202,6 +202,7 @@ class ThreadsList extends React.Component<Props, State> {
           title={'Messages'}
           rightAction={
             <PrimaryOutlineButton
+              data-cy="compose-dm"
               size={'small'}
               to={{ pathname: '/new/message', state: { modal: true } }}
             >

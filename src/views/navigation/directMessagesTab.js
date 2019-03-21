@@ -93,7 +93,12 @@ const DirectMessagesTab = (props: Props) => {
                 >
                   <IconWrapper>
                     <Icon glyph="message-simple" />
-                    {count > 0 && <RedDot style={{ right: '-3px' }} />}
+                    {count > 0 && (
+                      <RedDot
+                        data-cy="unread-dm-badge"
+                        style={{ right: '-3px' }}
+                      />
+                    )}
                   </IconWrapper>
 
                   <Label>Messages</Label>

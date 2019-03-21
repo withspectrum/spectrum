@@ -44,7 +44,11 @@ export const UnconnectedUserActions = (props: Props) => {
 
       <InitDirectMessageWrapper
         user={user}
-        render={<PrimaryOutlineButton>Message</PrimaryOutlineButton>}
+        render={
+          <PrimaryOutlineButton data-cy="message-user-button">
+            Message
+          </PrimaryOutlineButton>
+        }
       />
 
       {currentUser && user.id !== currentUser.id && (
