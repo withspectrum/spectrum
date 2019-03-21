@@ -117,12 +117,15 @@ class SetUsername extends React.Component<Props, State> {
             autoFocus={true}
             username={username}
             onValidationResult={this.handleUsernameValidation}
+            dataCy={'username-search'}
           />
         </Row>
 
         <Row style={{ minHeight: '43px' }}>
-          {error && <Error>{error}</Error>}
-          {success && <Success>{success}</Success>}
+          {error && <Error data-cy="username-search-error">{error}</Error>}
+          {success && (
+            <Success data-cy="username-search-success">{success}</Success>
+          )}
         </Row>
 
         <Row>
@@ -130,6 +133,7 @@ class SetUsername extends React.Component<Props, State> {
             onClick={this.saveUsername}
             disabled={!username || error}
             loading={isLoading}
+            data-cy="save-username-button"
           >
             {isLoading ? 'Saving...' : 'Save and Continue'}
           </ContinueButton>

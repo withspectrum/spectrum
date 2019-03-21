@@ -17,7 +17,7 @@ import {
 
 export const ThreadsListScrollContainer = styled.div`
   height: 100%;
-  max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+  max-height: 100vh;
   overflow: hidden;
   overflow-y: scroll;
   background: ${theme.bg.default};

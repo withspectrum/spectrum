@@ -20,6 +20,7 @@ const COMMUNITY_MODERATOR_USER_ID = '9';
 // this user is only a member of one community, and that community only has
 // one channel - use for testing the composer community+channel selection
 const SINGLE_CHANNEL_COMMUNITY_USER_ID = '10';
+const NEW_USER_ID = '11';
 
 // communities
 const SPECTRUM_COMMUNITY_ID = '1';
@@ -53,6 +54,7 @@ module.exports = {
   CHANNEL_MODERATOR_USER_ID,
   COMMUNITY_MODERATOR_USER_ID,
   SINGLE_CHANNEL_COMMUNITY_USER_ID,
+  NEW_USER_ID,
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
   DELETED_COMMUNITY_ID,

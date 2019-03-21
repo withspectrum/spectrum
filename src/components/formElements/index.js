@@ -202,9 +202,11 @@ export class UnderlineInput extends React.Component<InputProps> {
 }
 
 export const Error = (props: Object) => {
-  return <StyledError data-cy={props.dataCy}>{props.children}</StyledError>;
+  const { children, ...rest } = props;
+  return <StyledError {...rest}>{children}</StyledError>;
 };
 
 export const Success = (props: Object) => {
-  return <StyledSuccess data-cy={props.dataCy}>{props.children}</StyledSuccess>;
+  const { children, ...rest } = props;
+  return <StyledSuccess {...rest}>{children}</StyledSuccess>;
 };

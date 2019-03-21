@@ -41,7 +41,7 @@ class NewUserOnboarding extends React.Component<Props> {
   render() {
     const { currentUser } = this.props;
 
-    if (currentUser.username) {
+    if (currentUser && currentUser.username) {
       this.saveUsername();
       return null;
     }
@@ -50,7 +50,7 @@ class NewUserOnboarding extends React.Component<Props> {
     const subheading = 'You can change this at any time, so no pressure!';
     const emoji = '👋';
     return (
-      <ViewGrid>
+      <ViewGrid data-cy="new-user-onboarding">
         <CenteredGrid>
           <Card>
             <Emoji role="img" aria-label="Oops">
@@ -61,7 +61,11 @@ class NewUserOnboarding extends React.Component<Props> {
 
             <SetUsername user={currentUser} save={this.saveUsername} />
 
-            <LogOutButton target="_self" href={`${SERVER_URL}/auth/logout`}>
+            <LogOutButton
+              data-cy="new-user-onboarding-logout"
+              target="_self"
+              href={`${SERVER_URL}/auth/logout`}
+            >
               Log out
             </LogOutButton>
           </Card>

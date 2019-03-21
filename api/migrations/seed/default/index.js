@@ -14,6 +14,8 @@ const defaultMessages = require('./messages');
 const defaultReactions = require('./reactions');
 const defaultUsersNotifications = require('./usersNotifications');
 const defaultNotifications = require('./notifications');
+const defaultCommunitySettings = require('./communitySettings');
+const defaultChannelSettings = require('./channelSettings');
 
 module.exports = {
   constants,
@@ -30,7 +32,7 @@ module.exports = {
   defaultUsersSettings,
   defaultNotifications,
   defaultUsersNotifications,
-  defaultCommunitySettings: [],
-  defaultChannelSettings: [],
+  defaultCommunitySettings,
+  defaultChannelSettings,
   defaultReactions,
 };
