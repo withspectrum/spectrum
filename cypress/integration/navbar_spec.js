@@ -82,7 +82,7 @@ const checkSignedInSplashNavbarRenders = () => {
 
 describe('Navbar logged in', () => {
   beforeEach(() => {
-    cy.auth(user.id).then(() => cy.visit(`/`));
+    cy.auth(user.id).then(() => cy.visit('/explore'));
   });
 
   it('should render product navbar', () => {
@@ -116,7 +116,7 @@ describe('Navbar logged in', () => {
 
 describe('Navbar logged out', () => {
   beforeEach(() => {
-    cy.visit(`/`);
+    cy.visit('/');
   });
 
   it('should render splash page navbar', () => {
