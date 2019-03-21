@@ -16,6 +16,7 @@ import getNotifications, {
   type GetNotificationsType,
 } from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -26,11 +27,13 @@ import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 type Props = {
   isActive: boolean,
   count: number,
+  location: Object,
   data: {
     notifications?: GetNotificationsType,
     subscribeToNewNotifications: Function,
   },
   markAllNotificationsSeen: Function,
+  markSingleNotificationSeen: Function,
   dispatch: Function,
   match: Object,
   currentUser?: Object,
@@ -59,20 +62,32 @@ const NotificationsTab = (props: Props) => {
     data.notifications.edges
       .filter(Boolean)
       .reduce((count, { node }) => (node.isSeen ? count : count + 1), 0);
-  // $FlowIssue Mark all as seen when the tab becomes active
+
   React.useEffect(() => {
-    const count = data.notifications
-      ? data.notifications.edges
-          .filter(Boolean)
-          .filter(({ node }) => !node.isSeen).length
-      : 0;
-    props.dispatch(
-      setNotifications(
-        data.notifications
-          ? data.notifications.edges.filter(Boolean).map(({ node }) => node)
-          : []
-      )
-    );
+    let currentViewNotifications = [];
+    let unseenNotifications = [];
+
+    if (data.notifications) {
+      data.notifications.edges
+        .filter(Boolean)
+        .forEach(({ node: notification }) => {
+          if (notification.isSeen) return;
+          if (props.location.pathname.indexOf(notification.context.id) > -1) {
+            currentViewNotifications.push(notification);
+            return;
+          }
+          unseenNotifications.push(notification);
+        });
+    }
+
+    if (currentViewNotifications.length > 0) {
+      // Mark notifications for current view as seen
+      currentViewNotifications.forEach(notification =>
+        props.markSingleNotificationSeen(notification.id)
+      );
+    }
+    const count = unseenNotifications.length;
+    props.dispatch(setNotifications(unseenNotifications));
     props.dispatch(
       updateNotificationsCount('notifications', props.active ? 0 : count)
     );
@@ -128,6 +143,7 @@ export default compose(
   withApollo,
   getNotifications,
   markNotificationsSeenMutation,
+  markSingleNotificationSeenMutation,
   viewNetworkHandler,
   withRouter,
   withCurrentUser
