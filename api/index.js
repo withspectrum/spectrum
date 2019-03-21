@@ -49,7 +49,7 @@ if (!process.env.TEST_DB) {
   // Allow bursts of up to 40 req for initial page loads, but block more than 40 / 10s
   app.use(
     rateLimiter({
-      max: 40,
+      max: 60,
       duration: '10s',
     })
   );
