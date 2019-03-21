@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import querystring from 'query-string';
@@ -16,6 +16,7 @@ import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
 import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
+import usePrevious from 'src/hooks/usePrevious';
 
 type Props = {
   community: CommunityInfoType,
@@ -118,14 +119,32 @@ const Feeds = (props: Props) => {
     is chat, we want that scrolled to the bottom by default, since the behavior
     of chat is to scroll up for older messages
   */
-  const { scrollToBottom, scrollToTop } = useAppScroller();
-  useEffect(() => {
+  const { scrollToBottom, scrollToTop, scrollTo, ref } = useAppScroller();
+  const lastTab = usePrevious(tab);
+  const lastScroll = ref ? ref.scrollTop : null;
+  useLayoutEffect(() => {
+    if (lastTab && lastTab !== tab && lastScroll) {
+      sessionStorage.setItem(`last-scroll-${lastTab}`, lastScroll.toString());
+    }
+    const stored =
+      sessionStorage && sessionStorage.getItem(`last-scroll-${tab}`);
     if (tab === 'chat') {
       scrollToBottom();
+    } else if (stored) {
+      scrollTo(Number(stored));
     } else {
       scrollToTop();
     }
   }, [tab]);
+
+  // Store the last scroll position on unmount
+  useLayoutEffect(() => {
+    return () => {
+      const elem = document.getElementById('main');
+      if (!elem) return;
+      sessionStorage.setItem(`last-scroll-${tab}`, elem.scrollTop.toString());
+    };
+  }, []);
 
   const segments = ['posts', 'members', 'info'];
   if (community.watercoolerId) segments.unshift('chat');

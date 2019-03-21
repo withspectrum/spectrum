@@ -18,5 +18,10 @@ export const useAppScroller = () => {
     if (elem) return (elem.scrollTop = elem.scrollHeight - elem.clientHeight);
   };
 
-  return { scrollToTop, scrollToBottom, ref };
+  const scrollTo = (pos: number) => {
+    const elem = ref || document.getElementById('main');
+    if (elem) return (elem.scrollTop = pos);
+  };
+
+  return { scrollToTop, scrollTo, scrollToBottom, ref };
 };

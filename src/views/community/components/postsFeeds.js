@@ -1,7 +1,6 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import compose from 'recompose/compose';
-import { debounce } from 'src/helpers/utils';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import getCommunityThreads from 'shared/graphql/queries/community/getCommunityThreadConnection';
@@ -17,33 +16,6 @@ const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
 type Props = {
   community: GetCommunityType,
   currentUser: ?UserInfoType,
-};
-
-const useScrollPersistance = (key: string) => {
-  useEffect(() => {
-    // On mount, if we have a last scroll position scroll there
-    const last = sessionStorage ? sessionStorage.getItem(key) : null;
-    if (last) {
-      const elem = document.getElementById('main');
-      if (elem) {
-        elem.scrollTop = Number(last);
-        setTimeout(() => {
-          elem.scrollTop = Number(last);
-        });
-      }
-    }
-
-    // On unmount, store the current scroll position and set it to 0
-    return () => {
-      const elem = document.getElementById('main');
-      if (elem) {
-        if (sessionStorage) {
-          sessionStorage.setItem(key, elem.scrollTop.toString());
-        }
-        elem.scrollTop = 0;
-      }
-    };
-  }, []);
 };
 
 // @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
@@ -81,8 +53,6 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
     setClientSearchQuery(e.target.value);
     search(e.target.value);
   };
-
-  useScrollPersistance('last-community-post-feed-scroll-position');
 
   return (
     <React.Fragment>

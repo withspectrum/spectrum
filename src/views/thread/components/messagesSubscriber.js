@@ -172,6 +172,67 @@ class Messages extends React.Component<Props> {
   render() {
     const { data, isLoading, isFetchingMore, hasError } = this.props;
 
+    const { thread } = data;
+    if (thread && thread.messageConnection) {
+      const { messageConnection } = thread;
+      const { edges } = messageConnection;
+
+      if (edges.length === 0) return <NullMessages />;
+
+      const unsortedMessages = edges.map(message => message && message.node);
+      const sortedMessages = sortAndGroupMessages(unsortedMessages);
+
+      if (!sortedMessages || sortedMessages.length === 0)
+        return <NullMessages />;
+
+      return (
+        <React.Fragment>
+          {messageConnection.pageInfo.hasPreviousPage && (
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={this.props.loadPreviousPage}
+              automatic={!!thread.watercooler}
+              href={{
+                pathname: this.props.location.pathname,
+                search: queryString.stringify({
+                  ...queryString.parse(this.props.location.search),
+                  msgsbefore: messageConnection.edges[0].cursor,
+                  msgsafter: undefined,
+                }),
+              }}
+            >
+              Show previous messages
+            </NextPageButton>
+          )}
+          <ChatMessages
+            thread={thread}
+            uniqueMessageCount={unsortedMessages.length}
+            messages={sortedMessages}
+            threadType={'story'}
+            isWatercooler={thread.watercooler}
+          />
+          {messageConnection.pageInfo.hasNextPage && (
+            <NextPageButton
+              isFetchingMore={isFetchingMore}
+              fetchMore={this.props.loadNextPage}
+              href={{
+                pathname: this.props.location.pathname,
+                search: queryString.stringify({
+                  ...queryString.parse(this.props.location.search),
+                  msgsafter:
+                    messageConnection.edges[messageConnection.edges.length - 1]
+                      .cursor,
+                  msgsbefore: undefined,
+                }),
+              }}
+            >
+              Show more messages
+            </NextPageButton>
+          )}
+        </React.Fragment>
+      );
+    }
+
     if (isLoading)
       return (
         <NullMessagesWrapper>
@@ -179,65 +240,9 @@ class Messages extends React.Component<Props> {
         </NullMessagesWrapper>
       );
 
-    const { thread } = data;
-    if (!thread || hasError) return null;
+    if (hasError) return null;
 
-    const { messageConnection } = thread;
-    const { edges } = messageConnection;
-
-    if (edges.length === 0) return <NullMessages />;
-
-    const unsortedMessages = edges.map(message => message && message.node);
-    const sortedMessages = sortAndGroupMessages(unsortedMessages);
-
-    if (!sortedMessages || sortedMessages.length === 0) return <NullMessages />;
-
-    return (
-      <React.Fragment>
-        {messageConnection.pageInfo.hasPreviousPage && (
-          <NextPageButton
-            isFetchingMore={isFetchingMore}
-            fetchMore={this.props.loadPreviousPage}
-            automatic={!!thread.watercooler}
-            href={{
-              pathname: this.props.location.pathname,
-              search: queryString.stringify({
-                ...queryString.parse(this.props.location.search),
-                msgsbefore: messageConnection.edges[0].cursor,
-                msgsafter: undefined,
-              }),
-            }}
-          >
-            Show previous messages
-          </NextPageButton>
-        )}
-        <ChatMessages
-          thread={thread}
-          uniqueMessageCount={unsortedMessages.length}
-          messages={sortedMessages}
-          threadType={'story'}
-          isWatercooler={thread.watercooler}
-        />
-        {messageConnection.pageInfo.hasNextPage && (
-          <NextPageButton
-            isFetchingMore={isFetchingMore}
-            fetchMore={this.props.loadNextPage}
-            href={{
-              pathname: this.props.location.pathname,
-              search: queryString.stringify({
-                ...queryString.parse(this.props.location.search),
-                msgsafter:
-                  messageConnection.edges[messageConnection.edges.length - 1]
-                    .cursor,
-                msgsbefore: undefined,
-              }),
-            }}
-          >
-            Show more messages
-          </NextPageButton>
-        )}
-      </React.Fragment>
-    );
+    return null;
   }
 }
 
