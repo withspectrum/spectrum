@@ -77,15 +77,6 @@ describe('brand new user', () => {
   it('should allow the user to logout', () => {
     setUsernameIsVisible();
     cy.get('[data-cy="new-user-onboarding-logout"]').should('be.visible');
-    cy.wait(100);
-    cy.get('[data-cy="new-user-onboarding-logout"]')
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="navigation-splash"]').should('be.visible');
-    cy.get('[data-cy="navigation-splash-features"]').should('be.visible');
-    cy.get('[data-cy="navigation-splash-apps"]').should('be.visible');
-    cy.get('[data-cy="navigation-splash-support"]').should('be.visible');
   });
 });
 
@@ -127,10 +118,10 @@ describe('post username creation redirects', () => {
   });
 
   it('should persist community join token', () => {
-    cy.visit('/private/join/abc');
+    cy.visit('/private-join/join/abc');
     setUsernameIsVisible();
     saveUsername();
-    cy.url().should('include', '/private');
+    cy.url().should('include', '/private-join');
     cy.get('[data-cy="community-profile-card"]').should('be.visible');
   });
 
