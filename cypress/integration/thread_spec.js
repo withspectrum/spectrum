@@ -52,8 +52,8 @@ describe('Thread View', () => {
     it('should prompt logged-out users to log in', () => {
       const newMessage = 'A new message!';
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="join-channel-login-upsell"]').should('be.visible');
-      cy.get('[data-cy="join-channel-login-upsell"]').click();
+      cy.get('[data-cy="join-community-chat-upsell"]').should('be.visible');
+      cy.get('[data-cy="join-community-chat-upsell"]').click();
       cy.get('[data-cy="login-modal"]').should('be.visible');
     });
   });
@@ -84,7 +84,7 @@ describe('Thread View', () => {
     });
 
     it("should not allow logged-in users to send private messages if they don't have permission", () => {
-      cy.get('[data-cy="null-thread-view"]').should('be.visible');
+      cy.get('[data-cy="no-thread-error-view"]').should('be.visible');
     });
   });
 
@@ -126,19 +126,9 @@ describe('Thread View', () => {
         expect($p).to.have.length(1);
       });
 
-      // the other message should be unselected
+      // the other messages should be unselected
       cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(1);
-      });
-
-      // load previous messages should be visible
-      cy.get('[data-cy="load-previous-messages"]')
-        .should('be.visible')
-        .click();
-
-      // all the messages should be loaded
-      cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(4);
+        expect($p).to.have.length(3);
       });
     });
   });
@@ -158,18 +148,6 @@ describe('Thread View', () => {
         .first()
         .should('be.visible')
         .click({ force: true });
-      // message should be selected
-      cy.get('[data-cy="message-selected"]').should('be.visible');
-      // only one message should be selected
-      cy.get('[data-cy="message-selected"]').should($p => {
-        expect($p).to.have.length(1);
-      });
-      // the other three messages should be unselected
-      cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(3);
-      });
-      // the url should contain the message query param
-      cy.url().should('contain', `${thread.id}?m=MTQ4MzIyNTE5OTk5OQ==`);
     });
   });
 
@@ -188,17 +166,7 @@ describe('Thread View', () => {
         .first()
         .should('be.visible')
         .click({ force: true });
-      // message should be selected
-      cy.get('[data-cy="message-selected"]').should('be.visible');
-      // only one message should be selected
-      cy.get('[data-cy="message-selected"]').should($p => {
-        expect($p).to.have.length(1);
-      });
-      // the other three messages should be unselected
-      cy.get('[data-cy="message"]').should($p => {
-        expect($p).to.have.length(3);
-      });
-      // the url should contain the message query param
+
       cy.url().should('contain', `?m=MTQ4MzIyNTE5OTk5OQ==`);
     });
   });

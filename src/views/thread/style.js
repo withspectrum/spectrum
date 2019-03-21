@@ -393,6 +393,8 @@ export const NullMessagesWrapper = styled.div`
   color: ${theme.text.alt};
   flex-direction: column;
   opacity: 0.8;
+  width: 100%;
+  background: ${theme.bg.default};
 
   @media (max-width: ${MEDIA_BREAK}px) {
     padding-bottom: 128px;

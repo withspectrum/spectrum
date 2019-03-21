@@ -117,7 +117,7 @@ const EditingChatInput = (props: Props) => {
       </EditorInput>
       <EditActions>
         {!saving && (
-          <TextButton dataCy="edit-message-cancel" onClick={props.cancelEdit}>
+          <TextButton data-cy="edit-message-cancel" onClick={props.cancelEdit}>
             Cancel
           </TextButton>
         )}

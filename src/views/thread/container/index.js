@@ -231,6 +231,7 @@ const ThreadContainer = (props: Props) => {
                         <PrimaryOutlineButton
                           isLoading={isLoading}
                           icon={'door-enter'}
+                          data-cy="join-community-chat-upsell"
                         >
                           {isLoading ? 'Joining...' : 'Join community to chat'}
                         </PrimaryOutlineButton>
