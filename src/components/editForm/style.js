@@ -113,6 +113,7 @@ export const ImageInputWrapper = styled(FlexCol)`
   flex: 0 0 auto;
   margin-top: 8px;
   margin-bottom: 24px;
+  max-width: 342px;
 
   > label:nth-of-type(2) {
     position: absolute;
