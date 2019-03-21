@@ -6,15 +6,6 @@ Object {
     Object {
       "data": Object {},
       "depth": 0,
-      "entityRanges": Array [],
-      "inlineStyleRanges": Array [],
-      "key": "g0000",
-      "text": "https://simplecast.com/s/a1f11d11",
-      "type": "unstyled",
-    },
-    Object {
-      "data": Object {},
-      "depth": 0,
       "entityRanges": Array [
         Object {
           "key": 0,
@@ -23,9 +14,9 @@ Object {
         },
       ],
       "inlineStyleRanges": Array [],
-      "key": "0",
+      "key": "g0000",
       "text": " ",
-      "type": "atomic",
+      "type": "unstyled",
     },
   ],
   "entityMap": Object {
@@ -33,6 +24,46 @@ Object {
       "data": Object {
         "height": 200,
         "src": "https://embed.simplecast.com/a1f11d11",
+        "type": "simplecast",
+        "url": "https://embed.simplecast.com/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "embed",
+    },
+  },
+}
+`;
+
+exports[`should add multiple embeds to text 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [
+        Object {
+          "key": 0,
+          "length": 1,
+          "offset": 13,
+        },
+        Object {
+          "key": 0,
+          "length": 1,
+          "offset": 33,
+        },
+      ],
+      "inlineStyleRanges": Array [],
+      "key": "g0000",
+      "text": "New podcast!   it is really cool  ",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {
+    "0": Object {
+      "data": Object {
+        "height": 200,
+        "src": "https://embed.simplecast.com/a1f11d11",
+        "type": "simplecast",
         "url": "https://embed.simplecast.com/a1f11d11",
       },
       "mutability": "MUTABLE",
