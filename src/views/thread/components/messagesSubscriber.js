@@ -29,6 +29,7 @@ type Props = {
   subscribeToNewMessages: Function,
   onMessagesLoaded?: Function,
   location: Location,
+  thread?: Object,
   ...$Exact<ViewNetworkHandlerType>,
 };
 
@@ -36,13 +37,9 @@ class Messages extends React.Component<Props> {
   unsubscribe: Function;
 
   componentDidMount() {
-    const thread = this.props.data.thread;
+    const thread = this.props.data.thread || this.props.thread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
-    if (
-      thread &&
-      thread.messageConnection &&
-      (thread.watercooler || thread.currentUserLastSeen)
-    ) {
+    if (thread && (thread.watercooler || thread.currentUserLastSeen)) {
       const elem = document.getElementById('main');
       if (!elem) return;
       elem.scrollTop = elem.scrollHeight;
@@ -60,7 +57,6 @@ class Messages extends React.Component<Props> {
     if (
       !prev.data.thread &&
       curr.data.thread &&
-      curr.data.thread.messageConnection.edges.length > 0 &&
       (curr.data.thread.currentUserLastSeen || curr.data.thread.watercooler)
     ) {
       return {
@@ -236,7 +232,7 @@ class Messages extends React.Component<Props> {
     if (isLoading)
       return (
         <NullMessagesWrapper>
-          <Loading />
+          <Loading style={{ height: '80vh' }} />
         </NullMessagesWrapper>
       );
 
