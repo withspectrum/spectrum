@@ -165,7 +165,7 @@ const ThreadContainer = (props: Props) => {
   const { community, channel, isLocked } = thread;
   const { communityPermissions } = community;
   const { isMember } = communityPermissions;
-  const canChat = !isLocked && isMember;
+  const canChat = !isLocked && !channel.isArchived && isMember;
 
   return (
     <React.Fragment>
@@ -246,6 +246,15 @@ const ThreadContainer = (props: Props) => {
                   <LockedMessages>
                     <Icon glyph={'private'} size={24} />
                     <LockedText>This conversation has been locked</LockedText>
+                  </LockedMessages>
+                </ChatInputWrapper>
+              )}
+
+              {channel.isArchived && (
+                <ChatInputWrapper>
+                  <LockedMessages>
+                    <Icon glyph={'private'} size={24} />
+                    <LockedText>This channel has been archived</LockedText>
                   </LockedMessages>
                 </ChatInputWrapper>
               )}

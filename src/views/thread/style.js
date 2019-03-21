@@ -144,8 +144,8 @@ export const ThreadWrapper = styled(FlexCol)`
   width: 100%;
   max-width: 100%;
   /* manually nudge up 60px to cover the sliding header in the thread view */
-  top: -70px;
-  margin-bottom: -70px;
+  top: -64px;
+  margin-bottom: -64px;
 
   ${props =>
     props.isEditing &&
