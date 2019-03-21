@@ -75,6 +75,9 @@ describe('brand new user', () => {
   });
 
   it('should allow the user to logout', () => {
+    setUsernameIsVisible();
+    cy.get('[data-cy="new-user-onboarding-logout"]').should('be.visible');
+    cy.wait(100);
     cy.get('[data-cy="new-user-onboarding-logout"]')
       .should('be.visible')
       .click();
