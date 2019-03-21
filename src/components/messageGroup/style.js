@@ -12,6 +12,7 @@ export const MessagesWrapper = styled.div`
   width: 100%;
   max-width: 100%;
   justify-content: flex-end;
+  background: ${theme.bg.default};
 
   @media (max-width: ${MEDIA_BREAK}px) {
     padding-bottom: 72px;

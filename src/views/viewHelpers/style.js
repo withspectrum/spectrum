@@ -53,3 +53,11 @@ export const Card = styled.div`
     border-bottom: 1px solid ${theme.bg.border};
   }
 `;
+
+export const Stretch = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;

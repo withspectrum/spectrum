@@ -134,4 +134,5 @@ export const ColumnHeading = styled.div`
 export const FeedsContainer = styled.section`
   display: flex;
   flex-direction: column;
+  background: ${theme.bg.default};
 `;

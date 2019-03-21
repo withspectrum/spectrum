@@ -137,7 +137,7 @@ export const OuterMessageContainer = styled.div`
       ? props.theme.special.wash
       : props.error
       ? props.theme.warn.wash
-      : props.theme.bg.default};
+      : 'transparent'};
 
   ${props =>
     props.selected &&

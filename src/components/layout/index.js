@@ -133,11 +133,11 @@ export const CenteredGrid = styled.div`
     width: 100%;
     max-width: 100%;
     grid-template-columns: 1fr;
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
 export const PrimaryColumn = styled.section`
-  background: ${theme.bg.default};
   border-left: 1px solid ${theme.bg.border};
   border-right: 1px solid ${theme.bg.border};
   border-bottom: 1px solid ${theme.bg.border};
@@ -154,6 +154,7 @@ export const PrimaryColumn = styled.section`
     border-bottom: 0;
     grid-column-start: 1;
     max-width: 100%;
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 

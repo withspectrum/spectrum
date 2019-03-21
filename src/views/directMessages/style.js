@@ -83,6 +83,7 @@ export const NoCommunitySelected = styled.div`
   flex-direction: column;
   text-align: center;
   padding: 24px;
+  background: ${theme.bg.default};
 
   button {
     flex: 1;

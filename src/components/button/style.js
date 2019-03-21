@@ -54,7 +54,7 @@ export const StyledButton = styled.button`
 `;
 
 export const StyledWhiteIconButton = styled(StyledButton)`
-  background-color: ${theme.bg.default};
+  background-color: transparent;
   padding: 0;
   color: ${theme.text.default};
 

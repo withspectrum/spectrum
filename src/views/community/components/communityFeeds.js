@@ -1,7 +1,6 @@
 // @flow
 import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
-import theme from 'shared/theme';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import querystring from 'query-string';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
@@ -16,7 +15,7 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
-import { FeedsContainer, SidebarSection, FeedsStretch } from '../style';
+import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
 
 type Props = {
   community: CommunityInfoType,
@@ -83,7 +82,7 @@ const Feeds = (props: Props) => {
       }
       case 'info': {
         return (
-          <div style={{ paddingBottom: '64px', background: theme.bg.wash }}>
+          <InfoContainer>
             <SidebarSection style={{ paddingBottom: '16px' }}>
               <CommunityMeta community={community} />
             </SidebarSection>
@@ -104,7 +103,7 @@ const Feeds = (props: Props) => {
             <SidebarSection>
               <MobileCommunityInfoActions community={community} />
             </SidebarSection>
-          </div>
+          </InfoContainer>
         );
       }
       default:

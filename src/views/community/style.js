@@ -125,6 +125,7 @@ export const SidebarSectionHeading = styled.div`
 export const FeedsContainer = styled.section`
   display: flex;
   flex-direction: column;
+  background: ${theme.bg.default};
 `;
 
 export const Row = styled.div`
@@ -263,4 +264,12 @@ export const FeedsStretch = styled.div`
     padding-bottom: 56px;
     grid-template-rows: 1fr;
   }
+`;
+
+export const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: ${theme.bg.wash};
+  padding-bottom: 64px;
 `;

@@ -28,6 +28,10 @@ export const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   z-index: 9995;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+  }
 `;
 
 export const DropImageOverlayWrapper = styled.div`
@@ -74,6 +78,7 @@ export const Container = styled(FlexCol)`
   width: 100%;
   max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
+  height: calc(100vh);
   z-index: 9998;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
 
