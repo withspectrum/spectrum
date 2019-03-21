@@ -130,7 +130,8 @@ const Feeds = (props: Props) => {
       sessionStorage && sessionStorage.getItem(`last-scroll-${tab}`);
     if (tab === 'chat') {
       scrollToBottom();
-    } else if (stored) {
+      // If the user goes back, restore the scroll position
+    } else if (stored && history.action === 'POP') {
       scrollTo(Number(stored));
     } else {
       scrollToTop();
