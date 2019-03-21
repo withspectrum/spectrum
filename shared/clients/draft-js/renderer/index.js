@@ -173,7 +173,7 @@ export const createRenderer = (options: Options) => {
         children: Array<Node>,
         data: { src?: string, alt?: string },
         { key }: KeyObj
-      ) => <img key={key} src={data.src} alt={data.alt} />,
+      ) => <img key={key} src={data.src} alt={data.alt || 'Image'} />,
       embed: (children: Array<Node>, data: Object, { key }: KeyObj) => (
         <Embed key={key} {...data} />
       ),
