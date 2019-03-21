@@ -308,7 +308,7 @@ export const InputsGrid = styled.div`
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: ${theme.bg.default};
   padding-bottom: 48px;
 `;
