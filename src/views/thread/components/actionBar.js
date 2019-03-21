@@ -9,7 +9,7 @@ import { openModal } from 'src/actions/modals';
 import Tooltip from 'src/components/tooltip';
 import Icon from 'src/components/icon';
 import compose from 'recompose/compose';
-import { Button, TextButton } from 'src/components/button';
+import { PrimaryOutlineButton, TextButton } from 'src/components/button';
 import Flyout from 'src/components/flyout';
 import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -288,14 +288,14 @@ class ActionBar extends React.Component<Props, State> {
               <TextButton onClick={this.props.toggleEdit}>Cancel</TextButton>
             </EditDone>
             <EditDone>
-              <Button
+              <PrimaryOutlineButton
                 loading={isSavingEdit}
                 disabled={title.trim().length === 0 || isSavingEdit}
                 onClick={this.props.saveEdit}
                 data-cy="save-thread-edit-button"
               >
                 Save
-              </Button>
+              </PrimaryOutlineButton>
             </EditDone>
           </div>
         </FixedBottomActionBarContainer>
@@ -460,7 +460,7 @@ class ActionBar extends React.Component<Props, State> {
                               style={{
                                 position: 'relative',
                                 right: '170px',
-                                top: '-30px',
+                                top: '-40px',
                               }}
                             >
                               <Flyout
@@ -491,6 +491,9 @@ class ActionBar extends React.Component<Props, State> {
                                     <TextButton
                                       onClick={this.props.toggleEdit}
                                       data-cy={'thread-dropdown-edit'}
+                                      style={{
+                                        borderTop: '1px solid transparent',
+                                      }}
                                     >
                                       <Icon size={24} glyph={'edit'} />
                                       <Label>Edit post</Label>
