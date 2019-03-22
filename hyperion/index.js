@@ -61,6 +61,16 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
+// If a file in /static/js is requested, but express.static does not have it,
+// that means the user is on an old version of the app.
+// Serve a piece of JavaScript that hard-reloads the page they are on
+app.get('/static/js/:name', (req, res) => {
+  res.set('Content-Type', 'text/javascript');
+  res.send(
+    'window.alert("You are on an old version of Spectrum. Upgrading!"); window.location.reload(true);'
+  );
+});
+
 app.use(
   rateLimiter({
     max: 13,
