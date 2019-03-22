@@ -177,12 +177,9 @@ export const AvatarLink = styled(Link)`
   justify-content: center;
   padding: 8px 12px;
   position: relative;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    flex-direction: row;
-    justify-content: flex-start;
-    padding: 8px 20px 8px 12px;
-  }
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 8px 20px 8px 12px;
 `;
 
 export const Avatar = styled.img`
@@ -215,10 +212,6 @@ export const Label = styled.span`
   margin-left: 12px;
   padding-right: 12px;
   ${Truncate};
-
-  @media (min-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
 `;
 
 export const IconWrapper = styled.div`
