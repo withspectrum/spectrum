@@ -22,6 +22,8 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import LockedMessages from 'src/views/thread/components/lockedMessages';
 import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
+import OpenChatUpsell from './openChatUpsell';
+import Badge from 'src/components/badges';
 
 type Props = {
   community: CommunityInfoType,
@@ -51,7 +53,12 @@ const Feeds = (props: Props) => {
       changeTab(defaultTab);
     }
 
-    if (tab === 'chat' && !community.watercoolerId) {
+    if (
+      tab === 'chat' &&
+      !community.watercoolerId &&
+      (!community.communityPermissions.isModerator &&
+        !community.communityPermissions.isOwner)
+    ) {
       changeTab('posts');
     }
   };
@@ -63,7 +70,15 @@ const Feeds = (props: Props) => {
   const renderFeed = () => {
     switch (tab) {
       case 'chat': {
-        if (!community.watercoolerId) return null;
+        if (!community.watercoolerId) {
+          if (
+            !community.communityPermissions.isModerator &&
+            !community.communityPermissions.isOwner
+          )
+            return null;
+
+          return <OpenChatUpsell community={community} />;
+        }
         return (
           <React.Fragment>
             <MessagesSubscriber isWatercooler id={community.watercoolerId} />
@@ -172,7 +187,14 @@ const Feeds = (props: Props) => {
   }, []);
 
   const segments = ['posts', 'members', 'info'];
-  if (community.watercoolerId) segments.unshift('chat');
+  if (community.watercoolerId) {
+    segments.unshift('chat');
+  } else if (
+    community.communityPermissions.isModerator ||
+    community.communityPermissions.isOwner
+  ) {
+    segments.splice(1, 0, 'chat');
+  }
 
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
