@@ -82,6 +82,7 @@ export const collections = [
       'codepen',
       'bootstrap',
       'tachyons',
+      'divjoy'
     ],
   },
   {
