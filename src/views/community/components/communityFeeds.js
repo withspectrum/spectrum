@@ -187,15 +187,13 @@ const Feeds = (props: Props) => {
   }, []);
 
   const segments = ['posts', 'members', 'info'];
-  if (community.watercoolerId) {
-    segments.unshift('chat');
-  } else if (
+  if (
+    community.watercoolerId ||
     community.communityPermissions.isModerator ||
     community.communityPermissions.isOwner
   ) {
-    segments.splice(1, 0, 'chat');
+    segments.unshift('chat');
   }
-
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
   useEffect(() => {
