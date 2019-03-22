@@ -47,6 +47,10 @@ class MembersList extends React.Component<Props> {
       isFetchingMore,
     } = this.props;
 
+    if (isLoading) {
+      return <Loading />;
+    }
+
     if (community) {
       const { edges: members } = community.members;
       const nodes = members.map(member => member && member.node);
@@ -87,10 +91,6 @@ class MembersList extends React.Component<Props> {
           )}
         </React.Fragment>
       );
-    }
-
-    if (isLoading) {
-      return <Loading />;
     }
 
     return (
