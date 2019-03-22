@@ -27,7 +27,7 @@ export const ViewGrid = styled.main.attrs({
   grid-area: main;
   max-height: 100vh;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
@@ -177,6 +177,7 @@ export const SecondaryColumn = styled.section`
 export const ChatInputWrapper = styled.div`
   position: sticky;
   bottom: 0;
+  left: 0;
   width: 100%;
   z-index: 3000;
 
@@ -184,5 +185,6 @@ export const ChatInputWrapper = styled.div`
     width: 100vw;
     position: fixed;
     bottom: 0;
+    left: 0;
   }
 `;

@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import getComposerLink from 'src/helpers/get-composer-link';
-import { PrimaryOutlineButton, OutlineButton } from 'src/components/button';
+import {
+  PrimaryOutlineButton,
+  PrimaryButton,
+  OutlineButton,
+} from 'src/components/button';
 import { openModal } from 'src/actions/modals';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
@@ -70,13 +74,13 @@ export const UnconnectedCommunityActions = (props: Props) => {
       <JoinCommunity
         community={community}
         render={({ isLoading }) => (
-          <PrimaryOutlineButton
+          <PrimaryButton
             data-cy="profile-join-button"
             isLoading={isLoading}
             icon={'door-enter'}
           >
             {isLoading ? 'Joining...' : 'Join community'}
-          </PrimaryOutlineButton>
+          </PrimaryButton>
         )}
       />
     </ActionsRowContainer>

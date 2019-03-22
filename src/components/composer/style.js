@@ -261,6 +261,7 @@ export const ThreadTitle = {
   width: '100%',
   color: '#16171A',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
   minHeight: '34px',
   flex: 'none',
   display: 'inline-block',
@@ -279,6 +280,7 @@ export const ThreadDescription = {
   boxShadow: 'none',
   color: '#16171A',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
   overflowY: 'scroll',
   position: 'relative',
   // NOTE(@mxstbr): Magic value to make the margin between
@@ -306,7 +308,7 @@ export const InputsGrid = styled.div`
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: ${theme.bg.default};
   padding-bottom: 48px;
 `;

@@ -96,6 +96,10 @@ export const NoCommunitySelected = styled.div`
         display: none;
       `}
   }
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
 `;
 
 export const NoCommunityHeading = styled.h3`

@@ -51,7 +51,7 @@ const Channel = (props: Props) => {
       <JoinChannelWrapper
         channel={channel}
         render={({ isLoading }) => (
-          <PrimaryOutlineButton size={'small'}>
+          <PrimaryOutlineButton size={'small'} style={{ width: '100px' }}>
             {isLoading ? 'Joining...' : 'Join'}
           </PrimaryOutlineButton>
         )}
