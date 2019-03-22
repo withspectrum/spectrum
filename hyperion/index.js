@@ -64,6 +64,7 @@ if (process.env.NODE_ENV === 'development') {
 // If a file in /static/js is requested, but express.static does not have it,
 // that means the user is on an old version of the app.
 // Serve a piece of JavaScript that hard-reloads the page they are on
+// $FlowIssue
 app.get('/static/js/:name', (req, res) => {
   res.set('Content-Type', 'text/javascript');
   res.send(
