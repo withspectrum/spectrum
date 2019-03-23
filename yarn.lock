@@ -1623,6 +1623,16 @@ apollo-server-plugin-base@0.4.0-alpha.0:
   resolved "https://registry.npmjs.org/apollo-server-plugin-base/-/apollo-server-plugin-base-0.4.0-alpha.0.tgz#165d12056f4cc3a4c9ed1ac8b08e25fcac1b4f39"
   integrity sha512-L8HMdOOddy6mUkYopNVzx3YgU83FKeNM/pFdfAVft3Y2v4p9Fyu5cdoBijRHO4+gEfpJOdaSlZBqHlCg8wnw/g==
 
+apollo-server-plugin-response-cache@^0.1.0-alpha.0:
+  version "0.1.0-alpha.0"
+  resolved "https://registry.npmjs.org/apollo-server-plugin-response-cache/-/apollo-server-plugin-response-cache-0.1.0-alpha.0.tgz#c26c6502641daaeff17e5ebd896afd14049ed900"
+  integrity sha512-1p6mLlG24y+mg2iPPpJLIGHYVTE5oPSoWt7Pxd0kWu32n89sviQlok40LUc3Bb7nnq4uW1UxJRwRqGBRFiGrdw==
+  dependencies:
+    apollo-cache-control "0.6.0-alpha.0"
+    apollo-server-caching "0.4.0-alpha.0"
+    apollo-server-env "2.3.0-alpha.0"
+    apollo-server-plugin-base "0.4.0-alpha.0"
+
 apollo-tracing@0.6.0-alpha.0:
   version "0.6.0-alpha.0"
   resolved "https://registry.npmjs.org/apollo-tracing/-/apollo-tracing-0.6.0-alpha.0.tgz#d8e393fdbd16b0635b496ebb8438c0081397a961"
