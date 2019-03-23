@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('api:graphql');
 import { ApolloServer } from 'apollo-server-express';
+import responseCachePlugin from 'apollo-server-plugin-response-cache';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
 import createLoaders from './loaders';
@@ -120,8 +121,15 @@ const server = new ProtectedApolloServer({
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,
-  cacheControl: false,
+  cacheControl: {
+    calculateHttpHeaders: false,
+  },
   validationRules: [depthLimit(10)],
+  plugins: [
+    responseCachePlugin({
+      sessionId: ({ context }) => (context.user ? context.user.id : null),
+    }),
+  ],
 });
 
 export default server;
