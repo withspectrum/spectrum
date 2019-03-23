@@ -60,7 +60,7 @@ const Channel = /* GraphQL */ `
     userId: ID!
   }
 
-  type Channel {
+  type Channel @cacheControl(maxAge: 600) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date
@@ -70,21 +70,29 @@ const Channel = /* GraphQL */ `
     isPrivate: Boolean
     isDefault: Boolean
     isArchived: Boolean
-    channelPermissions: ChannelPermissions! @cost(complexity: 1)
-    communityPermissions: CommunityPermissions!
-    community: Community! @cost(complexity: 1)
+    channelPermissions: ChannelPermissions!
+      @cost(complexity: 1)
+      @cacheControl(scope: PRIVATE)
+    communityPermissions: CommunityPermissions! @cacheControl(scope: PRIVATE)
+    community: Community! @cost(complexity: 1) @cacheControl(maxAge: 86400)
     threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
+      @cacheControl(maxAge: 300)
     memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
       @cost(complexity: 1, multipliers: ["first"])
-    memberCount: Int!
-    metaData: ChannelMetaData @cost(complexity: 1)
-    pendingUsers: [User] @cost(complexity: 3)
-    blockedUsers: [User] @cost(complexity: 3)
+      @cacheControl(maxAge: 300)
+    memberCount: Int! @cacheControl(maxAge: 300)
+    metaData: ChannelMetaData @cost(complexity: 1) @cacheControl(maxAge: 300)
+    pendingUsers: [User]
+      @cost(complexity: 3)
+      @cacheControl(maxAge: 0, scope: PRIVATE)
+    blockedUsers: [User]
+      @cost(complexity: 3)
+      @cacheControl(maxAge: 0, scope: PRIVATE)
     moderators: [User] @cost(complexity: 3)
     owners: [User] @cost(complexity: 3)
-    joinSettings: JoinSettings
-    slackSettings: ChannelSlackSettings
+    joinSettings: JoinSettings @cacheControl(scope: PRIVATE)
+    slackSettings: ChannelSlackSettings @cacheControl(scope: PRIVATE)
   }
 
   extend type Query {

@@ -79,7 +79,7 @@ const User = /* GraphQL */ `
     username: String
   }
 
-  type User {
+  type User @cacheControl(maxAge: 600) {
     id: ID!
     name: String
     firstName: String
@@ -88,20 +88,23 @@ const User = /* GraphQL */ `
     username: LowercaseString
     profilePhoto: String
     coverPhoto: String
-    email: LowercaseString
-    providerId: String
+    email: LowercaseString @cacheControl(scope: PRIVATE)
+    providerId: String @cacheControl(scope: PRIVATE)
     createdAt: Date!
     lastSeen: Date!
     isOnline: Boolean
-    timezone: Int
+    timezone: Int @cacheControl(scope: PRIVATE)
     totalReputation: Int
-    pendingEmail: LowercaseString
-    betaSupporter: Boolean
+    pendingEmail: LowercaseString @cacheControl(scope: PRIVATE)
+    betaSupporter: Boolean @cacheControl(maxAge: 84700)
 
     isPro: Boolean @deprecated(reason: "Use the betaSupporter field instead")
     recurringPayments: [RecurringPayment]
       @deprecated(reason: "Payments are no longer used")
-    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
+      @cacheControl(scope: PRIVATE)
+    invoices: [Invoice]
+      @deprecated(reason: "Payments are no longer used")
+      @cacheControl(scope: PRIVATE)
 
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
@@ -112,18 +115,23 @@ const User = /* GraphQL */ `
       first: Int = 15
       after: String
     ): UserDirectMessageThreadsConnection!
+      @cacheControl(scope: PRIVATE)
       @cost(complexity: 1, multipliers: ["first"])
     threadConnection(
       first: Int = 10
       after: String
       kind: ThreadConnectionType
-    ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
+    ): UserThreadsConnection!
+      @cost(complexity: 1, multipliers: ["first"])
+      @cacheControl(scope: PRIVATE)
     everything(first: Int = 10, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
-    settings: UserSettings @cost(complexity: 1)
+      @cacheControl(scope: PRIVATE)
+    settings: UserSettings @cost(complexity: 1) @cacheControl(scope: PRIVATE)
     githubProfile: GithubProfile
 
     contextPermissions: ContextPermissions
+      @cacheControl(scope: PRIVATE)
       @deprecated(reason: "Use the CommunityMember type to get permissions")
   }
 
