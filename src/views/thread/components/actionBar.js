@@ -216,21 +216,9 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   shouldRenderActionsDropdown = () => {
-    const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
-      isCommunityOwner,
-      isCommunityModerator,
-    } = this.getThreadActionPermissions();
+    const { currentUser } = this.props;
 
-    return (
-      isThreadAuthor ||
-      isChannelModerator ||
-      isCommunityModerator ||
-      isChannelOwner ||
-      isCommunityOwner
-    );
+    return !!currentUser;
   };
 
   uploadFiles = evt => {
@@ -240,18 +228,13 @@ class ActionBar extends React.Component<Props, State> {
   render() {
     const {
       thread,
-      currentUser,
       isEditing,
       isSavingEdit,
       title,
       isLockingThread,
       isPinningThread,
     } = this.props;
-    const {
-      notificationStateLoading,
-      flyoutOpen,
-      isSettingsBtnHovering,
-    } = this.state;
+    const { flyoutOpen, isSettingsBtnHovering } = this.state;
     const isPinned = thread.community.pinnedThreadId === thread.id;
 
     const shouldRenderActionsDropdown = this.shouldRenderActionsDropdown();
@@ -306,126 +289,80 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex' }}>
             <LikeButton thread={thread} />
 
-            {!thread.channel.isPrivate && (
-              <ShareButtons>
-                <Tooltip content={'Share'}>
-                  <ShareButton facebook data-cy="thread-facebook-button">
-                    <a
-                      href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
-                        thread.content.title
-                      )}&u=https://spectrum.chat${getThreadLink(thread)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Icon
-                        glyph={'facebook'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'facebook' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
-                </Tooltip>
-
-                <Tooltip content={'Tweet'}>
-                  <ShareButton twitter data-cy="thread-tweet-button">
-                    <a
-                      href={`https://twitter.com/share?url=https://spectrum.chat${getThreadLink(
-                        thread
-                      )}&text=${encodeURIComponent(
-                        thread.content.title
-                      )} on @withspectrum`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Icon
-                        glyph={'twitter'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'twitter' })
-                        }
-                      />
-                    </a>
-                  </ShareButton>
-                </Tooltip>
-
-                <Clipboard
-                  style={{ background: 'none' }}
-                  data-clipboard-text={`${CLIENT_URL}${getThreadLink(thread)}`}
-                  onSuccess={() =>
-                    this.props.dispatch(
-                      addToastWithTimeout('success', 'Copied to clipboard')
-                    )
-                  }
-                >
-                  <Tooltip content={'Copy link'}>
-                    <ShareButton data-cy="thread-copy-link-button">
-                      <a>
+            <ShareButtons>
+              {!thread.channel.isPrivate && (
+                <React.Fragment>
+                  <Tooltip content={'Share'}>
+                    <ShareButton facebook data-cy="thread-facebook-button">
+                      <a
+                        href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
+                          thread.content.title
+                        )}&u=https://spectrum.chat${getThreadLink(thread)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Icon
-                          glyph={'link'}
+                          glyph={'facebook'}
                           size={24}
                           onClick={() =>
-                            track(events.THREAD_SHARED, { method: 'link' })
+                            track(events.THREAD_SHARED, { method: 'facebook' })
                           }
                         />
                       </a>
                     </ShareButton>
                   </Tooltip>
-                </Clipboard>
-              </ShareButtons>
-            )}
-            {thread.channel.isPrivate && (
-              <ShareButtons>
-                <Clipboard
-                  style={{ background: 'none' }}
-                  data-clipboard-text={`https://spectrum.chat${getThreadLink(
-                    thread
-                  )}`}
-                  onSuccess={() =>
-                    this.props.dispatch(
-                      addToastWithTimeout('success', 'Copied to clipboard')
-                    )
-                  }
-                >
-                  <Tooltip content={'Copy link'}>
-                    <ShareButton data-cy="thread-copy-link-button">
-                      <a>
+
+                  <Tooltip content={'Tweet'}>
+                    <ShareButton twitter data-cy="thread-tweet-button">
+                      <a
+                        href={`https://twitter.com/share?url=https://spectrum.chat${getThreadLink(
+                          thread
+                        )}&text=${encodeURIComponent(
+                          thread.content.title
+                        )} on @withspectrum`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Icon
-                          glyph={'link'}
+                          glyph={'twitter'}
                           size={24}
                           onClick={() =>
-                            track(events.THREAD_SHARED, { method: 'link' })
+                            track(events.THREAD_SHARED, { method: 'twitter' })
                           }
                         />
                       </a>
                     </ShareButton>
                   </Tooltip>
-                </Clipboard>
-              </ShareButtons>
-            )}
+                </React.Fragment>
+              )}
+
+              <Clipboard
+                style={{ background: 'none' }}
+                data-clipboard-text={`${CLIENT_URL}${getThreadLink(thread)}`}
+                onSuccess={() =>
+                  this.props.dispatch(
+                    addToastWithTimeout('success', 'Copied to clipboard')
+                  )
+                }
+              >
+                <Tooltip content={'Copy link'}>
+                  <ShareButton data-cy="thread-copy-link-button">
+                    <a>
+                      <Icon
+                        glyph={'link'}
+                        size={24}
+                        onClick={() =>
+                          track(events.THREAD_SHARED, { method: 'link' })
+                        }
+                      />
+                    </a>
+                  </ShareButton>
+                </Tooltip>
+              </Clipboard>
+            </ShareButtons>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {currentUser && (
-              <FollowButton
-                currentUser={currentUser}
-                loading={notificationStateLoading}
-                onClick={this.toggleNotification}
-                data-cy="thread-notifications-toggle"
-              >
-                <Icon
-                  glyph={
-                    thread.receiveNotifications
-                      ? 'notification-fill'
-                      : 'notification'
-                  }
-                  size={24}
-                />
-                {thread.receiveNotifications ? 'Subscribed' : 'Notify me'}
-              </FollowButton>
-            )}
-
             {shouldRenderActionsDropdown && (
               <DropWrap style={{ marginRight: '8px' }}>
                 <Manager>
@@ -467,7 +404,7 @@ class ActionBar extends React.Component<Props, State> {
                                 data-cy="thread-actions-dropdown"
                                 style={style}
                               >
-                                <FlyoutRow hideAbove={768}>
+                                <FlyoutRow>
                                   <TextButton
                                     onClick={this.toggleNotification}
                                     data-cy={'thread-dropdown-notifications'}
