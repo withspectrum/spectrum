@@ -33,6 +33,7 @@ import {
 } from 'src/components/layout';
 import { SidebarSection } from 'src/views/community/style';
 import { FeedsContainer } from './style';
+import { InfoContainer } from '../community/style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -212,6 +213,15 @@ class ChannelView extends React.Component<Props> {
                     </Segment>
 
                     <Segment
+                      onClick={() => this.handleSegmentClick('info')}
+                      isActive={selectedView === 'info'}
+                      data-cy="channel-info-tab"
+                      hideOnDesktop
+                    >
+                      Info
+                    </Segment>
+
+                    <Segment
                       onClick={() => this.handleSegmentClick('search')}
                       isActive={selectedView === 'search'}
                       data-cy="channel-search-tab"
@@ -220,8 +230,7 @@ class ChannelView extends React.Component<Props> {
                     </Segment>
                   </SegmentedControl>
 
-                  {// thread list
-                  selectedView === 'posts' && (
+                  {selectedView === 'posts' && (
                     <ThreadFeedWithData
                       viewContext="channelProfile"
                       id={channel.id}
@@ -230,18 +239,47 @@ class ChannelView extends React.Component<Props> {
                     />
                   )}
 
-                  {//search
-                  selectedView === 'search' && (
+                  {selectedView === 'search' && (
                     <ErrorBoundary>
                       <Search channel={channel} />
                     </ErrorBoundary>
                   )}
 
-                  {// members grid
-                  selectedView === 'members' && (
+                  {selectedView === 'members' && (
                     <ErrorBoundary>
                       <MembersList id={channel.id} />
                     </ErrorBoundary>
+                  )}
+
+                  {selectedView === 'info' && (
+                    <InfoContainer>
+                      <SidebarSection>
+                        <ChannelProfileCard channel={channel} />
+                      </SidebarSection>
+
+                      {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                        <ErrorBoundary>
+                          <SidebarSection>
+                            <NotificationsToggle
+                              value={
+                                channel.channelPermissions.receiveNotifications
+                              }
+                              channel={channel}
+                            />
+                          </SidebarSection>
+                        </ErrorBoundary>
+                      )}
+
+                      {/* user is signed in and has permissions to view pending users */}
+                      {isLoggedIn && (isOwner || isGlobalOwner) && (
+                        <ErrorBoundary>
+                          <PendingUsersNotification
+                            channel={channel}
+                            id={channel.id}
+                          />
+                        </ErrorBoundary>
+                      )}
+                    </InfoContainer>
                   )}
                 </FeedsContainer>
               </PrimaryColumn>
