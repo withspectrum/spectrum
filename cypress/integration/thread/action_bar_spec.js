@@ -230,9 +230,9 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
     });
@@ -271,9 +271,9 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
     });
@@ -312,11 +312,11 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -367,11 +367,11 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
