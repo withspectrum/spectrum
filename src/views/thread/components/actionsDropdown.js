@@ -5,6 +5,7 @@ import Flyout from 'src/components/flyout';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
   triggerDelete: Function,
 };
 
-export default (props: Props) => {
+const ActionsDropdown = (props: Props) => {
   const {
     thread,
     currentUser,
@@ -179,7 +180,7 @@ export default (props: Props) => {
                         </TextButton>
                       </FlyoutRow>
 
-                      {shouldRenderEditThreadAction && (
+                      {shouldRenderEditThreadAction() && (
                         <FlyoutRow>
                           <TextButton
                             onClick={toggleEdit}
@@ -194,7 +195,7 @@ export default (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderPinThreadAction && (
+                      {shouldRenderPinThreadAction() && (
                         <FlyoutRow>
                           <TextButton
                             onClick={togglePinThread}
@@ -213,7 +214,7 @@ export default (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderMoveThreadAction && (
+                      {shouldRenderMoveThreadAction() && (
                         <FlyoutRow hideBelow={1024}>
                           <TextButton
                             onClick={triggerChangeChannel}
@@ -225,7 +226,7 @@ export default (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderLockThreadAction && (
+                      {shouldRenderLockThreadAction() && (
                         <FlyoutRow>
                           <TextButton
                             onClick={lockThread}
@@ -246,7 +247,7 @@ export default (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderDeleteThreadAction && (
+                      {shouldRenderDeleteThreadAction() && (
                         <FlyoutRow>
                           <TextButton
                             onClick={triggerDelete}
@@ -268,3 +269,5 @@ export default (props: Props) => {
     </DropWrap>
   );
 };
+
+export default withCurrentUser(ActionsDropdown);

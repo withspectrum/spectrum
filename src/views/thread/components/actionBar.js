@@ -112,14 +112,7 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   render() {
-    const {
-      thread,
-      isEditing,
-      isSavingEdit,
-      title,
-      isLockingThread,
-      isPinningThread,
-    } = this.props;
+    const { thread, isEditing, isSavingEdit, title } = this.props;
 
     const shouldRenderActionsDropdown = this.shouldRenderActionsDropdown();
 
@@ -245,7 +238,6 @@ class ActionBar extends React.Component<Props, State> {
             {shouldRenderActionsDropdown && (
               <ActionsDropdown
                 thread={thread}
-                currentUser={this.props.currentUser}
                 toggleNotification={this.toggleNotification}
                 toggleEdit={this.props.toggleEdit}
                 triggerChangeChannel={this.triggerChangeChannel}
