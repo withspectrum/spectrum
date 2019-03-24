@@ -292,7 +292,7 @@ class ActionBar extends React.Component<Props, State> {
             <ShareButtons>
               {!thread.channel.isPrivate && (
                 <React.Fragment>
-                  <Tooltip content={'Share'}>
+                  <Tooltip content={'Share on Facebook'}>
                     <ShareButton facebook data-cy="thread-facebook-button">
                       <a
                         href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
