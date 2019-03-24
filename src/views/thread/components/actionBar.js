@@ -101,20 +101,12 @@ class ActionBar extends React.Component<Props, State> {
       });
   };
 
-  shouldRenderActionsDropdown = () => {
-    const { currentUser } = this.props;
-
-    return !!currentUser;
-  };
-
   uploadFiles = evt => {
     this.props.uploadFiles(evt.target.files);
   };
 
   render() {
-    const { thread, isEditing, isSavingEdit, title } = this.props;
-
-    const shouldRenderActionsDropdown = this.shouldRenderActionsDropdown();
+    const { thread, isEditing, isSavingEdit, title, currentUser } = this.props;
 
     if (isEditing) {
       return (
@@ -235,19 +227,17 @@ class ActionBar extends React.Component<Props, State> {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {shouldRenderActionsDropdown && (
-              <ActionsDropdown
-                thread={thread}
-                toggleNotification={this.toggleNotification}
-                toggleEdit={this.props.toggleEdit}
-                triggerChangeChannel={this.triggerChangeChannel}
-                lockThread={this.props.threadLock}
-                isLockingThread={this.props.isLockingThread}
-                isPinningThread={this.props.isPinningThread}
-                togglePinThread={this.props.togglePinThread}
-                triggerDelete={this.props.triggerDelete}
-              />
-            )}
+            <ActionsDropdown
+              thread={thread}
+              toggleNotification={this.toggleNotification}
+              toggleEdit={this.props.toggleEdit}
+              triggerChangeChannel={this.triggerChangeChannel}
+              lockThread={this.props.threadLock}
+              isLockingThread={this.props.isLockingThread}
+              isPinningThread={this.props.isPinningThread}
+              togglePinThread={this.props.togglePinThread}
+              triggerDelete={this.props.triggerDelete}
+            />
           </div>
         </ActionBarContainer>
       );

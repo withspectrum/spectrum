@@ -35,6 +35,8 @@ const ActionsDropdown = (props: Props) => {
     triggerDelete,
   } = props;
 
+  if (!currentUser) return null;
+
   const getThreadActionPermissions = () => {
     const {
       channel: { channelPermissions },
