@@ -79,17 +79,9 @@ class ChannelView extends React.Component<Props> {
         channel: transformations.analyticsChannel(channel),
         community: transformations.analyticsCommunity(channel.community),
       });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { dispatch } = this.props;
-
-    if (this.props.data.channel) {
-      const { channel } = this.props.data;
-      dispatch(
+      this.props.dispatch(
         setTitlebarProps({
-          title: `# ${this.props.data.channel.name}`,
+          title: `# ${channel.name}`,
           titleIcon: (
             <CommunityAvatar
               isClickable={false}
@@ -101,21 +93,42 @@ class ChannelView extends React.Component<Props> {
         })
       );
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { dispatch } = this.props;
 
     if (
-      (!prevProps.data.channel && this.props.data.channel) ||
-      (prevProps.data.channel &&
-        this.props.data.channel &&
-        prevProps.data.channel.id !== this.props.data.channel.id)
+      this.props.data.channel &&
+      prevProps.data.channel &&
+      this.props.data.channel.id !== prevProps.data.channel.id
     ) {
       const { channel } = this.props.data;
-
-      if (channel) {
-        track(events.CHANNEL_VIEWED, {
-          channel: transformations.analyticsChannel(channel),
-          community: transformations.analyticsCommunity(channel.community),
+      dispatch(
+        setTitlebarProps({
+          title: `# ${channel.name}`,
+          titleIcon: (
+            <CommunityAvatar
+              isClickable={false}
+              community={channel.community}
+              size={24}
+            />
+          ),
+          rightAction: <MobileChannelAction channel={channel} />,
+        })
+      );
+      track(events.CHANNEL_VIEWED, {
+        channel: transformations.analyticsChannel(channel),
+        community: transformations.analyticsCommunity(channel.community),
+      });
+      const { location, history } = this.props;
+      const { search } = location;
+      const { tab } = querystring.parse(search);
+      if (!tab)
+        history.replace({
+          ...location,
+          search: querystring.stringify({ tab: 'posts' }),
         });
-      }
     }
   }
 
