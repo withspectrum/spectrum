@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { UserHoverProfile } from 'src/components/hoverProfile';
+import { UserAvatar } from 'src/components/avatar';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -35,6 +36,11 @@ const StickyHeader = (props: Props) => {
     <StickyHeaderContainer>
       <StickyHeaderContent onClick={scrollToTop}>
         <CommunityHeaderMeta>
+          <UserAvatar
+            showHoverProfile
+            showOnlineStatus
+            username={thread.author.user.username}
+          />
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>{thread.content.title}</CommunityHeaderName>
             <CommunityHeaderSubtitle>
