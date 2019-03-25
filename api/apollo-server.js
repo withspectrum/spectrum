@@ -132,8 +132,10 @@ const server = new ProtectedApolloServer({
   }),
   plugins: [
     responseCachePlugin({
-      sessionId: ({ context }) =>
-        null /* only cache public responses for now (context.user ? context.user.id : null), */,
+      sessionId: ({ context }) => (context.user ? context.user.id : null),
+      // Only cache public responses
+      shouldReadFromCache: ({ context }) => !context.user,
+      shouldWriteToCache: ({ context }) => !context.user,
     }),
   ],
 });
