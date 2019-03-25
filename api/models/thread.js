@@ -588,9 +588,11 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
       {
         content: input.content,
         modifiedAt: shouldUpdate ? new Date() : null,
+        editedBy: userId,
         edits: db.row('edits').append({
           content: db.row('content'),
           timestamp: new Date(),
+          editedBy: db.row('editedBy').default(db.row('creatorId'))
         }),
       },
       { returnChanges: 'always' }

@@ -29,6 +29,7 @@ const Thread = /* GraphQL */ `
   type Edit {
     timestamp: Date!
     content: ThreadContent!
+    # editedBy: User!
   }
 
   enum ThreadType {
@@ -46,6 +47,7 @@ const Thread = /* GraphQL */ `
     id: ID!
     createdAt: Date!
     modifiedAt: Date
+    editedBy: ThreadParticipant @cost(complexity: 2)
     channel: Channel!
     community: Community! @cost(complexity: 1)
     isPublished: Boolean!

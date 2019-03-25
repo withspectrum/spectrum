@@ -25,6 +25,9 @@ export type ThreadInfoType = {
   lastActive: ?string,
   receiveNotifications: boolean,
   currentUserLastSeen: ?string,
+  editedBy?: {
+    ...$Exact<ThreadParticipantType>,
+  },
   author: {
     ...$Exact<ThreadParticipantType>,
   },
@@ -63,6 +66,9 @@ export default gql`
     lastActive
     receiveNotifications
     currentUserLastSeen
+    editedBy {
+      ...threadParticipant
+    }
     author {
       ...threadParticipant
     }

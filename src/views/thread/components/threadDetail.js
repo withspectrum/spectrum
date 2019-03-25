@@ -466,6 +466,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
                         Date.now(),
                         editedTimestamp
                       ).toLowerCase()}
+                      {thread.editedBy &&
+                        thread.editedBy.user.id !== thread.author.user.id &&
+                        ` by @${thread.editedBy.user.username}`}
                       )
                     </React.Fragment>
                   )}

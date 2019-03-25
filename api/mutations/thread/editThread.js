@@ -64,13 +64,15 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     getUserPermissionsInChannel(threadToEvaluate.channelId, user.id),
   ]);
 
+  const canEdit =
+    !channelPermissions.isBlocked &&
+    !communityPermissions.isBlocked &&
+    (threadToEvaluate.creatorId === user.id ||
+      communityPermissions.isModerator ||
+      communityPermissions.isOwner);
   // only the thread creator can edit the thread
   // also prevent deletion if the user was blocked
-  if (
-    threadToEvaluate.creatorId !== user.id ||
-    channelPermissions.isBlocked ||
-    communityPermissions.isBlocked
-  ) {
+  if (!canEdit) {
     trackQueue.add({
       userId: user.id,
       event: events.THREAD_EDITED_FAILED,
