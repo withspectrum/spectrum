@@ -137,7 +137,7 @@ const User = /* GraphQL */ `
 
   extend type Query {
     user(id: ID, username: LowercaseString): User
-    currentUser: User
+    currentUser: User @cacheControl(scope: PRIVATE)
     searchUsers(string: String): [User]
       @deprecated(reason: "Use the new Search query endpoint")
   }
