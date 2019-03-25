@@ -42,6 +42,7 @@ import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import CommunitySidebar from 'src/components/communitySidebar';
 import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
@@ -176,25 +177,7 @@ const ThreadContainer = (props: Props) => {
       <ViewGrid data-cy="thread-view">
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
-            <SidebarSection>
-              <CommunityProfileCard community={community} />
-            </SidebarSection>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <ChannelProfileCard
-                  hideActions
-                  hideCommunityMeta
-                  channel={channel}
-                />
-              </SidebarSection>
-            </ErrorBoundary>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <TrendingThreads id={community.id} />
-              </SidebarSection>
-            </ErrorBoundary>
+            <CommunitySidebar community={thread.community} />
 
             <ErrorBoundary>
               <DesktopAppUpsell />

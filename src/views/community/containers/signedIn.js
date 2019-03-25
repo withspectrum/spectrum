@@ -24,6 +24,7 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import Sidebar from 'src/components/communitySidebar';
 import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 import usePrevious from 'src/hooks/usePrevious';
 
@@ -133,29 +134,7 @@ const Component = (props: Props) => {
       <ViewGrid data-cy="community-view">
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
-            <SidebarSection>
-              <CommunityProfileCard community={community} />
-            </SidebarSection>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <ChannelsList
-                  id={community.id}
-                  communitySlug={community.slug}
-                />
-              </SidebarSection>
-            </ErrorBoundary>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <TeamMembersList
-                  community={community}
-                  id={community.id}
-                  first={100}
-                  filter={{ isModerator: true, isOwner: true }}
-                />
-              </SidebarSection>
-            </ErrorBoundary>
+            <Sidebar community={community} />
           </SecondaryColumn>
 
           <PrimaryColumn>

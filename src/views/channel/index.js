@@ -32,6 +32,7 @@ import {
   SecondaryColumn,
 } from 'src/components/layout';
 import { SidebarSection } from 'src/views/community/style';
+import CommunitySidebar from 'src/components/communitySidebar';
 import { FeedsContainer } from './style';
 
 const ThreadFeedWithData = compose(
@@ -166,20 +167,7 @@ class ChannelView extends React.Component<Props> {
           <ViewGrid>
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
-                <SidebarSection>
-                  <ChannelProfileCard channel={channel} />
-                </SidebarSection>
-
-                {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                  <ErrorBoundary>
-                    <SidebarSection>
-                      <NotificationsToggle
-                        value={channel.channelPermissions.receiveNotifications}
-                        channel={channel}
-                      />
-                    </SidebarSection>
-                  </ErrorBoundary>
-                )}
+                <CommunitySidebar community={channel.community} />
 
                 {/* user is signed in and has permissions to view pending users */}
                 {isLoggedIn && (isOwner || isGlobalOwner) && (
