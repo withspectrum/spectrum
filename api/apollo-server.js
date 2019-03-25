@@ -127,7 +127,8 @@ const server = new ProtectedApolloServer({
   validationRules: [depthLimit(10)],
   plugins: [
     responseCachePlugin({
-      sessionId: ({ context }) => (context.user ? context.user.id : null),
+      sessionId: ({ context }) =>
+        null /* only cache public responses for now (context.user ? context.user.id : null), */,
     }),
   ],
 });
