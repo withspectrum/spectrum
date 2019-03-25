@@ -122,10 +122,12 @@ const server = new ProtectedApolloServer({
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,
+  validationRules: [depthLimit(10)],
   cacheControl: {
     calculateHttpHeaders: false,
+    // Cache everything for at least a minute since we only cache public responses
+    defaultMaxAge: 60,
   },
-  validationRules: [depthLimit(10)],
   cache: new RedisCache({
     config,
     prefix: 'apollo-cache:',
