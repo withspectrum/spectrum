@@ -28,7 +28,7 @@ export class PrivateCommunityRequestApproved extends React.Component<Props> {
     const date = parseNotificationDate(notification.modifiedAt);
 
     return (
-      <NotificationCard>
+      <NotificationCard isSeen={notification.isSeen}>
         <CardLink to={`/${notification.context.payload.slug}/`} />
         <CardContent>
           <ApprovedContext>

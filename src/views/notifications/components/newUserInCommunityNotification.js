@@ -30,7 +30,7 @@ export class NewUserInCommunityNotification extends React.Component<Props> {
       return null;
 
     return (
-      <NotificationCard>
+      <NotificationCard isSeen={notification.isSeen}>
         <CardLink to={`/${notification.context.payload.slug}`} />
         <CardContent>
           <JoinContext>

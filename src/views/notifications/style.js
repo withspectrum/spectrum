@@ -1,6 +1,6 @@
 // @flow
 import theme from 'shared/theme';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   FlexRow,
   FlexCol,
@@ -27,6 +27,12 @@ export const NotificationCard = styled.div`
   overflow: hidden;
   position: relative;
   border-bottom: 1px solid ${props => props.theme.bg.border};
+  ${props =>
+    props.isSeen === false &&
+    css`
+      border-left: 2px solid ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 
   &:hover {
     background: ${theme.bg.wash};
@@ -37,13 +43,20 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
+
+  ${props =>
+    props.isSeen === false &&
+    css`
+      border-left: 2px solid ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 `;
 
 export const ContentHeading = styled.h2`

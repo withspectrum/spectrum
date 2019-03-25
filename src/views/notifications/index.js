@@ -78,6 +78,7 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   markAllNotificationsSeen = () => {
+    console.log('MARK ALL SEEN');
     this.props.dispatch(updateNotificationsCount('notifications', 0));
     this.props.markAllNotificationsSeen &&
       this.props.markAllNotificationsSeen().catch(err => {
@@ -88,8 +89,6 @@ class NotificationsPure extends React.Component<Props, State> {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setTitlebarProps({ title: 'Notifications ' }));
-
-    this.markAllNotificationsSeen();
 
     WebPushManager.getPermissionState()
       .then(result => {
@@ -206,6 +205,9 @@ class NotificationsPure extends React.Component<Props, State> {
           <ViewGrid>
             <StyledSingleColumn>
               <div>
+                <button onClick={() => this.markAllNotificationsSeen()}>
+                  Mark all seen
+                </button>
                 {!isDesktopApp() && this.state.showWebPushPrompt && (
                   <BrowserNotificationRequest
                     onSubscribe={this.subscribeToWebPush}

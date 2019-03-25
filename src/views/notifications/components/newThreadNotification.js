@@ -98,7 +98,7 @@ export class NewThreadNotification extends React.Component<Props, State> {
 
     if (threads && threads.length > 0) {
       return (
-        <SegmentedNotificationCard>
+        <SegmentedNotificationCard isSeen={notification.isSeen}>
           <ThreadContext>
             <Icon glyph="post-fill" />
             <TextContent pointer={true}>
