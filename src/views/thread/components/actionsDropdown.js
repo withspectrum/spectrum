@@ -1,35 +1,42 @@
 // @flow
 import React, { useState } from 'react';
 import { Manager, Reference, Popper } from 'react-popper';
+import { connect } from 'react-redux';
+import compose from 'recompose/compose';
+import { openModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import Flyout from 'src/components/flyout';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import { track, events, transformations } from 'src/helpers/analytics';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
   thread: Object,
-  currentUser: Object,
-  toggleNotification: Function,
   toggleEdit: Function,
   isPinningThread: boolean,
   togglePinThread: Function,
-  triggerChangeChannel: Function,
   isLockingThread: boolean,
   lockThread: Function,
   triggerDelete: Function,
+  // Injected
+  currentUser: Object,
+  dispatch: Function,
+  toggleThreadNotifications: Function,
 };
 
 const ActionsDropdown = (props: Props) => {
   const {
     thread,
+    dispatch,
+    toggleThreadNotifications,
     currentUser,
-    toggleNotification,
     toggleEdit,
     isPinningThread,
     togglePinThread,
-    triggerChangeChannel,
     isLockingThread,
     lockThread,
     triggerDelete,
@@ -132,6 +139,36 @@ const ActionsDropdown = (props: Props) => {
     return (
       !thread.channel.isPrivate && (isCommunityOwner || isCommunityModerator)
     );
+  };
+
+  const toggleNotification = () => {
+    toggleThreadNotifications({
+      threadId: thread.id,
+    })
+      .then(({ data: { toggleThreadNotifications } }) => {
+        if (toggleThreadNotifications.receiveNotifications) {
+          return dispatch(
+            addToastWithTimeout('success', 'Notifications activated!')
+          );
+        } else {
+          return dispatch(
+            addToastWithTimeout('neutral', 'Notifications turned off')
+          );
+        }
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  const triggerChangeChannel = () => {
+    track(events.THREAD_MOVED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
+    dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
   const isPinned = thread.community.pinnedThreadId === thread.id;
@@ -285,4 +322,8 @@ const ActionsDropdown = (props: Props) => {
   );
 };
 
-export default withCurrentUser(ActionsDropdown);
+export default compose(
+  withCurrentUser,
+  connect(),
+  toggleThreadNotificationsMutation
+)(ActionsDropdown);

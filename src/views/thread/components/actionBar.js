@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Clipboard from 'react-clipboard.js';
 import { CLIENT_URL } from 'src/api/constants';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { openModal } from 'src/actions/modals';
 import Tooltip from 'src/components/tooltip';
 import Icon from 'src/components/icon';
 import compose from 'recompose/compose';
@@ -12,7 +11,7 @@ import { PrimaryOutlineButton, TextButton } from 'src/components/button';
 import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
-import { track, events, transformations } from 'src/helpers/analytics';
+import { track, events } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import { InputHints, DesktopLink } from 'src/components/composer/style';
@@ -47,66 +46,14 @@ type Props = {
   isPinningThread: boolean,
   uploadFiles: Function,
 };
-type State = {
-  notificationStateLoading: boolean,
-};
-class ActionBar extends React.Component<Props, State> {
-  state = {
-    notificationStateLoading: false,
-  };
 
-  triggerChangeChannel = () => {
-    const { thread, dispatch } = this.props;
-
-    track(events.THREAD_MOVED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
-    dispatch(openModal('CHANGE_CHANNEL', { thread }));
-  };
-
-  toggleNotification = () => {
-    const { thread, dispatch, toggleThreadNotifications } = this.props;
-    const threadId = thread.id;
-
-    this.setState({
-      notificationStateLoading: true,
-    });
-
-    toggleThreadNotifications({
-      threadId,
-    })
-      .then(({ data: { toggleThreadNotifications } }) => {
-        this.setState({
-          notificationStateLoading: false,
-        });
-
-        if (toggleThreadNotifications.receiveNotifications) {
-          return dispatch(
-            addToastWithTimeout('success', 'Notifications activated!')
-          );
-        } else {
-          return dispatch(
-            addToastWithTimeout('neutral', 'Notifications turned off')
-          );
-        }
-      })
-      .catch(err => {
-        this.setState({
-          notificationStateLoading: true,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
+class ActionBar extends React.Component<Props> {
   uploadFiles = evt => {
     this.props.uploadFiles(evt.target.files);
   };
 
   render() {
-    const { thread, isEditing, isSavingEdit, title, currentUser } = this.props;
+    const { thread, isEditing, isSavingEdit, title } = this.props;
 
     if (isEditing) {
       return (
@@ -229,9 +176,7 @@ class ActionBar extends React.Component<Props, State> {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <ActionsDropdown
               thread={thread}
-              toggleNotification={this.toggleNotification}
               toggleEdit={this.props.toggleEdit}
-              triggerChangeChannel={this.triggerChangeChannel}
               lockThread={this.props.threadLock}
               isLockingThread={this.props.isLockingThread}
               isPinningThread={this.props.isPinningThread}
