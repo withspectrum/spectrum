@@ -8,7 +8,7 @@ const ChannelSlackSettings = /* GraphQL */ `
     threadCreated: String
   }
 
-  type ChannelSlackSettings @cacheControl(scope: PRIVATE) {
+  type ChannelSlackSettings {
     botLinks: BotLinks
   }
 

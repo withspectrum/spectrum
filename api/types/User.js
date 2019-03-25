@@ -88,23 +88,21 @@ const User = /* GraphQL */ `
     username: LowercaseString
     profilePhoto: String
     coverPhoto: String
-    email: LowercaseString @cacheControl(scope: PRIVATE)
-    providerId: String @cacheControl(scope: PRIVATE)
+    email: LowercaseString
+    providerId: String
     createdAt: Date!
     lastSeen: Date!
     isOnline: Boolean
-    timezone: Int @cacheControl(scope: PRIVATE)
+    timezone: Int
     totalReputation: Int
-    pendingEmail: LowercaseString @cacheControl(scope: PRIVATE)
+    pendingEmail: LowercaseString
     betaSupporter: Boolean @cacheControl(maxAge: 84700)
 
     isPro: Boolean @deprecated(reason: "Use the betaSupporter field instead")
     recurringPayments: [RecurringPayment]
       @deprecated(reason: "Payments are no longer used")
-      @cacheControl(scope: PRIVATE)
-    invoices: [Invoice]
-      @deprecated(reason: "Payments are no longer used")
-      @cacheControl(scope: PRIVATE)
+
+    invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
 
     # non-schema fields
     threadCount: Int @cost(complexity: 1)
@@ -115,29 +113,26 @@ const User = /* GraphQL */ `
       first: Int = 15
       after: String
     ): UserDirectMessageThreadsConnection!
-      @cacheControl(scope: PRIVATE)
       @cost(complexity: 1, multipliers: ["first"])
     threadConnection(
       first: Int = 10
       after: String
       kind: ThreadConnectionType
-    ): UserThreadsConnection!
-      @cost(complexity: 1, multipliers: ["first"])
-      @cacheControl(scope: PRIVATE)
+    ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
+
     everything(first: Int = 10, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
-      @cacheControl(scope: PRIVATE)
-    settings: UserSettings @cost(complexity: 1) @cacheControl(scope: PRIVATE)
+
+    settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 
     contextPermissions: ContextPermissions
-      @cacheControl(scope: PRIVATE)
       @deprecated(reason: "Use the CommunityMember type to get permissions")
   }
 
   extend type Query {
     user(id: ID, username: LowercaseString): User
-    currentUser: User @cacheControl(scope: PRIVATE)
+    currentUser: User
     searchUsers(string: String): [User]
       @deprecated(reason: "Use the new Search query endpoint")
   }

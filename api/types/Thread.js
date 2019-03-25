@@ -53,10 +53,9 @@ const Thread = /* GraphQL */ `
     isPublished: Boolean!
     content: ThreadContent!
     isLocked: Boolean
-    isAuthor: Boolean @cacheControl(scope: PRIVATE)
-    receiveNotifications: Boolean
-      @cost(complexity: 1)
-      @cacheControl(scope: PRIVATE)
+    isAuthor: Boolean
+    receiveNotifications: Boolean @cost(complexity: 1)
+
     lastActive: Date
     type: ThreadType
     edits: [Edit!]
@@ -69,15 +68,14 @@ const Thread = /* GraphQL */ `
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
     watercooler: Boolean
-    currentUserLastSeen: Date @cost(complexity: 1) @cacheControl(scope: PRIVATE)
+    currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
     metaImage: String
 
     attachments: [Attachment]
       @deprecated(reason: "Attachments no longer used for link previews")
-    isCreator: Boolean
-      @deprecated(reason: "Use Thread.isAuthor instead")
-      @cacheControl(scope: PRIVATE)
+    isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
+
     creator: User! @deprecated(reason: "Use Thread.author instead")
     participants: [User]
       @cost(complexity: 1)

@@ -5,7 +5,7 @@ const CommunitySlackSettings = /* GraphQL */ `
     name: String
   }
 
-  type CommunitySlackSettings @cacheControl(scope: PRIVATE) {
+  type CommunitySlackSettings {
     isConnected: Boolean
     hasSentInvites: Boolean
     teamName: String

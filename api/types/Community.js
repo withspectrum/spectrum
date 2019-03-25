@@ -144,14 +144,13 @@ const Community = /* GraphQL */ `
     website: String
     profilePhoto: String
     coverPhoto: String
-    reputation: Int @cacheControl(scope: PRIVATE)
+    reputation: Int
     pinnedThreadId: String
     pinnedThread: Thread
     isPrivate: Boolean
     lastActive: Date
-    communityPermissions: CommunityPermissions
-      @cost(complexity: 1)
-      @cacheControl(scope: PRIVATE)
+    communityPermissions: CommunityPermissions @cost(complexity: 1)
+
     channelConnection: CommunityChannelsConnection @cost(complexity: 1)
     members(
       first: Int = 10
@@ -164,27 +163,23 @@ const Community = /* GraphQL */ `
       sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multipliers: ["first"])
     metaData: CommunityMetaData @cost(complexity: 10)
-    memberGrowth: GrowthData @cost(complexity: 10) @cacheControl(scope: PRIVATE)
-    conversationGrowth: GrowthData
-      @cost(complexity: 3)
-      @cacheControl(scope: PRIVATE)
-    topMembers: [CommunityMember]
-      @cost(complexity: 10)
-      @cacheControl(scope: PRIVATE)
-    topAndNewThreads: TopAndNewThreads
-      @cost(complexity: 4)
-      @cacheControl(scope: PRIVATE)
+    memberGrowth: GrowthData @cost(complexity: 10)
+    conversationGrowth: GrowthData @cost(complexity: 3)
+
+    topMembers: [CommunityMember] @cost(complexity: 10)
+
+    topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
+
     watercooler: Thread
     brandedLogin: BrandedLogin
-    joinSettings: JoinSettings @cacheControl(scope: PRIVATE)
-    slackSettings: CommunitySlackSettings
-      @cost(complexity: 2)
-      @cacheControl(scope: PRIVATE)
+    joinSettings: JoinSettings
+    slackSettings: CommunitySlackSettings @cost(complexity: 2)
+
     watercoolerId: String
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
-      @cacheControl(scope: PRIVATE)
+
     memberConnection(
       first: Int = 10
       after: String
@@ -193,7 +188,6 @@ const Community = /* GraphQL */ `
       @deprecated(reason: "Use the new Community.members type")
     contextPermissions: ContextPermissions
       @deprecated(reason: "Use the new CommunityMember type to get permissions")
-      @cacheControl(scope: PRIVATE)
 
     hasFeatures: Features @deprecated(reason: "Payments are no longer used")
     hasChargeableSource: Boolean

@@ -29,7 +29,7 @@ const Meta = /* GraphQL */ `
     date: Date
   }
 
-  type Meta @cacheControl(scope: PRIVATE) {
+  type Meta {
     isAdmin: Boolean
     usersGrowth: UsersGrowthData
     communitiesGrowth: GrowthData
