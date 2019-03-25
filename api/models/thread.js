@@ -6,7 +6,7 @@ import {
   trackQueue,
   searchQueue,
 } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange } = require('./utils');
+const { parseRange } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
@@ -14,6 +14,9 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
 import { events } from 'shared/analytics';
+
+const NOT_WATERCOOLER = thread =>
+  db.not(thread.hasFields('watercooler')).or(thread('watercooler').eq(false));
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -93,7 +96,9 @@ export const getThreadsByChannels = (
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .filter(thread =>
+      db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread))
+    )
     .orderBy(...order)
     .skip(after || 0)
     .limit(first || 999999)
@@ -110,7 +115,7 @@ export const getThreadsByCommunity = (communityId: string): Promise<Array<DBThre
       rightBound: 'open',
     })
     .orderBy({ index: db.desc('communityIdAndLastActive') })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
     .run();
 };
 
@@ -121,7 +126,7 @@ export const getThreadsByCommunityInTimeframe = (communityId: string, range: Tim
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
     .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
     .run();
 };
 
