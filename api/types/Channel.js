@@ -60,7 +60,7 @@ const Channel = /* GraphQL */ `
     userId: ID!
   }
 
-  type Channel @cacheControl(maxAge: 600) {
+  type Channel @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date
@@ -93,7 +93,7 @@ const Channel = /* GraphQL */ `
       id: ID
       channelSlug: LowercaseString
       communitySlug: LowercaseString
-    ): Channel @cost(complexity: 1)
+    ): Channel @cost(complexity: 1) @cacheControl(maxAge: 1200)
   }
 
   input ArchiveChannelInput {

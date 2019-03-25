@@ -43,7 +43,7 @@ const Thread = /* GraphQL */ `
     data: String
   }
 
-  type Thread @cacheControl(maxAge: 600) {
+  type Thread @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date
@@ -55,7 +55,6 @@ const Thread = /* GraphQL */ `
     isLocked: Boolean
     isAuthor: Boolean
     receiveNotifications: Boolean @cost(complexity: 1)
-
     lastActive: Date
     type: ThreadType
     edits: [Edit!]
@@ -90,7 +89,7 @@ const Thread = /* GraphQL */ `
   }
 
   extend type Query {
-    thread(id: ID!): Thread
+    thread(id: ID!): Thread @cacheControl(maxAge: 1200)
     searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
       @deprecated(reason: "Use the new Search query endpoint")
   }

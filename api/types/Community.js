@@ -135,7 +135,7 @@ const Community = /* GraphQL */ `
     subscriptions: [StripeSubscription]
   }
 
-  type Community @cacheControl(maxAge: 600) {
+  type Community @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date
     name: String!
@@ -202,11 +202,12 @@ const Community = /* GraphQL */ `
 
   extend type Query {
     community(id: ID, slug: LowercaseString): Community
+      @cacheControl(maxAge: 1200)
     communities(
       slugs: [LowercaseString]
       ids: [ID]
       curatedContentType: String
-    ): [Community]
+    ): [Community] @cacheControl(maxAge: 1200)
     topCommunities(amount: Int = 20): [Community!]
       @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]
