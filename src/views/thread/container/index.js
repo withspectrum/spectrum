@@ -105,6 +105,7 @@ const ThreadContainer = (props: Props) => {
   const [mentionSuggestions, setMentionSuggestions] = useState([
     thread.author.user,
   ]);
+  const [isEditing, setEditing] = useState(false);
   const updateMentionSuggestions = (thread: GetThreadType) => {
     const { messageConnection, author } = thread;
 
@@ -213,60 +214,71 @@ const ThreadContainer = (props: Props) => {
                 <StickyHeader thread={thread} />
               </ErrorBoundary>
 
-              <ThreadDetail thread={thread} />
-
-              <MessagesSubscriber
-                id={thread.id}
+              <ThreadDetail
                 thread={thread}
-                isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
-                onMessagesLoaded={updateMentionSuggestions}
+                toggleEdit={() => setEditing(!isEditing)}
               />
 
-              {canChat && (
-                <ChatInputWrapper>
-                  <ChatInput
-                    threadType="story"
-                    threadId={thread.id}
-                    participants={mentionSuggestions}
+              {!isEditing && (
+                <React.Fragment>
+                  <MessagesSubscriber
+                    id={thread.id}
+                    thread={thread}
+                    isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+                    onMessagesLoaded={updateMentionSuggestions}
                   />
-                </ChatInputWrapper>
-              )}
 
-              {!canChat && !isLocked && (
-                <ChatInputWrapper>
-                  <JoinCommunity
-                    community={community}
-                    render={({ isLoading }) => (
+                  {canChat && (
+                    <ChatInputWrapper>
+                      <ChatInput
+                        threadType="story"
+                        threadId={thread.id}
+                        participants={mentionSuggestions}
+                      />
+                    </ChatInputWrapper>
+                  )}
+
+                  {!canChat && !isLocked && (
+                    <ChatInputWrapper>
+                      <JoinCommunity
+                        community={community}
+                        render={({ isLoading }) => (
+                          <LockedMessages>
+                            <PrimaryOutlineButton
+                              isLoading={isLoading}
+                              icon={'door-enter'}
+                              data-cy="join-community-chat-upsell"
+                            >
+                              {isLoading
+                                ? 'Joining...'
+                                : 'Join community to chat'}
+                            </PrimaryOutlineButton>
+                          </LockedMessages>
+                        )}
+                      />
+                    </ChatInputWrapper>
+                  )}
+
+                  {isLocked && (
+                    <ChatInputWrapper>
                       <LockedMessages>
-                        <PrimaryOutlineButton
-                          isLoading={isLoading}
-                          icon={'door-enter'}
-                          data-cy="join-community-chat-upsell"
-                        >
-                          {isLoading ? 'Joining...' : 'Join community to chat'}
-                        </PrimaryOutlineButton>
+                        <Icon glyph={'private'} size={24} />
+                        <LockedText>
+                          This conversation has been locked
+                        </LockedText>
                       </LockedMessages>
-                    )}
-                  />
-                </ChatInputWrapper>
-              )}
+                    </ChatInputWrapper>
+                  )}
 
-              {isLocked && (
-                <ChatInputWrapper>
-                  <LockedMessages>
-                    <Icon glyph={'private'} size={24} />
-                    <LockedText>This conversation has been locked</LockedText>
-                  </LockedMessages>
-                </ChatInputWrapper>
-              )}
-
-              {channel.isArchived && (
-                <ChatInputWrapper>
-                  <LockedMessages>
-                    <Icon glyph={'private'} size={24} />
-                    <LockedText>This channel has been archived</LockedText>
-                  </LockedMessages>
-                </ChatInputWrapper>
+                  {channel.isArchived && (
+                    <ChatInputWrapper>
+                      <LockedMessages>
+                        <Icon glyph={'private'} size={24} />
+                        <LockedText>This channel has been archived</LockedText>
+                      </LockedMessages>
+                    </ChatInputWrapper>
+                  )}
+                </React.Fragment>
               )}
             </Stretch>
           </PrimaryColumn>

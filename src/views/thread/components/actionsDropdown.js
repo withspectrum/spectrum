@@ -61,8 +61,21 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const shouldRenderEditThreadAction = () => {
-    const { isThreadAuthor } = getThreadActionPermissions();
-    return isThreadAuthor;
+    const {
+      isThreadAuthor,
+      isChannelModerator,
+      isChannelOwner,
+      isCommunityOwner,
+      isCommunityModerator,
+    } = getThreadActionPermissions();
+
+    return (
+      isThreadAuthor ||
+      isChannelModerator ||
+      isCommunityModerator ||
+      isChannelOwner ||
+      isCommunityOwner
+    );
   };
 
   const shouldRenderMoveThreadAction = () => {
