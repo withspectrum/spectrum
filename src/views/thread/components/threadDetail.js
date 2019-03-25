@@ -439,6 +439,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
                   name={author.user.name}
                   username={author.user.username}
                   profilePhoto={author.user.profilePhoto}
+                  badges={author.roles}
                   isCurrentUser={
                     currentUser && author.user.id === currentUser.id
                   }
