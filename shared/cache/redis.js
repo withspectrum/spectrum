@@ -1,7 +1,7 @@
 // @flow
 import Redis from 'ioredis';
 
-const config =
+export const config =
   process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV
     ? {
         port: process.env.REDIS_CACHE_PORT,

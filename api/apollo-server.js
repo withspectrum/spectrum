@@ -4,6 +4,8 @@ import { ApolloServer } from 'apollo-server-express';
 import responseCachePlugin from 'apollo-server-plugin-response-cache';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
+import { RedisCache } from 'apollo-server-cache-redis';
+import { config } from 'shared/cache/redis';
 import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
@@ -125,6 +127,10 @@ const server = new ProtectedApolloServer({
     calculateHttpHeaders: false,
   },
   validationRules: [depthLimit(10)],
+  cache: new RedisCache({
+    config,
+    prefix: 'apollo-cache:',
+  }),
   plugins: [
     responseCachePlugin({
       sessionId: ({ context }) =>
