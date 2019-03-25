@@ -10,6 +10,7 @@ import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
 import { setUserOnline } from 'shared/db/queries/user';
+import { statsd } from 'shared/statsd';
 import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';
@@ -75,20 +76,17 @@ const server = new ProtectedApolloServer({
   },
   subscriptions: {
     path: '/websocket',
-    onOperation: (_: any, params: Object) => {
-      const errorFormatter = createErrorFormatter();
-      params.formatError = errorFormatter;
-      return params;
-    },
     onDisconnect: rawSocket => {
+      statsd.increment('websocket.connections', -1);
       return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => id && setUserOnline(id, false))
         .catch(err => {
           console.error(err);
         });
     },
-    onConnect: (connectionParams, rawSocket) =>
-      getUserIdFromReq(rawSocket.upgradeReq)
+    onConnect: (connectionParams, rawSocket) => {
+      statsd.increment('websocket.connections', 1);
+      return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => (id ? setUserOnline(id, true) : null))
         .then(user => {
           return {
@@ -101,7 +99,8 @@ const server = new ProtectedApolloServer({
           return {
             loaders: createLoaders({ cache: false }),
           };
-        }),
+        });
+    },
   },
   playground: process.env.NODE_ENV !== 'production' && {
     settings: {
