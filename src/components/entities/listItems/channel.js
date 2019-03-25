@@ -8,7 +8,12 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import Icon from 'src/components/icon';
 import JoinChannelWrapper from 'src/components/joinChannelWrapper';
 import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
-import { OutlineButton, PrimaryOutlineButton } from 'src/components/button';
+import {
+  OutlineButton,
+  WhiteIconButton,
+  PrimaryOutlineButton,
+} from 'src/components/button';
+import Tooltip from 'src/components/tooltip';
 import { Row, Content, Label, Description, Actions } from './style';
 
 type Props = {
@@ -67,6 +72,31 @@ const Channel = (props: Props) => {
     );
   };
 
+  const renderSettingsIcon = () => {
+    if (!currentUser) return null;
+
+    const { community, channelPermissions, slug } = channel;
+    const { communityPermissions } = community;
+    const isChannelTeamMember =
+      channelPermissions.isModerator || channelPermissions.isOwner;
+    const isCommunityTeamMember =
+      communityPermissions.isModerator || communityPermissions.isOwner;
+    if (isChannelTeamMember || isCommunityTeamMember) {
+      return (
+        <Tooltip content={'Channel settings'}>
+          <span
+            style={{ marginLeft: '8px', display: 'flex', alignItems: 'center' }}
+          >
+            <WhiteIconButton to={`/${community.slug}/${slug}/settings`}>
+              <Icon glyph={'settings'} size={24} />
+            </WhiteIconButton>
+          </span>
+        </Tooltip>
+      );
+    }
+    return null;
+  };
+
   return (
     <ErrorBoundary>
       <Link to={`/${channel.community.slug}/${channel.slug}`}>
@@ -86,6 +116,7 @@ const Channel = (props: Props) => {
 
           <Actions>
             {renderAction()}
+            {renderSettingsIcon()}
             {children}
           </Actions>
         </Row>

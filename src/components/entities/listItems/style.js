@@ -105,7 +105,6 @@ export const Description = styled.p`
 export const Actions = styled.div`
   grid-area: actions;
   display: flex;
-  flex-direction: column;
   align-self: flex-start;
   justify-content: flex-start;
   position: relative;
