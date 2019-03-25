@@ -1,7 +1,7 @@
 // @flow
 // deprecated 9/27/2018 while removing payments
 const Invoice = /* GraphQL */ `
-  type Invoice {
+  type Invoice @cacheControl(scope: PRIVATE) {
     id: ID!
     paidAt: Int
     amount: Int

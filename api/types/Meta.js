@@ -29,7 +29,7 @@ const Meta = /* GraphQL */ `
     date: Date
   }
 
-  type Meta {
+  type Meta @cacheControl(scope: PRIVATE) {
     isAdmin: Boolean
     usersGrowth: UsersGrowthData
     communitiesGrowth: GrowthData
@@ -56,7 +56,9 @@ const Meta = /* GraphQL */ `
   }
 
   extend type Mutation {
-    saveUserCommunityPermissions(input: SaveUserCommunityPermissionsInput!): User
+    saveUserCommunityPermissions(
+      input: SaveUserCommunityPermissionsInput!
+    ): User
   }
 `;
 

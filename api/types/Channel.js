@@ -77,12 +77,10 @@ const Channel = /* GraphQL */ `
     community: Community! @cost(complexity: 1) @cacheControl(maxAge: 86400)
     threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
-      @cacheControl(maxAge: 300)
     memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
       @cost(complexity: 1, multipliers: ["first"])
-      @cacheControl(maxAge: 300)
-    memberCount: Int! @cacheControl(maxAge: 300)
-    metaData: ChannelMetaData @cost(complexity: 1) @cacheControl(maxAge: 300)
+    memberCount: Int!
+    metaData: ChannelMetaData @cost(complexity: 1)
     pendingUsers: [User]
       @cost(complexity: 3)
       @cacheControl(maxAge: 0, scope: PRIVATE)

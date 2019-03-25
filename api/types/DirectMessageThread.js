@@ -21,7 +21,7 @@ const DirectMessageThread = /* GraphQL */ `
     isOnline: Boolean
   }
 
-  type DirectMessageThread {
+  type DirectMessageThread @cacheControl(scope: PRIVATE) {
     id: ID!
     messageConnection(
       first: Int = 20

@@ -48,7 +48,7 @@ const Notification = /* GraphQL */ `
     node: Notification
   }
 
-  type Notification {
+  type Notification @cacheControl(scope: PRIVATE) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date!
