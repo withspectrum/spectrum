@@ -564,7 +564,6 @@ export const CommunityHeaderMetaCol = styled.div`
   flex-wrap: nowrap;
   align-items: flex-start;
   align-self: flex-start;
-  margin-left: 12px;
   max-width: 100%;
   padding-right: 64px;
 `;

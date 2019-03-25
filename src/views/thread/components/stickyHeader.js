@@ -26,7 +26,7 @@ type Props = {
 const StickyHeader = (props: Props) => {
   const { thread } = props;
   const { scrollToTop } = useAppScroller();
-  const { channel, community } = thread;
+  const { channel } = thread;
 
   const createdAt = new Date(thread.createdAt).getTime();
   const timestamp = convertTimestampToDate(createdAt);
