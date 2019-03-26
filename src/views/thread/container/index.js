@@ -54,6 +54,8 @@ type Props = {
   currentUser?: Object,
   dispatch: Function,
   notifications: Array<Object>,
+  isModal: boolean,
+  children: React$Node,
 };
 
 const ThreadContainer = (props: Props) => {
