@@ -523,7 +523,7 @@ class ComposerWithData extends React.Component<Props, State> {
                   !selectedCommunityId
                 }
               >
-                Publish
+                {isLoading ? 'Publishing...' : 'Publish'}
               </PrimaryButton>
             </ButtonRow>
           </Actions>
