@@ -129,7 +129,7 @@ const server = new ProtectedApolloServer({
     defaultMaxAge: 60,
   },
   cache: new RedisCache({
-    config,
+    ...config,
     prefix: 'apollo-cache:',
   }),
   plugins: [
