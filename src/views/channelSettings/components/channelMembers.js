@@ -8,11 +8,10 @@ import type { GetChannelMemberConnectionType } from 'shared/graphql/queries/chan
 import { FetchMoreButton } from 'src/components/threadFeed/style';
 import ViewError from 'src/components/viewError';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/entities';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -24,7 +23,6 @@ type Props = {
   isLoading: boolean,
   isFetchingMore: boolean,
   dispatch: Dispatch<Object>,
-  initMessage: Function,
   currentUser: ?Object,
 };
 
@@ -36,23 +34,16 @@ class ChannelMembers extends Component<Props> {
       isLoading,
       isFetchingMore,
       currentUser,
-      initMessage,
     } = this.props;
 
     if (data && data.channel) {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member && member.node);
-      const totalCount =
-        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
         <SectionCard>
-          <SectionTitle>
-            {totalCount === 1
-              ? `${totalCount} member`
-              : `${totalCount} members`}
-          </SectionTitle>
+          <SectionTitle>Members</SectionTitle>
 
           <ListContainer>
             {members &&
@@ -60,7 +51,7 @@ class ChannelMembers extends Component<Props> {
                 if (!user) return null;
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
@@ -71,16 +62,8 @@ class ChannelMembers extends Component<Props> {
                       avatarSize={40}
                       description={user.description}
                       showHoverProfile={false}
-                    >
-                      {currentUser && user.id !== currentUser.id && (
-                        <MessageIconContainer data-cy="message-user-button">
-                          <Icon
-                            glyph={'message'}
-                            onClick={() => initMessage(user)}
-                          />
-                        </MessageIconContainer>
-                      )}
-                    </GranularUserProfile>
+                      messageButton={true}
+                    />
                   </UserListItemContainer>
                 );
               })}

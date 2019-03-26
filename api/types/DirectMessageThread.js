@@ -34,7 +34,7 @@ const DirectMessageThread = /* GraphQL */ `
 
   extend type Query {
     directMessageThread(id: ID!): DirectMessageThread
-    directMessageThreadByUserId(userId: ID!): DirectMessageThread
+    directMessageThreadByUserIds(userIds: [ID!]): DirectMessageThread
   }
 
   enum MessageType {

@@ -1,8 +1,10 @@
+// @flow
 import React from 'react';
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { ProfileHeaderAction } from './style';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const PhotoContainer = styled.div`
   grid-area: cover;
@@ -17,7 +19,7 @@ const PhotoContainer = styled.div`
   background-position: center;
   border-radius: ${props => (props.large ? '0' : '12px 12px 0 0')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: 0 0 ${props => (props.large ? '160px' : '64px')};
     border-radius: 0;
   }
@@ -40,8 +42,6 @@ export const CoverPhoto = (props: Object) => {
               color="text.reverse"
               opacity="0.5"
               hoverColor="text.reverse"
-              tipText={`Edit profile`}
-              tipLocation={'left'}
             />
           </Link>
         ) : props.currentUser ? (
@@ -50,8 +50,6 @@ export const CoverPhoto = (props: Object) => {
             color="text.reverse"
             hoverColor="text.reverse"
             onClick={props.onClick}
-            tipText={`Message ${props.user.name}`}
-            tipLocation={'left'}
           />
         ) : null}
         {props.children}

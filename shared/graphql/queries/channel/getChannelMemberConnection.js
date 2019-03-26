@@ -3,14 +3,11 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
-import channelMetaDataFragment from '../../fragments/channel/channelMetaData';
-import type { ChannelMetaDataType } from '../../fragments/channel/channelMetaData';
 import channelMemberConnectionFragment from '../../fragments/channel/channelMemberConnection';
 import type { ChannelMemberConnectionType } from '../../fragments/channel/channelMemberConnection';
 
 export type GetChannelMemberConnectionType = {
   ...$Exact<ChannelInfoType>,
-  ...$Exact<ChannelMetaDataType>,
   ...$Exact<ChannelMemberConnectionType>,
 };
 
@@ -18,12 +15,10 @@ export const getChannelMemberConnectionQuery = gql`
   query getChannelMemberConnection($id: ID, $first: Int, $after: String) {
     channel(id: $id) {
       ...channelInfo
-      ...channelMetaData
       ...channelMemberConnection
     }
   }
   ${channelInfoFragment}
-  ${channelMetaDataFragment}
   ${channelMemberConnectionFragment}
 `;
 
@@ -31,12 +26,10 @@ const LoadMoreMembers = gql`
   query loadMoreChannelMembers($id: ID, $first: Int, $after: String) {
     channel(id: $id) {
       ...channelInfo
-      ...channelMetaData
       ...channelMemberConnection
     }
   }
   ${channelInfoFragment}
-  ${channelMetaDataFragment}
   ${channelMemberConnectionFragment}
 `;
 

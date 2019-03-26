@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Tooltip, zIndex } from '../globals';
+import { zIndex } from '../globals';
 
 export const ReputationWrapper = styled.div`
   display: flex;
@@ -11,7 +11,6 @@ export const ReputationWrapper = styled.div`
   cursor: pointer;
   position: relative;
   z-index: ${zIndex.fullScreen};
-  ${Tooltip};
   width: fit-content;
 `;
 

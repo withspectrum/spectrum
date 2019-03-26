@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelNotificationsMutation, {
   type ToggleChannelNotificationsType,
@@ -75,6 +75,7 @@ class ToggleChannelNotifications extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelNotificationsMutation)(
-  ToggleChannelNotifications
-);
+export default compose(
+  connect(),
+  toggleChannelNotificationsMutation
+)(ToggleChannelNotifications);

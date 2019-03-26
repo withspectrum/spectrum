@@ -7,9 +7,9 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
 import { withApollo } from 'react-apollo';
-import { closeModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { throttle } from '../../../helpers/utils';
+import { closeModal } from 'src/actions/modals';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { throttle } from 'src/helpers/utils';
 import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -19,7 +19,7 @@ import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import { modalStyles, UpsellDescription } from '../styles';
 import {
   Input,
@@ -167,7 +167,7 @@ class CreateChannelModal extends React.Component<Props, State> {
             });
           }
         })
-        .catch(err => {
+        .catch(() => {
           // do nothing
         });
     }
@@ -346,16 +346,14 @@ class CreateChannelModal extends React.Component<Props, State> {
             </UpsellDescription>
 
             <Actions>
-              <TextButton onClick={this.close} color={'warn.alt'}>
-                Cancel
-              </TextButton>
-              <Button
+              <TextButton onClick={this.close}>Cancel</TextButton>
+              <PrimaryOutlineButton
                 disabled={!name || !slug || slugTaken || !description}
                 loading={loading}
                 onClick={this.create}
               >
                 Create Channel
-              </Button>
+              </PrimaryOutlineButton>
             </Actions>
 
             {createError && (

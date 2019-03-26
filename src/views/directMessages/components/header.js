@@ -1,6 +1,6 @@
 import React from 'react';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Head from '../../../components/head';
+import Head from 'src/components/head';
 import {
   StyledHeader,
   PhotosContainer,
@@ -14,6 +14,9 @@ const Header = ({ thread, currentUser }) => {
   const trimmedUsers = thread.participants.filter(
     user => user.userId !== currentUser.id
   );
+
+  // don't show the header in a 1:1 dm because we already have the titlebar
+  if (trimmedUsers.length === 1) return null;
 
   const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>

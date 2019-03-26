@@ -9,11 +9,8 @@ const Switch = props => {
   return (
     <AuthViewHandler>
       {authed => {
-        if (!authed) {
-          return <FallbackComponent {...rest} />;
-        } else {
-          return <Component {...rest} />;
-        }
+        if (!authed) return <FallbackComponent {...rest} />;
+        return <Component {...rest} />;
       }}
     </AuthViewHandler>
   );

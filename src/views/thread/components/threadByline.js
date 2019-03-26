@@ -49,6 +49,7 @@ class ThreadByline extends React.Component<Props> {
           )}
 
           <ReputationRow>
+            {/* $FlowIssue */}
             {reputation > 0 && <Reputation reputation={reputation} />}
           </ReputationRow>
         </BylineMeta>

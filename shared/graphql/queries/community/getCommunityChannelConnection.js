@@ -27,7 +27,7 @@ const getCommunityChannelConnectionOptions = {
     variables: {
       id,
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 

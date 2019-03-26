@@ -18,7 +18,7 @@ class Reaction extends React.Component<Props> {
     const { toggleReaction, message, dispatch, currentUser } = this.props;
 
     if (!currentUser) {
-      return dispatch(openModal('CHAT_INPUT_LOGIN_MODAL', {}));
+      return dispatch(openModal('LOGIN_MODAL', {}));
     }
 
     return toggleReaction({

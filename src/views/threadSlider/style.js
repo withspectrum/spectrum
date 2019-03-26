@@ -1,27 +1,28 @@
 // @flow
+import styled from 'styled-components';
 import theme from 'shared/theme';
-import styled, { css } from 'styled-components';
 import { zIndex } from 'src/components/globals';
-
-const animation = css`
-  opacity: 0;
-  transform: translateX(1em) translate3d(0, 0, 0);
-  transition: opacity ${props => props.duration}ms ease-out,
-    transform ${props => props.duration}ms ease-in-out;
-
-  ${props =>
-    props.entering || props.entered
-      ? css`
-          opacity: 1;
-          transform: translateX(0em) translate3d(0, 0, 0);
-        `
-      : ''};
-`;
+import {
+  MEDIA_BREAK,
+  MAX_WIDTH,
+  TITLEBAR_HEIGHT,
+  NAVBAR_WIDTH,
+} from 'src/components/layout';
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  display: flex;
+  justify-content: center;
+  z-index: ${zIndex.slider + 1};
   position: absolute;
+  left: ${NAVBAR_WIDTH}px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    top: ${TITLEBAR_HEIGHT}px;
+    left: 0;
+  }
 `;
 
 export const Overlay = styled.div`
@@ -30,59 +31,48 @@ export const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.15);
-  z-index: ${zIndex.slider + 2};
-
-  ${animation};
+  background: rgba(0, 0, 0, 0.24);
 `;
 
-export const Thread = styled.div`
-  display: flex;
-  position: absolute;
-  right: 0;
+export const ThreadBackground = styled.div`
+  position: fixed;
   top: 0;
   bottom: 0;
-  width: 650px;
-  background: #fff;
-  z-index: ${zIndex.slider + 3};
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
-  flex-direction: column;
-  max-width: 100%;
-
-  @media (max-width: 768px) {
-    top: -48px;
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    ${animation};
-  }
+  background: ${theme.bg.wash};
+  width: ${MAX_WIDTH + 32}px;
+  left: 50%;
+  transform: translateX(calc(-50% + 32px));
 `;
 
-export const Close = styled.div`
+export const ThreadContainer = styled.div`
   display: flex;
-  align-items: center;
-  flex: 1;
-  border-bottom: 1px solid ${theme.bg.border};
-  padding: 8px 16px;
-  flex: 1 0 auto;
-  background: ${theme.bg.wash};
-  max-height: 48px;
-  justify-content: flex-end;
+  justify-content: center;
+  width: 100%;
+  z-index: ${zIndex.slider + 4};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100%;
+    box-shadow: 0;
+  }
 `;
 
 export const CloseButton = styled.span`
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 32px;
-  color: ${theme.text.alt};
-`;
+  background: ${theme.bg.reverse};
+  color: ${theme.text.reverse};
+  z-index: ${zIndex.slider + 4};
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
-export const CloseLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${theme.text.alt};
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
 `;

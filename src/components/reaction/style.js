@@ -1,6 +1,5 @@
 // @flow
 import styled from 'styled-components';
-import { Tooltip } from 'src/components/globals';
 
 export const ReactionWrapper = styled.span`
   display: flex;
@@ -34,6 +33,4 @@ export const ReactionWrapper = styled.span`
     margin-right: 4px;
     margin-top: -1px;
   }
-
-  ${Tooltip};
 `;

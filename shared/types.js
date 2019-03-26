@@ -240,6 +240,7 @@ export type DBThread = {
   isLocked: boolean,
   lockedBy?: string,
   lockedAt?: Date,
+  editedBy?: string,
   lastActive: Date,
   modifiedAt?: Date,
   deletedAt?: string,

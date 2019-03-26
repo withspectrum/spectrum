@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { closeGallery } from '../../actions/gallery';
+import { closeGallery } from 'src/actions/gallery';
 import type { GetMediaMessagesForThreadType } from 'shared/graphql/queries/message/getMediaMessagesForThread';
 import type { Dispatch } from 'redux';
 import {

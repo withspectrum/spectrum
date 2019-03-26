@@ -13,6 +13,8 @@ export default async (
   }
 
   const thread = await loaders.thread.load(id);
+
+  if (!thread) return null;
   // If the threads score hasn't been updated in the past
   // 24 hours add a new job to the queue to update it
   if (

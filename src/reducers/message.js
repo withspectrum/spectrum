@@ -1,5 +1,5 @@
 // @flow
-import type { ReplyToMessageActionType } from '../actions/message';
+import type { ReplyToMessageActionType } from 'src/actions/message';
 
 const initialState = {
   quotedMessage: {},

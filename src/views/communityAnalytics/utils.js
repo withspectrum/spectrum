@@ -3,16 +3,9 @@ import React from 'react';
 import {
   SectionSubtitle,
   GrowthText,
-} from '../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 
-export const parseGrowth = (
-  {
-    growth,
-    currentPeriodCount,
-    prevPeriodCount,
-  }: { growth: number, currentPeriodCount: number, prevPeriodCount: number },
-  range: string
-) => {
+export const parseGrowth = ({ growth }: { growth: number }, range: string) => {
   if (!growth) {
     return null;
   } else if (growth > 0) {

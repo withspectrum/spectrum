@@ -14,11 +14,13 @@ type Props = {
   staticSuggestions?: Array<UserInfoType>,
   client: ApolloClient,
   placeholder?: string,
+  hasAttachment?: boolean,
   onFocus?: Function,
   onBlur?: Function,
   onKeyDown?: Function,
   inputRef?: Function,
   dataCy?: string,
+  networkDisabled?: boolean,
 };
 
 const cleanSuggestionUserObject = (user: ?Object) => {
@@ -106,7 +108,13 @@ const SpectrumMentionsInput = (props: Props) => {
     return callback(uniqueResults.slice(0, 8));
   };
 
-  const { dataCy, ...rest } = props;
+  const {
+    dataCy,
+    networkDisabled,
+    staticSuggestions,
+    hasAttachment,
+    ...rest
+  } = props;
 
   return (
     <MentionsInput

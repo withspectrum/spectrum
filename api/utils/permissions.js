@@ -141,18 +141,19 @@ export const canViewCommunity = async (user: DBUser, communityId: string, loader
   const community = await communityExists(communityId, loaders);
   if (!community) return false;
 
-  if (!community.isPrivate) return true
-
-  if (!user) return false
+  if (!user) {
+    if (community.isPrivate) return false
+    return true
+  }
 
   const communityPermissions = await loaders.userPermissionsInCommunity.load([
     user.id,
     communityId,
   ]);
 
-  if (!communityPermissions) return false;
-  if (communityPermissions.isBlocked) return false
-  if (!communityPermissions.isMember) return false
+  if (community.isPrivate && !communityPermissions) return false;
+  if (communityPermissions && communityPermissions.isBlocked) return false
+  if (community.isPrivate && !communityPermissions.isMember) return false
   
   return true;
 }
@@ -181,22 +182,41 @@ export const canViewThread = async (
   if (!channel || !community) return false;
   if (channel.deletedAt || community.deletedAt) return false;
 
-  if (!channel.isPrivate && !community.isPrivate) return true;
+  if (userId) {
+    if (channel.isPrivate) {
+      if (
+        !channelPermissions ||
+        channelPermissions.isBlocked ||
+        !channelPermissions.isMember
+      ) {
+        return false;
+      }
 
-  if (channel.isPrivate)
-    return (
-      channelPermissions &&
-      channelPermissions.isMember &&
-      !channelPermissions.isBlocked
-    );
-  if (community.isPrivate)
-    return (
-      communityPermissions &&
-      communityPermissions.isMember &&
-      !communityPermissions.isBlocked
-    );
+      return true;
+    }
 
-  return false;
+    if (community.isPrivate) {
+      if (
+        !communityPermissions ||
+        communityPermissions.isBlocked ||
+        !communityPermissions.isMember
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+
+    if (communityPermissions) {
+      return !communityPermissions.isBlocked;
+    }
+
+    if (channelPermissions) {
+      return !channelPermissions.isBlocked;
+    }
+  }
+
+  return !channel.isPrivate && !community.isPrivate;
 };
 
 export const canViewDMThread = async (
@@ -229,11 +249,12 @@ export const canViewChannel = async (user: DBUser, channelId: string, loaders: a
 
   const community = await communityExists(channel.communityId, loaders);
   if (!community) return false
-
-  if (!channel.isPrivate && !community.isPrivate) return true
-
-  if (!user) return false
-
+  
+  if (!user) {
+    if (!community.isPrivate && !channel.isPrivate) return true
+    return false
+  }
+  
   const [
     communityPermissions,
     channelPermissions
@@ -247,7 +268,7 @@ export const canViewChannel = async (user: DBUser, channelId: string, loaders: a
       channel.id,
     ])
   ])
-
+  
   if (channel.isPrivate && !channelPermissions) return false
   if (community.isPrivate && !communityPermissions) return false
   if (channel.isPrivate && !channelPermissions.isMember) return false

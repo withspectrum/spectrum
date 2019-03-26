@@ -1,14 +1,13 @@
 import data from '../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
 
-const pressEscape = () => cy.get('body').trigger('keydown', { keyCode: 27 });
+const pressEscape = () =>
+  cy.get('[data-cy="modal-container"]').trigger('keydown', { keyCode: 27 });
 
-const inboxBeforeUrlIsValid = () =>
-  cy.url().should('eq', 'http://localhost:3000/?t=thread-9');
 const communityBeforeUrlIsValid = () =>
-  cy.url().should('eq', 'http://localhost:3000/spectrum');
+  cy.url().should('eq', 'http://localhost:3000/spectrum?tab=posts');
 const channelBeforeUrlIsValid = () =>
-  cy.url().should('eq', 'http://localhost:3000/spectrum/general');
+  cy.url().should('eq', 'http://localhost:3000/spectrum/general?tab=posts');
 
 describe('composer modal route', () => {
   beforeEach(() => {
@@ -17,71 +16,16 @@ describe('composer modal route', () => {
 
   const threadComposerWrapper = () =>
     cy.get('[data-cy="thread-composer-wrapper"]');
-  const threadComposerOverlay = () =>
-    cy.get('[data-cy="thread-composer-overlay"]');
-  const threadSliderOverlay = () => cy.get('[data-cy="thread-slider-overlay"]');
-  const cancelThreadComposer = () =>
-    cy.get('[data-cy="composer-cancel-button"]').click();
-  const threadComposer = () => cy.get('[data-cy="thread-composer"]');
-  const composerPlaceholder = () =>
-    cy.get('[data-cy="thread-composer-placeholder"]');
-  const inboxComposeButton = () => cy.get('[data-cy="inbox-view-post-button"]');
-
-  it('handles esc key', () => {
-    cy.visit('/');
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxBeforeUrlIsValid();
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    threadComposer().should('be.visible');
-    threadComposerWrapper().should('be.visible');
-    cy.url().should('eq', 'http://localhost:3000/new/thread');
-
-    pressEscape();
-
-    threadComposer().should('not.be.visible');
-    threadComposerWrapper().should('not.be.visible');
-    inboxBeforeUrlIsValid();
-  });
-
-  it('handles overlay click', () => {
-    cy.visit('/');
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxBeforeUrlIsValid();
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    threadComposer().should('be.visible');
-    threadComposerWrapper().should('be.visible');
-    cy.url().should('eq', 'http://localhost:3000/new/thread');
-
-    threadComposerWrapper().click(200, 200);
-
-    threadComposer().should('not.be.visible');
-    threadComposerWrapper().should('not.be.visible');
-    inboxBeforeUrlIsValid();
-  });
-
-  it('handles cancel click', () => {
-    cy.visit('/');
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    inboxBeforeUrlIsValid();
-    inboxComposeButton().should('be.visible');
-    inboxComposeButton().click();
-    threadComposer().should('be.visible');
-    threadComposerWrapper().should('be.visible');
-    cy.url().should('eq', 'http://localhost:3000/new/thread');
-
-    cancelThreadComposer();
-
-    threadComposer().should('not.be.visible');
-    threadComposerWrapper().should('not.be.visible');
-    inboxBeforeUrlIsValid();
-  });
+  const threadComposer = () => cy.get('[data-cy="modal-container"]');
+  const communityComposerPlaceholder = () =>
+    cy.get('[data-cy="community-thread-compose-button"]');
+  const channelComposerPlaceholder = () =>
+    cy.get('[data-cy="channel-thread-compose-button"]');
 
   it('handles community view', () => {
     cy.visit('/spectrum');
     communityBeforeUrlIsValid();
-    composerPlaceholder().click();
+    communityComposerPlaceholder().click();
     threadComposer().should('be.visible');
     threadComposerWrapper().should('be.visible');
     cy.url().should(
@@ -99,7 +43,7 @@ describe('composer modal route', () => {
   it('handles channel view', () => {
     cy.visit('/spectrum/general');
     channelBeforeUrlIsValid();
-    composerPlaceholder().click();
+    channelComposerPlaceholder().click();
     threadComposer().should('be.visible');
     threadComposerWrapper().should('be.visible');
     cy.url().should(
@@ -116,7 +60,7 @@ describe('composer modal route', () => {
 });
 
 describe('thread modal route', () => {
-  const threadSlider = () => cy.get('[data-cy="thread-slider"]');
+  const threadSlider = () => cy.get('[data-cy="modal-container"]');
   const threadSliderClose = () => cy.get('[data-cy="thread-slider-close"]');
 
   it('handles esc key', () => {
@@ -147,7 +91,7 @@ describe('thread modal route', () => {
       'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
     );
 
-    cy.get('body').click(200, 200);
+    cy.get('[data-cy="overlay"]').click(200, 200, { force: true });
 
     communityBeforeUrlIsValid();
     threadSlider().should('not.be.visible');
@@ -184,17 +128,6 @@ describe('thread modal route', () => {
     pressEscape();
 
     channelBeforeUrlIsValid();
-    threadSlider().should('not.be.visible');
-  });
-
-  it('handles inbox feed', () => {
-    cy.auth(user.id);
-    cy.visit('/');
-    cy.get('[data-cy="inbox-thread-feed"]').should('be.visible');
-    cy.wait(500);
-    cy.get('[data-cy="thread-card"]')
-      .eq(1)
-      .click();
     threadSlider().should('not.be.visible');
   });
 

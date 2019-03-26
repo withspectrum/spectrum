@@ -95,11 +95,12 @@ describe('public community signed out', () => {
 
   it('should prompt user to login when joining', () => {
     cy.get('[data-cy="join-community-button-login"]')
+      .last()
       .scrollIntoView()
       .should('be.visible')
       .click();
 
-    cy.get('[data-cy="login-page"]').should('be.visible');
+    cy.get('[data-cy="login-modal"]').should('be.visible');
   });
 });
 
@@ -156,15 +157,16 @@ describe('public community signed in without permission', () => {
 
   it('should join the community', () => {
     cy.get('[data-cy="join-community-button"]')
+      .last()
       .scrollIntoView()
       .should('be.visible');
 
     cy.get('[data-cy="join-community-button"]')
-      .contains(`Join ${publicCommunity.name}`)
+      .contains(`Join community`)
       .click();
 
     cy.get('[data-cy="leave-community-button"]')
-      .contains(`Leave community`)
+      .contains(`Member`)
       .click();
 
     // triggered the leave modal
@@ -173,8 +175,10 @@ describe('public community signed in without permission', () => {
       .should('be.visible')
       .click();
 
+    cy.get('[data-cy="delete-button"]').should('not.be.visible');
+
     cy.get('[data-cy="join-community-button"]')
-      .scrollIntoView()
+      .last()
       .should('be.visible');
   });
 });
@@ -212,14 +216,14 @@ describe('private community signed in without permission', () => {
   });
 
   it('should render the blocked page', () => {
-    cy.get('[data-cy="community-view-blocked"]').should('be.visible');
+    cy.get('[data-cy="community-view-private"]').should('be.visible');
     cy.contains('This community is private');
   });
 
   it('should request to join the private community', () => {
     cy.get('[data-cy="request-to-join-private-community-button"]')
       .should('be.visible')
-      .contains(`Request to join ${privateCommunity.name}`)
+      .contains(`Request to join`)
       .click();
 
     cy.get('[data-cy="cancel-request-to-join-private-community-button"]')
@@ -229,7 +233,7 @@ describe('private community signed in without permission', () => {
 
     cy.get('[data-cy="request-to-join-private-community-button"]')
       .should('be.visible')
-      .contains(`Request to join ${privateCommunity.name}`);
+      .contains(`Request to join`);
   });
 });
 

@@ -10,7 +10,7 @@ import {
   SocialLinks,
 } from '../style';
 import { Link } from 'react-router-dom';
-import { IconButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
 import { Logo } from 'src/components/logo';
 import { track, events } from 'src/helpers/analytics';
 
@@ -28,14 +28,14 @@ export default () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <IconButton glyph="github" hoverColor={'text.reverse'} />
+              <Icon glyph="github" hoverColor={'text.reverse'} />
             </a>
             <a
               href="https://twitter.com/withspectrum"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <IconButton glyph="twitter" hoverColor={'text.reverse'} />
+              <Icon glyph="twitter" hoverColor={'text.reverse'} />
             </a>
           </SocialLinks>
         </Masthead>

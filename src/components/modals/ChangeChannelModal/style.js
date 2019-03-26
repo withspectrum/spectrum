@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { zIndex } from '../../globals';
-import { isMobile } from '../../../helpers/utils';
+import { zIndex } from 'src/components/globals';
+import { isMobile } from 'src/helpers/utils';
 
 const maxWidth = '460px';
 const mobile = isMobile();
@@ -45,7 +45,6 @@ export const modalStyles = {
 export const Section = styled.section`
   display: flex;
   justify-content: center;
-  align-items: center;
   padding: 16px 32px 32px;
   flex-direction: column;
 `;
@@ -55,7 +54,6 @@ export const Title = styled.h3`
   font-weight: 700;
   color: ${theme.text.default};
   margin: 16px 0 8px;
-  text-align: center;
   line-height: 1.4;
 `;
 
@@ -63,7 +61,6 @@ export const Subtitle = styled.h3`
   font-size: 16px;
   font-weight: 400;
   color: ${theme.text.alt};
-  text-align: center;
 `;
 
 export const SelectorContainer = styled.div`
@@ -82,11 +79,13 @@ export const SelectorContainer = styled.div`
 export const Actions = styled.div`
   margin-top: 24px;
   display: flex;
-  width: 100%;
   justify-content: center;
+  align-self: flex-end;
+
   button {
     flex: 1;
   }
+
   button + button {
     margin-left: 8px;
   }

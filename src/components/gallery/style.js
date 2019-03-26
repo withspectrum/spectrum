@@ -1,6 +1,8 @@
+// @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { Shadow, zIndex } from '../globals';
+import { Shadow, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const GalleryWrapper = styled.div`
   position: fixed;
@@ -32,7 +34,7 @@ export const ActiveImage = styled.img`
   object-fit: cover;
   max-height: 90%;
   width: 100%;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   margin: auto 0 5rem;
   box-shadow: ${Shadow.high};
   z-index: ${zIndex.fullscreen + 2};
@@ -68,7 +70,7 @@ export const MiniContainer = styled.div`
   display: flex;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     justify-content: flex-start;
     overflow-x: scroll;
   }

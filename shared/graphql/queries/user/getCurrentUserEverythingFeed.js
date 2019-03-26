@@ -68,8 +68,7 @@ const getCurrentUserEverythingOptions = {
 
             const newThreads = parseRealtimeThreads(
               prev.user.everything.edges,
-              updatedThread,
-              ownProps.dispatch
+              updatedThread
             );
 
             // Add the new notification to the data

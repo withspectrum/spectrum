@@ -1,6 +1,8 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 /* eslint no-eval: 0 */
 
@@ -37,14 +39,20 @@ export const SvgWrapper = styled.div`
   color: ${props => eval(`props.theme.${props.color}`)};
   pointer-events: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 150%;
     left: -25%;
     right: -25%;
   }
 `;
 
-class Goop extends React.Component {
+type Props = {
+  color: string,
+  goop: number,
+  goopHeight: number,
+};
+
+class Goop extends React.Component<Props> {
   returnGoop() {
     switch (this.props.goop) {
       default:
@@ -100,12 +108,13 @@ class Goop extends React.Component {
   }
 
   render() {
+    const { color = 'bg.default', goopHeight, goop } = this.props;
     return (
       <SvgWrapper
         className={'goop'}
-        goopHeight={this.props.goopHeight}
-        goop={this.props.goop}
-        color={this.props.color}
+        goopHeight={goopHeight}
+        goop={goop}
+        color={color}
       >
         <InlineSvg
           fillRule="evenodd"
@@ -122,9 +131,5 @@ class Goop extends React.Component {
     );
   }
 }
-
-Goop.defaultProps = {
-  color: 'bg.default',
-};
 
 export default Goop;

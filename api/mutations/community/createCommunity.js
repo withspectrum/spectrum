@@ -3,13 +3,19 @@ import type { GraphQLContext } from '../../';
 import type { CreateCommunityInput } from '../../models/community';
 import UserError from '../../utils/UserError';
 import { communitySlugIsBlacklisted } from '../../utils/permissions';
-import { getCommunitiesBySlug, createCommunity } from '../../models/community';
+import {
+  getCommunitiesBySlug,
+  createCommunity,
+  setCommunityWatercoolerId,
+} from '../../models/community';
 import { createOwnerInCommunity } from '../../models/usersCommunities';
 import { createGeneralChannel } from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
+import { publishThread } from '../../models/thread';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { trackQueue } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
+import Raven from 'shared/raven';
 
 export default requireAuth(
   async (_: any, args: CreateCommunityInput, { user }: GraphQLContext) => {
@@ -92,23 +98,33 @@ export default requireAuth(
     const community = await createCommunity(sanitizedArgs, user);
 
     // create a new relationship with the community
-    const communityRelationship = await createOwnerInCommunity(
-      community.id,
-      user.id
-    );
+    await createOwnerInCommunity(community.id, user.id);
 
     // create a default 'general' channel
     const generalChannel = await createGeneralChannel(community.id, user.id);
 
     // create a new relationship with the general channel
-    const generalChannelRelationship = createOwnerInChannel(
-      generalChannel.id,
-      user.id
-    );
+    await createOwnerInChannel(generalChannel.id, user.id);
 
-    return Promise.all([
-      communityRelationship,
-      generalChannelRelationship,
-    ]).then(() => community);
+    try {
+      const watercooler = await publishThread(
+        {
+          channelId: generalChannel.id,
+          communityId: community.id,
+          content: {
+            title: `${community.name} watercooler`,
+          },
+          type: 'DRAFTJS',
+          watercooler: true,
+        },
+        user.id
+      );
+
+      return setCommunityWatercoolerId(community.id, watercooler.id);
+      // Do not fail community creation if the watercooler creation does not work out
+    } catch (err) {
+      Raven.captureException(err);
+      return community;
+    }
   }
 );

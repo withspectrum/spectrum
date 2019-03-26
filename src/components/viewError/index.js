@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FillSpaceError, LargeEmoji, Heading, Subheading } from './style';
-import { Button } from '../buttons';
-import { removeItemFromStorage } from '../../helpers/localStorage';
+import { PrimaryButton } from 'src/components/button';
+import { removeItemFromStorage } from 'src/helpers/localStorage';
 
 /*
   A generic error component which will fill the space of any container its placed in.
@@ -19,7 +19,7 @@ type Props = {
   subheading?: string,
   clearStorage?: boolean,
   refresh?: boolean,
-  children?: React.Node,
+  children?: React$Node,
   small?: boolean,
   dataCy?: string,
 };
@@ -54,13 +54,9 @@ class ViewError extends React.Component<Props> {
         <Subheading small={small}>{subhead}</Subheading>
 
         {refresh && (
-          <Button
-            large={!small}
-            icon="view-reload"
-            onClick={() => window.location.reload(true)}
-          >
+          <PrimaryButton onClick={() => window.location.reload(true)}>
             Refresh the page
-          </Button>
+          </PrimaryButton>
         )}
 
         {children}

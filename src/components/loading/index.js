@@ -1,17 +1,12 @@
 // @flow
 import React from 'react';
-//$FlowFixMe
 import branch from 'recompose/branch';
-//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-// $FlowFixMe
 import styled from 'styled-components';
 import { Spinner, FlexCol } from '../globals';
 import { Card } from '../card';
-import { Column } from '../column';
 import { ThreadViewContainer, Detail, Content } from '../../views/thread/style';
 import {
-  LoadingScreenContainer,
   ShimmerList,
   ShimmerListLite,
   ShimmerInboxThread,
@@ -34,10 +29,6 @@ import {
   LoadingNavbarContainer,
   LogoLink,
   Logo,
-  GridProfile,
-  Meta,
-  GridContent,
-  LoadingCoverPhoto,
 } from './style';
 
 /*
@@ -71,11 +62,12 @@ const LoadingCardContainer = styled(Card)`
 export const Loading = ({
   size,
   color,
+  ...rest
 }: {
   size?: number,
   color?: string,
 }): React$Element<any> => (
-  <LoadingContainer>
+  <LoadingContainer {...rest}>
     <Spinner size={size} color={color} />
   </LoadingContainer>
 );
@@ -1029,20 +1021,6 @@ export const ErrorSelect = ({ children }: Props) => (
   <StyledErrorSelect>{children}</StyledErrorSelect>
 );
 
-export const LoadingScreen = (): React$Element<any> => (
-  <LoadingScreenContainer>
-    <GridProfile>
-      <LoadingCoverPhoto />
-      <Meta>
-        <LoadingProfile />
-      </Meta>
-      <GridContent>
-        <Loading />
-      </GridContent>
-    </GridProfile>
-  </LoadingScreenContainer>
-);
-
 export const LoadingThreadView = (): React$Element<any> => (
   <ThreadViewContainer>
     <Content>
@@ -1051,14 +1029,6 @@ export const LoadingThreadView = (): React$Element<any> => (
       </Detail>
     </Content>
   </ThreadViewContainer>
-);
-
-export const LoadingNotifications = (): React$Element<any> => (
-  <LoadingScreenContainer>
-    <Column type="primary" alignItems="center">
-      <LoadingFeed />
-    </Column>
-  </LoadingScreenContainer>
 );
 
 export const displayLoadingState = branch(
@@ -1085,19 +1055,9 @@ export const displayLoadingCard = branch(
   renderComponent(LoadingCard)
 );
 
-export const displayLoadingScreen = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(LoadingScreen)
-);
-
 export const displayLoadingThreadView = branch(
   props => !props.data,
   renderComponent(LoadingThreadView)
-);
-
-export const displayLoadingNotifications = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(LoadingNotifications)
 );
 
 export const displayLoadingComposer = branch(

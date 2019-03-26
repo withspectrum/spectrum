@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { EditDropdownContainer } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 
 type Props = {
