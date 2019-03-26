@@ -3,14 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
-import {
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { UserHoverProfile } from 'src/components/hoverProfile';
+import { UserAvatar } from 'src/components/avatar';
 import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { CommunityAvatar } from 'src/components/avatar';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import {
@@ -30,7 +27,7 @@ type Props = {
 const StickyHeader = (props: Props) => {
   const { thread } = props;
   const { scrollToTop } = useAppScroller();
-  const { channel, community } = thread;
+  const { channel } = thread;
 
   const createdAt = new Date(thread.createdAt).getTime();
   const timestamp = convertTimestampToDate(createdAt);
@@ -39,23 +36,21 @@ const StickyHeader = (props: Props) => {
     <StickyHeaderContainer>
       <StickyHeaderContent onClick={scrollToTop}>
         <CommunityHeaderMeta>
-          <CommunityAvatar community={community} size={32} />
+          <UserAvatar
+            showHoverProfile
+            showOnlineStatus
+            username={thread.author.user.username}
+          />
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>{thread.content.title}</CommunityHeaderName>
             <CommunityHeaderSubtitle>
-              <CommunityHoverProfile id={community.id}>
-                <Link to={`/${community.slug}`}>{community.name}</Link>
-              </CommunityHoverProfile>
-              <span>/</span>
-              <ChannelHoverProfile id={channel.id}>
-                <Link to={`/${community.slug}/${channel.slug}`}>
-                  {channel.name}
+              <UserHoverProfile username={thread.author.user.username}>
+                <Link to={`/users/${thread.author.user.username}`}>
+                  {thread.author.user.name} (@{thread.author.user.username})
                 </Link>
-              </ChannelHoverProfile>
-              <Link to={getThreadLink(thread)}>
-                &nbsp;
-                {`· ${timestamp}`}
-              </Link>
+              </UserHoverProfile>
+              &nbsp;·&nbsp;
+              <Link to={getThreadLink(thread)}>{timestamp}</Link>
             </CommunityHeaderSubtitle>
           </CommunityHeaderMetaCol>
         </CommunityHeaderMeta>
