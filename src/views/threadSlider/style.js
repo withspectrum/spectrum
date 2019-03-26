@@ -24,6 +24,8 @@ export const Container = styled.div`
   }
 `;
 
+const OVERLAY_Z_INDEX = zIndex.slider + 2;
+
 export const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -31,16 +33,24 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: ${zIndex.slider + 2};
+  z-index: ${OVERLAY_Z_INDEX};
+`;
+
+export const ThreadBackground = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  background: ${theme.bg.wash};
+  z-index: ${OVERLAY_Z_INDEX + 1};
+  width: ${MAX_WIDTH + 32}px;
+  transform: translateX(-8px);
 `;
 
 export const ThreadContainer = styled.div`
   display: flex;
+  justify-content: center;
   width: 100%;
-  max-width: ${MAX_WIDTH + 32}px;
   z-index: ${zIndex.slider + 4};
-  padding-left: 16px;
-  background: ${theme.bg.wash};
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;

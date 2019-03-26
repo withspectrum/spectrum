@@ -6,7 +6,13 @@ import { ThreadView } from 'src/views/thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import { Container, Overlay, ThreadContainer, CloseButton } from './style';
+import {
+  Container,
+  Overlay,
+  ThreadContainer,
+  CloseButton,
+  ThreadBackground,
+} from './style';
 
 type Props = {
   previousLocation: Location,
@@ -46,13 +52,15 @@ const ThreadSlider = (props: Props) => {
       <Container data-cy="thread-slider">
         <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
 
+        <ThreadBackground />
+
+        <ThreadContainer>
+          <ThreadView css={{ width: '100%' }} threadId={threadId} />
+        </ThreadContainer>
+
         <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>
           <Icon glyph="view-close" size={32} />
         </CloseButton>
-
-        <ThreadContainer>
-          <ThreadView threadId={threadId} />
-        </ThreadContainer>
       </Container>
     </ErrorBoundary>
   );

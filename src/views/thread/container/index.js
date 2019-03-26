@@ -50,13 +50,14 @@ type Props = {
     thread: GetThreadType,
   },
   client: Object,
+  className?: string,
   currentUser?: Object,
   dispatch: Function,
   notifications: Array<Object>,
 };
 
 const ThreadContainer = (props: Props) => {
-  const { data, isLoading, client, currentUser, dispatch } = props;
+  const { data, isLoading, client, currentUser, dispatch, className } = props;
 
   if (isLoading) return <LoadingView />;
 
@@ -173,7 +174,7 @@ const ThreadContainer = (props: Props) => {
     <React.Fragment>
       <ThreadHead thread={thread} />
       <TopBottomButtons />
-      <ViewGrid data-cy="thread-view">
+      <ViewGrid className={className} data-cy="thread-view">
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <SidebarSection>
