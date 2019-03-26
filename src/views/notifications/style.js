@@ -278,23 +278,18 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled.div`
+export const StickyHeader = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 16px;
   background: ${props => props.theme.bg.default};
   position: sticky;
   top: 0;
   border-bottom: 1px solid ${theme.bg.border};
   z-index: 10;
-
-  > p {
-    font-weight: 600;
-    font-size: 16px;
-  }
 `;
 
 export const CloseRequest = styled(Icon)`
