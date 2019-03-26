@@ -24,7 +24,6 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import viewNetworkHandler, {
@@ -38,9 +37,10 @@ import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { ViewGrid } from 'src/components/layout';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
-import { StyledSingleColumn } from './style';
+import { StyledSingleColumn, StickyHeader } from './style';
 import { updateNotificationsCount } from 'src/actions/notifications';
 import NextPageButton from 'src/components/nextPageButton';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 
 type Props = {
   markAllNotificationsSeen?: Function,
@@ -87,9 +87,16 @@ class NotificationsPure extends React.Component<Props, State> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(setTitlebarProps({ title: 'Notifications ' }));
-
-    this.markAllNotificationsSeen();
+    dispatch(
+      setTitlebarProps({
+        title: 'Notifications',
+        rightAction: (
+          <OutlineButton onClick={() => this.markAllNotificationsSeen()}>
+            Mark all seen
+          </OutlineButton>
+        ),
+      })
+    );
 
     WebPushManager.getPermissionState()
       .then(result => {
@@ -206,13 +213,25 @@ class NotificationsPure extends React.Component<Props, State> {
           <ViewGrid>
             <StyledSingleColumn>
               <div>
-                {!isDesktopApp() && this.state.showWebPushPrompt && (
-                  <BrowserNotificationRequest
-                    onSubscribe={this.subscribeToWebPush}
-                    onDismiss={this.dismissWebPushRequest}
-                    loading={this.state.webPushPromptLoading}
-                  />
-                )}
+                <StickyHeader>
+                  {!isDesktopApp() && this.state.showWebPushPrompt && (
+                    <OutlineButton
+                      onClick={this.subscribeToWebPush}
+                      isLoading={this.state.webPushPromptLoading}
+                      css={{ marginRight: '16px' }}
+                    >
+                      Enable push notifications
+                    </OutlineButton>
+                  )}
+                  <PrimaryButton
+                    disabled={notifications.every(
+                      notification => notification.isSeen
+                    )}
+                    onClick={() => this.markAllNotificationsSeen()}
+                  >
+                    Mark all seen
+                  </PrimaryButton>
+                </StickyHeader>
                 {notifications.map(notification => {
                   switch (notification.event) {
                     case 'MESSAGE_CREATED': {

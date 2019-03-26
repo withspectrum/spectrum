@@ -36,7 +36,7 @@ export const NewThreadReactionNotification = ({
   );
 
   return (
-    <NotificationCard key={notification.id}>
+    <NotificationCard isSeen={notification.isSeen} key={notification.id}>
       <CardLink
         to={{
           pathname: getThreadLink(notification.context.payload),

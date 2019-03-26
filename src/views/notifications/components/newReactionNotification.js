@@ -34,7 +34,7 @@ export const NewReactionNotification = ({
   const context = parseContext(notification.context);
 
   return (
-    <NotificationCard key={notification.id}>
+    <NotificationCard isSeen={notification.isSeen} key={notification.id}>
       <CardLink
         to={{
           // TODO(@mxstbr): Make this open in the modal

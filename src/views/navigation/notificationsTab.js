@@ -15,11 +15,9 @@ import {
 import getNotifications, {
   type GetNotificationsType,
 } from 'shared/graphql/queries/notification/getNotifications';
-import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/routes';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import formatNotification from 'shared/notification-to-text';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
@@ -32,7 +30,6 @@ type Props = {
     notifications?: GetNotificationsType,
     subscribeToNewNotifications: Function,
   },
-  markAllNotificationsSeen: Function,
   markSingleNotificationSeen: Function,
   dispatch: Function,
   match: Object,
@@ -88,10 +85,7 @@ const NotificationsTab = (props: Props) => {
     }
     const count = unseenNotifications.length;
     props.dispatch(setNotifications(unseenNotifications));
-    props.dispatch(
-      updateNotificationsCount('notifications', props.active ? 0 : count)
-    );
-    if (isActive) props.markAllNotificationsSeen();
+    props.dispatch(updateNotificationsCount('notifications', count));
   }, [
     isActive,
     data.notifications && data.notifications.edges.length,
@@ -142,7 +136,6 @@ export default compose(
   connect(map),
   withApollo,
   getNotifications,
-  markNotificationsSeenMutation,
   markSingleNotificationSeenMutation,
   viewNetworkHandler,
   withRouter,

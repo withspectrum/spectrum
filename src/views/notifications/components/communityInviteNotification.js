@@ -36,7 +36,7 @@ export const CommunityInviteNotification = ({
   const actors = parseActors(notification.actors, currentUser, true);
 
   return (
-    <SegmentedNotificationCard>
+    <SegmentedNotificationCard isSeen={notification.isSeen}>
       <CreatedContext>
         <Icon glyph="community" />
         <TextContent pointer={true}>
