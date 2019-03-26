@@ -20,7 +20,7 @@ const Message = /* GraphQL */ `
     hasReacted: Boolean
   }
 
-  type Message {
+  type Message @cacheControl(maxAge: 600) {
     id: ID!
     timestamp: Date!
     thread: Thread
