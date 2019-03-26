@@ -453,10 +453,10 @@ class ComposerWithData extends React.Component<Props, State> {
         <Overlay
           isModal={isModal}
           onClick={this.closeComposer}
-          data-cy="thread-composer-overlay"
+          data-cy="overlay"
         />
 
-        <Container data-cy="thread-composer" isModal={isModal}>
+        <Container data-cy="modal-container" isModal={isModal}>
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}
