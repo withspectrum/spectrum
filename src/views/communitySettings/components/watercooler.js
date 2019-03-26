@@ -18,11 +18,9 @@ import {
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import { Link } from 'react-router-dom';
-import { Button, OutlineButton } from 'src/components/buttons';
-import { TextArea, Error } from 'src/components/formElements';
+import { TextButton, OutlineButton } from 'src/components/button';
 import enableCommunityWatercooler from 'shared/graphql/mutations/community/enableCommunityWatercooler';
 import disableCommunityWatercooler from 'shared/graphql/mutations/community/disableCommunityWatercooler';
-import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 import type { History } from 'react-router';
@@ -53,7 +51,7 @@ const Watercooler = (props: Props) => {
       .enableCommunityWatercooler({
         id: community.id,
       })
-      .then(({ data }) => {
+      .then(() => {
         setSaving(false);
         dispatch(addToastWithTimeout('success', 'Open chat enabled!'));
       });
@@ -65,7 +63,7 @@ const Watercooler = (props: Props) => {
       .disableCommunityWatercooler({
         id: community.id,
       })
-      .then(({ data }) => {
+      .then(() => {
         dispatch(addToastWithTimeout('neutral', 'Open chat disabled.'));
         setSaving(false);
       });
@@ -82,18 +80,18 @@ const Watercooler = (props: Props) => {
           {community && community.watercoolerId && (
             <Link
               style={{ marginRight: '8px' }}
-              to={`/${community.slug}/general/${community.watercoolerId}`}
+              to={`/${community.slug}?tab=chat`}
             >
-              <OutlineButton>Go to open chat</OutlineButton>
+              <TextButton>Go to open chat</TextButton>
             </Link>
           )}
-          <Button
+          <OutlineButton
             loading={saving}
             onClick={community.watercoolerId ? disable : enable}
             type="submit"
           >
             {community && community.watercoolerId ? 'Disable' : 'Enable'}
-          </Button>
+          </OutlineButton>
         </SectionCardFooter>
       </SectionCard>
     );

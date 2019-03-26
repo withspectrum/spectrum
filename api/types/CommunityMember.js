@@ -1,6 +1,6 @@
 // @flow
 const CommunityMember = /* GraphQL */ `
-  type CommunityMember {
+  type CommunityMember @cacheControl(maxAge: 600) {
     id: ID!
     user: User!
     roles: [String]
@@ -10,6 +10,7 @@ const CommunityMember = /* GraphQL */ `
     isBlocked: Boolean
     isPending: Boolean
     reputation: Int
+    lastSeen: Date
   }
 
   extend type Query {

@@ -36,7 +36,7 @@ class AuthViewHandler extends React.Component<Props> {
         } catch (err) {}
       }
 
-      if (location.pathname === '/home') history.push('/');
+      if (location.pathname === '/home') history.replace('/');
     }
   }
 

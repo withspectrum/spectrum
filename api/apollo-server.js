@@ -1,11 +1,16 @@
 // @flow
+const debug = require('debug')('api:graphql');
 import { ApolloServer } from 'apollo-server-express';
+import responseCachePlugin from 'apollo-server-plugin-response-cache';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
+import { RedisCache } from 'apollo-server-cache-redis';
+import { config } from 'shared/cache/redis';
 import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
 import { setUserOnline } from 'shared/db/queries/user';
+import { statsd } from 'shared/statsd';
 import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';
@@ -55,6 +60,7 @@ const server = new ProtectedApolloServer({
     req.statsdTags = {
       graphqlOperationName: req.body.operationName || 'unknown_operation',
     };
+    debug(req.body.operationName || 'unknown_operation');
     const loaders = createLoaders();
     let currentUser = req.user && !req.user.bannedAt ? req.user : null;
 
@@ -70,20 +76,17 @@ const server = new ProtectedApolloServer({
   },
   subscriptions: {
     path: '/websocket',
-    onOperation: (_: any, params: Object) => {
-      const errorFormatter = createErrorFormatter();
-      params.formatError = errorFormatter;
-      return params;
-    },
     onDisconnect: rawSocket => {
+      statsd.increment('websocket.connections', -1);
       return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => id && setUserOnline(id, false))
         .catch(err => {
           console.error(err);
         });
     },
-    onConnect: (connectionParams, rawSocket) =>
-      getUserIdFromReq(rawSocket.upgradeReq)
+    onConnect: (connectionParams, rawSocket) => {
+      statsd.increment('websocket.connections', 1);
+      return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => (id ? setUserOnline(id, true) : null))
         .then(user => {
           return {
@@ -96,7 +99,8 @@ const server = new ProtectedApolloServer({
           return {
             loaders: createLoaders({ cache: false }),
           };
-        }),
+        });
+    },
   },
   playground: process.env.NODE_ENV !== 'production' && {
     settings: {
@@ -118,8 +122,24 @@ const server = new ProtectedApolloServer({
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,
-  cacheControl: false,
   validationRules: [depthLimit(10)],
+  cacheControl: {
+    calculateHttpHeaders: false,
+    // Cache everything for at least a minute since we only cache public responses
+    defaultMaxAge: 60,
+  },
+  cache: new RedisCache({
+    ...config,
+    prefix: 'apollo-cache:',
+  }),
+  plugins: [
+    responseCachePlugin({
+      sessionId: ({ context }) => (context.user ? context.user.id : null),
+      // Only cache public responses
+      shouldReadFromCache: ({ context }) => !context.user,
+      shouldWriteToCache: ({ context }) => !context.user,
+    }),
+  ],
 });
 
 export default server;

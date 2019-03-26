@@ -107,7 +107,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
           ? toPlainText(JSON.parse(data.body))
           : data.body);
       return setDefault({
-        title: data && data.title + ' · ' + data.communityName,
+        title: data && data.title + ' · ' + data.communityName + ' community',
         description: body,
       });
     }

@@ -1,10 +1,10 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { FlexRow, FlexCol } from '../../components/globals';
-import Card from '../../components/card';
-import { Transition, zIndex } from '../../components/globals';
-import { SegmentedControl } from '../../components/segmentedControl';
+import { FlexRow, FlexCol } from 'src/components/globals';
+import Card from 'src/components/card';
+import { Transition, zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Row = styled(FlexRow)`
   padding: 8px 16px;
@@ -42,20 +42,18 @@ export const RowLabel = styled.span`
 `;
 
 export const SearchContainer = styled(Card)`
-  border-bottom: 2px solid ${theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.wash};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
-  display: block;
-  min-height: 64px;
+  display: flex;
+  padding: 8px 12px;
   transition: ${Transition.hover.off};
+  display: flex;
+  align-items: center;
 
-  &:hover {
-    transition: none;
-    border-bottom: 2px solid ${theme.brand.alt};
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     pointer-events: all;
     margin-bottom: 0;
@@ -63,44 +61,21 @@ export const SearchContainer = styled(Card)`
 `;
 
 export const SearchInput = styled.input`
-  justify-content: flex-start;
+  display: flex;
+  flex: 1 0 auto;
   align-items: center;
-  cursor: pointer;
-  padding: 20px;
+  width: 100%;
+  padding: 12px 16px;
   color: ${theme.text.default};
   transition: ${Transition.hover.off};
-  font-size: 20px;
-  font-weight: 800;
-  margin-left: 8px;
-  width: 97%;
-  border-radius: 12px;
-`;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 100px;
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
 
-export const Grid = styled.main`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: 240px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  max-width: 1280px;
-  min-height: 100vh;
-  background-color: ${theme.bg.default};
-  box-shadow: inset 1px 0 0 ${theme.bg.border},
-    inset -1px 0 0 ${theme.bg.border};
-
-  @media (max-width: 1028px) {
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: 160px 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
-  }
-
-  @media (max-width: 768px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
+  &:focus {
+    border: 1px solid ${theme.text.secondary};
   }
 `;
 
@@ -118,13 +93,13 @@ export const Meta = styled(Column)`
     margin-left: 32px;
     width: calc(100% - 32px);
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       width: 100%;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 0 16px;
 
     > div {
@@ -140,47 +115,8 @@ export const MetaMemberships = styled.div`
     display: none;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
-  }
-`;
-
-export const Content = styled(Column)`
-  grid-area: content;
-  min-width: 0;
-  align-items: stretch;
-
-  @media (max-width: 1028px) and (min-width: 768px) {
-    padding-right: 32px;
-  }
-
-  @media (max-width: 768px) {
-    > ${SegmentedControl} > div {
-      margin-top: 0;
-    }
-  }
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  > ${FlexCol} > div {
-    border-top: 0;
-    padding: 0;
-    padding-top: 24px;
-
-    h3 {
-      font-size: 16px;
-      line-height: 1.2;
-    }
-  }
-
-  @media (max-width: 1280px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
   }
 `;
 
@@ -193,8 +129,10 @@ export const ColumnHeading = styled.div`
   padding: 8px 16px 12px;
   margin-top: 24px;
   border-bottom: 2px solid ${theme.bg.border};
+`;
 
-  + div {
-    padding: 8px 16px;
-  }
+export const FeedsContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  background: ${theme.bg.default};
 `;

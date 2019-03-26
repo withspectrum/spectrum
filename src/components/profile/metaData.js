@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 
 /*

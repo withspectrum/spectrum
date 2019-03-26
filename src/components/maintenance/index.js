@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { FlexCol } from '../globals';
+import { FlexCol } from 'src/components/globals';
 import { Tagline, Copy } from 'src/views/pages/style';
-import ViewSegment from '../../components/themedSection';
+import ViewSegment from 'src/components/themedSection';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const Emoji = styled.div`
   font-size: 3em;
@@ -28,7 +29,7 @@ const Text = styled(Copy)`
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 20px;
     text-align: center;
   }
@@ -41,7 +42,7 @@ const MaintenanceDowntime = () => {
         <Emoji>🛠</Emoji>
         <Tagline>Spectrum is currently undergoing maintenance</Tagline>
         <Text>
-          We'll be back soon, check{' '}
+          We’ll be back soon, check{' '}
           <a href="https://twitter.com/withspectrum">
             @withspectrum on Twitter
           </a>{' '}

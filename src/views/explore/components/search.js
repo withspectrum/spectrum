@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 import { debounce } from 'src/helpers/utils';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import type { SearchCommunitiesType } from 'shared/graphql/queries/search/searchCommunities';
@@ -45,7 +45,7 @@ type Props = {
 };
 
 class Search extends React.Component<Props, State> {
-  input: React.Node;
+  input: React$Node;
 
   constructor() {
     super();
@@ -241,7 +241,7 @@ class Search extends React.Component<Props, State> {
           <SearchIcon glyph="search" onClick={this.onFocus} />
           <SearchInput
             data-cy="explore-community-search-input"
-            innerRef={c => {
+            ref={c => {
               this.input = c;
             }}
             type="text"

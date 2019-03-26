@@ -77,12 +77,13 @@ export default (props: Props) => {
           right: '0',
           zIndex: '9999',
           background: '#FFF',
+          minHeight: '52px',
         }}
       >
-        <Segment selected={!showPreview} onClick={() => onClick(false)}>
+        <Segment isActive={!showPreview} onClick={() => onClick(false)}>
           Write
         </Segment>
-        <Segment selected={showPreview} onClick={() => onClick(true)}>
+        <Segment isActive={showPreview} onClick={() => onClick(true)}>
           Preview
         </Segment>
       </SegmentedControl>
@@ -107,7 +108,7 @@ export default (props: Props) => {
             {({ getRootProps, getInputProps, isDragActive }) => (
               <DropzoneWrapper
                 {...getRootProps({
-                  refKey: 'innerRef',
+                  refKey: 'ref',
                 })}
               >
                 <input {...getInputProps()} />

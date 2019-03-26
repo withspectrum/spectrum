@@ -1,14 +1,11 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
-import ViewError from '../../../components/viewError';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { Loading } from 'src/components/loading';
+import ViewError from 'src/components/viewError';
 import ThreadListItem from './threadListItem';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import getCommunityTopAndNewThreads from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 import type { GetCommunityTopAndNewThreadsType } from 'shared/graphql/queries/community/getCommunityTopAndNewThreads';
 

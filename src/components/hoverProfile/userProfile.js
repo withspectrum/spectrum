@@ -6,13 +6,13 @@ import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
-import { Button } from 'src/components/buttons';
+import { PrimaryOutlineButton, OutlineButton } from 'src/components/button';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   HoverWrapper,
   ProfileCard,
@@ -21,6 +21,7 @@ import {
   ProfilePhotoContainer,
   Content,
   Title,
+  Username,
   Description,
   Actions,
 } from './style';
@@ -29,22 +30,17 @@ type ProfileProps = {
   user: GetUserType,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
-  innerRef: (?HTMLElement) => void,
+  ref: (?HTMLElement) => void,
   style: CSSStyleDeclaration,
 };
 
 class HoverProfile extends Component<ProfileProps> {
-  initMessage = () => {
-    const { dispatch, user } = this.props;
-    dispatch(initNewThreadWithUser(user));
-  };
-
   render() {
-    const { user, currentUser, innerRef, style } = this.props;
+    const { user, currentUser, ref, style } = this.props;
     const me = currentUser && currentUser.id === user.id;
 
     return (
-      <HoverWrapper popperStyle={style} innerRef={innerRef}>
+      <HoverWrapper popperStyle={style} ref={ref}>
         <ProfileCard>
           <ConditionalWrap
             condition={!!user.username}
@@ -68,6 +64,7 @@ class HoverProfile extends Component<ProfileProps> {
               )}
             >
               <Title>{user.name}</Title>
+              <Username>@{user.username}</Username>
             </ConditionalWrap>
 
             {user.betaSupporter && (
@@ -83,18 +80,17 @@ class HoverProfile extends Component<ProfileProps> {
 
           <Actions>
             {!me && (
-              <Link to={'/messages/new'}>
-                <Button icon={'message'} onClick={this.initMessage}>
-                  Message
-                </Button>
-              </Link>
+              <InitDirectMessageWrapper
+                user={user}
+                render={
+                  <PrimaryOutlineButton icon={'message-simple-new'}>
+                    Message
+                  </PrimaryOutlineButton>
+                }
+              />
             )}
 
-            {me && (
-              <Link to={'/me'}>
-                <Button>My profile</Button>
-              </Link>
-            )}
+            {me && <OutlineButton to={'/me'}>My profile</OutlineButton>}
           </Actions>
         </ProfileCard>
       </HoverWrapper>

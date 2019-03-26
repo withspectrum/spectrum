@@ -10,6 +10,7 @@ import {
   searchQueue,
   trackQueue,
 } from 'shared/bull/queues';
+import { createChangefeed } from 'shared/changefeed-utils';
 import { events } from 'shared/analytics';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
@@ -187,6 +188,16 @@ export const getCommunitiesOnlineMemberCounts = (
     )
     .group('communityId')
     .count()
+    .run();
+};
+
+export const setCommunityLastActive = (id: string, lastActive: Date) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update({
+      lastActive: new Date(lastActive),
+    })
     .run();
 };
 
@@ -724,4 +735,20 @@ export const setMemberCount = (
     )
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+const getUpdatedCommunitiesChangefeed = () =>
+  db
+    .table('communities')
+    .changes({
+      includeInitial: false,
+    })('new_val')
+    .run();
+
+export const listenToUpdatedCommunities = (cb: Function): Function => {
+  return createChangefeed(
+    getUpdatedCommunitiesChangefeed,
+    cb,
+    'listenToUpdatedCommunities'
+  );
 };

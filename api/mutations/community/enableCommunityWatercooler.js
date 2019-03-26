@@ -57,7 +57,7 @@ export default requireAuth(async (_: any, args: Args, ctx: GraphQLContext) => {
       channelId: channel.id,
       communityId: community.id,
       content: {
-        title: `${community.name} watercooler`,
+        title: `${community.name} Chat`,
       },
       type: 'DRAFTJS',
       watercooler: true,

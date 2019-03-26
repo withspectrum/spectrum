@@ -8,7 +8,7 @@ import getCommunityChannelConnection, {
   type GetCommunityChannelConnectionType,
 } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import { LoadingSelect, ErrorSelect } from 'src/components/loading';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { sortChannels } from '../utils';
 import { RequiredSelector, ChannelPreview } from '../style';
 

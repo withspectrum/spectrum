@@ -5,8 +5,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import AppViewWrapper from 'src/components/appViewWrapper';
-import { Loading } from 'src/components/loading';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Upsell404Channel } from 'src/components/upsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -14,15 +12,15 @@ import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel
 import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
 import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
-import Titlebar from '../titlebar';
 import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
-import Subnav from 'src/components/settingsViews/subnav';
-import { initNewThreadWithUser } from 'src/actions/directMessageThreads';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { ViewGrid } from 'src/components/layout';
+import { setTitlebarProps } from 'src/actions/titlebar';
 
 type Props = {
   data: {
@@ -40,8 +38,16 @@ type Props = {
 
 class ChannelSettings extends React.Component<Props> {
   componentDidMount() {
-    if (this.props.data && this.props.data.channel) {
-      const { channel } = this.props.data;
+    const { dispatch, data } = this.props;
+
+    dispatch(
+      setTitlebarProps({
+        title: 'Settings',
+      })
+    );
+
+    if (data && data.channel) {
+      const { channel } = data;
 
       track(events.CHANNEL_SETTINGS_VIEWED, {
         channel: transformations.analyticsChannel(channel),
@@ -61,13 +67,11 @@ class ChannelSettings extends React.Component<Props> {
     }
   }
 
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    return this.props.history.push('/messages/new');
-  };
-
   togglePending = (userId, action) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
     const input = {
       channelId: channel.id,
       userId,
@@ -96,7 +100,10 @@ class ChannelSettings extends React.Component<Props> {
   };
 
   unblock = (userId: string) => {
-    const { data: { channel }, dispatch } = this.props;
+    const {
+      data: { channel },
+      dispatch,
+    } = this.props;
 
     const input = {
       channelId: channel.id,
@@ -124,9 +131,8 @@ class ChannelSettings extends React.Component<Props> {
       match,
       location,
       isLoading,
-      hasError,
     } = this.props;
-    const { communitySlug, channelSlug } = match.params;
+    const { communitySlug } = match.params;
 
     // this is hacky, but will tell us if we're viewing analytics or the root settings view
     const pathname = location.pathname;
@@ -143,13 +149,7 @@ class ChannelSettings extends React.Component<Props> {
 
       if (!userHasPermissions) {
         return (
-          <AppViewWrapper>
-            <Titlebar
-              title={'Channel settings'}
-              provideBack={true}
-              backRoute={`/${communitySlug}`}
-              noComposer
-            />
+          <React.Fragment>
             <ViewError
               heading={'You don’t have permission to manage this channel.'}
               subheading={`Head back to the ${
@@ -158,7 +158,7 @@ class ChannelSettings extends React.Component<Props> {
             >
               <Upsell404Channel community={communitySlug} />
             </ViewError>
-          </AppViewWrapper>
+          </React.Fragment>
         );
       }
 
@@ -172,7 +172,6 @@ class ChannelSettings extends React.Component<Props> {
                 communitySlug={communitySlug}
                 togglePending={this.togglePending}
                 unblock={this.unblock}
-                initMessage={this.initMessage}
               />
             );
           default:
@@ -180,81 +179,31 @@ class ChannelSettings extends React.Component<Props> {
         }
       };
 
-      const subnavItems = [
-        {
-          to: `/${channel.community.slug}/${channel.slug}/settings`,
-          label: 'Overview',
-          activeLabel: 'settings',
-        },
-      ];
-
       const subheading = {
         to: `/${channel.community.slug}/settings`,
         label: `Return to ${channel.community.name} settings`,
       };
 
       return (
-        <AppViewWrapper>
-          <Titlebar
-            title={`${channel.name} · ${channel.community.name}`}
-            subtitle={'Settings'}
-            provideBack={true}
-            backRoute={`/${channel.community.slug}/${channel.slug}`}
-            noComposer
-          />
-
-          <View id="main">
+        <ViewGrid>
+          <View>
             <Header
               subheading={subheading}
               heading={`${channel.name} Settings ${
                 channel.isArchived ? '(Archived)' : ''
               }`}
             />
-            <Subnav items={subnavItems} activeTab={activeTab} />
-
             <ActiveView />
           </View>
-        </AppViewWrapper>
+        </ViewGrid>
       );
     }
 
     if (isLoading) {
-      return <Loading />;
+      return <LoadingView />;
     }
 
-    if (hasError) {
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={'Channel not found'}
-            provideBack={true}
-            backRoute={`/${communitySlug}/${channelSlug}`}
-            noComposer
-          />
-          <ViewError
-            refresh
-            heading={'There was an error fetching this channel.'}
-          />
-        </AppViewWrapper>
-      );
-    }
-
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Channel not found'}
-          provideBack={true}
-          backRoute={`/${communitySlug}`}
-          noComposer
-        />
-        <ViewError
-          heading={'We couldn’t find a channel with this name.'}
-          subheading={`Head back to the ${communitySlug} community to get back on track.`}
-        >
-          <Upsell404Channel community={communitySlug} />
-        </ViewError>
-      </AppViewWrapper>
-    );
+    return <ErrorView />;
   }
 }
 

@@ -38,7 +38,15 @@ const createLinksDecorator = (
         );
       }, callback);
     }
-    linkStrategy(contentBlock, callback);
+    linkStrategy(contentBlock, (start, end) => {
+      if (
+        contentBlock.entityRanges.find(
+          range => range.offset === start && range.length === end - start
+        )
+      )
+        return;
+      callback(start, end);
+    });
   },
   component: ({
     decoratedText,

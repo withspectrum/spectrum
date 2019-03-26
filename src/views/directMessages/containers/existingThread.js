@@ -2,7 +2,10 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
 import { withApollo } from 'react-apollo';
+import { Link } from 'react-router-dom';
+import Icon from 'src/components/icon';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
@@ -11,13 +14,17 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
 } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
+import { setTitlebarProps } from 'src/actions/titlebar';
+import { UserAvatar } from 'src/components/avatar';
 import { MessagesContainer, ViewContent } from '../style';
+import { ChatInputWrapper } from 'src/components/layout';
 import { Loading } from 'src/components/loading';
-import ViewError from 'src/components/viewError';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { DesktopTitlebar } from 'src/components/titlebar';
 
 type Props = {
   data: {
@@ -32,10 +39,10 @@ type Props = {
   threadSliderIsOpen: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
+  dispatch: Dispatch<Object>,
 };
 
 class ExistingThread extends React.Component<Props> {
-  scrollBody: ?HTMLDivElement;
   chatInput: ?ChatInput;
 
   componentDidMount() {
@@ -45,7 +52,6 @@ class ExistingThread extends React.Component<Props> {
     if (!threadId) return;
 
     this.props.setLastSeen(threadId);
-    this.forceScrollToBottom();
     // autofocus on desktop
     if (window && window.innerWidth > 768 && this.chatInput) {
       this.chatInput.focus();
@@ -54,10 +60,37 @@ class ExistingThread extends React.Component<Props> {
 
   componentDidUpdate(prev) {
     const curr = this.props;
+    const { dispatch, currentUser } = curr;
 
     const didReconnect = useConnectionRestored({ curr, prev });
     if (didReconnect && curr.data.refetch) {
       curr.data.refetch();
+    }
+
+    if (curr.data.directMessageThread) {
+      const thread = curr.data.directMessageThread;
+      const trimmedUsers = thread.participants.filter(
+        user => user.userId !== currentUser.id
+      );
+      const titleIcon =
+        trimmedUsers.length === 1 ? (
+          <UserAvatar user={trimmedUsers[0]} size={24} />
+        ) : null;
+      const rightAction =
+        trimmedUsers.length === 1 ? (
+          <Link to={`/users/${trimmedUsers[0].username}`}>
+            <Icon glyph={'info'} />
+          </Link>
+        ) : null;
+      const names = trimmedUsers.map(user => user.name).join(', ');
+      dispatch(
+        setTitlebarProps({
+          title: names,
+          titleIcon,
+          rightAction,
+          leftAction: 'view-back',
+        })
+      );
     }
 
     // if the thread slider is open, dont be focusing shit up in heyuhr
@@ -81,27 +114,12 @@ class ExistingThread extends React.Component<Props> {
       if (!threadId) return;
 
       curr.setLastSeen(threadId);
-      this.forceScrollToBottom();
       // autofocus on desktop
       if (window && window.innerWidth > 768 && this.chatInput) {
         this.chatInput.focus();
       }
     }
   }
-
-  forceScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    node.scrollTop = node.scrollHeight - node.clientHeight;
-  };
-
-  contextualScrollToBottom = () => {
-    if (!this.scrollBody) return;
-    let node = this.scrollBody;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      node.scrollTop = node.scrollHeight - node.clientHeight;
-    }
-  };
 
   render() {
     const id = this.props.match.params.threadId;
@@ -110,54 +128,68 @@ class ExistingThread extends React.Component<Props> {
     if (id !== 'new') {
       if (data.directMessageThread) {
         const thread = data.directMessageThread;
+        const trimmedUsers = thread.participants.filter(
+          user => user.userId !== currentUser.id
+        );
+        const titleIcon =
+          trimmedUsers.length === 1 ? (
+            <UserAvatar user={trimmedUsers[0]} size={24} />
+          ) : null;
+        const rightAction =
+          trimmedUsers.length === 1 ? (
+            <Link to={`/users/${trimmedUsers[0].username}`}>
+              <Icon glyph={'info'} />
+            </Link>
+          ) : null;
+        const names = trimmedUsers.map(user => user.name).join(', ');
         const mentionSuggestions = thread.participants
           .map(cleanSuggestionUserObject)
           .filter(user => user && user.username !== currentUser.username);
         return (
-          <MessagesContainer>
-            <ViewContent
-              innerRef={scrollBody => (this.scrollBody = scrollBody)}
-            >
-              {!isLoading ? (
-                <React.Fragment>
-                  <ErrorBoundary>
-                    <Header thread={thread} currentUser={currentUser} />
-                  </ErrorBoundary>
-
-                  <Messages
-                    id={id}
-                    currentUser={currentUser}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    contextualScrollToBottom={this.contextualScrollToBottom}
-                  />
-                </React.Fragment>
-              ) : (
-                <Loading />
-              )}
-            </ViewContent>
-
-            <ChatInput
-              thread={id}
-              currentUser={currentUser}
-              threadType={'directMessageThread'}
-              forceScrollToBottom={this.forceScrollToBottom}
-              onRef={chatInput => (this.chatInput = chatInput)}
-              participants={mentionSuggestions}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <DesktopTitlebar
+              title={names}
+              titleIcon={titleIcon}
+              rightAction={rightAction}
             />
-          </MessagesContainer>
+            <MessagesContainer>
+              <ViewContent>
+                {!isLoading ? (
+                  <React.Fragment>
+                    <ErrorBoundary>
+                      <Header thread={thread} currentUser={currentUser} />
+                    </ErrorBoundary>
+
+                    <Messages
+                      id={id}
+                      currentUser={currentUser}
+                      thread={thread}
+                    />
+                  </React.Fragment>
+                ) : (
+                  <Loading />
+                )}
+              </ViewContent>
+
+              <ChatInputWrapper>
+                <ChatInput
+                  threadId={id}
+                  currentUser={currentUser}
+                  threadType={'directMessageThread'}
+                  onRef={chatInput => (this.chatInput = chatInput)}
+                  participants={mentionSuggestions}
+                />
+              </ChatInputWrapper>
+            </MessagesContainer>
+          </div>
         );
       }
 
       if (isLoading) {
-        return <Loading />;
+        return <LoadingView />;
       }
 
-      return (
-        <ViewError
-          heading={'We had trouble loading this conversation'}
-          refresh
-        />
-      );
+      return <ErrorView />;
     }
 
     /*

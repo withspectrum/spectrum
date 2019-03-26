@@ -1,17 +1,16 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
+import type { Dispatch } from 'redux';
+import Tooltip from 'src/components/tooltip';
 import { openModal } from 'src/actions/modals';
 import { truncateNumber } from 'src/helpers/utils';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { ReputationWrapper, ReputationLabel } from './style';
-import type { Dispatch } from 'redux';
 
 type Props = {
   size?: 'mini' | 'default' | 'large',
   reputation: number,
-  tipText?: string,
-  tipLocation?: string,
   dispatch: Dispatch<Object>,
   ignoreClick?: boolean,
 };
@@ -25,28 +24,22 @@ class Reputation extends React.Component<Props> {
   };
 
   render() {
-    const {
-      tipText = 'Reputation',
-      tipLocation = 'top-right',
-      reputation,
-    } = this.props;
+    const { reputation } = this.props;
 
     if (reputation === undefined || reputation === null) return null;
 
     const renderedReputation = reputation > 0 ? `${reputation}` : '0';
 
     return (
-      <ReputationWrapper
-        onClick={this.open}
-        tipText={`${tipText}`}
-        tipLocation={tipLocation}
-      >
-        <Icon glyph="rep" size={24} />
+      <Tooltip content={'Reputation'}>
+        <ReputationWrapper onClick={this.open}>
+          <Icon glyph="rep" size={24} />
 
-        <ReputationLabel>
-          {truncateNumber(parseInt(renderedReputation, 10), 1)}
-        </ReputationLabel>
-      </ReputationWrapper>
+          <ReputationLabel>
+            {truncateNumber(parseInt(renderedReputation, 10), 1)}
+          </ReputationLabel>
+        </ReputationWrapper>
+      </Tooltip>
     );
   }
 }

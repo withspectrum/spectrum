@@ -4,7 +4,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.409.0",
+    "aws-sdk": "^2.426.0",
     "axios": "^0.16.2",
     "bull": "3.3.10",
     "cryptr": "^3.0.0",
@@ -23,8 +23,8 @@
     "now-env": "^3.1.0",
     "performance-now": "^2.1.0",
     "raven": "^2.6.4",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "redis-tag-cache": "^1.2.1",
     "rethinkdb-inspector": "^0.3.3",
     "rethinkdbdash": "^2.3.31",

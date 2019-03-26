@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
-import Icon from 'src/components/icons';
-import { FauxOutlineButton } from 'src/components/buttons';
+import Icon from 'src/components/icon';
+import { WhiteOutlineButton } from 'src/components/button';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 
@@ -23,7 +23,7 @@ import {
 } from './style';
 
 type InputProps = {
-  children?: React.Node,
+  children?: React$Node,
   inputType?: string,
   defaultValue?: ?string,
   value?: ?any,
@@ -117,13 +117,7 @@ export const CoverInput = (props: CoverPhotoInputProps) => {
       <InputOverlay
         visible={!props.defaultValue || props.defaultValue.length === 1}
       >
-        <FauxOutlineButton
-          color={'bg.default'}
-          hoverColor={'bg.default'}
-          icon={'photo'}
-        >
-          Add Cover Photo
-        </FauxOutlineButton>
+        <WhiteOutlineButton as={'div'}>Add Cover Photo</WhiteOutlineButton>
       </InputOverlay>
       <CoverImage
         src={props.defaultValue ? `${props.defaultValue}` : ''}
@@ -208,9 +202,11 @@ export class UnderlineInput extends React.Component<InputProps> {
 }
 
 export const Error = (props: Object) => {
-  return <StyledError data-cy={props.dataCy}>{props.children}</StyledError>;
+  const { children, ...rest } = props;
+  return <StyledError {...rest}>{children}</StyledError>;
 };
 
 export const Success = (props: Object) => {
-  return <StyledSuccess data-cy={props.dataCy}>{props.children}</StyledSuccess>;
+  const { children, ...rest } = props;
+  return <StyledSuccess {...rest}>{children}</StyledSuccess>;
 };

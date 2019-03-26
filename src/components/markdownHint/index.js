@@ -1,6 +1,10 @@
 // @flow
 import React from 'react';
-import { StyledMarkdownHint, Preformatted } from './style';
+import {
+  MarkdownHintContainer,
+  StyledMarkdownHint,
+  Preformatted,
+} from './style';
 
 type Props = {
   dataCy?: string,
@@ -14,12 +18,14 @@ export const MarkdownHint = ({
   style = {},
 }: Props) => {
   return (
-    <StyledMarkdownHint showHint={showHint} data-cy={dataCy} style={style}>
-      <b>**bold**</b>
-      <i>*italic*</i>
-      <Preformatted>`code`</Preformatted>
-      <Preformatted>```codeblock```</Preformatted>
-      <Preformatted>[name](link)</Preformatted>
-    </StyledMarkdownHint>
+    <MarkdownHintContainer>
+      <StyledMarkdownHint showHint={showHint} data-cy={dataCy} style={style}>
+        <b>**bold**</b>
+        <i>*italic*</i>
+        <Preformatted>`code`</Preformatted>
+        <Preformatted>```codeblock```</Preformatted>
+        <Preformatted>[name](link)</Preformatted>
+      </StyledMarkdownHint>
+    </MarkdownHintContainer>
   );
 };

@@ -41,8 +41,8 @@ describe('sending a message to channel member', () => {
       .first()
       .click();
 
-    cy.url().should('include', '/messages/new');
+    cy.url().should('include', '/new/message');
 
-    cy.get('[data-cy="selected-user-pill"]').should('be.visible');
+    cy.get('[data-cy="write-direct-message-titlebar"]').should('be.visible');
   });
 });

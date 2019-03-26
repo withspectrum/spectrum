@@ -67,16 +67,12 @@ class ListCardItemDirectMessageThread extends React.Component<Props> {
             {avatars}
             <MessageGroupTextContainer>
               <MessageGroupByline>
-                <Usernames isUnread={isUnread}>
+                <Usernames>
                   <p>{participantsArray}</p>
                 </Usernames>
-                <Timestamp isUnread={isUnread}>
-                  {threadTimeDifference}
-                </Timestamp>
+                <Timestamp>{threadTimeDifference}</Timestamp>
               </MessageGroupByline>
-              <Meta isUnread={isUnread} nowrap>
-                {thread.snippet}
-              </Meta>
+              <Meta nowrap>{thread.snippet}</Meta>
             </MessageGroupTextContainer>
           </Row>
         </WrapperLink>

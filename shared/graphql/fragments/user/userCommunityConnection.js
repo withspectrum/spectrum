@@ -1,11 +1,14 @@
 // @flow
 import gql from 'graphql-tag';
 import communityInfoFragment from '../community/communityInfo';
+import communityMetaDataFragment from '../community/communityMetaData';
 import type { CommunityInfoType } from '../community/communityInfo';
+import type { CommunityMetaDataType } from '../community/communityMetaData';
 
 type Edge = {
   node: {
     ...$Exact<CommunityInfoType>,
+    ...$Exact<CommunityMetaDataType>,
     contextPermissions: {
       communityId: string,
       isOwner: boolean,
@@ -21,7 +24,7 @@ export type UserCommunityConnectionType = {
       hasNextPage: boolean,
       hasPreviousPage: boolean,
     },
-    edges: Array<?Edge>,
+    edges: Array<Edge>,
   },
 };
 
@@ -35,6 +38,7 @@ export default gql`
       edges {
         node {
           ...communityInfo
+          ...communityMetaData
           contextPermissions {
             communityId
             isOwner
@@ -45,5 +49,6 @@ export default gql`
       }
     }
   }
+  ${communityMetaDataFragment}
   ${communityInfoFragment}
 `;

@@ -4,6 +4,7 @@ import { graphql } from 'react-apollo';
 import { btoa } from 'b2a';
 import snarkdown from 'snarkdown';
 import messageInfoFragment from '../../fragments/message/messageInfo';
+import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getThreadMessageConnectionQuery } from '../../queries/thread/getThreadMessageConnection';
 import { messageTypeObj } from 'shared/draft-utils/message-types';
@@ -125,9 +126,9 @@ const sendMessageOptions = {
                 return edge;
               }
             );
-            // If it's an actual duplicate because the subscription already added the message to the store then ignore
+            // If it's an actual duplicate because the subscription already added the message to the store
+            // only set lastActive and currentUserLastSeen
           } else if (messageInStore) {
-            return;
             // If it's a totally new message (i.e. the optimstic response) then insert it at the end
           } else {
             data.thread.messageConnection.edges.push({
@@ -140,9 +141,40 @@ const sendMessageOptions = {
           // Write our data back to the cache.
           store.writeQuery({
             query: getThreadMessageConnectionQuery,
-            data,
+            data: {
+              ...data,
+              thread: {
+                ...data.thread,
+                // Optimistically update lastActive and lastSeen to make sure the
+                // feed ordering is the way users expect it to be
+                lastActive: addMessage.timestamp,
+                currentUserLastSeen: new Date(
+                  new Date(addMessage.timestamp).getTime() + 1000
+                ).toISOString(),
+              },
+            },
             variables: {
               id: message.threadId,
+            },
+          });
+
+          const community = store.readFragment({
+            fragment: communityInfoFragment,
+            fragmentName: 'communityInfo',
+            id: `Community:${data.thread.community.slug}`,
+          });
+
+          store.writeFragment({
+            fragment: communityInfoFragment,
+            fragmentName: 'communityInfo',
+            id: `Community:${data.thread.community.slug}`,
+            data: {
+              ...community,
+              communityPermissions: {
+                ...community.communityPermissions,
+                // Forward-date lastSeen by 10 seconds
+                lastSeen: new Date(Date.now() + 10000).toISOString(),
+              },
             },
           });
         },

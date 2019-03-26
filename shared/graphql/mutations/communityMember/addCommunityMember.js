@@ -19,9 +19,9 @@ export type AddCommunityMemberType = {
 };
 
 export type AddCommunityMemberProps = {
-  addCommunityMember: ({ input: { communityId: string } }) => Promise<
-    AddCommunityMemberType
-  >,
+  addCommunityMember: ({
+    input: { communityId: string },
+  }) => Promise<AddCommunityMemberType>,
 };
 
 export const addCommunityMemberQuery = gql`
@@ -38,6 +38,9 @@ export const addCommunityMemberQuery = gql`
 `;
 
 const addCommunityMemberOptions = {
+  options: {
+    refetchQueries: ['getCurrentUserCommunityConnection'],
+  },
   props: ({ mutate }) => ({
     addCommunityMember: ({ input }) =>
       mutate({

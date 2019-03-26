@@ -4,10 +4,10 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 import isEmail from 'validator/lib/isEmail';
 import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-import { Button } from '../buttons';
+import { OutlineButton } from 'src/components/button';
 import { Error } from '../formElements';
 import { SectionCardFooter } from 'src/components/settingsViews/style';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -414,13 +414,13 @@ class EmailInvitationForm extends React.Component<Props, State> {
         )}
 
         <SectionCardFooter>
-          <Button
+          <OutlineButton
             loading={isLoading}
             onClick={this.sendInvitations}
             disabled={hasCustomMessage && customMessageError}
           >
             Send Invitations
-          </Button>
+          </OutlineButton>
         </SectionCardFooter>
       </div>
     );

@@ -16,7 +16,7 @@ const ChannelHoverProfile = getChannelById(props => {
   if (props.data.channel) {
     return (
       <ChannelProfile
-        innerRef={props.innerRef}
+        ref={props.ref}
         channel={props.data.channel}
         style={props.style}
       />
@@ -24,9 +24,7 @@ const ChannelHoverProfile = getChannelById(props => {
   }
 
   if (props.data.loading) {
-    return (
-      <LoadingHoverProfile style={props.style} innerRef={props.innerRef} />
-    );
+    return <LoadingHoverProfile style={props.style} ref={props.ref} />;
   }
 
   return null;
@@ -93,7 +91,7 @@ class ChannelHoverProfileWrapper extends React.Component<Props, State> {
     //     <Manager>
     //       <Reference>
     //         {({ ref }) => (
-    //           <Span innerRef={ref} style={style}>
+    //           <Span ref={ref} style={style}>
     //             {children}
     //           </Span>
     //         )}
@@ -109,7 +107,7 @@ class ChannelHoverProfileWrapper extends React.Component<Props, State> {
     //             }}
     //           >
     //             {({ style, ref }) => (
-    //               <ChannelHoverProfile id={id} innerRef={ref} style={style} />
+    //               <ChannelHoverProfile id={id} ref={ref} style={style} />
     //             )}
     //           </Popper>,
     //           document.body

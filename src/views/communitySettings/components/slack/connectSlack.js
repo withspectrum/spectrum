@@ -7,8 +7,8 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { Button } from 'src/components/buttons';
-import Icon from 'src/components/icons';
+import { OutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
 
 type Props = {
   community: GetSlackSettingsType,
@@ -48,7 +48,7 @@ class ImportSlackTeam extends React.Component<Props> {
 
         <SectionCardFooter>
           <a href={url}>
-            <Button>Connect a Slack team</Button>
+            <OutlineButton>Connect a Slack team</OutlineButton>
           </a>
         </SectionCardFooter>
       </SectionCard>

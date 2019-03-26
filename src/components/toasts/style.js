@@ -1,12 +1,11 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled, { keyframes } from 'styled-components';
-import { zIndex } from '../globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
-export const Container = styled.div`
+export const ToastsContainer = styled.div`
   position: fixed;
-  top: 48px;
+  top: 0;
   right: 0;
   padding: 16px;
   width: 100%;
@@ -15,7 +14,15 @@ export const Container = styled.div`
   max-width: 256px;
   background: transparent;
   pointer-events: none;
-  z-index: ${zIndex.toast};
+  z-index: 9997;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    /* titlebars are ~56px */
+    top: 60px;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+  }
 `;
 
 const toastFade = keyframes`
@@ -67,4 +74,9 @@ export const SuccessToast = styled(Toast)`
 
 export const NeutralToast = styled(Toast)`
   background-color: ${theme.text.alt};
+`;
+
+export const NotificationToast = styled(Toast)`
+  background-color: ${theme.bg.default};
+  color: ${theme.text.secondary};
 `;

@@ -4,7 +4,6 @@ import { convertTimestampToTime } from 'shared/time-formatting';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import { Link } from 'react-router-dom';
-import { MessagesContext } from 'src/components/messageGroup';
 import Badge from '../badges';
 import {
   BadgesContainer,
@@ -20,64 +19,49 @@ type Props = {
   roles?: Array<string>,
   bot?: boolean,
   messageUrl: string,
-  selectedMessageId: string,
 };
 
 export default (props: Props) => {
-  const { user, roles, timestamp, messageUrl, selectedMessageId } = props;
+  const { user, roles, timestamp, messageUrl } = props;
   return (
-    <MessagesContext.Consumer>
-      {({ selectMessage }) => {
-        return (
-          <Byline>
-            <ConditionalWrap
-              condition={!!user.username}
-              wrap={children => (
-                <UserHoverProfile
-                  username={user.username}
-                  style={{ flexWrap: 'wrap', flex: '0 1 auto' }}
-                >
-                  <Link
-                    to={`/users/${user.username}`}
-                    onClick={e => e.stopPropagation()}
-                  >
-                    {children}
-                    <Username>{user.username && `@${user.username}`}</Username>
-                  </Link>
-                </UserHoverProfile>
-              )}
+    <Byline>
+      <ConditionalWrap
+        condition={!!user.username}
+        wrap={children => (
+          <UserHoverProfile
+            username={user.username}
+            style={{ flexWrap: 'wrap', flex: '0 1 auto' }}
+          >
+            <Link
+              to={`/users/${user.username}`}
+              onClick={e => e.stopPropagation()}
             >
-              <Name>{user.name}</Name>
-            </ConditionalWrap>
+              {children}
+              <Username>{user.username && `@${user.username}`}</Username>
+            </Link>
+          </UserHoverProfile>
+        )}
+      >
+        <Name>{user.name}</Name>
+      </ConditionalWrap>
 
-            <BadgesContainer>
-              {roles &&
-                roles.map((role, index) => (
-                  <Badge
-                    type={role}
-                    key={index}
-                    onClick={e => e.stopPropagation()}
-                  />
-                ))}
-              {user.betaSupporter && (
-                <Badge
-                  type="beta-supporter"
-                  label={'β'}
-                  style={{ textTransform: 'none' }}
-                />
-              )}
-              {props.bot && <Badge type="bot" label={'BOT'} />}
-            </BadgesContainer>
-            <GutterTimestamp
-              to={messageUrl}
-              data-cy="message-timestamp"
-              onClick={() => selectMessage(selectedMessageId)}
-            >
-              {convertTimestampToTime(new Date(timestamp))}
-            </GutterTimestamp>
-          </Byline>
-        );
-      }}
-    </MessagesContext.Consumer>
+      <BadgesContainer>
+        {roles &&
+          roles.map((role, index) => (
+            <Badge type={role} key={index} onClick={e => e.stopPropagation()} />
+          ))}
+        {user.betaSupporter && (
+          <Badge
+            type="beta-supporter"
+            label={'β'}
+            style={{ textTransform: 'none' }}
+          />
+        )}
+        {props.bot && <Badge type="bot" label={'BOT'} />}
+      </BadgesContainer>
+      <GutterTimestamp to={messageUrl} data-cy="message-timestamp">
+        {convertTimestampToTime(new Date(timestamp))}
+      </GutterTimestamp>
+    </Byline>
   );
 };

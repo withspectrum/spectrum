@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import { storeItem } from 'src/helpers/localStorage';
-import ToggleCommunityMembership from 'src/components/toggleCommunityMembership';
-import { Button, OutlineButton } from 'src/components/buttons';
-import { Login } from 'src/views/login';
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
+import { Button, OutlineButton } from 'src/components/button';
+import Login from 'src/views/login';
 import {
   Title,
   MiniTitle,
@@ -19,6 +17,7 @@ import {
   SignupButton,
   SignupFooter,
   SigninLink,
+  HeadingIconWrapper,
 } from './style';
 
 type NullCardProps = {
@@ -27,13 +26,16 @@ type NullCardProps = {
   bg?: ?string,
   heading?: string,
   copy?: string,
-  children?: React.Node,
+  children?: React$Node,
   repeat?: boolean,
   emoji?: string,
 };
 export const NullCard = (props: NullCardProps) => {
   return (
     <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+      {props.headingIcon && (
+        <HeadingIconWrapper>{props.headingIcon}</HeadingIconWrapper>
+      )}
       {props.heading && <Title>{props.heading}</Title>}
       {props.copy && <Subtitle>{props.copy}</Subtitle>}
       {props.children}
@@ -63,7 +65,7 @@ type NullStateProps = {
   heading?: string,
   copy?: string,
   icon?: string,
-  children?: React.Node,
+  children?: React$Node,
 };
 export const NullState = (props: NullStateProps) => (
   <NullCol bg={props.bg}>
@@ -82,7 +84,7 @@ export const UpsellMiniCreateCommunity = () => {
       copy="Building communities on Spectrum is easy and free forever"
     >
       <Link to="/new/community">
-        <Button icon="plus">Get Started</Button>
+        <Button>Get Started</Button>
       </Link>
     </MiniNullCard>
   );
@@ -217,29 +219,6 @@ export const Upsell404Community = () => {
   );
 };
 
-export const UpsellJoinCommunity = ({
-  community,
-}: {
-  community: GetCommunityType,
-}) => {
-  return (
-    <NullCard
-      bg="chat"
-      heading="Want to be a part of the conversation?"
-      copy={`Join ${community.name} to get involved!`}
-    >
-      <ToggleCommunityMembership
-        community={community}
-        render={({ isLoading }) => (
-          <Button loading={isLoading} icon="plus">
-            Join {community.name}
-          </Button>
-        )}
-      />
-    </NullCard>
-  );
-};
-
 type NewUserProps = {
   user: {
     name: string,
@@ -311,7 +290,7 @@ export const UpsellNullNotifications = () => {
   return (
     <NullCard bg="notification" heading="You don't have any notifications yet.">
       <Link to="/">
-        <Button icon="home">Take Me Home</Button>
+        <Button>Take Me Home</Button>
       </Link>
     </NullCard>
   );
@@ -323,8 +302,6 @@ export const UpsellReload = () => (
     heading={'Whoops!'}
     copy={'Something went wrong on our end... Mind reloading?'}
   >
-    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
-      Reload
-    </Button>
+    <Button onClick={() => window.location.reload(true)}>Reload</Button>
   </NullCard>
 );

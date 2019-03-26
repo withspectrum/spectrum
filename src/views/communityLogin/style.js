@@ -1,8 +1,8 @@
 // @flow
 import theme from 'shared/theme';
-// $FlowFixMe
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Title = styled.h1`
   color: ${theme.text.default};
@@ -69,7 +69,7 @@ export const SigninLink = styled.span`
 
 export const FullscreenContent = styled.div`
   width: 100%;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   display: flex;
   align-items: center;
   flex-direction: column;

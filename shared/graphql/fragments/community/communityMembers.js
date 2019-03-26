@@ -24,7 +24,7 @@ export type CommunityMembersType = {
 export default gql`
   fragment communityMembers on Community {
     members(after: $after, filter: $filter, first: $first)
-      @connection(key: "communityMembers") {
+      @connection(key: "communityMembers", filters: ["filter"]) {
       pageInfo {
         hasNextPage
         hasPreviousPage
