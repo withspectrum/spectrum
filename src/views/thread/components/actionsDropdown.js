@@ -74,45 +74,31 @@ const ActionsDropdown = (props: Props) => {
   } = getThreadActionPermissions();
   if (!currentUser) return null;
 
-  const shouldRenderEditThreadAction = () => {
-    return (
-      isThreadAuthor ||
-      isChannelModerator ||
-      isCommunityModerator ||
-      isChannelOwner ||
-      isCommunityOwner
-    );
-  };
+  const shouldRenderEditThreadAction =
+    isThreadAuthor ||
+    isChannelModerator ||
+    isCommunityModerator ||
+    isChannelOwner ||
+    isCommunityOwner;
 
-  const shouldRenderMoveThreadAction = () => {
-    return isCommunityModerator || isCommunityOwner;
-  };
+  const shouldRenderMoveThreadAction = isCommunityModerator || isCommunityOwner;
 
-  const shouldRenderLockThreadAction = () => {
-    return (
-      isThreadAuthor ||
-      isChannelModerator ||
-      isCommunityModerator ||
-      isChannelOwner ||
-      isCommunityOwner
-    );
-  };
+  const shouldRenderLockThreadAction =
+    isThreadAuthor ||
+    isChannelModerator ||
+    isCommunityModerator ||
+    isChannelOwner ||
+    isCommunityOwner;
 
-  const shouldRenderDeleteThreadAction = () => {
-    return (
-      isThreadAuthor ||
-      isChannelModerator ||
-      isCommunityModerator ||
-      isChannelOwner ||
-      isCommunityOwner
-    );
-  };
+  const shouldRenderDeleteThreadAction =
+    isThreadAuthor ||
+    isChannelModerator ||
+    isCommunityModerator ||
+    isChannelOwner ||
+    isCommunityOwner;
 
-  const shouldRenderPinThreadAction = () => {
-    return (
-      !thread.channel.isPrivate && (isCommunityOwner || isCommunityModerator)
-    );
-  };
+  const shouldRenderPinThreadAction =
+    !thread.channel.isPrivate && (isCommunityOwner || isCommunityModerator);
 
   const toggleNotification = () => {
     toggleThreadNotifications({
@@ -205,7 +191,7 @@ const ActionsDropdown = (props: Props) => {
                         </TextButton>
                       </FlyoutRow>
 
-                      {shouldRenderEditThreadAction() && (
+                      {shouldRenderEditThreadAction && (
                         <FlyoutRow>
                           <TextButton
                             onClick={toggleEdit}
@@ -220,7 +206,7 @@ const ActionsDropdown = (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderPinThreadAction() && (
+                      {shouldRenderPinThreadAction && (
                         <FlyoutRow>
                           <TextButton
                             onClick={togglePinThread}
@@ -239,7 +225,7 @@ const ActionsDropdown = (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderMoveThreadAction() && (
+                      {shouldRenderMoveThreadAction && (
                         <FlyoutRow hideBelow={1024}>
                           <TextButton
                             onClick={triggerChangeChannel}
@@ -251,7 +237,7 @@ const ActionsDropdown = (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderLockThreadAction() && (
+                      {shouldRenderLockThreadAction && (
                         <FlyoutRow>
                           <TextButton
                             onClick={lockThread}
@@ -272,7 +258,7 @@ const ActionsDropdown = (props: Props) => {
                         </FlyoutRow>
                       )}
 
-                      {shouldRenderDeleteThreadAction() && (
+                      {shouldRenderDeleteThreadAction && (
                         <FlyoutRow>
                           <TextButton
                             onClick={triggerDelete}
