@@ -163,7 +163,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-notifications"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -231,7 +231,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-notifications"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -272,7 +272,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-notifications"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -313,7 +313,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-notifications"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -368,7 +368,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-notifications"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
