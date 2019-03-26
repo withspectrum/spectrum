@@ -42,8 +42,6 @@ const ActionsDropdown = (props: Props) => {
     triggerDelete,
   } = props;
 
-  if (!currentUser) return null;
-
   const getThreadActionPermissions = () => {
     const {
       channel: { channelPermissions },
@@ -67,15 +65,16 @@ const ActionsDropdown = (props: Props) => {
     };
   };
 
-  const shouldRenderEditThreadAction = () => {
-    const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
-      isCommunityOwner,
-      isCommunityModerator,
-    } = getThreadActionPermissions();
+  const {
+    isThreadAuthor,
+    isChannelModerator,
+    isCommunityModerator,
+    isChannelOwner,
+    isCommunityOwner,
+  } = getThreadActionPermissions();
+  if (!currentUser) return null;
 
+  const shouldRenderEditThreadAction = () => {
     return (
       isThreadAuthor ||
       isChannelModerator ||
@@ -86,23 +85,10 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const shouldRenderMoveThreadAction = () => {
-    const {
-      isCommunityOwner,
-      isCommunityModerator,
-    } = getThreadActionPermissions();
-
     return isCommunityModerator || isCommunityOwner;
   };
 
   const shouldRenderLockThreadAction = () => {
-    const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
-      isCommunityOwner,
-      isCommunityModerator,
-    } = getThreadActionPermissions();
-
     return (
       isThreadAuthor ||
       isChannelModerator ||
@@ -113,14 +99,6 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const shouldRenderDeleteThreadAction = () => {
-    const {
-      isThreadAuthor,
-      isChannelModerator,
-      isChannelOwner,
-      isCommunityOwner,
-      isCommunityModerator,
-    } = getThreadActionPermissions();
-
     return (
       isThreadAuthor ||
       isChannelModerator ||
@@ -131,11 +109,6 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const shouldRenderPinThreadAction = () => {
-    const {
-      isCommunityOwner,
-      isCommunityModerator,
-    } = getThreadActionPermissions();
-
     return (
       !thread.channel.isPrivate && (isCommunityOwner || isCommunityModerator)
     );
