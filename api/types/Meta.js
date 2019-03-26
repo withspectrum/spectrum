@@ -56,7 +56,9 @@ const Meta = /* GraphQL */ `
   }
 
   extend type Mutation {
-    saveUserCommunityPermissions(input: SaveUserCommunityPermissionsInput!): User
+    saveUserCommunityPermissions(
+      input: SaveUserCommunityPermissionsInput!
+    ): User
   }
 `;
 

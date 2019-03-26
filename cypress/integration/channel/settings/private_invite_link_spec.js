@@ -13,9 +13,7 @@ const enable = () => {
 
   cy.get('[data-cy="login-with-token-settings"]').scrollIntoView();
 
-  cy.get('[data-cy="toggle-token-link-invites-unchecked"]')
-    .should('be.visible')
-    .click();
+  cy.get('[data-cy="toggle-token-link-invites-unchecked"]').click();
 
   cy.get('[data-cy="join-link-input"]').should('be.visible');
 };
@@ -51,9 +49,7 @@ describe('private channel invite link settings', () => {
       });
 
     // disable
-    cy.get('[data-cy="toggle-token-link-invites-checked"]')
-      .should('be.visible')
-      .click();
+    cy.get('[data-cy="toggle-token-link-invites-checked"]').click();
 
     cy.get('[data-cy="join-link-input"]').should('not.be.visible');
   });

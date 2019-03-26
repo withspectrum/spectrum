@@ -26,7 +26,7 @@ const Search = /* GraphQL */ `
     everythingFeed: Boolean
   }
 
-  type SearchResults {
+  type SearchResults @cacheControl(maxAge: 600) {
     searchResultsConnection: SearchResultsConnection
   }
 

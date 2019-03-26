@@ -47,6 +47,7 @@ import { PrimaryOutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
 import { FeedsContainer } from './style';
+import { InfoContainer } from 'src/views/community/style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -261,6 +262,15 @@ class UserView extends React.Component<Props, State> {
                     </Segment>
 
                     <Segment
+                      onClick={() => this.handleSegmentClick('info')}
+                      hideOnDesktop
+                      isActive={selectedView === 'info'}
+                      data-cy="user-info-tab"
+                    >
+                      Info
+                    </Segment>
+
+                    <Segment
                       onClick={() => this.handleSegmentClick('search')}
                       isActive={selectedView === 'search'}
                       data-cy="user-search-tab"
@@ -291,28 +301,52 @@ class UserView extends React.Component<Props, State> {
 
                   {selectedView === 'search' && <Search user={user} />}
 
-                  {!hasThreads && (
-                    <NullColumn>
-                      <span>
-                        <NullColumnHeading>No posts yet</NullColumnHeading>
-                        <NullColumnSubheading>
-                          Posts will show up here as they are published and when
-                          conversations are joined.
-                        </NullColumnSubheading>
-                        {isCurrentUser && (
-                          <PrimaryOutlineButton
-                            to={{
-                              pathname: '/new/thread',
-                              state: { modal: true },
-                            }}
-                          >
-                            <Icon glyph={'post'} size={24} />
-                            New post
-                          </PrimaryOutlineButton>
-                        )}
-                      </span>
-                    </NullColumn>
+                  {selectedView === 'info' && (
+                    <InfoContainer>
+                      <SidebarSection>
+                        <UserProfileCard user={user} />
+                      </SidebarSection>
+
+                      <SidebarSection>
+                        <SidebarSectionHeader>
+                          <SidebarSectionHeading>
+                            Communities
+                          </SidebarSectionHeading>
+                        </SidebarSectionHeader>
+
+                        <CommunityList
+                          currentUser={currentUser}
+                          user={user}
+                          id={user.id}
+                        />
+                      </SidebarSection>
+                    </InfoContainer>
                   )}
+
+                  {!hasThreads &&
+                    (selectedView === 'posts' ||
+                      selectedView === 'activity') && (
+                      <NullColumn>
+                        <span>
+                          <NullColumnHeading>No posts yet</NullColumnHeading>
+                          <NullColumnSubheading>
+                            Posts will show up here as they are published and
+                            when conversations are joined.
+                          </NullColumnSubheading>
+                          {isCurrentUser && (
+                            <PrimaryOutlineButton
+                              to={{
+                                pathname: '/new/thread',
+                                state: { modal: true },
+                              }}
+                            >
+                              <Icon glyph={'post'} size={24} />
+                              New post
+                            </PrimaryOutlineButton>
+                          )}
+                        </span>
+                      </NullColumn>
+                    )}
                 </FeedsContainer>
               </PrimaryColumn>
             </SecondaryPrimaryColumnGrid>

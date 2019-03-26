@@ -79,7 +79,7 @@ const User = /* GraphQL */ `
     username: String
   }
 
-  type User {
+  type User @cacheControl(maxAge: 600) {
     id: ID!
     name: String
     firstName: String
@@ -96,11 +96,12 @@ const User = /* GraphQL */ `
     timezone: Int
     totalReputation: Int
     pendingEmail: LowercaseString
-    betaSupporter: Boolean
+    betaSupporter: Boolean @cacheControl(maxAge: 84700)
 
     isPro: Boolean @deprecated(reason: "Use the betaSupporter field instead")
     recurringPayments: [RecurringPayment]
       @deprecated(reason: "Payments are no longer used")
+
     invoices: [Invoice] @deprecated(reason: "Payments are no longer used")
 
     # non-schema fields
@@ -118,8 +119,10 @@ const User = /* GraphQL */ `
       after: String
       kind: ThreadConnectionType
     ): UserThreadsConnection! @cost(complexity: 1, multipliers: ["first"])
+
     everything(first: Int = 10, after: String): EverythingThreadsConnection!
       @cost(complexity: 1, multipliers: ["first"])
+
     settings: UserSettings @cost(complexity: 1)
     githubProfile: GithubProfile
 
@@ -128,8 +131,8 @@ const User = /* GraphQL */ `
   }
 
   extend type Query {
-    user(id: ID, username: LowercaseString): User
-    currentUser: User
+    user(id: ID, username: LowercaseString): User @cacheControl(maxAge: 1200)
+    currentUser: User @cacheControl(maxAge: 1200, scope: PRIVATE)
     searchUsers(string: String): [User]
       @deprecated(reason: "Use the new Search query endpoint")
   }

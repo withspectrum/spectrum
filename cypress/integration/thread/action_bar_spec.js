@@ -95,7 +95,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -114,7 +113,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -133,7 +131,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('not.be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -152,7 +149,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -167,6 +163,7 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -220,7 +217,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -230,11 +226,12 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -261,7 +258,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -271,11 +267,12 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('not.be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -302,7 +299,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -312,11 +308,12 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
+      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
     });
 
     it('should lock the thread', () => {
@@ -357,7 +354,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
       cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
       cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
@@ -367,11 +363,12 @@ describe('action bar renders', () => {
       cy.get('[data-cy="thread-actions-dropdown"]').should('be.visible');
 
       // dropdown controls
-      cy.get('[data-cy="thread-dropdown-edit"]').should('not.be.visible');
       cy.get('[data-cy="thread-dropdown-pin"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-move"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-lock"]').should('be.visible');
       cy.get('[data-cy="thread-dropdown-delete"]').should('be.visible');
+      cy.get('[data-cy="thread-dropdown-edit"]').should('be.visible');
+      cy.get('[data-cy="thread-notifications-toggle"]').should('be.visible');
     });
 
     it('should lock the thread', () => {

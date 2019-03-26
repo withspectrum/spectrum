@@ -154,8 +154,20 @@ class ActionBar extends React.Component<Props, State> {
   };
 
   shouldRenderEditThreadAction = () => {
-    const { isThreadAuthor } = this.getThreadActionPermissions();
-    return isThreadAuthor;
+    const {
+      isThreadAuthor,
+      isChannelModerator,
+      isCommunityModerator,
+      isChannelOwner,
+      isCommunityOwner,
+    } = this.getThreadActionPermissions();
+    return (
+      isThreadAuthor ||
+      isChannelModerator ||
+      isCommunityModerator ||
+      isChannelOwner ||
+      isCommunityOwner
+    );
   };
 
   shouldRenderMoveThreadAction = () => {
