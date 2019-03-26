@@ -178,7 +178,7 @@ describe('action bar renders', () => {
       triggerThreadDelete();
     });
 
-    it('should edit the thread', () => {
+    it.only('should edit the thread', () => {
       cy.auth(publicThreadAuthor.id);
 
       openSettingsDropdown();
@@ -195,6 +195,7 @@ describe('action bar renders', () => {
       cy.contains(title);
 
       // undo the edit
+      openSettingsDropdown();
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
