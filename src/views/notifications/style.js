@@ -15,6 +15,7 @@ import { HorizontalRule } from 'src/components/globals';
 import Card from 'src/components/card';
 import { SingleColumnGrid } from 'src/components/layout';
 import Icon from 'src/components/icon';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -30,12 +31,13 @@ export const NotificationCard = styled.div`
   ${props =>
     props.isSeen === false &&
     css`
-      border-left: 2px solid ${theme.brand.default};
+      box-shadow: inset 2px 0 0 ${theme.brand.default};
       background: ${hexa(theme.brand.default, 0.06)};
     `}
 
   &:hover {
-    background: ${theme.bg.wash};
+    background: ${props =>
+      props.isSeen ? theme.bg.wash : hexa(theme.brand.default, 0.06)};
   }
 `;
 
@@ -290,6 +292,10 @@ export const StickyHeader = styled.div`
   top: 0;
   border-bottom: 1px solid ${theme.bg.border};
   z-index: 10;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
 `;
 
 export const CloseRequest = styled(Icon)`

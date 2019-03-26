@@ -87,7 +87,16 @@ class NotificationsPure extends React.Component<Props, State> {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(setTitlebarProps({ title: 'Notifications ' }));
+    dispatch(
+      setTitlebarProps({
+        title: 'Notifications',
+        rightAction: (
+          <OutlineButton onClick={() => this.markAllNotificationsSeen()}>
+            Mark all seen
+          </OutlineButton>
+        ),
+      })
+    );
 
     WebPushManager.getPermissionState()
       .then(result => {
