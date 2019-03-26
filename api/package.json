@@ -92,7 +92,7 @@
     "passport-google-oauth2": "^0.1.6",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.16.0",
     "query-string": "5.1.1",
     "ratelimiter": "^3.3.0",
     "raven": "^2.6.4",
