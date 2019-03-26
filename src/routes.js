@@ -289,6 +289,24 @@ class Routes extends React.Component<Props, State> {
               <NoUsernameHandler currentUser={currentUser} />
             </ErrorBoundary>
 
+            {isModal && (
+              <Route
+                // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                // - /id-123-id => id-123-id, easy start that works
+                // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                component={props => (
+                  <ThreadSlider
+                    previousLocation={this.previousLocation}
+                    {...props}
+                  />
+                )}
+              />
+            )}
+
             {/*
               this context provider allows children views to determine
               how they should behave if a modal is open. For example,
@@ -448,24 +466,6 @@ class Routes extends React.Component<Props, State> {
                     <Route path="/:communitySlug" component={CommunityView} />
                   </Switch>
                 </div>
-
-                {isModal && (
-                  <Route
-                    // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
-                    // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
-                    // - /id-123-id => id-123-id, easy start that works
-                    // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
-                    // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
-                    // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
-                    path="/:communitySlug/:channelSlug/(.*~)?:threadId"
-                    component={props => (
-                      <ThreadSlider
-                        previousLocation={this.previousLocation}
-                        {...props}
-                      />
-                    )}
-                  />
-                )}
 
                 {isModal && (
                   <Route
