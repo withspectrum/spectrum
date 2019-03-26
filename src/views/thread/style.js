@@ -827,6 +827,12 @@ export const Stretch = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
+  ${props =>
+    props.isModal &&
+    css`
+      border-left: 1px solid ${theme.bg.border};
+      border-right: 1px solid ${theme.bg.border};
+    `}
 `;
 
 export const LockedWrapper = styled.div`
