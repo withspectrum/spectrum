@@ -44,6 +44,12 @@ export default createGlobalStyle`
     height: 100%;
     overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
+    
+    &::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+      background: transparent; /* make scrollbar transparent */
+    }
   }
 
   #root {

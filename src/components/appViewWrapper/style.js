@@ -2,14 +2,17 @@ import styled from 'styled-components';
 import {
   MEDIA_BREAK,
   TITLEBAR_HEIGHT,
-  NAVBAR_WIDTH,
+  MIN_NAVBAR_WIDTH,
+  MAX_NAVBAR_WIDTH,
 } from 'src/components/layout';
 
 export const StyledAppViewWrapper = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: ${props =>
-    props.isTwoColumn ? `${NAVBAR_WIDTH}px 1fr` : '1fr'};
+    props.isTwoColumn
+      ? `minmax(${MIN_NAVBAR_WIDTH}px, ${MIN_NAVBAR_WIDTH}px) 1fr`
+      : '1fr'};
   grid-template-areas: ${props =>
     props.isTwoColumn ? "'navigation main'" : "'main'"};
 

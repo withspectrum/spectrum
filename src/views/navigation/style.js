@@ -3,7 +3,11 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import theme from 'shared/theme';
 import { hexa, Truncate } from 'src/components/globals';
-import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/layout';
+import {
+  MEDIA_BREAK,
+  MIN_NAVBAR_WIDTH,
+  MAX_NAVBAR_WIDTH,
+} from 'src/components/layout';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Overlay = styled.div`
@@ -51,7 +55,7 @@ export const NavigationWrapper = styled.div`
   grid-area: navigation;
   position: sticky;
   top: 0;
-  width: ${NAVBAR_WIDTH}px;
+  max-width: ${MIN_NAVBAR_WIDTH}px;
   height: 100vh;
   overflow: hidden;
   overflow-y: auto;
@@ -84,7 +88,7 @@ export const NavigationGrid = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
-  max-width: ${NAVBAR_WIDTH}px;
+  max-width: ${MIN_NAVBAR_WIDTH}px;
   overflow: hidden;
   overflow-y: auto;
   padding: 12px 0 16px;

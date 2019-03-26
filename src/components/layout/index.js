@@ -3,17 +3,30 @@ import styled from 'styled-components';
 import theme from 'shared/theme';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
-export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
-export const PRIMARY_COLUMN_WIDTH = 600;
-export const SECONDARY_COLUMN_WIDTH = 340;
-export const COL_GAP = 16;
+export const MIN_NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
+export const MAX_NAVBAR_WIDTH = 256;
+
+export const MIN_PRIMARY_COLUMN_WIDTH = 600;
+export const MAX_PRIMARY_COLUMN_WIDTH = 1280;
+
+export const MIN_SECONDARY_COLUMN_WIDTH = 240;
+export const MAX_SECONDARY_COLUMN_WIDTH = 320;
+
+export const COL_GAP = 0;
 export const TITLEBAR_HEIGHT = isDesktopApp() ? 82 : 62;
-export const MAX_WIDTH =
-  PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP;
-export const SINGLE_COLUMN_WIDTH = MAX_WIDTH;
+export const MIN_MAX_WIDTH =
+  MIN_PRIMARY_COLUMN_WIDTH + MIN_SECONDARY_COLUMN_WIDTH + COL_GAP;
+export const MAX_MAX_WIDTH =
+  MAX_PRIMARY_COLUMN_WIDTH + MAX_SECONDARY_COLUMN_WIDTH;
+
+export const MIN_SINGLE_COLUMN_WIDTH = MIN_MAX_WIDTH;
+export const MAX_SINGLE_COLUMN_WIDTH = MAX_MAX_WIDTH;
 // add 144 (72 * 2) to account for the left side nav
 export const MEDIA_BREAK =
-  PRIMARY_COLUMN_WIDTH + SECONDARY_COLUMN_WIDTH + COL_GAP + NAVBAR_WIDTH * 2;
+  MIN_PRIMARY_COLUMN_WIDTH +
+  MIN_SECONDARY_COLUMN_WIDTH +
+  COL_GAP +
+  MIN_NAVBAR_WIDTH * 2;
 
 /* 
   do not remove this className.
@@ -28,6 +41,12 @@ export const ViewGrid = styled.main.attrs({
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent; /* make scrollbar transparent */
+  }
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
@@ -46,7 +65,7 @@ export const ViewGrid = styled.main.attrs({
 export const SingleColumnGrid = styled.div`
   display: grid;
   justify-self: center;
-  grid-template-columns: ${MAX_WIDTH}px;
+  grid-template-columns: minmax(${MIN_MAX_WIDTH}px, ${MAX_MAX_WIDTH}px);
   background: ${theme.bg.default};
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -69,12 +88,15 @@ export const SingleColumnGrid = styled.div`
 */
 export const PrimarySecondaryColumnGrid = styled.div`
   display: grid;
-  justify-self: center;
-  grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px ${SECONDARY_COLUMN_WIDTH}px;
+  justify-self: flex-start;
+  grid-template-columns: minmax(
+      ${MIN_PRIMARY_COLUMN_WIDTH}px,
+      ${MAX_PRIMARY_COLUMN_WIDTH}px
+    ) minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH});
   grid-template-rows: 100%;
   grid-template-areas: 'primary secondary';
   grid-gap: ${COL_GAP}px;
-  max-width: ${MAX_WIDTH}px;
+  max-width: ${MAX_MAX_WIDTH}px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: 1fr;
@@ -95,12 +117,15 @@ export const PrimarySecondaryColumnGrid = styled.div`
 */
 export const SecondaryPrimaryColumnGrid = styled.div`
   display: grid;
-  justify-self: center;
-  grid-template-columns: ${SECONDARY_COLUMN_WIDTH}px ${PRIMARY_COLUMN_WIDTH}px;
+  justify-self: flex-start;
+  grid-template-columns: minmax(
+      ${MIN_SECONDARY_COLUMN_WIDTH}px,
+      ${MAX_SECONDARY_COLUMN_WIDTH}px
+    ) minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px);
   grid-template-rows: 100%;
   grid-template-areas: 'secondary primary';
   grid-gap: ${COL_GAP}px;
-  max-width: ${MAX_WIDTH}px;
+  max-width: ${MAX_MAX_WIDTH}px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: 1fr;
@@ -123,10 +148,13 @@ export const SecondaryPrimaryColumnGrid = styled.div`
 export const CenteredGrid = styled.div`
   display: grid;
   justify-self: center;
-  grid-template-columns: ${MAX_WIDTH}px;
+  grid-template-columns: minmax(${MIN_MAX_WIDTH}px, ${MAX_MAX_WIDTH}px);
   align-self: center;
-  max-width: ${PRIMARY_COLUMN_WIDTH}px;
-  grid-template-columns: ${PRIMARY_COLUMN_WIDTH}px;
+  max-width: ${MAX_PRIMARY_COLUMN_WIDTH}px;
+  grid-template-columns: minmax(
+    ${MIN_PRIMARY_COLUMN_WIDTH}px,
+    ${MAX_PRIMARY_COLUMN_WIDTH}px
+  );
 
   @media (max-width: ${MEDIA_BREAK}px) {
     align-self: flex-start;
@@ -138,12 +166,11 @@ export const CenteredGrid = styled.div`
 `;
 
 export const PrimaryColumn = styled.section`
-  border-left: 1px solid ${theme.bg.border};
   border-right: 1px solid ${theme.bg.border};
   border-bottom: 1px solid ${theme.bg.border};
   border-radius: 0 0 4px 4px;
   height: 100%;
-  max-width: ${PRIMARY_COLUMN_WIDTH}px;
+  max-width: ${MAX_PRIMARY_COLUMN_WIDTH}px;
   grid-area: primary;
   display: grid;
   grid-template-rows: 1fr;
@@ -165,8 +192,14 @@ export const SecondaryColumn = styled.section`
   position: sticky;
   top: 0;
   padding-bottom: 48px;
-  padding-right: 12px;
+  border-right: 1px solid ${theme.bg.border};
   grid-area: secondary;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    background: transparent; /* make scrollbar transparent */
+  }
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);

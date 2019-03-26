@@ -3,7 +3,11 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from 'src/components/icon';
 import { hexa, FlexRow, FlexCol, zIndex } from '../globals';
-import { MAX_WIDTH, MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
+import {
+  MAX_MAX_WIDTH,
+  MEDIA_BREAK,
+  TITLEBAR_HEIGHT,
+} from 'src/components/layout';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;
@@ -76,7 +80,7 @@ export const Container = styled(FlexCol)`
   height: 100%;
   max-height: 100vh;
   width: 100%;
-  max-width: ${MAX_WIDTH + 32}px;
+  max-width: ${MAX_MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
   height: calc(100vh);
   z-index: 9998;

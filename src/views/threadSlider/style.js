@@ -4,9 +4,9 @@ import theme from 'shared/theme';
 import { zIndex } from 'src/components/globals';
 import {
   MEDIA_BREAK,
-  MAX_WIDTH,
+  MIN_MAX_WIDTH,
   TITLEBAR_HEIGHT,
-  NAVBAR_WIDTH,
+  MIN_NAVBAR_WIDTH,
 } from 'src/components/layout';
 
 export const Container = styled.div`
@@ -14,7 +14,7 @@ export const Container = styled.div`
   justify-content: center;
   z-index: ${zIndex.slider + 1};
   position: absolute;
-  left: ${NAVBAR_WIDTH}px;
+  left: ${MIN_NAVBAR_WIDTH}px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -39,7 +39,7 @@ export const ThreadBackground = styled.div`
   top: 0;
   bottom: 0;
   background: ${theme.bg.wash};
-  width: ${MAX_WIDTH + 32}px;
+  width: ${MIN_MAX_WIDTH + 32}px;
   left: 50%;
   transform: translateX(calc(-50% + 32px));
 `;

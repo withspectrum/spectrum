@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
-import { MEDIA_BREAK, PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK, MAX_PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,
@@ -814,7 +814,7 @@ export const StickyHeaderContainer = styled.div`
   align-self: stretch;
   background: ${theme.bg.wash};
   padding-right: 16px;
-  max-width: ${PRIMARY_COLUMN_WIDTH - 2}px;
+  max-width: ${MAX_PRIMARY_COLUMN_WIDTH - 2}px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;

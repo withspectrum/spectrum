@@ -65,7 +65,7 @@ export const Label = styled.div`
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
-  display: inline-flex;
+  display: inline-block;
   align-items: center;
   ${Truncate};
 
