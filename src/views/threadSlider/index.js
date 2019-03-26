@@ -50,12 +50,12 @@ const ThreadSlider = (props: Props) => {
   return (
     <ErrorBoundary>
       <Container data-cy="thread-slider">
-        <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
-
-        <ThreadBackground />
-
         <ThreadContainer>
-          <ThreadView css={{ width: '100%' }} threadId={threadId} />
+          <ThreadView css={{ width: '100%' }} threadId={threadId}>
+            <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
+
+            <ThreadBackground />
+          </ThreadView>
         </ThreadContainer>
 
         <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>

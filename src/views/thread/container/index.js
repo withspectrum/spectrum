@@ -57,7 +57,15 @@ type Props = {
 };
 
 const ThreadContainer = (props: Props) => {
-  const { data, isLoading, client, currentUser, dispatch, className } = props;
+  const {
+    data,
+    isLoading,
+    children,
+    client,
+    currentUser,
+    dispatch,
+    className,
+  } = props;
 
   if (isLoading) return <LoadingView />;
 
@@ -175,6 +183,7 @@ const ThreadContainer = (props: Props) => {
       <ThreadHead thread={thread} />
       <TopBottomButtons />
       <ViewGrid className={className} data-cy="thread-view">
+        {children}
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <SidebarSection>

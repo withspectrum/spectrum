@@ -25,8 +25,6 @@ export const Container = styled.div`
   }
 `;
 
-const OVERLAY_Z_INDEX = zIndex.slider + 2;
-
 export const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -34,7 +32,6 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: ${OVERLAY_Z_INDEX};
 `;
 
 export const ThreadBackground = styled.div`
@@ -42,9 +39,9 @@ export const ThreadBackground = styled.div`
   top: 0;
   bottom: 0;
   background: ${theme.bg.wash};
-  z-index: ${OVERLAY_Z_INDEX + 1};
   width: ${MAX_WIDTH + 32}px;
-  transform: translateX(-8px);
+  left: 50%;
+  transform: translateX(calc(-50% + 32px));
 `;
 
 export const ThreadContainer = styled.div`
