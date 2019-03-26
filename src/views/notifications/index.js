@@ -78,7 +78,6 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   markAllNotificationsSeen = () => {
-    console.log('MARK ALL SEEN');
     this.props.dispatch(updateNotificationsCount('notifications', 0));
     this.props.markAllNotificationsSeen &&
       this.props.markAllNotificationsSeen().catch(err => {
