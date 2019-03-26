@@ -41,38 +41,19 @@ const ActionsDropdown = (props: Props) => {
     lockThread,
     triggerDelete,
   } = props;
-
-  const getThreadActionPermissions = () => {
-    const {
-      channel: { channelPermissions },
-      community: { communityPermissions },
-    } = thread;
-
-    const isThreadAuthor =
-      currentUser && currentUser.id === thread.author.user.id;
-    const isChannelModerator = currentUser && channelPermissions.isModerator;
-    const isCommunityModerator =
-      currentUser && communityPermissions.isModerator;
-    const isChannelOwner = currentUser && channelPermissions.isOwner;
-    const isCommunityOwner = currentUser && communityPermissions.isOwner;
-
-    return {
-      isThreadAuthor,
-      isChannelModerator,
-      isCommunityModerator,
-      isChannelOwner,
-      isCommunityOwner,
-    };
-  };
+  if (!currentUser) return null;
 
   const {
-    isThreadAuthor,
-    isChannelModerator,
-    isCommunityModerator,
-    isChannelOwner,
-    isCommunityOwner,
-  } = getThreadActionPermissions();
-  if (!currentUser) return null;
+    channel: { channelPermissions },
+    community: { communityPermissions },
+  } = thread;
+
+  const isThreadAuthor =
+    currentUser && currentUser.id === thread.author.user.id;
+  const isChannelModerator = currentUser && channelPermissions.isModerator;
+  const isCommunityModerator = currentUser && communityPermissions.isModerator;
+  const isChannelOwner = currentUser && channelPermissions.isOwner;
+  const isCommunityOwner = currentUser && communityPermissions.isOwner;
 
   const shouldRenderEditThreadAction =
     isThreadAuthor ||
