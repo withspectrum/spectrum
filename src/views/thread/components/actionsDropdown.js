@@ -166,9 +166,11 @@ const ActionsDropdown = (props: Props) => {
                                 : 'notification'
                             }
                           />
-                          {thread.receiveNotifications
-                            ? 'Subscribed'
-                            : 'Notify me'}
+                          <Label>
+                            {thread.receiveNotifications
+                              ? 'Subscribed'
+                              : 'Notify me'}
+                          </Label>
                         </TextButton>
                       </FlyoutRow>
 
@@ -213,7 +215,7 @@ const ActionsDropdown = (props: Props) => {
                             data-cy={'thread-dropdown-move'}
                           >
                             <Icon size={24} glyph={'channel'} />
-                            Move thread
+                            <Label>Move thread</Label>
                           </TextButton>
                         </FlyoutRow>
                       )}

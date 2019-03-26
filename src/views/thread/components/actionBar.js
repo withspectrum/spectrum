@@ -88,7 +88,7 @@ class ActionBar extends React.Component<Props> {
                 onClick={this.props.saveEdit}
                 data-cy="save-thread-edit-button"
               >
-                Save
+                {isSavingEdit ? 'Saving...' : 'Save'}
               </PrimaryOutlineButton>
             </EditDone>
           </div>

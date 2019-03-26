@@ -144,8 +144,8 @@ export const ThreadWrapper = styled(FlexCol)`
   width: 100%;
   max-width: 100%;
   /* manually nudge up 60px to cover the sliding header in the thread view */
-  top: -64px;
-  margin-bottom: -64px;
+  top: -68px;
+  margin-bottom: -68px;
 
   ${props =>
     props.isEditing &&
@@ -155,7 +155,7 @@ export const ThreadWrapper = styled(FlexCol)`
       position: relative;
       display: block;
       overflow: hidden;
-      overflow-y: scroll;
+      overflow-y: auto;
     `}
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -171,9 +171,9 @@ export const ThreadContent = styled.div`
   ${props =>
     props.isEditing &&
     css`
-      max-height: calc(100% - 52px);
+      max-height: calc(100% - 55px);
       overflow: hidden;
-      overflow-y: scroll;
+      overflow-y: auto;
     `}
 
   @media (max-width: 1024px) {
@@ -508,6 +508,7 @@ export const CommunityHeaderSubtitle = styled.span`
   margin-top: 4px;
   line-height: 12px;
   color: ${theme.text.alt};
+  ${Truncate};
 
   > a {
     display: flex;
