@@ -65,6 +65,7 @@ const ThreadContainer = (props: Props) => {
     currentUser,
     dispatch,
     className,
+    isModal = false,
   } = props;
 
   if (isLoading) return <LoadingView />;
@@ -219,7 +220,7 @@ const ThreadContainer = (props: Props) => {
               the chat input at the bottom of the view, so it must always be tricked
               into thinking that its preceeding sibling is full-height.
             */}
-            <Stretch>
+            <Stretch isModal={isModal}>
               <ErrorBoundary>
                 <StickyHeader thread={thread} />
               </ErrorBoundary>

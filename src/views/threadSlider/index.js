@@ -51,7 +51,7 @@ const ThreadSlider = (props: Props) => {
     <ErrorBoundary>
       <Container data-cy="thread-slider">
         <ThreadContainer>
-          <ThreadView css={{ width: '100%' }} threadId={threadId}>
+          <ThreadView isModal css={{ width: '100%' }} threadId={threadId}>
             <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
 
             <ThreadBackground />
