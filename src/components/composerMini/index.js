@@ -17,6 +17,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import { DropImageOverlay } from 'src/components/composer/style';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import MentionsInput from 'src/components/mentionsInput';
+import Tooltip from 'src/components/tooltip';
 import publishThreadMutation from 'shared/graphql/mutations/thread/publishThread';
 import {
   getDraftThread,
@@ -340,20 +341,24 @@ const MiniComposer = ({
                     css={{ marginLeft: 0 }}
                   />
                 )}
-                <Link
-                  to={{
-                    pathname,
-                    search,
-                    state: { modal: true },
-                  }}
-                  css={{
-                    color: theme.text.alt,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Icon glyph="view" />
-                </Link>
+                <Tooltip content="Open in fullscreen">
+                  <span style={{ marginLeft: '8px' }}>
+                    <Link
+                      to={{
+                        pathname,
+                        search,
+                        state: { modal: true },
+                      }}
+                      css={{
+                        color: theme.text.alt,
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Icon size={24} glyph="expand" />
+                    </Link>
+                  </span>
+                </Tooltip>
               </div>
               <PrimaryButton
                 disabled={
