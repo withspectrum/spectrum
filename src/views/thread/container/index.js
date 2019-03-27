@@ -222,7 +222,10 @@ const ThreadContainer = (props: Props) => {
               the chat input at the bottom of the view, so it must always be tricked
               into thinking that its preceeding sibling is full-height.
             */}
-            <Stretch isModal={isModal}>
+            <Stretch
+              isModal={isModal}
+              data-cy={isModal ? 'thread-is-modal' : undefined}
+            >
               <ErrorBoundary>
                 <StickyHeader thread={thread} />
               </ErrorBoundary>

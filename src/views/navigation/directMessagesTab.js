@@ -13,7 +13,7 @@ import getUnreadDMQuery, {
 } from 'shared/graphql/queries/notification/getDirectMessageNotifications';
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { getAccessibilityActiveState } from './accessibility';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import formatNotification from 'shared/notification-to-text';

@@ -2,7 +2,7 @@
 import React from 'react';
 import Icon from 'src/components/icon';
 import Tooltip from 'src/components/tooltip';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 import { AvatarGrid, AvatarLink, Label, IconWrapper } from './style';
 
 const GlobalComposerTab = () => {

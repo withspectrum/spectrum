@@ -17,7 +17,7 @@ import getNotifications, {
 } from 'shared/graphql/queries/notification/getNotifications';
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { getAccessibilityActiveState } from './accessibility';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 import formatNotification from 'shared/notification-to-text';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';

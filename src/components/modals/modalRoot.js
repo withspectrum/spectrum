@@ -9,6 +9,7 @@ import RestoreChannelModal from './RestoreChannelModal';
 import LoginModal from './LoginModal';
 import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
+import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -19,6 +20,7 @@ const MODAL_COMPONENTS = {
   LOGIN_MODAL: LoginModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
+  CLOSE_COMPOSER_CONFIRMATION_MODAL: CloseComposerConfirmationModal,
 };
 
 export type ModalTypes = $Keys<typeof MODAL_COMPONENTS>;
