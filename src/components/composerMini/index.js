@@ -18,6 +18,11 @@ import { DropImageOverlay } from 'src/components/composer/style';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import MentionsInput from 'src/components/mentionsInput';
 import publishThreadMutation from 'shared/graphql/mutations/thread/publishThread';
+import {
+  getDraftThread,
+  storeDraftThread,
+  clearDraftThread,
+} from 'src/helpers/thread-draft-handling';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { History } from 'react-router-dom';
 
@@ -45,12 +50,15 @@ const MiniComposer = ({
 }: Props) => {
   const titleEditor = useRef();
   const bodyEditor = useRef();
-  const [expanded, setExpanded] = useState(false);
   const [selectedChannelId, setSelectedChannelId] = useState(
     defaultSelectedChannel
   );
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const draftThread = getDraftThread();
+  const [expanded, setExpanded] = useState(
+    !!draftThread.title || !!draftThread.body
+  );
+  const [title, setTitle] = useState(draftThread.title || '');
+  const [body, setBody] = useState(draftThread.body || '');
   const bodyRef = useRef(body);
   const [titleWarning, setTitleWarning] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,15 +72,26 @@ const MiniComposer = ({
   }, [expanded]);
 
   const changeTitle = evt => {
-    const text = evt.target.value;
-    if (text.length >= 80 && !titleWarning) {
+    const title = evt.target.value;
+    if (title.length >= 80 && !titleWarning) {
       setTitleWarning(
         'ProTip: good titles are shorter than 80 characters. Write extra information below!'
       );
-    } else if (text.length < 80 && titleWarning) {
+    } else if (title.length < 80 && titleWarning) {
       setTitleWarning(null);
     }
-    setTitle(text);
+    setTitle(title);
+    storeDraftThread({
+      title,
+    });
+  };
+
+  const changeBody = evt => {
+    const body = evt.target.value;
+    setBody(body);
+    storeDraftThread({
+      body,
+    });
   };
 
   const uploadFiles = files => {
@@ -282,7 +301,7 @@ const MiniComposer = ({
                     }}
                     ref={bodyEditor}
                     value={body}
-                    onChange={evt => setBody(evt.target.value)}
+                    onChange={changeBody}
                     placeholder="Elaborate here if necessary (optional)"
                   />
 

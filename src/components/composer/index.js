@@ -37,6 +37,11 @@ import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 import Inputs from './inputs';
 import ComposerLocationSelectors from './LocationSelectors';
+import {
+  getDraftThread,
+  storeDraftThread,
+  clearDraftThread,
+} from 'src/helpers/thread-draft-handling';
 
 type State = {
   title: string,
@@ -64,15 +69,6 @@ type Props = {
   isEditing: boolean,
   isModal?: boolean,
   previousLocation?: Location,
-};
-
-const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
-const LS_TITLE_KEY = 'last-plaintext-thread-composer-title';
-const LS_COMPOSER_EXPIRE = 'last-plaintext-thread-composer-expire';
-
-const ONE_DAY = (): string => {
-  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
-  return time.toString();
 };
 
 // We persist the body and title to localStorage
@@ -104,30 +100,11 @@ class ComposerWithData extends React.Component<Props, State> {
   }
 
   removeStorage = () => {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
-    localStorage.removeItem(LS_COMPOSER_EXPIRE);
+    clearDraftThread();
   };
 
   getTitleAndBody = () => {
-    let storedBody;
-    let storedTitle;
-
-    if (localStorage) {
-      try {
-        const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
-        const currTime = new Date().getTime().toString();
-        /////if current time is greater than valid till of text then please expire title/body back to ''
-        if (expireTime && currTime > expireTime) {
-          this.removeStorage();
-        } else {
-          storedBody = localStorage.getItem(LS_BODY_KEY) || '';
-          storedTitle = localStorage.getItem(LS_TITLE_KEY) || '';
-        }
-      } catch (err) {
-        this.removeStorage();
-      }
-    }
+    const { body: storedBody, title: storedTitle } = getDraftThread();
     return {
       storedBody,
       storedTitle,
@@ -203,15 +180,9 @@ class ComposerWithData extends React.Component<Props, State> {
     });
   };
 
-  closeComposer = (clear?: string) => {
+  closeComposer = () => {
     this.persistBodyToLocalStorage();
     this.persistTitleToLocalStorage();
-
-    // we will clear the composer if it unmounts as a result of a post
-    // being published, that way the next composer open will start fresh
-    if (clear) {
-      this.clearEditorStateAfterPublish();
-    }
 
     if (this.props.previousLocation)
       return this.props.history.push({
@@ -230,13 +201,10 @@ class ComposerWithData extends React.Component<Props, State> {
     }
   };
 
-  handleTitleBodyChange = titleOrBody => {
-    if (titleOrBody === 'body') {
-      localStorage.setItem(LS_BODY_KEY, this.state.body);
-    } else {
-      localStorage.setItem(LS_TITLE_KEY, this.state.title);
-    }
-    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
+  handleTitleBodyChange = (key: 'title' | 'body') => {
+    storeDraftThread({
+      [key]: this.state[key],
+    });
   };
 
   persistBodyToLocalStorageWithDebounce = () => {
