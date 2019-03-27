@@ -10,25 +10,56 @@ import Select from 'src/components/select';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { PostsFeedsSelectorContainer, SearchInput } from '../style';
 
+import { Link } from 'react-router-dom';
 import { UserAvatar } from 'src/components/avatar';
 import theme from 'shared/theme';
 import { PrimaryButton } from 'src/components/button';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import ConditionalWrap from 'src/components/conditionalWrap';
+import ChannelSelector from 'src/components/composer/LocationSelectors/ChannelSelector';
+import Icon from 'src/components/icon';
+import getComposerLink from 'src/helpers/get-composer-link';
 
-const MiniComposer = ({ currentUser }) => {
+const MiniComposer = ({ currentUser, community }) => {
   const input = React.createRef();
   const [expanded, setExpanded] = React.useState(false);
+  const [selectedChannelId, setSelectedChannelId] = React.useState(null);
+  const [title, setTitle] = React.useState('');
+  const [body, setBody] = React.useState('');
+  const [titleWarning, setTitleWarning] = React.useState(null);
 
   React.useLayoutEffect(() => {
     if (expanded && input.current) input.current.focus();
   }, [expanded]);
 
+  const changeTitle = evt => {
+    const text = evt.target.value;
+    if (text.length >= 80 && !titleWarning) {
+      setTitleWarning(
+        'ProTip: good titles are shorter than 80 characters. Write extra information below!'
+      );
+    } else if (text.length < 80 && titleWarning) {
+      setTitleWarning(null);
+    }
+    setTitle(text);
+  };
+
+  const { pathname, search } = getComposerLink({
+    communityId: community.id,
+    channelId: selectedChannelId,
+  });
+
   return (
     <ConditionalWrap
       condition={expanded}
       wrap={children => (
-        <OutsideClickHandler onOutsideClick={() => setExpanded(false)}>
+        <OutsideClickHandler
+          onOutsideClick={() => {
+            if (title.trim().length === 0 && body.trim().length === 0) {
+              setExpanded(false);
+            }
+          }}
+        >
           {children}
         </OutsideClickHandler>
       )}
@@ -73,20 +104,35 @@ const MiniComposer = ({ currentUser }) => {
             user={currentUser}
             size={40}
           />
-          <input
-            css={{
-              background: theme.bg.default,
-              border: `1px solid ${theme.bg.border}`,
-              borderRadius: '5px',
-              width: '100%',
-              margin: '0 8px',
-              padding: '8px 12px',
-              fontSize: '16px',
-              minHeight: '40px',
-            }}
-            ref={input}
-            placeholder={`What do you want to talk about?`}
-          />
+          <div css={{ width: '100%', margin: '0 8px' }}>
+            {titleWarning && (
+              <p
+                css={{
+                  color: theme.warn.default,
+                  fontSize: '12px',
+                  marginBottom: '4px',
+                }}
+              >
+                {titleWarning}
+              </p>
+            )}
+            <input
+              css={{
+                background: theme.bg.default,
+                border: `1px solid ${
+                  titleWarning ? theme.warn.default : theme.bg.border
+                }`,
+                borderRadius: '8px',
+                width: '100%',
+                padding: '12px',
+                fontSize: '16px',
+              }}
+              ref={input}
+              value={title}
+              onChange={changeTitle}
+              placeholder={`What do you want to talk about?`}
+            />
+          </div>
           {!expanded && <PrimaryButton>Post</PrimaryButton>}
         </div>
         {expanded && (
@@ -106,16 +152,58 @@ const MiniComposer = ({ currentUser }) => {
               css={{
                 background: theme.bg.default,
                 border: `1px solid ${theme.bg.border}`,
-                borderRadius: '5px',
+                borderRadius: '8px',
                 width: '100%',
-                padding: '8px 12px',
+                padding: '12px',
                 fontSize: '16px',
                 minHeight: '80px',
                 marginBottom: '8px',
               }}
+              value={body}
+              onChange={evt => setBody(evt.target.value)}
               placeholder="More thoughts here"
             />
-            <PrimaryButton>Post</PrimaryButton>
+            <div
+              css={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <div css={{ display: 'flex', alignItems: 'center' }}>
+                <ChannelSelector
+                  id={community.id}
+                  onChannelChange={id => {
+                    setSelectedChannelId(id);
+                  }}
+                  selectedCommunityId={community.id}
+                  selectedChannelId={selectedChannelId}
+                  css={{ marginLeft: 0 }}
+                />
+                <Link
+                  to={{
+                    pathname,
+                    search,
+                    state: { modal: true },
+                  }}
+                  css={{
+                    color: theme.text.alt,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Icon glyph="view" />
+                </Link>
+              </div>
+              <PrimaryButton
+                disabled={
+                  title.trim().length === 0 || selectedChannelId === null
+                }
+              >
+                Post
+              </PrimaryButton>
+            </div>
           </div>
         )}
       </div>
@@ -189,7 +277,9 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
           value={clientSearchQuery}
         />
       </PostsFeedsSelectorContainer>
-      {currentUser && <MiniComposer currentUser={currentUser} />}
+      {currentUser && (
+        <MiniComposer community={community} currentUser={currentUser} />
+      )}
       {debouncedServerSearchQuery && (
         <SearchThreadFeed
           search

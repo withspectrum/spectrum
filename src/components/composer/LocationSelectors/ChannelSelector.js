@@ -18,6 +18,7 @@ type Props = {
   selectedCommunityId: ?string,
   onChannelChange: Function,
   location: Location,
+  className?: string,
   data: {
     loading: boolean,
     error: ?string,
@@ -32,6 +33,7 @@ const ChannelSelector = (props: Props) => {
     selectedChannelId,
     selectedCommunityId,
     location,
+    className,
   } = props;
   const { loading, error, community } = data;
   if (loading) return <LoadingSelect />;
@@ -98,6 +100,7 @@ const ChannelSelector = (props: Props) => {
       if (shouldSelectSingleChannelChild()) return selectSingleChannelChild();
       return (
         <RequiredSelector
+          className={className}
           data-cy="composer-channel-selector"
           onChange={onChange}
           value={channelIsValid ? selectedChannelId : ''}
@@ -121,7 +124,7 @@ const ChannelSelector = (props: Props) => {
     }
 
     return (
-      <ChannelPreview data-cy="composer-channel-selected">
+      <ChannelPreview className={className} data-cy="composer-channel-selected">
         <Icon glyph={'channel'} size={32} />
         {channel.name}
       </ChannelPreview>
@@ -131,6 +134,7 @@ const ChannelSelector = (props: Props) => {
   if (shouldSelectSingleChannelChild()) return selectSingleChannelChild();
   return (
     <RequiredSelector
+      className={className}
       data-cy="composer-channel-selector"
       onChange={onChange}
       value={channelIsValid ? selectedChannelId : ''}
