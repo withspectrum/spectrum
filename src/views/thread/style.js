@@ -813,7 +813,6 @@ export const StickyHeaderContainer = styled.div`
   align-self: stretch;
   background: ${theme.bg.wash};
   padding-right: 16px;
-  max-width: ${PRIMARY_COLUMN_WIDTH - 2}px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;

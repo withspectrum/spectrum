@@ -47,6 +47,7 @@ export const SingleColumnGrid = styled.div`
   display: grid;
   justify-self: center;
   grid-template-columns: ${MAX_WIDTH}px;
+  grid-template-areas: 'primary';
   background: ${theme.bg.default};
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -143,7 +144,8 @@ export const PrimaryColumn = styled.section`
   border-bottom: 1px solid ${theme.bg.border};
   border-radius: 0 0 4px 4px;
   height: 100%;
-  max-width: ${PRIMARY_COLUMN_WIDTH}px;
+  max-width: ${props =>
+    !props.fullWidth ? `${PRIMARY_COLUMN_WIDTH}px` : 'none'};
   grid-area: primary;
   display: grid;
   grid-template-rows: 1fr;
