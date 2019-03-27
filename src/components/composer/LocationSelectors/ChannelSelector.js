@@ -34,6 +34,7 @@ const ChannelSelector = (props: Props) => {
     selectedCommunityId,
     location,
     className,
+    ...rest
   } = props;
   const { loading, error, community } = data;
   if (loading) return <LoadingSelect />;
@@ -105,6 +106,7 @@ const ChannelSelector = (props: Props) => {
           onChange={onChange}
           value={channelIsValid ? selectedChannelId : ''}
           emphasize={!selectedChannelId}
+          {...rest}
         >
           {/* $FlowIssue */}
           <React.Fragment>
@@ -139,6 +141,7 @@ const ChannelSelector = (props: Props) => {
       onChange={onChange}
       value={channelIsValid ? selectedChannelId : ''}
       emphasize={!selectedChannelId}
+      {...rest}
     >
       {/* $FlowIssue */}
       <React.Fragment>

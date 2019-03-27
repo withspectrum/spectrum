@@ -235,6 +235,18 @@ export const RequiredSelector = styled(Selector)`
   color: ${props => (props.emphasize ? theme.brand.alt : theme.text.default)};
   background-color: ${props =>
     props.disabled ? theme.bg.wash : theme.bg.default};
+
+  &:focus {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.24)};
+  }
+
+  &:active {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.64)};
+  }
 `;
 
 export const OptionalSelector = styled(Selector)`
