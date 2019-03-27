@@ -233,7 +233,7 @@ class ChannelView extends React.Component<Props> {
 
                   {selectedView === 'posts' && (
                     <React.Fragment>
-                      {currentUser && !channel.isArchived && (
+                      {currentUser && isMember && !channel.isArchived && (
                         <MiniComposer
                           community={community}
                           fixedChannelId={channel.id}

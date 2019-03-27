@@ -6,9 +6,7 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { UserAvatar } from 'src/components/avatar';
 import theme from 'shared/theme';
-import { PrimaryButton } from 'src/components/button';
-import OutsideClickHandler from 'src/components/outsideClickHandler';
-import ConditionalWrap from 'src/components/conditionalWrap';
+import { PrimaryButton, TextButton } from 'src/components/button';
 import ChannelSelector from 'src/components/composer/LocationSelectors/ChannelSelector';
 import Icon from 'src/components/icon';
 import getComposerLink from 'src/helpers/get-composer-link';
@@ -172,6 +170,7 @@ const MiniComposer = ({
         await storeDraftThread({ title: '', body: '' });
         await setBody('');
         await setTitle('');
+        await setExpanded(false);
         return history.push({
           pathname: getThreadLink(data.publishThread),
           state: { modal: true },
@@ -189,188 +188,190 @@ const MiniComposer = ({
   });
 
   return (
-    <ConditionalWrap
-      condition={expanded}
-      wrap={children => (
-        <OutsideClickHandler
-          onOutsideClick={() => {
-            if (title.trim().length === 0 && body.trim().length === 0) {
-              setExpanded(false);
-            }
-          }}
-        >
-          {children}
-        </OutsideClickHandler>
-      )}
+    <Container
+      data-cy={expanded ? 'mini-composer-expanded' : 'mini-composer-collapsed'}
     >
-      <Container>
-        {!expanded && (
-          <div
-            tabIndex={-1}
+      {!expanded && (
+        <div
+          tabIndex={-1}
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            background: 'transparent',
+            zIndex: 9999,
+            cursor: 'pointer',
+          }}
+          onClick={() => setExpanded(true)}
+        />
+      )}
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+        }}
+      >
+        <UserAvatar
+          isClickable={false}
+          showHoverProfile={false}
+          showOnlineStatus={false}
+          user={currentUser}
+          size={40}
+        />
+        <div css={{ width: '100%', margin: '0 8px' }}>
+          {titleWarning && (
+            <p
+              data-cy="mini-composer-warning"
+              css={{
+                color: theme.warn.default,
+                fontSize: '12px',
+                marginBottom: '4px',
+                fontWeight: '500',
+              }}
+            >
+              {titleWarning}
+            </p>
+          )}
+          <input
+            data-cy="mini-composer-title"
+            tabIndex={1}
             css={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              background: 'transparent',
-              zIndex: 9999,
-              cursor: 'pointer',
+              background: theme.bg.default,
+              border: `1px solid ${
+                titleWarning ? theme.warn.default : theme.bg.border
+              }`,
+              borderRadius: '8px',
+              width: '100%',
+              padding: '12px',
+              fontSize: '16px',
             }}
-            onClick={() => setExpanded(true)}
+            ref={titleEditor}
+            value={title}
+            onChange={changeTitle}
+            placeholder="What's on your mind?"
           />
-        )}
+        </div>
+        {!expanded && <PrimaryButton tabIndex={-1}>Post</PrimaryButton>}
+      </div>
+      {expanded && (
         <div
           css={{
-            display: 'flex',
-            flexDirection: 'row',
             width: '100%',
+            paddingLeft: '48px',
+            paddingRight: '8px',
+            marginTop: '8px',
+            fontSize: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
           }}
         >
-          <UserAvatar
-            isClickable={false}
-            showHoverProfile={false}
-            showOnlineStatus={false}
-            user={currentUser}
-            size={40}
-          />
-          <div css={{ width: '100%', margin: '0 8px' }}>
-            {titleWarning && (
-              <p
+          <Dropzone
+            accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+            disableClick
+            multiple={false}
+            onDropAccepted={uploadFiles}
+          >
+            {({ getRootProps, getInputProps, isDragActive }) => (
+              <div
+                {...getRootProps({
+                  refKey: 'ref',
+                })}
                 css={{
-                  color: theme.warn.default,
-                  fontSize: '12px',
-                  marginBottom: '4px',
-                  fontWeight: '500',
+                  width: '100%',
+                  position: 'relative',
+                  marginBottom: '8px',
                 }}
               >
-                {titleWarning}
-              </p>
+                <input {...getInputProps()} />
+                <MentionsInput
+                  data-cy="mini-composer-body"
+                  tabIndex={2}
+                  style={{
+                    background: theme.bg.default,
+                    border: `1px solid ${theme.bg.border}`,
+                    borderRadius: '8px',
+                    width: '100%',
+                    input: {
+                      fontSize: '16px',
+                      minHeight: '80px',
+                      padding: '12px',
+                    },
+                  }}
+                  inputRef={bodyEditor}
+                  value={body}
+                  onChange={changeBody}
+                  placeholder="(Optional) Add more details..."
+                />
+
+                <DropImageOverlay
+                  css={{
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                  visible={isDragActive}
+                />
+              </div>
             )}
-            <input
-              tabIndex={1}
-              css={{
-                background: theme.bg.default,
-                border: `1px solid ${
-                  titleWarning ? theme.warn.default : theme.bg.border
-                }`,
-                borderRadius: '8px',
-                width: '100%',
-                padding: '12px',
-                fontSize: '16px',
-              }}
-              ref={titleEditor}
-              value={title}
-              onChange={changeTitle}
-              placeholder="What's on your mind?"
-            />
-          </div>
-          {!expanded && <PrimaryButton tabIndex={-1}>Post</PrimaryButton>}
-        </div>
-        {expanded && (
+          </Dropzone>
           <div
             css={{
-              width: '100%',
-              paddingLeft: '48px',
-              paddingRight: '8px',
-              marginTop: '8px',
-              fontSize: '16px',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
             }}
           >
-            <Dropzone
-              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
-              disableClick
-              multiple={false}
-              onDropAccepted={uploadFiles}
-            >
-              {({ getRootProps, getInputProps, isDragActive }) => (
-                <div
-                  {...getRootProps({
-                    refKey: 'ref',
-                  })}
-                  css={{
-                    width: '100%',
-                    position: 'relative',
-                    marginBottom: '8px',
+            <div css={{ display: 'flex', alignItems: 'center' }}>
+              {!fixedChannelId && (
+                <ChannelSelector
+                  id={community.id}
+                  onChannelChange={id => {
+                    setSelectedChannelId(id);
                   }}
-                >
-                  <input {...getInputProps()} />
-                  <MentionsInput
-                    tabIndex={2}
-                    style={{
-                      background: theme.bg.default,
-                      border: `1px solid ${theme.bg.border}`,
-                      borderRadius: '8px',
-                      width: '100%',
-                      input: {
-                        fontSize: '16px',
-                        minHeight: '80px',
-                        padding: '12px',
-                      },
-                    }}
-                    inputRef={bodyEditor}
-                    value={body}
-                    onChange={changeBody}
-                    placeholder="(Optional) Add more details..."
-                  />
-
-                  <DropImageOverlay
-                    css={{
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                    }}
-                    visible={isDragActive}
-                  />
-                </div>
+                  selectedCommunityId={community.id}
+                  selectedChannelId={selectedChannelId}
+                  css={{ marginLeft: 0 }}
+                  tabIndex={3}
+                />
               )}
-            </Dropzone>
-            <div
-              css={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-              }}
-            >
-              <div css={{ display: 'flex', alignItems: 'center' }}>
-                {!fixedChannelId && (
-                  <ChannelSelector
-                    id={community.id}
-                    onChannelChange={id => {
-                      setSelectedChannelId(id);
+              <Tooltip content="Open in fullscreen">
+                <span style={{ marginLeft: '8px' }}>
+                  <Link
+                    data-cy="mini-composer-fullscreen"
+                    to={{
+                      pathname,
+                      search,
+                      state: { modal: true },
                     }}
-                    selectedCommunityId={community.id}
-                    selectedChannelId={selectedChannelId}
-                    css={{ marginLeft: 0 }}
-                    tabIndex={3}
-                  />
-                )}
-                <Tooltip content="Open in fullscreen">
-                  <span style={{ marginLeft: '8px' }}>
-                    <Link
-                      to={{
-                        pathname,
-                        search,
-                        state: { modal: true },
-                      }}
-                      css={{
-                        color: theme.text.alt,
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Icon size={24} glyph="expand" />
-                    </Link>
-                  </span>
-                </Tooltip>
-              </div>
+                    css={{
+                      color: theme.text.alt,
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Icon size={24} glyph="expand" />
+                  </Link>
+                </span>
+              </Tooltip>
+            </div>
+            <div style={{ display: 'flex' }}>
+              <TextButton
+                tabIndex={0}
+                style={{ marginRight: '8px' }}
+                onClick={() => setExpanded(false)}
+                data-cy="mini-composer-cancel"
+              >
+                Cancel
+              </TextButton>
               <PrimaryButton
                 tabIndex={4}
+                data-cy="mini-composer-post"
                 disabled={
                   isLoading ||
                   title.trim().length === 0 ||
@@ -378,13 +379,13 @@ const MiniComposer = ({
                 }
                 onClick={publish}
               >
-                {isLoading ? 'Loading...' : 'Post'}
+                {isLoading ? 'Posting...' : 'Post'}
               </PrimaryButton>
             </div>
           </div>
-        )}
-      </Container>
-    </ConditionalWrap>
+        </div>
+      )}
+    </Container>
   );
 };
 

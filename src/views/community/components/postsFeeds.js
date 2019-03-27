@@ -38,6 +38,8 @@ function useDebounce(value, delay) {
 
 export const PostsFeeds = withCurrentUser((props: Props) => {
   const { community, currentUser } = props;
+  const { communityPermissions } = community;
+  const { isMember } = communityPermissions;
   const defaultFeed = !currentUser ? 'trending' : 'latest';
   const [activeFeed, setActiveFeed] = useState(defaultFeed);
   const [clientSearchQuery, setClientSearchQuery] = useState('');
@@ -77,7 +79,7 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
           value={clientSearchQuery}
         />
       </PostsFeedsSelectorContainer>
-      {currentUser && (
+      {currentUser && isMember && (
         <MiniComposer community={community} currentUser={currentUser} />
       )}
 
