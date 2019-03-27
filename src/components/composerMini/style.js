@@ -15,3 +15,19 @@ export const Container = styled.div`
     display: none;
   }
 `;
+
+export const BodyContainer = styled.div`
+  width: 100%;
+  padding-left: 48px;
+  padding-right: 8px;
+  margin-top: 8px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  div,
+  textarea {
+    line-height: 1.4 !important;
+  }
+`;

@@ -262,7 +262,7 @@ export const ThreadTitle = {
   padding: '0',
   outline: 'none',
   border: '0',
-  lineHeight: '1.3',
+  lineHeight: '1.4',
   fontWeight: '600',
   boxShadow: 'none',
   width: '100%',
