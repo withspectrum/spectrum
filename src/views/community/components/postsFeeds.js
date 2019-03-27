@@ -9,6 +9,7 @@ import ThreadFeed from 'src/components/threadFeed';
 import Select from 'src/components/select';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { PostsFeedsSelectorContainer, SearchInput } from '../style';
+import MiniComposer from 'src/components/composerMini';
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
@@ -37,6 +38,8 @@ function useDebounce(value, delay) {
 
 export const PostsFeeds = withCurrentUser((props: Props) => {
   const { community, currentUser } = props;
+  const { communityPermissions } = community;
+  const { isMember } = communityPermissions;
   const defaultFeed = !currentUser ? 'trending' : 'latest';
   const [activeFeed, setActiveFeed] = useState(defaultFeed);
   const [clientSearchQuery, setClientSearchQuery] = useState('');
@@ -76,6 +79,10 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
           value={clientSearchQuery}
         />
       </PostsFeedsSelectorContainer>
+      {currentUser && isMember && (
+        <MiniComposer community={community} currentUser={currentUser} />
+      )}
+
       {debouncedServerSearchQuery && (
         <SearchThreadFeed
           search

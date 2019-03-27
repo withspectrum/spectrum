@@ -178,7 +178,7 @@ describe('action bar renders', () => {
       triggerThreadDelete();
     });
 
-    it.only('should edit the thread', () => {
+    it('should edit the thread', () => {
       cy.auth(publicThreadAuthor.id);
 
       openSettingsDropdown();

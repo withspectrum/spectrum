@@ -1,4 +1,4 @@
-import data from '../../shared/testing/data';
+import data from '../../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
 const singleCommunityUser = data.users.find(
   user => user.username === 'single-community-user'
@@ -23,12 +23,6 @@ const channelDropdown = () => cy.get('[data-cy="composer-channel-selector"]');
 const communitySelected = () =>
   cy.get('[data-cy="composer-community-selected"]');
 const channelSelected = () => cy.get('[data-cy="composer-channel-selected"]');
-const communityComposerButton = () =>
-  cy.get('[data-cy="community-thread-compose-button"]');
-const channelComposerButton = () =>
-  cy.get('[data-cy="channel-thread-compose-button"]');
-const titlebarComposeButton = () =>
-  cy.get('[data-cy="titlebar-compose-button"]');
 
 const communityDropdownIsEnabled = () => {
   communityDropdown().should('be.visible');
@@ -194,76 +188,5 @@ describe('/new/thread community and channel selection', () => {
     cy.visit('/new/thread?composerCommunityId=1&channelId=6');
     communityIsLocked();
     channelDropdownIsEnabled();
-  });
-});
-
-describe('community view composer', () => {
-  beforeEach(() => {
-    cy.auth(user.id);
-  });
-
-  it('should lock the community selection', () => {
-    cy.visit('/spectrum');
-    communityComposerButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelDropdownIsEnabled();
-    channelDropdown().contains('General');
-    channelDropdown().contains('Private');
-  });
-});
-
-describe('channel view composer', () => {
-  beforeEach(() => {
-    cy.auth(user.id);
-  });
-
-  it('should lock the community and channel selection', () => {
-    cy.visit('/spectrum/general');
-    channelComposerButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelIsLocked();
-    communitySelected().contains('Spectrum');
-    channelSelected().contains('General');
-  });
-});
-
-describe.skip('mobile tabbar composer', () => {
-  beforeEach(() => {
-    cy.auth(user.id);
-    cy.viewport('iphone-6');
-  });
-
-  it('selects a community from the community view', () => {
-    cy.visit('/spectrum');
-    titlebarComposeButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelDropdownIsEnabled();
-    channelDropdown().contains('General');
-    channelDropdown().contains('Private');
-    cy.url().should(
-      'eq',
-      'http://localhost:3000/new/thread?composerCommunityId=1'
-    );
-  });
-
-  it('selects a community and channel from the channel view', () => {
-    cy.visit('/spectrum/general');
-    titlebarComposeButton()
-      .should('be.visible')
-      .click();
-    communityIsLocked();
-    channelIsLocked();
-    communitySelected().contains('Spectrum');
-    channelSelected().contains('General');
-    cy.url().should(
-      'eq',
-      'http://localhost:3000/new/thread?composerCommunityId=1&composerChannelId=1'
-    );
   });
 });

@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import getComposerLink from 'src/helpers/get-composer-link';
-import { PrimaryOutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { NullColumn, NullColumnHeading, NullColumnSubheading } from './style';
 
@@ -46,7 +44,6 @@ const NullState = ({
     cp = 'Try searching again or create a new post';
   }
 
-  const { pathname, search } = getComposerLink({ communityId, channelId });
   const headingIcon = (communityId || channelId) && (
     <Icon glyph={'post'} size={44} />
   );
@@ -57,13 +54,6 @@ const NullState = ({
         {headingIcon && headingIcon}
         {hd && <NullColumnHeading>{hd}</NullColumnHeading>}
         {cp && <NullColumnSubheading>{cp}</NullColumnSubheading>}
-        {(communityId || channelId) && (
-          <PrimaryOutlineButton
-            to={{ pathname, search, state: { modal: true } }}
-          >
-            New post
-          </PrimaryOutlineButton>
-        )}
       </span>
     </NullColumn>
   );
