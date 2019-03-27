@@ -132,10 +132,9 @@ class DeleteAccountForm extends React.Component<Props, State> {
                 <WarnButton
                   data-cy="delete-account-confirm-button"
                   loading={isLoading}
-                  disabled={isLoading}
                   onClick={this.confirmDelete}
                 >
-                  Confirm and delete my account
+                  {isLoading ? 'Deleting...' : 'Confirm and delete my account'}
                 </WarnButton>
               </div>
             ) : (

@@ -140,7 +140,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   loading={this.state.isLoading}
                   data-cy="community-settings-branded-login-save"
                 >
-                  Save
+                  {this.state.isLoading ? 'Saving...' : 'Save'}
                 </OutlineButton>
 
                 <TextButton
