@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import { closeModal } from '../../../actions/modals';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, Button } from '../../button';
 import { Actions, Message } from './style';
 import { modalStyles } from '../styles';
 import { ENTER } from '../../../helpers/keycodes';
