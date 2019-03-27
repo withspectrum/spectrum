@@ -33,7 +33,7 @@ export const StyledButton = styled.button`
   line-height: 1.2;
   transition: box-shadow 0.2s ease-in-out;
 
-  .icon {
+  .icon:not(:first-child):not(:last-child) {
     margin-right: 4px;
   }
 
