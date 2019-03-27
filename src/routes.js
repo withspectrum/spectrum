@@ -43,6 +43,7 @@ import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
 import { LoadingView } from 'src/views/viewHelpers';
 import GlobalTitlebar from 'src/views/globalTitlebar';
 import NoUsernameHandler from 'src/views/authViewHandler/noUsernameHandler';
+import { NavigationContext } from 'src/helpers/navigation-context';
 
 const Explore = Loadable({
   loader: () => import('./views/explore' /* webpackChunkName: "Explore" */),
@@ -169,11 +170,6 @@ const ComposerFallback = signedOutFallback(Composer, () => (
 
 export const RouteModalContext = React.createContext({
   isModal: false,
-});
-
-export const NavigationContext = React.createContext({
-  navigationIsOpen: false,
-  setNavigationIsOpen: () => {},
 });
 
 type Props = {

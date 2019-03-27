@@ -5,6 +5,7 @@ import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
 import Icon from 'src/components/icon';
+import { openModal, closeModal } from 'src/actions/modals';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
@@ -37,6 +38,11 @@ import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 import Inputs from './inputs';
 import ComposerLocationSelectors from './LocationSelectors';
+import {
+  getDraftThread,
+  storeDraftThread,
+  clearDraftThread,
+} from 'src/helpers/thread-draft-handling';
 
 type State = {
   title: string,
@@ -66,14 +72,8 @@ type Props = {
   previousLocation?: Location,
 };
 
-const LS_BODY_KEY = 'last-plaintext-thread-composer-body';
-const LS_TITLE_KEY = 'last-plaintext-thread-composer-title';
-const LS_COMPOSER_EXPIRE = 'last-plaintext-thread-composer-expire';
-
-const ONE_DAY = (): string => {
-  const time = new Date().getTime() + 60 * 60 * 24 * 1000;
-  return time.toString();
-};
+export const DISCARD_DRAFT_MESSAGE =
+  'Are you sure you want to discard this draft?';
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
@@ -103,31 +103,12 @@ class ComposerWithData extends React.Component<Props, State> {
     );
   }
 
-  removeStorage = () => {
-    localStorage.removeItem(LS_BODY_KEY);
-    localStorage.removeItem(LS_TITLE_KEY);
-    localStorage.removeItem(LS_COMPOSER_EXPIRE);
+  removeStorage = async () => {
+    await clearDraftThread();
   };
 
   getTitleAndBody = () => {
-    let storedBody;
-    let storedTitle;
-
-    if (localStorage) {
-      try {
-        const expireTime = localStorage.getItem(LS_COMPOSER_EXPIRE);
-        const currTime = new Date().getTime().toString();
-        /////if current time is greater than valid till of text then please expire title/body back to ''
-        if (expireTime && currTime > expireTime) {
-          this.removeStorage();
-        } else {
-          storedBody = localStorage.getItem(LS_BODY_KEY) || '';
-          storedTitle = localStorage.getItem(LS_TITLE_KEY) || '';
-        }
-      } catch (err) {
-        this.removeStorage();
-      }
-    }
+    const { body: storedBody, title: storedTitle } = getDraftThread();
     return {
       storedBody,
       storedTitle,
@@ -170,17 +151,44 @@ class ComposerWithData extends React.Component<Props, State> {
 
   handleGlobalKeyPress = e => {
     const esc = e && e.keyCode === ESC;
+    const enter = e.keyCode === ENTER;
+    const cmdEnter = e.keyCode === ENTER && e.metaKey;
 
-    if (esc) {
+    // we need to verify the source of the keypress event
+    // so that if it comes from the discard draft modal, it should not
+    // listen to the events for composer
+    const innerText = e.target.innerText;
+    const modalIsOpen = innerText.indexOf(DISCARD_DRAFT_MESSAGE) >= 0;
+
+    if (esc && modalIsOpen) {
       e.stopPropagation();
-      this.closeComposer();
+      this.props.dispatch(closeModal());
       return;
     }
+
+    if (enter && modalIsOpen) {
+      e.stopPropagation();
+      this.discardDraft();
+      return;
+    }
+
+    const composerHasContent = this.composerHasContent();
+
+    if (esc && composerHasContent) {
+      this.discardDraft();
+      return;
+    }
+
+    if (esc && !composerHasContent) {
+      return this.closeComposer();
+    }
+
+    if (cmdEnter && !modalIsOpen) return this.publishThread();
   };
 
-  handleKeyPress = e => {
-    const cmdEnter = e.keyCode === ENTER && e.metaKey;
-    if (cmdEnter) return this.publishThread();
+  composerHasContent = () => {
+    const { title, body } = this.state;
+    return title !== '' || body !== '';
   };
 
   changeTitle = e => {
@@ -203,14 +211,19 @@ class ComposerWithData extends React.Component<Props, State> {
     });
   };
 
-  closeComposer = (clear?: string) => {
+  closeComposer = (clear?: any) => {
     this.persistBodyToLocalStorage();
     this.persistTitleToLocalStorage();
 
     // we will clear the composer if it unmounts as a result of a post
-    // being published, that way the next composer open will start fresh
+    // being published or draft discarded, that way the next composer open will start fresh
     if (clear) {
       this.clearEditorStateAfterPublish();
+      this.setState({
+        title: '',
+        body: '',
+        preview: false,
+      });
     }
 
     if (this.props.previousLocation)
@@ -222,6 +235,21 @@ class ComposerWithData extends React.Component<Props, State> {
     return this.props.history.goBack({ state: { modal: false } });
   };
 
+  discardDraft = () => {
+    const composerHasContent = this.composerHasContent();
+
+    if (!composerHasContent) {
+      return this.closeComposer();
+    }
+
+    this.props.dispatch(
+      openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+        message: DISCARD_DRAFT_MESSAGE,
+        closeComposer: () => this.closeComposer('clear'),
+      })
+    );
+  };
+
   clearEditorStateAfterPublish = () => {
     try {
       this.removeStorage();
@@ -230,13 +258,14 @@ class ComposerWithData extends React.Component<Props, State> {
     }
   };
 
-  handleTitleBodyChange = titleOrBody => {
-    if (titleOrBody === 'body') {
-      localStorage.setItem(LS_BODY_KEY, this.state.body);
-    } else {
-      localStorage.setItem(LS_TITLE_KEY, this.state.title);
-    }
-    localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
+  onCancelClick = () => {
+    this.discardDraft();
+  };
+
+  handleTitleBodyChange = (key: 'title' | 'body') => {
+    storeDraftThread({
+      [key]: this.state[key],
+    });
   };
 
   persistBodyToLocalStorageWithDebounce = () => {
@@ -398,6 +427,8 @@ class ComposerWithData extends React.Component<Props, State> {
         this.setState({
           isLoading: false,
           postWasPublished: true,
+          title: '',
+          body: '',
         });
 
         // redirect the user to the thread
@@ -452,7 +483,7 @@ class ComposerWithData extends React.Component<Props, State> {
       <Wrapper data-cy="thread-composer-wrapper">
         <Overlay
           isModal={isModal}
-          onClick={this.closeComposer}
+          onClick={this.discardDraft}
           data-cy="overlay"
         />
 
@@ -472,7 +503,7 @@ class ComposerWithData extends React.Component<Props, State> {
             uploadFiles={this.uploadFiles}
             autoFocus={true}
             bodyRef={ref => (this.bodyEditor = ref)}
-            onKeyDown={this.handleKeyPress}
+            onKeyDown={this.handleGlobalKeyPress}
             isEditing={isEditing}
           />
 
@@ -506,7 +537,8 @@ class ComposerWithData extends React.Component<Props, State> {
             <ButtonRow>
               <TextButton
                 data-cy="composer-cancel-button"
-                onClick={this.closeComposer}
+                hoverColor="warn.alt"
+                onClick={this.discardDraft}
               >
                 Cancel
               </TextButton>

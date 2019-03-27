@@ -18,6 +18,7 @@ const { ReactLoadablePlugin } = require('react-loadable/webpack');
 const OfflinePlugin = require('offline-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const BundleBuddyWebpackPlugin = require('bundle-buddy-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 // Recursively walk a folder and get all file paths
 function walkFolder(currentDirPath, callback) {
@@ -164,5 +165,12 @@ module.exports = function override(config, env) {
       })
     );
   }
+
+  config.plugins.push(
+    new CircularDependencyPlugin({
+      cwd: process.cwd(),
+      failOnError: true,
+    })
+  );
   return rewireStyledComponents(config, env, { ssr: true });
 };

@@ -24,6 +24,7 @@ import { CommunityAvatar } from 'src/components/avatar';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import MiniComposer from 'src/components/composerMini';
 import MembersList from './components/MembersList';
 import {
   ViewGrid,
@@ -231,12 +232,21 @@ class ChannelView extends React.Component<Props> {
                   </SegmentedControl>
 
                   {selectedView === 'posts' && (
-                    <ThreadFeedWithData
-                      viewContext="channelProfile"
-                      id={channel.id}
-                      currentUser={isLoggedIn}
-                      channelId={channel.id}
-                    />
+                    <React.Fragment>
+                      {currentUser && isMember && !channel.isArchived && (
+                        <MiniComposer
+                          community={community}
+                          fixedChannelId={channel.id}
+                          currentUser={currentUser}
+                        />
+                      )}
+                      <ThreadFeedWithData
+                        viewContext="channelProfile"
+                        id={channel.id}
+                        currentUser={isLoggedIn}
+                        channelId={channel.id}
+                      />
+                    </React.Fragment>
                   )}
 
                   {selectedView === 'search' && (

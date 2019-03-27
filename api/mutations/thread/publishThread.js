@@ -348,26 +348,6 @@ export default requireAuth(
       ),
     ]);
 
-    // Post a new message with a link to the new thread to the watercooler thread if one exists
-    if (community.watercoolerId && !channel.isPrivate) {
-      await addMessage(
-        {
-          content: {
-            body: `${
-              user.name
-            } just posted a new thread 📝 https://spectrum.chat/${
-              community.slug
-            }/${channel.slug}/${slugg(dbThread.content.title)}~${dbThread.id}`,
-          },
-          messageType: 'text',
-          threadId: community.watercoolerId,
-          threadType: 'story',
-          bot: true,
-        },
-        user.id
-      );
-    }
-
     if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
       return dbThread;
     }

@@ -3,12 +3,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import getComposerLink from 'src/helpers/get-composer-link';
-import {
-  PrimaryOutlineButton,
-  PrimaryButton,
-  OutlineButton,
-} from 'src/components/button';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import { openModal } from 'src/actions/modals';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { ActionsRowContainer } from '../style';
@@ -37,7 +32,6 @@ export const UnconnectedCommunityActions = (props: Props) => {
 
   const { isMember, isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
-  const { pathname, search } = getComposerLink({ communityId: community.id });
 
   if (isMember) {
     return (
@@ -58,13 +52,6 @@ export const UnconnectedCommunityActions = (props: Props) => {
             {isHovering ? 'Leave community' : 'Member'}
           </OutlineButton>
         )}
-
-        <PrimaryOutlineButton
-          data-cy="community-thread-compose-button"
-          to={{ pathname, search, state: { modal: true } }}
-        >
-          New Post
-        </PrimaryOutlineButton>
       </ActionsRowContainer>
     );
   }

@@ -47,8 +47,7 @@ const Feeds = (props: Props) => {
     const { tab } = querystring.parse(search);
 
     if (!tab) {
-      const defaultTab = community.watercoolerId ? 'chat' : 'posts';
-      changeTab(defaultTab);
+      changeTab('posts');
     }
 
     if (tab === 'chat' && !community.watercoolerId) {
@@ -172,7 +171,7 @@ const Feeds = (props: Props) => {
   }, []);
 
   const segments = ['posts', 'members', 'info'];
-  if (community.watercoolerId) segments.unshift('chat');
+  if (community.watercoolerId) segments.splice(1, 0, 'chat');
 
   // if the community being viewed changes, and the previous community had
   // a watercooler but the next one doesn't, select the posts tab on the new one
