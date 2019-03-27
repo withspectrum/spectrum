@@ -224,7 +224,7 @@ export const RequiredSelector = styled(Selector)`
   max-height: 38px;
   max-width: 212px;
   line-height: 1.2;
-  border: 2px solid
+  border: 1px solid
     ${props => (props.emphasize ? theme.brand.alt : theme.bg.border)};
   border-radius: 8px;
   color: ${props => (props.emphasize ? theme.brand.alt : theme.text.default)};
