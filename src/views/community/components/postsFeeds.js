@@ -80,6 +80,7 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
       {currentUser && (
         <MiniComposer community={community} currentUser={currentUser} />
       )}
+
       {debouncedServerSearchQuery && (
         <SearchThreadFeed
           search

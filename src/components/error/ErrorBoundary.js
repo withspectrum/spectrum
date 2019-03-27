@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import BlueScreen from '.';
+import BlueScreen from './BlueScreen';
 
 type State = {
   error: ?any,

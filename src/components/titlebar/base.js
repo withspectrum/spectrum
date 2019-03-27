@@ -4,7 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter, type History } from 'react-router-dom';
 import { ErrorBoundary } from 'src/components/error';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 import Icon from 'src/components/icon';
 import { RedDot } from 'src/views/navigation/style';
 import {

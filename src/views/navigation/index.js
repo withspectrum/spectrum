@@ -23,7 +23,7 @@ import NotificationsTab from './notificationsTab';
 import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 
 type Props = {
   history: History,
