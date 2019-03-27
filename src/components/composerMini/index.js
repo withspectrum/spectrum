@@ -161,6 +161,9 @@ const MiniComposer = ({
       .then(({ data }) => {
         setIsLoading(false);
         dispatch(addToastWithTimeout('success', 'Thread published!'));
+        storeDraftThread({ title: '', body: '' });
+        setBody('');
+        setTitle('');
         history.push({
           pathname: getThreadLink(data.publishThread),
           state: { modal: true },
