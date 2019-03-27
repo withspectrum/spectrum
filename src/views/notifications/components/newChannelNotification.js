@@ -80,7 +80,7 @@ export class NewChannelNotification extends React.Component<Props> {
         : 'A new channel was';
 
     return (
-      <SegmentedNotificationCard>
+      <SegmentedNotificationCard isSeen={notification.isSeen}>
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={true}>

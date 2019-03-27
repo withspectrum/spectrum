@@ -21,6 +21,7 @@ import {
   ProfilePhotoContainer,
   Content,
   Title,
+  Username,
   Description,
   Actions,
 } from './style';
@@ -63,6 +64,7 @@ class HoverProfile extends Component<ProfileProps> {
               )}
             >
               <Title>{user.name}</Title>
+              <Username>@{user.username}</Username>
             </ConditionalWrap>
 
             {user.betaSupporter && (

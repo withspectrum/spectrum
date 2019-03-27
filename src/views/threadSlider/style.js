@@ -2,17 +2,26 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { zIndex } from 'src/components/globals';
-import { MEDIA_BREAK, MAX_WIDTH, TITLEBAR_HEIGHT } from 'src/components/layout';
+import {
+  MEDIA_BREAK,
+  MAX_WIDTH,
+  TITLEBAR_HEIGHT,
+  NAVBAR_WIDTH,
+} from 'src/components/layout';
 
 export const Container = styled.div`
-  grid-area: main;
   display: flex;
   justify-content: center;
   z-index: ${zIndex.slider + 1};
-  position: sticky;
+  position: absolute;
+  left: ${NAVBAR_WIDTH}px;
+  right: 0;
+  top: 0;
+  bottom: 0;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    top: ${TITLEBAR_HEIGHT}px;
+    left: 0;
   }
 `;
 
@@ -23,37 +32,26 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: ${zIndex.slider + 2};
 `;
 
-export const ThreadContainerBackground = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
+export const ThreadBackground = styled.div`
   position: fixed;
-  max-width: ${MAX_WIDTH + 32}px;
+  top: 0;
+  bottom: 0;
   background: ${theme.bg.wash};
-  z-index: ${zIndex.slider + 3};
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    max-width: 100%;
-    padding: 0;
-    box-shadow: none;
-  }
+  width: ${MAX_WIDTH + 32}px;
+  left: 50%;
+  transform: translateX(calc(-50% + 32px));
 `;
 
 export const ThreadContainer = styled.div`
   display: flex;
+  justify-content: center;
   width: 100%;
-  max-width: ${MAX_WIDTH + 32}px;
   z-index: ${zIndex.slider + 4};
-  padding: 0 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-width: 100%;
-    transform: translateX(0);
-    padding: 0;
     box-shadow: 0;
   }
 `;

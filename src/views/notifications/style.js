@@ -1,6 +1,6 @@
 // @flow
 import theme from 'shared/theme';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   FlexRow,
   FlexCol,
@@ -15,6 +15,7 @@ import { HorizontalRule } from 'src/components/globals';
 import Card from 'src/components/card';
 import { SingleColumnGrid } from 'src/components/layout';
 import Icon from 'src/components/icon';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -27,9 +28,16 @@ export const NotificationCard = styled.div`
   overflow: hidden;
   position: relative;
   border-bottom: 1px solid ${props => props.theme.bg.border};
+  ${props =>
+    props.isSeen === false &&
+    css`
+      box-shadow: inset 2px 0 0 ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 
   &:hover {
-    background: ${theme.bg.wash};
+    background: ${props =>
+      props.isSeen ? theme.bg.wash : hexa(theme.brand.default, 0.06)};
   }
 `;
 
@@ -37,13 +45,20 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
+
+  ${props =>
+    props.isSeen === false &&
+    css`
+      border-left: 2px solid ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 `;
 
 export const ContentHeading = styled.h2`
@@ -265,12 +280,12 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled.div`
+export const StickyHeader = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 16px;
   background: ${props => props.theme.bg.default};
   position: sticky;
@@ -278,9 +293,8 @@ export const RequestCard = styled.div`
   border-bottom: 1px solid ${theme.bg.border};
   z-index: 10;
 
-  > p {
-    font-weight: 600;
-    font-size: 16px;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
   }
 `;
 

@@ -44,12 +44,6 @@ const StickyHeader = (props: Props) => {
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>{thread.content.title}</CommunityHeaderName>
             <CommunityHeaderSubtitle>
-              <UserHoverProfile username={thread.author.user.username}>
-                <Link to={`/users/${thread.author.user.username}`}>
-                  {thread.author.user.name} (@{thread.author.user.username})
-                </Link>
-              </UserHoverProfile>
-              &nbsp;·&nbsp;
               <Link to={getThreadLink(thread)}>{timestamp}</Link>
             </CommunityHeaderSubtitle>
           </CommunityHeaderMetaCol>

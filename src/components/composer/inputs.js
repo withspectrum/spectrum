@@ -77,6 +77,7 @@ export default (props: Props) => {
           right: '0',
           zIndex: '9999',
           background: '#FFF',
+          minHeight: '52px',
         }}
       >
         <Segment isActive={!showPreview} onClick={() => onClick(false)}>

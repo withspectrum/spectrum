@@ -50,13 +50,25 @@ type Props = {
     thread: GetThreadType,
   },
   client: Object,
+  className?: string,
   currentUser?: Object,
   dispatch: Function,
   notifications: Array<Object>,
+  isModal: boolean,
+  children: React$Node,
 };
 
 const ThreadContainer = (props: Props) => {
-  const { data, isLoading, client, currentUser, dispatch } = props;
+  const {
+    data,
+    isLoading,
+    children,
+    client,
+    currentUser,
+    dispatch,
+    className,
+    isModal = false,
+  } = props;
 
   if (isLoading) return <LoadingView />;
 
@@ -173,7 +185,8 @@ const ThreadContainer = (props: Props) => {
     <React.Fragment>
       <ThreadHead thread={thread} />
       <TopBottomButtons />
-      <ViewGrid data-cy="thread-view">
+      <ViewGrid className={className} data-cy="thread-view">
+        {children}
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
             <SidebarSection>
@@ -209,7 +222,7 @@ const ThreadContainer = (props: Props) => {
               the chat input at the bottom of the view, so it must always be tricked
               into thinking that its preceeding sibling is full-height.
             */}
-            <Stretch>
+            <Stretch isModal={isModal}>
               <ErrorBoundary>
                 <StickyHeader thread={thread} />
               </ErrorBoundary>
