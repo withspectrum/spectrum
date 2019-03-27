@@ -66,7 +66,6 @@ const MiniComposer = ({
   const titleWarningText =
     'Tip: good titles are shorter than 80 characters. Add more details below.';
   useEffect(() => {
-    const { title } = draftThread;
     if (title.length >= 80 && !titleWarning) {
       setTitleWarning(titleWarningText);
     } else if (title.length < 80 && titleWarning) {
