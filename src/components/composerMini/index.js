@@ -368,9 +368,7 @@ const MiniComposer = ({
               </div>
               <PrimaryButton
                 disabled={
-                  isLoading ||
-                  title.trim().length === 0 ||
-                  selectedChannelId === null
+                  isLoading || title.trim().length === 0 || !selectedChannelId
                 }
                 onClick={publish}
               >
