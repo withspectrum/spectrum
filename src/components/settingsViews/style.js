@@ -197,8 +197,7 @@ export const EditDropdownContainer = styled.div`
   color: ${theme.text.secondary};
   cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  padding-top: 16px;
 `;
 
 export const Dropdown = styled.div`
