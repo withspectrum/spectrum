@@ -11,6 +11,8 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import { PostsFeedsSelectorContainer, SearchInput } from '../style';
 
 import { Link } from 'react-router-dom';
+import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
 import { UserAvatar } from 'src/components/avatar';
 import theme from 'shared/theme';
 import { PrimaryButton } from 'src/components/button';
@@ -19,17 +21,34 @@ import ConditionalWrap from 'src/components/conditionalWrap';
 import ChannelSelector from 'src/components/composer/LocationSelectors/ChannelSelector';
 import Icon from 'src/components/icon';
 import getComposerLink from 'src/helpers/get-composer-link';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { DropImageOverlay } from 'src/components/composer/style';
+import uploadImageMutation, {
+  type UploadImageInput,
+  type UploadImageType,
+} from 'shared/graphql/mutations/uploadImage';
+import MentionsInput from 'src/components/mentionsInput';
 
-const MiniComposer = ({ currentUser, community }) => {
-  const input = React.createRef();
+const MiniComposer = compose(
+  connect(),
+  uploadImageMutation
+)(({ currentUser, community, dispatch, uploadImage }) => {
+  const titleEditor = React.createRef();
+  const bodyEditor = React.createRef();
   const [expanded, setExpanded] = React.useState(false);
   const [selectedChannelId, setSelectedChannelId] = React.useState(null);
   const [title, setTitle] = React.useState('');
   const [body, setBody] = React.useState('');
+  const bodyRef = React.useRef(body);
   const [titleWarning, setTitleWarning] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  useEffect(() => {
+    bodyRef.current = body;
+  }, [body]);
 
   React.useLayoutEffect(() => {
-    if (expanded && input.current) input.current.focus();
+    if (expanded && titleEditor.current) titleEditor.current.focus();
   }, [expanded]);
 
   const changeTitle = evt => {
@@ -42,6 +61,48 @@ const MiniComposer = ({ currentUser, community }) => {
       setTitleWarning(null);
     }
     setTitle(text);
+  };
+
+  const uploadFiles = files => {
+    if (!bodyEditor.current || !files[0]) return;
+
+    const uploading = `![Uploading ${files[0].name}...]()`;
+    let caretPos = bodyEditor.current.selectionStart;
+    setIsLoading(true);
+    setBody(
+      bodyRef.current.substring(0, caretPos) +
+        uploading +
+        bodyRef.current.substring(bodyEditor.current.selectionEnd, body.length)
+    );
+    caretPos = caretPos + uploading.length;
+    bodyEditor.current.selectionStart = caretPos;
+    bodyEditor.current.selectionEnd = caretPos;
+    bodyEditor.current.focus();
+
+    return uploadImage({
+      image: files[0],
+      type: 'threads',
+    })
+      .then(({ data }) => {
+        setIsLoading(false);
+        setBody(
+          bodyRef.current.replace(
+            uploading,
+            `![${files[0].name}](${data.uploadImage})`
+          )
+        );
+      })
+      .catch(err => {
+        console.error(err);
+        setIsLoading(false);
+        setBody(bodyRef.current.replace(uploading, ''));
+        dispatch(
+          addToastWithTimeout(
+            'error',
+            `Uploading image failed - ${err.message}`
+          )
+        );
+      });
   };
 
   const { pathname, search } = getComposerLink({
@@ -127,7 +188,7 @@ const MiniComposer = ({ currentUser, community }) => {
                 padding: '12px',
                 fontSize: '16px',
               }}
-              ref={input}
+              ref={titleEditor}
               value={title}
               onChange={changeTitle}
               placeholder={`What do you want to talk about?`}
@@ -148,21 +209,43 @@ const MiniComposer = ({ currentUser, community }) => {
               alignItems: 'flex-end',
             }}
           >
-            <textarea
-              css={{
-                background: theme.bg.default,
-                border: `1px solid ${theme.bg.border}`,
-                borderRadius: '8px',
-                width: '100%',
-                padding: '12px',
-                fontSize: '16px',
-                minHeight: '80px',
-                marginBottom: '8px',
-              }}
-              value={body}
-              onChange={evt => setBody(evt.target.value)}
-              placeholder="More thoughts here"
-            />
+            <Dropzone
+              accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
+              disableClick
+              multiple={false}
+              onDropAccepted={uploadFiles}
+            >
+              {({ getRootProps, getInputProps, isDragActive }) => (
+                <div
+                  {...getRootProps({
+                    refKey: 'ref',
+                  })}
+                  css={{ width: '100%', position: 'relative' }}
+                >
+                  <input {...getInputProps()} />
+                  <MentionsInput
+                    style={{
+                      background: theme.bg.default,
+                      border: `1px solid ${theme.bg.border}`,
+                      borderRadius: '8px',
+                      width: '100%',
+                      marginBottom: '8px',
+                      input: {
+                        fontSize: '16px',
+                        minHeight: '80px',
+                        padding: '12px',
+                      },
+                    }}
+                    ref={bodyEditor}
+                    value={body}
+                    onChange={evt => setBody(evt.target.value)}
+                    placeholder="Elaborate here if necessary (optional)"
+                  />
+
+                  <DropImageOverlay visible={isDragActive} />
+                </div>
+              )}
+            </Dropzone>
             <div
               css={{
                 display: 'flex',
@@ -198,10 +281,12 @@ const MiniComposer = ({ currentUser, community }) => {
               </div>
               <PrimaryButton
                 disabled={
-                  title.trim().length === 0 || selectedChannelId === null
+                  isLoading ||
+                  title.trim().length === 0 ||
+                  selectedChannelId === null
                 }
               >
-                Post
+                {isLoading ? 'Loading...' : 'Post'}
               </PrimaryButton>
             </div>
           </div>
@@ -209,7 +294,7 @@ const MiniComposer = ({ currentUser, community }) => {
       </div>
     </ConditionalWrap>
   );
-};
+});
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
