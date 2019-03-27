@@ -244,7 +244,6 @@ class ComposerWithData extends React.Component<Props, State> {
     this.props.dispatch(
       openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
         message: DISCARD_DRAFT_MESSAGE,
-        activateLastThread: this.activateLastThread,
         closeComposer: () => this.closeComposer('clear'),
       })
     );
