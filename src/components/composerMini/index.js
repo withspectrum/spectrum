@@ -22,10 +22,10 @@ import publishThreadMutation from 'shared/graphql/mutations/thread/publishThread
 import {
   getDraftThread,
   storeDraftThread,
-  clearDraftThread,
 } from 'src/helpers/thread-draft-handling';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { History } from 'react-router-dom';
+import { Container } from './style';
 
 type Props = {
   community: CommunityInfoType,
@@ -195,16 +195,7 @@ const MiniComposer = ({
         </OutsideClickHandler>
       )}
     >
-      <div
-        css={{
-          borderBottom: `1px solid ${theme.bg.border}`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          padding: '12px 20px 12px 12px',
-          position: 'relative',
-        }}
-      >
+      <Container>
         {!expanded && (
           <div
             tabIndex={-1}
@@ -383,7 +374,7 @@ const MiniComposer = ({
             </div>
           </div>
         )}
-      </div>
+      </Container>
     </ConditionalWrap>
   );
 };
