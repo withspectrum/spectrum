@@ -72,7 +72,8 @@ type Props = {
   previousLocation?: Location,
 };
 
-const DISCARD_DRAFT_MESSAGE = 'Are you sure you want to discard this draft?';
+export const DISCARD_DRAFT_MESSAGE =
+  'Are you sure you want to discard this draft?';
 
 // We persist the body and title to localStorage
 // so in case the app crashes users don't loose content
@@ -103,7 +104,6 @@ class ComposerWithData extends React.Component<Props, State> {
   }
 
   removeStorage = async () => {
-    console.log('clearing draft thread');
     await clearDraftThread();
   };
 
@@ -215,8 +215,6 @@ class ComposerWithData extends React.Component<Props, State> {
     this.persistBodyToLocalStorage();
     this.persistTitleToLocalStorage();
 
-    console.log({ clear });
-
     // we will clear the composer if it unmounts as a result of a post
     // being published or draft discarded, that way the next composer open will start fresh
     if (clear) {
@@ -254,7 +252,6 @@ class ComposerWithData extends React.Component<Props, State> {
 
   clearEditorStateAfterPublish = () => {
     try {
-      console.log('removing storage');
       this.removeStorage();
     } catch (err) {
       console.error(err);

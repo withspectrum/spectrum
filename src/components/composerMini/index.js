@@ -23,6 +23,8 @@ import {
 } from 'src/helpers/thread-draft-handling';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import type { History } from 'react-router-dom';
+import { DISCARD_DRAFT_MESSAGE } from 'src/components/composer';
+import { openModal } from 'src/actions/modals';
 import { Container } from './style';
 
 type Props = {
@@ -142,6 +144,26 @@ const MiniComposer = ({
           )
         );
       });
+  };
+
+  const handleCancel = () => {
+    const composerHasContent = body || title;
+
+    if (!composerHasContent) {
+      return setExpanded(false);
+    }
+
+    dispatch(
+      openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+        message: DISCARD_DRAFT_MESSAGE,
+        closeComposer: async () => {
+          await storeDraftThread({ title: '', body: '' });
+          await setBody('');
+          await setTitle('');
+          await setExpanded(false);
+        },
+      })
+    );
   };
 
   const publish = () => {
@@ -364,7 +386,7 @@ const MiniComposer = ({
               <TextButton
                 tabIndex={0}
                 style={{ marginRight: '8px' }}
-                onClick={() => setExpanded(false)}
+                onClick={handleCancel}
                 data-cy="mini-composer-cancel"
               >
                 Cancel

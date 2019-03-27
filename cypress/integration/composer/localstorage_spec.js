@@ -204,7 +204,7 @@ describe('discarding drafts message', () => {
     discardDraftModal().should('not.be.visible');
   });
 
-  it.only('should close discard confirmation modal on esc press', () => {
+  it('should close discard confirmation modal on esc press', () => {
     cy.get('[data-cy=editing-chat-input]').type(message);
     pressEscapeMessageInput();
     discardDraftModal().should('be.visible');

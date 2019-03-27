@@ -158,8 +158,8 @@ describe('mini composer functionality', () => {
     miniComposerExpanded().scrollIntoView();
     miniComposerTitle()
       .scrollIntoView()
-      .should('have.value', title + 'foo');
-    miniComposerBody().should('have.value', body + 'bar');
+      .should('not.have.value', title);
+    miniComposerBody().should('not.have.value', body);
   });
 
   it('should handle post button disabled state on community view', () => {

@@ -155,7 +155,7 @@ const Navigation = (props: Props) => {
 
               <Route path="/login">
                 {({ match }) => (
-                  <Tooltip content="login" placement={'left'}>
+                  <Tooltip content="Log in or sign up" placement={'left'}>
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/login'}
