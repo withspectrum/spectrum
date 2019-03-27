@@ -254,7 +254,7 @@ const MiniComposer = ({
               ref={titleEditor}
               value={title}
               onChange={changeTitle}
-              placeholder={`What do you want to talk about?`}
+              placeholder="What do you want to talk about?"
             />
           </div>
           {!expanded && <PrimaryButton>Post</PrimaryButton>}

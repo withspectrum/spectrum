@@ -117,7 +117,7 @@ export default (props: Props) => {
                   onChange={changeTitle}
                   style={ThreadTitle}
                   value={title}
-                  placeholder={'What‘s on your mind?'}
+                  placeholder="What do you want to talk about?"
                   autoFocus={autoFocus}
                 />
 
@@ -127,7 +127,7 @@ export default (props: Props) => {
                   disabled={body === null}
                   style={ThreadDescription}
                   inputRef={bodyRef}
-                  placeholder={'Add more thoughts here...'}
+                  placeholder="Elaborate here if necessary (optional)"
                   className={'threadComposer'}
                   dataCy="rich-text-editor"
                   onKeyDown={onKeyDown}
