@@ -29,6 +29,7 @@ const Thread = /* GraphQL */ `
   type Edit {
     timestamp: Date!
     content: ThreadContent!
+    # editedBy: User!
   }
 
   enum ThreadType {
@@ -42,12 +43,13 @@ const Thread = /* GraphQL */ `
     data: String
   }
 
-  type Thread {
+  type Thread @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date!
     modifiedAt: Date
+    editedBy: ThreadParticipant @cost(complexity: 2)
     channel: Channel!
-    community: Community! @cost(complexity: 1)
+    community: Community! @cost(complexity: 1) @cacheControl(maxAge: 84700)
     isPublished: Boolean!
     content: ThreadContent!
     isLocked: Boolean
@@ -72,6 +74,7 @@ const Thread = /* GraphQL */ `
     attachments: [Attachment]
       @deprecated(reason: "Attachments no longer used for link previews")
     isCreator: Boolean @deprecated(reason: "Use Thread.isAuthor instead")
+
     creator: User! @deprecated(reason: "Use Thread.author instead")
     participants: [User]
       @cost(complexity: 1)
@@ -86,7 +89,7 @@ const Thread = /* GraphQL */ `
   }
 
   extend type Query {
-    thread(id: ID!): Thread
+    thread(id: ID!): Thread @cacheControl(maxAge: 1200)
     searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
       @deprecated(reason: "Use the new Search query endpoint")
   }

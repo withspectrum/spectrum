@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "amplitude": "^3.5.0",
-    "aws-sdk": "^2.409.0",
+    "aws-sdk": "^2.426.0",
     "bull": "3.3.10",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
@@ -22,7 +22,7 @@
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.1",
     "sha1": "^1.1.1",
-    "source-map-support": "^0.5.10",
+    "source-map-support": "^0.5.11",
     "toobusy-js": "^0.5.1"
   }
 }

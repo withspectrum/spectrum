@@ -14,6 +14,9 @@ import importSlackMembers from './importSlackMembers';
 import enableCommunityTokenJoin from './enableCommunityTokenJoin';
 import disableCommunityTokenJoin from './disableCommunityTokenJoin';
 import resetCommunityJoinToken from './resetCommunityJoinToken';
+import enableCommunityWatercooler from './enableCommunityWatercooler';
+import disableCommunityWatercooler from './disableCommunityWatercooler';
+import setCommunityLastSeen from './setCommunityLastSeen';
 
 module.exports = {
   Mutation: {
@@ -32,5 +35,8 @@ module.exports = {
     enableCommunityTokenJoin,
     disableCommunityTokenJoin,
     resetCommunityJoinToken,
+    enableCommunityWatercooler,
+    disableCommunityWatercooler,
+    setCommunityLastSeen,
   },
 };

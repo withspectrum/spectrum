@@ -9,7 +9,7 @@ import uuidv4 from 'uuid/v4';
 const defaultSettings = {
   joinSettings: {
     tokenJoinEnabled: false,
-    message: null,
+    token: null,
   },
   slackSettings: {
     botLinks: {

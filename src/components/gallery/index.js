@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import getMediaMessagesForThread from 'shared/graphql/queries/message/getMediaMessagesForThread';
-import { displayLoadingGallery } from '../../components/loading';
+import { displayLoadingGallery } from 'src/components/loading';
 import Browser from './browser';
 
 const GalleryWithMedia = compose(

@@ -6,11 +6,12 @@ import { withRouter } from 'react-router';
 import editCommunityMutation from 'shared/graphql/mutations/community/editCommunity';
 import type { EditCommunityType } from 'shared/graphql/mutations/community/editCommunity';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import { openModal } from '../../../actions/modals';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { Button, IconButton } from '../../../components/buttons';
-import { Notice } from '../../../components/listItems/style';
-import Icon from 'src/components/icons';
+import { openModal } from 'src/actions/modals';
+import Tooltip from 'src/components/tooltip';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { PrimaryOutlineButton } from 'src/components/button';
+import { Notice } from 'src/components/listItems/style';
+import Icon from 'src/components/icon';
 import {
   Input,
   UnderlineInput,
@@ -18,7 +19,7 @@ import {
   PhotoInput,
   Error,
   CoverInput,
-} from '../../../components/formElements';
+} from 'src/components/formElements';
 import {
   Form,
   FormTitle,
@@ -28,11 +29,8 @@ import {
   ImageInputWrapper,
   DeleteCoverWrapper,
   DeleteCoverButton,
-} from '../../../components/editForm/style';
-import {
-  SectionCard,
-  SectionTitle,
-} from '../../../components/settingsViews/style';
+} from 'src/components/editForm/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -191,6 +189,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
       photoSizeError,
     } = this.state;
@@ -200,6 +199,7 @@ class EditForm extends React.Component<Props, State> {
       website,
       file,
       coverFile,
+      coverPhoto,
       communityId,
     };
 
@@ -248,9 +248,7 @@ class EditForm extends React.Component<Props, State> {
         </p>{' '}
         <p>
           <b>{communityData.metaData.members} members</b> will be removed from
-          the community and the{' '}
-          <b>{communityData.metaData.channels} channels</b> you’ve created will
-          be deleted.
+          the community and the channels you’ve created will be deleted.
         </p>
         <p>
           All threads, messages, reactions, and media shared in your community
@@ -298,7 +296,7 @@ class EditForm extends React.Component<Props, State> {
           <FormTitle>This community doesn’t exist yet.</FormTitle>
           <Description>Want to make it?</Description>
           <Actions>
-            <Button>Create</Button>
+            <PrimaryOutlineButton>Create</PrimaryOutlineButton>
           </Actions>
         </SectionCard>
       );
@@ -362,24 +360,29 @@ class EditForm extends React.Component<Props, State> {
           </Input>
 
           <Actions>
-            <Button
+            <PrimaryOutlineButton
               loading={isLoading}
               onClick={this.save}
               disabled={photoSizeError}
               type="submit"
+              data-cy="community-settings-edit-save-button"
             >
               Save
-            </Button>
+            </PrimaryOutlineButton>
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (
-                <IconButton
-                  glyph="delete"
-                  tipText={`Delete ${name}`}
-                  tipLocation="top-right"
-                  color="text.placeholder"
-                  hoverColor={'warn.alt'}
-                  onClick={e => this.triggerDeleteCommunity(e, community.id)}
-                />
+                <Tooltip content={`Delete ${name}`}>
+                  <span>
+                    <Icon
+                      glyph="delete"
+                      color="text.placeholder"
+                      hoverColor={'warn.alt'}
+                      onClick={e =>
+                        this.triggerDeleteCommunity(e, community.id)
+                      }
+                    />
+                  </span>
+                </Tooltip>
               )}
             </TertiaryActionContainer>
           </Actions>

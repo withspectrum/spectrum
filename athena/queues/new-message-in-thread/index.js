@@ -36,6 +36,9 @@ export default async (job: Job<MessageNotificationJobData>) => {
     }`
   );
 
+  // Do not send notification emails for bot messages
+  if (incomingMessage.bot) return;
+
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
   const existing = await checkForExistingNotification(
     'MESSAGE_CREATED',

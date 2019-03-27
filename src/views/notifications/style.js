@@ -1,6 +1,6 @@
 // @flow
 import theme from 'shared/theme';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   FlexRow,
   FlexCol,
@@ -10,10 +10,12 @@ import {
   Shadow,
   zIndex,
   Truncate,
-} from '../../components/globals';
-import { HorizontalRule } from '../../components/globals';
-import Card from '../../components/card';
-import { IconButton } from '../../components/buttons';
+} from 'src/components/globals';
+import { HorizontalRule } from 'src/components/globals';
+import Card from 'src/components/card';
+import { SingleColumnGrid } from 'src/components/layout';
+import Icon from 'src/components/icon';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -21,25 +23,21 @@ export const HzRule = styled(HorizontalRule)`
 
 export const NotificationCard = styled.div`
   padding: 16px;
+  width: 100%;
   padding-bottom: 24px;
   overflow: hidden;
-  transition: ${Transition.hover.off};
-  border-radius: 8px;
-  background: ${props => props.theme.bg.default};
-  margin-top: 8px;
-  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
   position: relative;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  ${props =>
+    props.isSeen === false &&
+    css`
+      box-shadow: inset 2px 0 0 ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 
   &:hover {
-    transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
-  }
-
-  @media (max-width: 768px) {
-    border-radius: 0;
-    border-bottom: 1px solid ${props => props.theme.bg.border};
-    box-shadow: none;
-    margin-top: 0;
+    background: ${props =>
+      props.isSeen ? theme.bg.wash : hexa(theme.brand.default, 0.06)};
   }
 `;
 
@@ -47,13 +45,20 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
+
+  ${props =>
+    props.isSeen === false &&
+    css`
+      border-left: 2px solid ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 `;
 
 export const ContentHeading = styled.h2`
@@ -166,10 +171,11 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const ActorPhotoItem = styled.div`
-  margin-right: 4px;
+  margin: 2px 4px 2px 0;
 `;
 
 export const ActorPhoto = styled.img`
@@ -274,30 +280,25 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled.div`
+export const StickyHeader = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px 16px 24px;
-  border-radius: 8px;
-  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  justify-content: flex-end;
+  padding: 16px;
   background: ${props => props.theme.bg.default};
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid ${theme.bg.border};
+  z-index: 10;
 
-  > p {
-    font-weight: 700;
-    font-size: 16px;
-  }
-
-  @media (max-width: 768px) {
-    border-radius: 0;
-    border-bottom: 1px solid ${props => props.theme.bg.border};
-    box-shadow: none;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
   }
 `;
 
-export const CloseRequest = styled(IconButton)`
+export const CloseRequest = styled(Icon)`
   margin-left: 8px;
   color: ${theme.text.placeholder};
 `;
@@ -356,4 +357,9 @@ export const ToggleNotificationsContainer = styled.div`
   align-items: center;
   height: 100%;
   cursor: pointer;
+`;
+
+export const StyledSingleColumn = styled(SingleColumnGrid)`
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
 `;

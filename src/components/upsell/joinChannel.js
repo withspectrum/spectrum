@@ -9,7 +9,7 @@ import { openModal } from 'src/actions/modals';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { JoinChannelContainer, JoinChannelContent } from './style';
-import { Button } from 'src/components/buttons';
+import { Button } from 'src/components/button';
 
 type Props = {
   channel: Object,
@@ -26,7 +26,7 @@ type State = {
 class JoinChannel extends React.Component<Props, State> {
   state = { isLoading: false };
 
-  login = () => this.props.dispatch(openModal('CHAT_INPUT_LOGIN_MODAL'));
+  login = () => this.props.dispatch(openModal('LOGIN_MODAL'));
 
   toggleSubscription = () => {
     const { channel, dispatch } = this.props;
@@ -95,11 +95,8 @@ class JoinChannel extends React.Component<Props, State> {
         <JoinChannelContent>
           <Button
             loading={isLoading}
-            color={'success.default'}
-            hoverColor={'success.default'}
-            gradientTheme={'success'}
             onClick={currentUser ? this.toggleSubscription : this.login}
-            dataCy={
+            data-cy={
               currentUser
                 ? 'thread-join-channel-upsell-button'
                 : 'join-channel-login-upsell'

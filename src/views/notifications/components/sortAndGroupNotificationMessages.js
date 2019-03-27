@@ -1,4 +1,4 @@
-import { sortByDate } from '../../../helpers/utils';
+import { sortByDate } from 'src/helpers/utils';
 
 export const sortAndGroupNotificationMessages = messagesToSort => {
   if (!(messagesToSort.length > 0)) return [];

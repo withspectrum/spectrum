@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import { IconButton } from '../../components/buttons';
+import Icon from 'src/components/icon';
 import { Wrapper, MenuContainer, MenuOverlay, Absolute } from './style';
 
 type Props = {
   hasNavBar?: boolean,
   darkContext?: boolean,
   hasTabBar?: boolean,
-  children: React.Node,
+  children: React$Node,
 };
 
 type State = {
@@ -27,7 +27,7 @@ class Menu extends React.Component<Props, State> {
     const { menuIsOpen } = this.state;
     return (
       <Wrapper darkContext={darkContext}>
-        <IconButton
+        <Icon
           dataCy={'community-menu-open'}
           glyph={'menu'}
           onClick={() => this.toggleMenu()}
@@ -36,7 +36,7 @@ class Menu extends React.Component<Props, State> {
           <MenuContainer hasNavBar={hasNavBar} hasTabBar={hasTabBar}>
             {menuIsOpen && this.props.children}
           </MenuContainer>
-          <IconButton
+          <Icon
             glyph={'view-close'}
             onClick={() => this.toggleMenu()}
             hasNavBar={hasNavBar}

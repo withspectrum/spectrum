@@ -1,15 +1,21 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, ErrorToast, SuccessToast, NeutralToast } from './style';
+import {
+  ToastsContainer,
+  ErrorToast,
+  SuccessToast,
+  NeutralToast,
+  NotificationToast,
+} from './style';
 
-const ToastsPure = ({ toasts }): React$Element<any> => {
-  if (!toasts) {
-    return <span />;
+const ToastsPure = ({ toasts }): ?React$Element<any> => {
+  if (!toasts || toasts.length === 0) {
+    return null;
   }
 
   return (
-    <Container>
+    <ToastsContainer>
       {toasts.map(toast => {
         const { kind, timeout, message, id } = toast;
         switch (kind) {
@@ -46,12 +52,19 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
               </NeutralToast>
             );
           }
+          case 'notification': {
+            return (
+              <NotificationToast key={id} timeout={timeout}>
+                {message}
+              </NotificationToast>
+            );
+          }
           default: {
             return null;
           }
         }
       })}
-    </Container>
+    </ToastsContainer>
   );
 };
 

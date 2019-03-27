@@ -2,15 +2,9 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import MentionsInput from '../mentionsInput';
-import { IconButton } from '../buttons';
 import { QuoteWrapper } from '../message/style';
-import {
-  FlexRow,
-  hexa,
-  Transition,
-  zIndex,
-  monoStack,
-} from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
+import { FlexRow, hexa, zIndex, monoStack } from 'src/components/globals';
 
 export const ChatInputContainer = styled(FlexRow)`
   flex: none;
@@ -37,7 +31,7 @@ export const ChatInputWrapper = styled.div`
   border-top: 1px solid ${theme.bg.border};
   box-shadow: -1px 0 0 ${theme.bg.border}, 1px 0 0 ${theme.bg.border};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;
     z-index: ${zIndex.mobileInput};
@@ -91,7 +85,7 @@ export const InputWrapper = styled.div`
     transition: border-color 0.2s ease-in;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-left: 16px;
   }
 `;
@@ -103,13 +97,13 @@ export const Input = styled(MentionsInput).attrs({
   autoComplete: 'on',
   autoCorrect: 'on',
 })`
-  font-size: 15px;
+  font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   font-weight: 400;
   line-height: 1.4;
   background: ${props =>
     props.networkDisabled ? 'none' : props.theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
   }
 
@@ -166,16 +160,6 @@ export const Input = styled(MentionsInput).attrs({
     `};
 `;
 
-export const SendButton = styled(IconButton)`
-  height: 32px;
-  width: 32px;
-  bottom: 4px;
-  margin-left: 4px;
-  background-color: transparent;
-  transition: ${Transition.hover.off};
-  align-self: flex-end;
-`;
-
 export const MediaInput = styled.input`
   width: 0.1px;
   height: 0.1px;
@@ -199,17 +183,6 @@ export const MediaLabel = styled.label`
   &:hover {
     cursor: pointer;
     color: ${theme.brand.default};
-  }
-`;
-
-export const EmojiToggle = styled(IconButton)`
-  position: absolute;
-  left: 56px;
-  background-color: transparent;
-  top: calc(50% - 16px);
-
-  @media (max-width: 768px) {
-    display: none;
   }
 `;
 

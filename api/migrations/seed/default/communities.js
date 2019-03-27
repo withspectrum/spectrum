@@ -7,6 +7,7 @@ const {
   DELETED_COMMUNITY_ID,
   PRIVATE_COMMUNITY_ID,
   SINGLE_CHANNEL_COMMUNITY_ID,
+  PRIVATE_COMMUNITY_WITH_JOIN_TOKEN_ID,
 } = constants;
 
 module.exports = [
@@ -79,6 +80,20 @@ module.exports = [
     coverPhoto:
       'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
     slug: 'single',
+    memberCount: 1,
+  },
+  {
+    id: PRIVATE_COMMUNITY_WITH_JOIN_TOKEN_ID,
+    createdAt: new Date(DATE),
+    isPrivate: true,
+    name: 'private community with join token',
+    description: 'private community with join token',
+    website: 'https://spectrum.chat',
+    profilePhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Profile.png.0.6225566835336693',
+    coverPhoto:
+      'https://spectrum.imgix.net/communities/-Kh6RfPYjmSaIWbkck8i/Twitter Header.png.0.3303118636071434',
+    slug: 'private-join',
     memberCount: 1,
   },
 ];

@@ -5,6 +5,7 @@ import ReactImage from 'react-image';
 import { zIndex } from '../globals';
 import { Link } from 'react-router-dom';
 import { ProfileHeaderAction } from '../profile/style';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled.div`
   position: relative;
@@ -19,7 +20,7 @@ export const Container = styled.div`
   ${props =>
     props.mobilesize &&
     css`
-      @media (max-width: 768px) {
+      @media (max-width: ${MEDIA_BREAK}px) {
         width: ${props => `${props.mobilesize}px`};
         height: ${props => `${props.mobilesize}px`};
       }
@@ -58,7 +59,7 @@ export const Img = styled(ReactImage)`
   ${props =>
     props.mobilesize &&
     css`
-      @media (max-width: 768px) {
+      @media (max-width: ${MEDIA_BREAK}px) {
         width: ${props => `${props.mobilesize}px`};
         height: ${props => `${props.mobilesize}px`};
       }
@@ -77,7 +78,7 @@ export const FallbackImg = styled.img`
   ${props =>
     props.mobilesize &&
     css`
-      @media (max-width: 768px) {
+      @media (max-width: ${MEDIA_BREAK}px) {
         width: ${props => `${props.mobilesize}px`};
         height: ${props => `${props.mobilesize}px`};
       }
@@ -95,7 +96,7 @@ export const LoadingImg = styled.div`
   ${props =>
     props.mobilesize &&
     css`
-      @media (max-width: 768px) {
+      @media (max-width: ${MEDIA_BREAK}px) {
         width: ${props => `${props.mobilesize}px`};
         height: ${props => `${props.mobilesize}px`};
       }

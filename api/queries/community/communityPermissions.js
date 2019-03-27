@@ -25,6 +25,7 @@ export default async (
     ...defaultPermissions,
     userId: user.id,
     communityId: id,
+    lastSeen: null,
   };
 
   return permissions || fallbackPermissions;

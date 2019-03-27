@@ -15,9 +15,9 @@ describe('renders members list on channel view', () => {
   });
 
   it('should render members component', () => {
-    cy.get('[data-cy="channel-members-list"]')
-      .scrollIntoView()
-      .should('be.visible');
+    cy.get('[data-cy="channel-members-tab"]')
+      .should('be.visible')
+      .click();
 
     members.map(member => {
       cy.get('[data-cy="channel-view"]')

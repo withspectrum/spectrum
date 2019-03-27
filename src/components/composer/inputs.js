@@ -15,11 +15,10 @@ import { ThreadHeading } from 'src/views/thread/style';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import MentionsInput from 'src/components/mentionsInput';
 import ThreadRenderer from '../threadRenderer';
-import processThreadContent from 'shared/draft-utils/process-thread-content';
 
 type Props = {
   title: string,
-  body: string,
+  body: ?string,
   changeBody: Function,
   changeTitle: Function,
   uploadFiles: Function,
@@ -32,6 +31,8 @@ type Props = {
 export default (props: Props) => {
   // $FlowIssue
   const [showPreview, setShowPreview] = React.useState(false);
+  // $FlowIssue
+  const [previewBody, setPreviewBody] = React.useState(null);
 
   const {
     title,
@@ -45,6 +46,26 @@ export default (props: Props) => {
     isEditing,
   } = props;
 
+  const onClick = (show: boolean) => {
+    setShowPreview(show);
+
+    if (show) {
+      setPreviewBody(null);
+      fetch('https://convert.spectrum.chat/from', {
+        method: 'POST',
+        body,
+      })
+        .then(res => {
+          if (res.status < 200 || res.status >= 300)
+            throw new Error('Oops, something went wrong');
+          return res.json();
+        })
+        .then(json => {
+          setPreviewBody(json);
+        });
+    }
+  };
+
   return (
     <InputsGrid isEditing={isEditing}>
       <SegmentedControl
@@ -56,12 +77,13 @@ export default (props: Props) => {
           right: '0',
           zIndex: '9999',
           background: '#FFF',
+          minHeight: '52px',
         }}
       >
-        <Segment selected={!showPreview} onClick={() => setShowPreview(false)}>
+        <Segment isActive={!showPreview} onClick={() => onClick(false)}>
           Write
         </Segment>
-        <Segment selected={showPreview} onClick={() => setShowPreview(true)}>
+        <Segment isActive={showPreview} onClick={() => onClick(true)}>
           Preview
         </Segment>
       </SegmentedControl>
@@ -70,9 +92,11 @@ export default (props: Props) => {
           /* $FlowFixMe */
           <RenderWrapper>
             <ThreadHeading>{title}</ThreadHeading>
-            <ThreadRenderer
-              body={JSON.parse(processThreadContent('TEXT', body))}
-            />
+            {previewBody === null ? (
+              <p>Loading...</p>
+            ) : (
+              <ThreadRenderer body={previewBody} />
+            )}
           </RenderWrapper>
         ) : (
           <Dropzone
@@ -84,7 +108,7 @@ export default (props: Props) => {
             {({ getRootProps, getInputProps, isDragActive }) => (
               <DropzoneWrapper
                 {...getRootProps({
-                  refKey: 'innerRef',
+                  refKey: 'ref',
                 })}
               >
                 <input {...getInputProps()} />
@@ -99,7 +123,8 @@ export default (props: Props) => {
 
                 <MentionsInput
                   onChange={changeBody}
-                  value={body}
+                  value={body === null ? 'Loading...' : body}
+                  disabled={body === null}
                   style={ThreadDescription}
                   inputRef={bodyRef}
                   placeholder={'Add more thoughts here...'}

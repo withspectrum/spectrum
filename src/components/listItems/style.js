@@ -1,6 +1,8 @@
+// @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   Truncate,
   FlexCol,
@@ -8,7 +10,7 @@ import {
   H3,
   H4,
   Transition,
-} from '../../components/globals';
+} from 'src/components/globals';
 
 export const Wrapper = styled(FlexCol)`
   flex: 1 0 auto;
@@ -95,7 +97,7 @@ export const StyledCard = styled.div`
   flex-direction: column;
   display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.largeOnly ? 'none' : 'flex')};
   }
 `;

@@ -29,9 +29,9 @@ describe('renders composer for logged in members', () => {
   it('should render composer', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy.get('[data-cy="thread-composer-placeholder"]').should('be.visible');
-
-    cy.get('[data-cy="thread-composer-placeholder"]').click();
+    cy.get('[data-cy="channel-thread-compose-button"]')
+      .should('be.visible')
+      .click();
 
     cy.get('[data-cy="rich-text-editor"]').should('be.visible');
   });
@@ -47,7 +47,9 @@ describe('does not render composer for non members', () => {
   it('should not render composer', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy.get('[data-cy="thread-composer-placeholder"]').should('not.be.visible');
+    cy.get('[data-cy="channel-thread-compose-button"]').should(
+      'not.be.visible'
+    );
   });
 });
 
@@ -59,7 +61,9 @@ describe('does not render composer for logged out users', () => {
   it('should not render composer', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy.get('[data-cy="thread-composer-placeholder"]').should('not.be.visible');
+    cy.get('[data-cy="channel-thread-compose-button"]').should(
+      'not.be.visible'
+    );
   });
 });
 
@@ -73,6 +77,8 @@ describe('does not render composer for archived channel', () => {
   it('should not render composer', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy.get('[data-cy="thread-composer-placeholder"]').should('not.be.visible');
+    cy.get('[data-cy="channel-thread-compose-button"]').should(
+      'not.be.visible'
+    );
   });
 });

@@ -3,15 +3,16 @@ import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from 'src/components/globals';
 import { Link } from 'react-router-dom';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HoverWrapper = styled.div`
-  position: absolute;
-  padding: 8px 0;
+  padding: 12px;
+  margin-left: -12px;
   z-index: ${zIndex.tooltip};
   width: 256px;
   ${props => props.popperStyle};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
     pointer-events: none;
   }
@@ -38,20 +39,29 @@ export const ProfileCard = styled.div`
 `;
 
 export const Content = styled.div`
-  padding: 0 8px;
+  padding: 0 12px;
 `;
 
 export const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
   color: ${theme.text.default};
+  line-height: 1.2;
+`;
+
+export const Username = styled.h3`
+  font-size: 16px;
+  font-weight: 400;
+  color: ${theme.text.alt};
+  line-height: 1.2;
+  margin-top: 4px;
 `;
 
 export const Description = styled.p`
   font-size: 14px;
   font-weight: 400;
   color: ${theme.text.secondary};
-  margin-top: 4px;
+  margin-top: 8px;
   line-height: 1.4;
   white-space: pre-wrap;
 
@@ -66,7 +76,7 @@ export const Description = styled.p`
 `;
 
 export const Actions = styled.div`
-  padding: 16px 8px 8px;
+  padding: 16px 12px 12px;
   display: flex;
   flex: 1 0 auto;
 
@@ -100,7 +110,7 @@ export const CoverPhoto = styled.div`
 
 export const ProfilePhotoContainer = styled.div`
   position: relative;
-  left: 8px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   margin-bottom: -16px;

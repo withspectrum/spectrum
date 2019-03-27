@@ -6,7 +6,7 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
 import toggleUserNotificationSettingsMutation from 'shared/graphql/mutations/user/toggleUserNotificationSettings';
 import { Checkbox } from 'src/components/formElements';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 import {
   ListContainer,
   Notice,
@@ -110,7 +110,12 @@ class EmailSettings extends React.Component<Props> {
   };
 
   render() {
-    const { user: { settings: { notifications } }, user } = this.props;
+    const {
+      user: {
+        settings: { notifications },
+      },
+      user,
+    } = this.props;
 
     const settings = parseNotificationTypes(notifications).filter(
       notification => notification.hasOwnProperty('emailValue')

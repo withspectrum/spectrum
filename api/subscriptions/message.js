@@ -12,7 +12,6 @@ import Raven from 'shared/raven';
 const addMessageListener = asyncify(listenToNewMessages);
 
 import type { GraphQLContext } from '../';
-import type { GraphQLResolveInfo } from 'graphql';
 
 /**
  * Define the message subscription resolvers
@@ -24,8 +23,7 @@ module.exports = {
       subscribe: async (
         _: any,
         { thread }: { thread: string },
-        { user }: GraphQLContext,
-        info: GraphQLResolveInfo
+        { user }: GraphQLContext
       ) => {
         // Make sure the user has the permission to view the thread before
         // subscribing them to changes

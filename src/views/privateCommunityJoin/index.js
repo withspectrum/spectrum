@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 import addCommunityMemberWithTokenMutation from 'shared/graphql/mutations/communityMember/addCommunityMemberWithToken';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import CommunityLogin from 'src/views/communityLogin';
-import AppViewWrapper from 'src/components/appViewWrapper';
-import { Loading } from 'src/components/loading';
 import { CLIENT_URL } from 'src/api/constants';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 type Props = {
   match: Object,
@@ -34,7 +33,7 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
     const { token, communitySlug } = match.params;
 
     if (!token) {
-      return history.push(`/${communitySlug}`);
+      return history.replace(`/${communitySlug}`);
     }
 
     if (!currentUser) {
@@ -64,15 +63,15 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     addCommunityMemberWithToken({ communitySlug, token })
-      .then(data => {
+      .then(() => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('success', 'Welcome!'));
-        return history.push(`/${communitySlug}`);
+        return history.replace(`/${communitySlug}`);
       })
       .catch(err => {
         this.setState({ isLoading: false });
         dispatch(addToastWithTimeout('error', err.message));
-        return history.push(`/${communitySlug}`);
+        return history.replace(`/${communitySlug}`);
       });
   };
 
@@ -90,15 +89,9 @@ class PrivateCommunityJoin extends React.Component<Props, State> {
       return <CommunityLogin match={match} redirectPath={redirectPath} />;
     }
 
-    if (isLoading) {
-      return (
-        <AppViewWrapper>
-          <Loading />
-        </AppViewWrapper>
-      );
-    }
+    if (isLoading) return <LoadingView />;
 
-    return null;
+    return <ErrorView />;
   }
 }
 

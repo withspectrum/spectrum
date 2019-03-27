@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
@@ -94,6 +94,7 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation)(
-  ToggleChannelMembership
-);
+export default compose(
+  connect(),
+  toggleChannelSubscriptionMutation
+)(ToggleChannelMembership);

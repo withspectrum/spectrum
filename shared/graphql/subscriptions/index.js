@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import messageInfoFragment from '../fragments/message/messageInfo';
 import notificationInfoFragment from '../fragments/notification/notificationInfo';
 import threadInfoFragment from '../fragments/thread/threadInfo';
+import communityInfoFragment from '../fragments/community/communityInfo';
 import directMessageThreadInfoFragment from '../fragments/directMessageThread/directMessageThreadInfo';
 
 export const subscribeToNewMessages = gql`
@@ -49,6 +50,15 @@ export const subscribeToUpdatedThreads = gql`
     }
   }
   ${threadInfoFragment}
+`;
+
+export const subscribeToUpdatedCommunities = gql`
+  subscription subscribeToUpdatedCommunities($communityIds: [ID!]) {
+    communityUpdated(communityIds: $communityIds) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
 `;
 
 const SUBSCRIBE_TO_WEB_PUSH_MUTATION = gql`

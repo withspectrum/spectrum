@@ -16,12 +16,16 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch = (error: any, errorInfo: any) => {
     this.setState({ error });
+    console.error({ error });
     window.Raven && window.Raven.captureException(error, { extra: errorInfo });
   };
 
   render() {
     const { error } = this.state;
-    const { fallbackComponent: FallbackComponent, children } = this.props;
+    const {
+      fallbackComponent: FallbackComponent = null,
+      children,
+    } = this.props;
 
     if (error) {
       if (this.props.fallbackComponent) {
@@ -29,7 +33,7 @@ class ErrorBoundary extends React.Component<Props, State> {
         return <FallbackComponent />;
       }
 
-      if (this.props.fallbackComponent === null) {
+      if (!this.props.fallbackComponent) {
         return null;
       }
 

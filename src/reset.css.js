@@ -1,12 +1,12 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 // $FlowIssue
 import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
+import theme from 'shared/theme';
 
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;
+export default createGlobalStyle`
+  ${prismGlobalCSS}
 
-injectGlobal`
   * {
     border: 0;
     box-sizing: inherit;
@@ -23,14 +23,12 @@ injectGlobal`
 
   html {
     display: flex;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    max-height: 100%;
-    max-width: 100%;
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.5;
-    background-color: #ffffff;
+    background-color: ${theme.bg.wash};
     color: #16171a;
     padding: 0;
     margin: 0;
@@ -41,13 +39,16 @@ injectGlobal`
   }
 
   body {
-    display: flex;
     box-sizing: border-box;
-    flex: auto;
-    align-self: stretch;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    height: 100%
+    width: 100%;
   }
 
   a {
@@ -65,46 +66,32 @@ injectGlobal`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::selection {
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
   }
   :-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   ::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #a3afbf;
-  }
-
-  #root {
-    display: flex;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    flex-direction: column;
-    -ms-flex-direction: column;
-    -moz-flex-direction: column;
-    -webkit-flex-direction: column;
-    height: 100%;
-    width: 100%;
+    color: ${theme.text.placeholder};
   }
 
   .fade-enter {
@@ -119,14 +106,18 @@ injectGlobal`
 
   .markdown {
     font-size: 16px;
-    line-height: 24px;
-    color: #16171a;
+    line-height: 1.4;
+    color: ${theme.text.default};
+  }
+
+  .markdown pre {
+    font-size: 15px;
+    white-space: pre-wrap;
   }
 
   .markdown p {
     color: inherit;
     font-size: 16px;
-    line-height: 1.5;
     font-weight: 400;
     display: block;
   }
@@ -179,12 +170,12 @@ injectGlobal`
   }
 
   .markdown blockquote {
-    color: #828c99;
-    border-left: 4px solid #7b16ff;
+    color: ${theme.text.secondary};
+    border-left: 4px solid ${theme.text.secondary};
+    background: ${theme.bg.wash};
     padding: 4px 8px 4px 16px;
-    font-size: 24px;
-    font-weight: 300;
-    font-style: italic;
+    font-size: 16px;
+    font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;
   }
@@ -194,7 +185,7 @@ injectGlobal`
   }
 
   .markdown a {
-    color: #3818e5;
+    color: ${theme.brand.default};
     font-weight: 500;
     text-decoration: none;
     font-size: inherit;
@@ -215,12 +206,12 @@ injectGlobal`
     font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
     font-weight: 500;
     font-size: 14px;
-    line-height: 20px;
-    background-color: #f5f8fc;
+    line-height: 1.4px;
+    background-color: ${theme.bg.wash};
     padding: 2px 4px;
     display: inline;
     width: 100%;
-    border: 1px solid #dfe7ef;
+    border: 1px solid ${theme.bg.border};
     border-radius: 4px;
     margin-bottom: 16px;
   }
@@ -229,7 +220,7 @@ injectGlobal`
     margin: 16px 0;
     display: block;
     border-radius: 4px;
-    background-color: #f5f8fc;
+    background-color: ${theme.bg.wash};
   }
 
   .markdown pre code {
@@ -267,7 +258,7 @@ injectGlobal`
   .markdown hr {
     width: 100%;
     height: 1px;
-    background: #dfe7ef;
+    background: ${theme.bg.border};
     display: block;
     margin: 32px 0;
   }
@@ -275,7 +266,7 @@ injectGlobal`
   .markdown h1 {
     font-size: 24px;
     line-height: 40px;
-    border-bottom: 1px solid #dfe7ef;
+    border-bottom: 1px solid ${theme.bg.border};
     font-weight: 800;
     margin-top: 1rem;
     margin-bottom: 8px;
@@ -329,7 +320,10 @@ injectGlobal`
 
   .threadComposer textarea {
     line-height: 1.5;
-    /* account for bottom save bar when editing */
-    height: calc(100% + 52px)!important;
+    height: calc(100% + 48px)!important;
+  }
+  
+  .tippy-backdrop {
+    background-color: ${theme.text.default};
   }
 `;

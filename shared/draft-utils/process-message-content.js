@@ -2,13 +2,9 @@
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { addEmbedsToEditorState } from './add-embeds-to-draft-js';
+import { messageTypeObj, type MessageType } from './message-types';
 
-export const messageTypeObj = {
-  text: 'text',
-  media: 'media',
-  draftjs: 'draftjs',
-};
-export type MessageType = $Keys<typeof messageTypeObj>;
+export { messageTypeObj };
 
 export default (type: MessageType, body: string): string => {
   let newBody = body;

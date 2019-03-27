@@ -20,7 +20,7 @@ const Message = /* GraphQL */ `
     hasReacted: Boolean
   }
 
-  type Message {
+  type Message @cacheControl(maxAge: 600) {
     id: ID!
     timestamp: Date!
     thread: Thread
@@ -30,6 +30,7 @@ const Message = /* GraphQL */ `
     messageType: MessageTypes!
     parent: Message
     modifiedAt: Date
+    bot: Boolean
     sender: User! @deprecated(reason: "Use Message.author field instead")
   }
 

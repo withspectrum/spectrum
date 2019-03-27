@@ -1,18 +1,14 @@
-// Redirect any route ?thread=<id> to /thread/<id>
+// Redirect any route ?thread=<id> or ?t=<id> to /thread/<id>
 
 const threadParamRedirect = (req, res, next) => {
-  // Redirect /?t=asdf123 if the user isn't logged in
-  if (req.query.t && !req.user) {
+  const threadId = req.query.thread || req.query.t;
+
+  if (threadId) {
     if (req.query.m) {
-      res.redirect(`/thread/${req.query.t}?m=${req.query.m}`);
+      res.redirect(`/thread/${threadId}?m=${req.query.m}`);
+    } else {
+      res.redirect(`/thread/${threadId}`);
     }
-    res.redirect(`/thread/${req.query.t}`);
-    // Redirect /anything?thread=asdf123
-  } else if (req.query.thread) {
-    if (req.query.m) {
-      res.redirect(`/thread/${req.query.thread}?m=${req.query.m}`);
-    }
-    res.redirect(`/thread/${req.query.thread}`);
   } else {
     next();
   }

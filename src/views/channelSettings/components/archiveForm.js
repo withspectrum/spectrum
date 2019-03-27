@@ -2,15 +2,15 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openModal } from '../../../actions/modals';
-import { Button } from '../../../components/buttons';
+import { openModal } from 'src/actions/modals';
+import { OutlineButton } from 'src/components/button';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import {
   SectionCard,
   SectionTitle,
   SectionSubtitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
@@ -85,7 +85,9 @@ class Channel extends React.Component<Props> {
           )}
 
           <SectionCardFooter>
-            <Button onClick={this.initArchiveChannel}>Archive Channel</Button>
+            <OutlineButton onClick={this.initArchiveChannel}>
+              Archive Channel
+            </OutlineButton>
           </SectionCardFooter>
         </SectionCard>
       );
@@ -100,7 +102,9 @@ class Channel extends React.Component<Props> {
           </SectionSubtitle>
 
           <SectionCardFooter>
-            <Button onClick={this.initRestoreChannel}>Restore Channel</Button>
+            <OutlineButton onClick={this.initRestoreChannel}>
+              Restore Channel
+            </OutlineButton>
           </SectionCardFooter>
         </SectionCard>
       );

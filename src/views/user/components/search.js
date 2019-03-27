@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import { throttle } from '../../../helpers/utils';
+import { throttle } from 'src/helpers/utils';
 import searchThreadsQuery from 'shared/graphql/queries/search/searchThreads';
-import ThreadFeed from '../../../components/threadFeed';
+import ThreadFeed from 'src/components/threadFeed';
 import { SearchContainer, SearchInput } from '../style';
 
 const SearchThreadFeed = compose(searchThreadsQuery)(ThreadFeed);
@@ -68,17 +68,16 @@ class Search extends React.Component<Props, State> {
             onChange={this.handleChange}
           />
         </SearchContainer>
-        {searchString &&
-          sendStringToServer && (
-            <SearchThreadFeed
-              search
-              viewContext="userProfile"
-              userId={user.id}
-              queryString={sendStringToServer}
-              filter={{ creatorId: user.id }}
-              user={user}
-            />
-          )}
+        {searchString && sendStringToServer && (
+          <SearchThreadFeed
+            search
+            viewContext="userProfile"
+            userId={user.id}
+            queryString={sendStringToServer}
+            filter={{ creatorId: user.id }}
+            user={user}
+          />
+        )}
       </div>
     );
   }

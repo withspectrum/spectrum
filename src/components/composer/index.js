@@ -4,25 +4,26 @@ import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router';
 import { connect } from 'react-redux';
 import debounce from 'debounce';
+import Icon from 'src/components/icon';
 import queryString from 'query-string';
-import Icon from '../icons';
 import { openModal, closeModal } from 'src/actions/modals';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import getThreadLink from 'src/helpers/get-thread-link';
-import { changeActiveThread } from 'src/actions/dashboardFeed';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getComposerCommunitiesAndChannels from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import type { GetComposerType } from 'shared/graphql/queries/composer/getComposerCommunitiesAndChannels';
 import publishThread from 'shared/graphql/mutations/thread/publishThread';
+import { setTitlebarProps } from 'src/actions/titlebar';
 import uploadImage, {
   type UploadImageInput,
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
-import { TextButton, Button } from '../buttons';
+import { TextButton } from 'src/components/button';
+import { PrimaryButton } from 'src/components/button';
+import Tooltip from 'src/components/tooltip';
 import {
   MediaLabel,
   MediaInput,
 } from 'src/components/chatInput/components/style';
-import Titlebar from 'src/views/titlebar';
 import type { Dispatch } from 'redux';
 import {
   Overlay,
@@ -60,11 +61,11 @@ type Props = {
   publishThread: Function,
   history: History,
   location: Location,
-  isInbox: boolean,
   websocketConnection: string,
   networkOnline: boolean,
   isEditing: boolean,
-  slider?: boolean,
+  isModal?: boolean,
+  previousLocation?: Location,
 };
 
 const LS_BODY_KEY = 'last-thread-composer-body';
@@ -146,6 +147,13 @@ class ComposerWithData extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'New post',
+      })
+    );
+
     track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleGlobalKeyPress, false);
@@ -206,18 +214,9 @@ class ComposerWithData extends React.Component<Props, State> {
     return title !== '' || body !== '';
   };
 
-  activateLastThread = () => {
-    // we get the last thread id from the query params and dispatch it
-    // as the active thread.
-    const { location } = this.props;
-    const { t: threadId } = queryString.parse(location.search);
-
-    this.props.dispatch(changeActiveThread(threadId));
-  };
-
   changeTitle = e => {
     const title = e.target.value;
-    this.persistTitleToLocalStorageWithDebounce(title);
+    this.persistTitleToLocalStorageWithDebounce();
     if (/\n$/g.test(title)) {
       this.bodyEditor.focus && this.bodyEditor.focus();
       return;
@@ -229,15 +228,15 @@ class ComposerWithData extends React.Component<Props, State> {
 
   changeBody = evt => {
     const body = evt.target.value;
-    this.persistBodyToLocalStorageWithDebounce(body);
+    this.persistBodyToLocalStorageWithDebounce();
     this.setState({
       body,
     });
   };
 
   closeComposer = (clear?: string) => {
-    this.persistBodyToLocalStorage(this.state.body);
-    this.persistTitleToLocalStorage(this.state.title);
+    this.persistBodyToLocalStorage();
+    this.persistTitleToLocalStorage();
 
     // we will clear the composer if it unmounts as a result of a post
     // being published or draft discarded, that way the next composer open will start fresh
@@ -250,8 +249,13 @@ class ComposerWithData extends React.Component<Props, State> {
       });
     }
 
-    this.props.history.goBack();
-    return;
+    if (this.props.previousLocation)
+      return this.props.history.push({
+        ...this.props.previousLocation,
+        state: { modal: false },
+      });
+
+    return this.props.history.goBack({ state: { modal: false } });
   };
 
   discardDraft = () => {
@@ -291,22 +295,22 @@ class ComposerWithData extends React.Component<Props, State> {
     localStorage.setItem(LS_COMPOSER_EXPIRE, ONE_DAY());
   };
 
-  persistBodyToLocalStorageWithDebounce = body => {
+  persistBodyToLocalStorageWithDebounce = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('body');
   };
 
-  persistTitleToLocalStorageWithDebounce = title => {
+  persistTitleToLocalStorageWithDebounce = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('title');
   };
 
-  persistTitleToLocalStorage = title => {
+  persistTitleToLocalStorage = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('title');
   };
 
-  persistBodyToLocalStorage = body => {
+  persistBodyToLocalStorage = () => {
     if (!localStorage) return;
     this.handleTitleBodyChange('body');
   };
@@ -355,6 +359,20 @@ class ComposerWithData extends React.Component<Props, State> {
       })
       .catch(err => {
         console.error({ err });
+        this.setState({
+          isLoading: false,
+        });
+        this.changeBody({
+          target: {
+            value: this.state.body.replace(uploading, ''),
+          },
+        });
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Uploading image failed - ${err.message}`
+          )
+        );
       });
   };
 
@@ -422,17 +440,14 @@ class ComposerWithData extends React.Component<Props, State> {
     };
 
     // one last save to localstorage
-    this.persistBodyToLocalStorage(this.state.body);
-    this.persistTitleToLocalStorage(this.state.title);
+    this.persistBodyToLocalStorage();
+    this.persistTitleToLocalStorage();
 
     this.props
       .publishThread(thread)
       // after the mutation occurs, it will either return an error or the new
       // thread that was published
       .then(({ data }) => {
-        // get the thread id to redirect the user
-        const id = data.publishThread.id;
-
         this.clearEditorStateAfterPublish();
 
         // stop the loading spinner on the publish button
@@ -448,14 +463,10 @@ class ComposerWithData extends React.Component<Props, State> {
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );
-        if (this.props.isInbox) {
-          this.props.history.replace(`/?t=${id}`);
-          this.props.dispatch(changeActiveThread(id));
-        } else if (this.props.location.pathname === '/new/thread') {
+        if (this.props.location.pathname === '/new/thread') {
           this.props.history.replace(getThreadLink(data.publishThread));
         } else {
           this.props.history.push(getThreadLink(data.publishThread));
-          this.props.dispatch(changeActiveThread(null));
         }
         return;
       })
@@ -487,7 +498,7 @@ class ComposerWithData extends React.Component<Props, State> {
       networkOnline,
       websocketConnection,
       isEditing,
-      slider,
+      isModal,
     } = this.props;
 
     const networkDisabled =
@@ -498,14 +509,12 @@ class ComposerWithData extends React.Component<Props, State> {
     return (
       <Wrapper data-cy="thread-composer-wrapper">
         <Overlay
-          slider={slider}
+          isModal={isModal}
           onClick={this.discardDraft}
-          data-cy="thread-composer-overlay"
+          data-cy="overlay"
         />
 
-        <Container data-cy="thread-composer" slider={slider}>
-          <Titlebar provideBack title={'New conversation'} noComposer />
-
+        <Container data-cy="modal-container" isModal={isModal}>
           <ComposerLocationSelectors
             selectedChannelId={selectedChannelId}
             selectedCommunityId={selectedCommunityId}
@@ -532,29 +541,25 @@ class ComposerWithData extends React.Component<Props, State> {
           )}
           <Actions>
             <InputHints>
-              <MediaLabel>
-                <MediaInput
-                  type="file"
-                  accept={'.png, .jpg, .jpeg, .gif, .mp4'}
-                  multiple={false}
-                  onChange={this.uploadFile}
-                />
-                <Icon
-                  glyph="photo"
-                  tipLocation={'top-right'}
-                  tipText="Upload photo"
-                />
-              </MediaLabel>
-              <DesktopLink
-                target="_blank"
-                href="https://guides.github.com/features/mastering-markdown/"
-              >
-                <Icon
-                  tipText="Style with Markdown"
-                  tipLocation="top-right"
-                  glyph="markdown"
-                />
-              </DesktopLink>
+              <Tooltip content={'Upload photo'}>
+                <MediaLabel>
+                  <MediaInput
+                    type="file"
+                    accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+                    multiple={false}
+                    onChange={this.uploadFile}
+                  />
+                  <Icon glyph="photo" />
+                </MediaLabel>
+              </Tooltip>
+              <Tooltip content={'Style with Markdown'}>
+                <DesktopLink
+                  target="_blank"
+                  href="https://guides.github.com/features/mastering-markdown/"
+                >
+                  <Icon glyph="markdown" />
+                </DesktopLink>
+              </Tooltip>
             </InputHints>
             <ButtonRow>
               <TextButton
@@ -564,7 +569,7 @@ class ComposerWithData extends React.Component<Props, State> {
               >
                 Cancel
               </TextButton>
-              <Button
+              <PrimaryButton
                 data-cy="composer-publish-button"
                 onClick={this.publishThread}
                 loading={isLoading}
@@ -576,10 +581,9 @@ class ComposerWithData extends React.Component<Props, State> {
                   !selectedChannelId ||
                   !selectedCommunityId
                 }
-                color={'brand'}
               >
-                Publish
-              </Button>
+                {isLoading ? 'Publishing...' : 'Publish'}
+              </PrimaryButton>
             </ButtonRow>
           </Actions>
         </Container>
@@ -596,8 +600,8 @@ const mapStateToProps = state => ({
 
 export default compose(
   uploadImage,
-  getComposerCommunitiesAndChannels, // query to get data
-  publishThread, // mutation to publish a thread
-  withRouter, // needed to use history.push() as a post-publish action
+  getComposerCommunitiesAndChannels,
+  publishThread,
+  withRouter,
   connect(mapStateToProps)
 )(ComposerWithData);

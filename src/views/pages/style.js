@@ -2,7 +2,8 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Button } from '../../components/buttons';
+import { Button } from 'src/components/button';
+import { ViewGrid } from 'src/components/layout';
 import {
   H2,
   FlexCol,
@@ -13,7 +14,8 @@ import {
   zIndex,
   hexa,
   Gradient,
-} from '../../components/globals';
+} from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Page = styled.main`
   position: relative;
@@ -39,7 +41,7 @@ export const Wrapper = styled(FlexCol)`
 export const Flexer = styled(FlexRow)`
   flex-wrap: wrap;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
   }
 `;
@@ -57,7 +59,7 @@ export const Content = styled(FlexRow)`
   justify-content: center;
   position: relative;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
   }
 `;
@@ -69,7 +71,7 @@ export const Tagline = styled(H2)`
   margin-bottom: 8px;
   color: inherit;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-bottom: 32px;
   }
 `;
@@ -86,7 +88,7 @@ export const Copy = styled(P)`
     margin-top: 16px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     text-align: left;
   }
 `;
@@ -99,7 +101,7 @@ export const Bullets = styled(FlexRow)`
   margin: 32px 16px 16px;
   flex-wrap: wrap;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     margin-top: 0;
   }
@@ -113,7 +115,7 @@ export const Bullet = styled(FlexCol)`
   margin: 32px;
   margin-bottom: 0;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
     margin: 0;
     margin-top: 48px;
@@ -415,7 +417,7 @@ export const LinkBlock = styled(Link)`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     justify-content: flex-start;
     padding-bottom: 16px;
@@ -457,7 +459,7 @@ export const LinkBlockA = styled.a`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     justify-content: flex-start;
     padding-bottom: 16px;
@@ -498,7 +500,7 @@ export const Tabs = styled.div`
   z-index: ${zIndex.chrome + 1};
   line-height: 1;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     grid-template-columns: auto 1fr auto;
     grid-template-areas: 'logo . menu';
   }
@@ -555,7 +557,7 @@ export const LogoTab = styled(Tab)`
   > div:last-of-type {
     display: none;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: inline-block;
     }
   }
@@ -563,7 +565,7 @@ export const LogoTab = styled(Tab)`
   > div:first-of-type {
     display: inline-block;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: none;
     }
   }
@@ -669,12 +671,10 @@ export const MenuOverlay = styled.div`
 
 export const MenuTab = styled.div`
   grid-area: menu;
+  color: ${props =>
+    props.dark ? props.theme.brand.border : props.theme.brand.alt};
 
   > button {
-    color: ${props =>
-      props.dark ? props.theme.brand.border : props.theme.brand.alt};
-    transform: none;
-
     &:hover {
       color: ${props =>
         props.dark ? props.theme.text.reverse : props.theme.brand.default};
@@ -686,7 +686,7 @@ export const MenuTab = styled.div`
     display: ${props => (props.open ? 'flex' : 'none')};
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -694,7 +694,7 @@ export const MenuTab = styled.div`
 export const FeaturesTab = styled(Tab)`
   grid-area: features;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -702,7 +702,7 @@ export const FeaturesTab = styled(Tab)`
 export const AppsTab = styled(Tab)`
   grid-area: apps;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -710,7 +710,7 @@ export const AppsTab = styled(Tab)`
 export const SupportTab = styled(Tab)`
   grid-area: support;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -743,7 +743,13 @@ export const AuthTab = styled.div`
       props.dark ? `0 0 0 2px ${props.theme.bg.default}` : 'none'};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
+  }
+`;
+
+export const StyledViewGrid = styled(ViewGrid)`
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-height: 100vh;
   }
 `;
