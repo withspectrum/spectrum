@@ -31,7 +31,7 @@ const HomeViewRedirect = (props: Props) => {
   const { communityConnection } = user;
   const { edges } = communityConnection;
   const communities = edges.map(edge => edge && edge.node);
-  history.replace('/spectrum');
+
   // if the user hasn't joined any communities yet, help them find some
   if (!communities || communities.length === 0) {
     history.replace('/explore');
