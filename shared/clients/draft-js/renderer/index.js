@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import {
@@ -13,6 +14,7 @@ import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
 import linksDecorator from '../links-decorator';
 import type { Node } from 'react';
+import { SPECTRUM_URLS } from 'shared/regexps';
 import type { KeyObj, KeysObj, DataObj } from '../message/types';
 import type {
   EmbedData,
@@ -159,16 +161,23 @@ export const createRenderer = (options: Options) => {
       ),
     },
     entities: {
-      LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => (
-        <a
-          key={key}
-          href={data.url || data.href}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {children}
-        </a>
-      ),
+      LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => {
+        const regexp = new RegExp(SPECTRUM_URLS, 'ig');
+        const match = regexp.exec(data.url || data.href);
+        if (match && match[0] && match[1])
+          return <Link to={match[1]}>{children}</Link>;
+
+        return (
+          <a
+            key={key}
+            href={data.url || data.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {children}
+          </a>
+        );
+      },
       IMAGE: (
         children: Array<Node>,
         data: { src?: string, alt?: string },
