@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { compose } from 'recompose/compose';
+import compose from 'recompose/compose';
 import { Link, withRouter } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
