@@ -77,7 +77,7 @@ class ChannelMembers extends Component<Props> {
                   loading={isFetchingMore}
                   onClick={() => fetchMore()}
                 >
-                  Load more
+                  {isFetchingMore ? 'Loading...' : 'Load more'}
                 </FetchMoreButton>
               </ListFooter>
             )}
