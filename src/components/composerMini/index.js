@@ -139,14 +139,14 @@ const MiniComposer = ({
   };
 
   const publish = () => {
-    if (!title.trim() || !selectedChannelId) {
+    if (!title.trim() || (!fixedChannelId && !selectedChannelId)) {
       return;
     }
 
     setIsLoading(true);
 
     const thread = {
-      channelId: selectedChannelId,
+      channelId: fixedChannelId || selectedChannelId,
       communityId: community.id,
       type: 'TEXT',
       content: {
@@ -158,13 +158,13 @@ const MiniComposer = ({
     };
 
     publishThread(thread)
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         setIsLoading(false);
         dispatch(addToastWithTimeout('success', 'Thread published!'));
-        storeDraftThread({ title: '', body: '' });
-        setBody('');
-        setTitle('');
-        history.push({
+        await storeDraftThread({ title: '', body: '' });
+        await setBody('');
+        await setTitle('');
+        return history.push({
           pathname: getThreadLink(data.publishThread),
           state: { modal: true },
         });
@@ -207,6 +207,7 @@ const MiniComposer = ({
       >
         {!expanded && (
           <div
+            tabIndex={-1}
             css={{
               position: 'absolute',
               top: 0,
@@ -216,7 +217,6 @@ const MiniComposer = ({
               background: 'transparent',
               zIndex: 9999,
               cursor: 'pointer',
-              tabIndex: 0,
             }}
             onClick={() => setExpanded(true)}
           />
@@ -248,6 +248,7 @@ const MiniComposer = ({
               </p>
             )}
             <input
+              tabIndex={1}
               css={{
                 background: theme.bg.default,
                 border: `1px solid ${
@@ -264,7 +265,7 @@ const MiniComposer = ({
               placeholder="What do you want to talk about?"
             />
           </div>
-          {!expanded && <PrimaryButton>Post</PrimaryButton>}
+          {!expanded && <PrimaryButton tabIndex={-1}>Post</PrimaryButton>}
         </div>
         {expanded && (
           <div
@@ -298,6 +299,7 @@ const MiniComposer = ({
                 >
                   <input {...getInputProps()} />
                   <MentionsInput
+                    tabIndex={2}
                     style={{
                       background: theme.bg.default,
                       border: `1px solid ${theme.bg.border}`,
@@ -345,6 +347,7 @@ const MiniComposer = ({
                     selectedCommunityId={community.id}
                     selectedChannelId={selectedChannelId}
                     css={{ marginLeft: 0 }}
+                    tabIndex={3}
                   />
                 )}
                 <Tooltip content="Open in fullscreen">
@@ -367,8 +370,11 @@ const MiniComposer = ({
                 </Tooltip>
               </div>
               <PrimaryButton
+                tabIndex={4}
                 disabled={
-                  isLoading || title.trim().length === 0 || !selectedChannelId
+                  isLoading ||
+                  title.trim().length === 0 ||
+                  (!fixedChannelId && !selectedChannelId)
                 }
                 onClick={publish}
               >
