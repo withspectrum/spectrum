@@ -63,6 +63,16 @@ const MiniComposer = ({
   const bodyRef = useRef(body);
   const [titleWarning, setTitleWarning] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const titleWarningText =
+    'Tip: good titles are shorter than 80 characters. Add more details below.';
+  useEffect(() => {
+    const { title } = draftThread;
+    if (title.length >= 80 && !titleWarning) {
+      setTitleWarning(titleWarningText);
+    } else if (title.length < 80 && titleWarning) {
+      setTitleWarning(null);
+    }
+  }, []);
 
   useEffect(() => {
     bodyRef.current = body;
@@ -75,9 +85,7 @@ const MiniComposer = ({
   const changeTitle = evt => {
     const title = evt.target.value;
     if (title.length >= 80 && !titleWarning) {
-      setTitleWarning(
-        'ProTip: good titles are shorter than 80 characters. Write extra information below!'
-      );
+      setTitleWarning(titleWarningText);
     } else if (title.length < 80 && titleWarning) {
       setTitleWarning(null);
     }
@@ -233,6 +241,7 @@ const MiniComposer = ({
                   color: theme.warn.default,
                   fontSize: '12px',
                   marginBottom: '4px',
+                  fontWeight: '500',
                 }}
               >
                 {titleWarning}
@@ -253,7 +262,7 @@ const MiniComposer = ({
               ref={titleEditor}
               value={title}
               onChange={changeTitle}
-              placeholder="What do you want to talk about?"
+              placeholder="What's on your mind?"
             />
           </div>
           {!expanded && <PrimaryButton tabIndex={-1}>Post</PrimaryButton>}
@@ -305,7 +314,7 @@ const MiniComposer = ({
                     inputRef={bodyEditor}
                     value={body}
                     onChange={changeBody}
-                    placeholder="Elaborate here if necessary (optional)"
+                    placeholder="(Optional) Add more details..."
                   />
 
                   <DropImageOverlay
