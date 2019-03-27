@@ -102,8 +102,9 @@ class ComposerWithData extends React.Component<Props, State> {
     );
   }
 
-  removeStorage = () => {
-    clearDraftThread();
+  removeStorage = async () => {
+    console.log('clearing draft thread');
+    await clearDraftThread();
   };
 
   getTitleAndBody = () => {
@@ -214,6 +215,8 @@ class ComposerWithData extends React.Component<Props, State> {
     this.persistBodyToLocalStorage();
     this.persistTitleToLocalStorage();
 
+    console.log({ clear });
+
     // we will clear the composer if it unmounts as a result of a post
     // being published or draft discarded, that way the next composer open will start fresh
     if (clear) {
@@ -244,7 +247,6 @@ class ComposerWithData extends React.Component<Props, State> {
     this.props.dispatch(
       openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
         message: DISCARD_DRAFT_MESSAGE,
-        activateLastThread: this.activateLastThread,
         closeComposer: () => this.closeComposer('clear'),
       })
     );
@@ -252,6 +254,7 @@ class ComposerWithData extends React.Component<Props, State> {
 
   clearEditorStateAfterPublish = () => {
     try {
+      console.log('removing storage');
       this.removeStorage();
     } catch (err) {
       console.error(err);

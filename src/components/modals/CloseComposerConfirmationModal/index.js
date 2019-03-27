@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import { closeModal } from '../../../actions/modals';
 import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../button';
+import { TextButton, WarnButton } from '../../button';
 import { Actions, Message } from './style';
 import { modalStyles } from '../styles';
 import { ENTER } from '../../../helpers/keycodes';
@@ -98,20 +98,20 @@ class CloseComposerConfirmation extends React.Component<Props, State> {
               color={'text.placeholder'}
               hoverColor={'warn.default'}
               onClick={this.close}
-              dataCy={'discard-draft-cancel'}
+              data-cy={'discard-draft-cancel'}
             >
               Cancel
             </TextButton>
 
-            <Button
+            <WarnButton
               gradientTheme={'warn'}
               color={'warn.default'}
               hoverColor={'warn.default'}
-              dataCy={'discard-draft-discard'}
+              data-cy={'discard-draft-discard'}
               onClick={() => this.closeConfirmed(functions)}
             >
               Discard
-            </Button>
+            </WarnButton>
           </Actions>
         </ModalContainer>
       </Modal>
