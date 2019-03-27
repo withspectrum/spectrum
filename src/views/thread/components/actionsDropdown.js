@@ -125,7 +125,7 @@ const ActionsDropdown = (props: Props) => {
                 <Icon
                   glyph="settings"
                   onClick={() => setFlyoutOpen(!flyoutOpen)}
-                  dataCy="thread-actions-dropdown-trigger"
+                  data-cy="thread-actions-dropdown-trigger"
                 />
               </span>
             );
