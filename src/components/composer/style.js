@@ -89,7 +89,7 @@ export const Container = styled(FlexCol)`
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    max-width: 100%;
+    max-width: 100vw;
     max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     padding: 0;
     box-shadow: 0;
@@ -150,7 +150,7 @@ export const InputHints = styled(FlexRow)`
 
 export const Dropdowns = styled(FlexRow)`
   display: flex;
-  flex: 1 0 auto;
+  flex: 1;
   height: 48px;
   max-height: 48px;
   align-items: center;
@@ -163,7 +163,6 @@ export const Dropdowns = styled(FlexRow)`
   font-size: 16px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    width: 100%;
     justify-content: flex-start;
   }
 `;
@@ -202,9 +201,7 @@ export const ChannelPreview = styled(CommunityPreview)`
 `;
 
 const Selector = styled.select`
-  max-width: 196px;
   display: inline-block;
-  flex: none;
   border: none;
   box-shadow: none;
   -webkit-appearance: none;
@@ -218,7 +215,6 @@ const Selector = styled.select`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     flex: auto;
-    max-width: calc(50% - 12px);
     font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   }
 `;
@@ -226,8 +222,7 @@ const Selector = styled.select`
 export const RequiredSelector = styled(Selector)`
   padding: 8px 12px;
   max-height: 38px;
-  display: flex;
-  align-items: center;
+  max-width: 212px;
   line-height: 1.2;
   border: 2px solid
     ${props => (props.emphasize ? theme.brand.alt : theme.bg.border)};
@@ -247,12 +242,6 @@ export const RequiredSelector = styled(Selector)`
     box-shadow: 0 0 0 2px ${theme.bg.default},
       0 0 0 4px ${hexa(theme.brand.alt, 0.64)};
   }
-`;
-
-export const OptionalSelector = styled(Selector)`
-  color: ${theme.text.alt};
-  margin-left: 16px;
-  background-color: transparent;
 `;
 
 export const ThreadInputs = styled(FlexCol)`
