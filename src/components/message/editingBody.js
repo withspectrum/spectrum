@@ -9,6 +9,8 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import editMessageMutation from 'shared/graphql/mutations/message/editMessage';
+import { ESC } from '../../helpers/keycodes';
+import { openModal } from '../../actions/modals';
 
 type Props = {
   message: MessageInfoType,
@@ -49,6 +51,11 @@ const EditingChatInput = (props: Props) => {
   };
 
   const handleKeyPress = e => {
+    const esc = e.keyCode === ESC;
+    if (esc) {
+      cancelEdit();
+      return;
+    }
     // Submit on Enter unless Shift is pressed
     if (e.key === 'Enter') {
       if (e.metaKey) {
@@ -56,6 +63,20 @@ const EditingChatInput = (props: Props) => {
         return submit();
       }
     }
+  };
+
+  const cancelEdit = () => {
+    if (initialState === text) {
+      props.cancelEdit();
+      return;
+    }
+
+    props.dispatch(
+      openModal('CLOSE_COMPOSER_CONFIRMATION_MODAL', {
+        message: 'Are you sure you want to discard this draft?',
+        cancelEdit: props.cancelEdit,
+      })
+    );
   };
 
   const submit = () => {
@@ -117,7 +138,7 @@ const EditingChatInput = (props: Props) => {
       </EditorInput>
       <EditActions>
         {!saving && (
-          <TextButton data-cy="edit-message-cancel" onClick={props.cancelEdit}>
+          <TextButton dataCy="edit-message-cancel" onClick={cancelEdit}>
             Cancel
           </TextButton>
         )}
