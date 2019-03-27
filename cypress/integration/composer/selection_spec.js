@@ -23,12 +23,6 @@ const channelDropdown = () => cy.get('[data-cy="composer-channel-selector"]');
 const communitySelected = () =>
   cy.get('[data-cy="composer-community-selected"]');
 const channelSelected = () => cy.get('[data-cy="composer-channel-selected"]');
-const communityComposerButton = () =>
-  cy.get('[data-cy="community-thread-compose-button"]');
-const channelComposerButton = () =>
-  cy.get('[data-cy="channel-thread-compose-button"]');
-const titlebarComposeButton = () =>
-  cy.get('[data-cy="titlebar-compose-button"]');
 
 const communityDropdownIsEnabled = () => {
   communityDropdown().should('be.visible');

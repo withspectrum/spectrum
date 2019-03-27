@@ -17,15 +17,10 @@ describe('composer modal route', () => {
   const threadComposerWrapper = () =>
     cy.get('[data-cy="thread-composer-wrapper"]');
   const threadComposer = () => cy.get('[data-cy="modal-container"]');
-  const communityComposerPlaceholder = () =>
-    cy.get('[data-cy="community-thread-compose-button"]');
-  const channelComposerPlaceholder = () =>
-    cy.get('[data-cy="channel-thread-compose-button"]');
 
   it('handles community view', () => {
     cy.visit('/spectrum');
     communityBeforeUrlIsValid();
-    communityComposerPlaceholder().click();
     threadComposer().should('be.visible');
     threadComposerWrapper().should('be.visible');
     cy.url().should(
@@ -43,7 +38,6 @@ describe('composer modal route', () => {
   it('handles channel view', () => {
     cy.visit('/spectrum/general');
     channelBeforeUrlIsValid();
-    channelComposerPlaceholder().click();
     threadComposer().should('be.visible');
     threadComposerWrapper().should('be.visible');
     cy.url().should(

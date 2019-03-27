@@ -9,7 +9,7 @@ const pressEscape = () =>
 const pressEscapeMessageInput = () =>
   cy.get('[data-cy=editing-chat-input]').trigger('keydown', { keyCode: 27 });
 const pressEnter = () =>
-  cy.get('modal-container').trigger('keydown', { keyCode: 13 });
+  cy.get('[data-cy="discard-draft-modal"]').trigger('keydown', { keyCode: 13 });
 const discardDraftModal = () => cy.get('[data-cy="discard-draft-modal"]');
 const cancelButton = () => cy.get('[data-cy="composer-cancel-button"]');
 const title = 'Some new thread';
@@ -172,7 +172,7 @@ describe('discarding drafts', () => {
   });
 });
 
-describe('discarding drafts message', () => {
+describe.only('discarding drafts message', () => {
   beforeEach(() => {
     cy.auth(publicThreadAuthor.id).then(() =>
       cy.visit(`/thread/${publicThread.id}`)
