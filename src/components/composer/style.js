@@ -74,7 +74,7 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: 9998;
+  z-index: 9994;
 `;
 
 export const Container = styled(FlexCol)`
@@ -85,7 +85,7 @@ export const Container = styled(FlexCol)`
   max-width: ${MAX_WIDTH + 32}px;
   background: ${theme.bg.wash};
   height: calc(100vh);
-  z-index: 9998;
+  z-index: 9995;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
 
   @media (max-width: ${MEDIA_BREAK}px) {
