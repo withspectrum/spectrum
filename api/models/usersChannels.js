@@ -75,7 +75,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
             {
               createdAt: new Date(),
               isMember: true,
-              receiveNotifications: true,
+              receiveNotifications: false,
             },
             { returnChanges: 'always' }
           )
@@ -93,7 +93,7 @@ const createMemberInChannel = (channelId: string, userId: string, token: boolean
               isModerator: false,
               isBlocked: false,
               isPending: false,
-              receiveNotifications: true,
+              receiveNotifications: false,
             },
             { returnChanges: true }
           )
@@ -317,7 +317,7 @@ const approvePendingUserInChannel = async (channelId: string, userId: string): P
       {
         isMember: true,
         isPending: false,
-        receiveNotifications: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -360,7 +360,7 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
       {
         isMember: true,
         isPending: false,
-        receiveNotifications: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -421,7 +421,6 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
     .run();
 
   // get the current user's relationships to all channels
-
   const usersChannels = db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
