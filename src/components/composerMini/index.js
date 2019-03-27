@@ -24,6 +24,7 @@ import type { History } from 'react-router-dom';
 type Props = {
   community: CommunityInfoType,
   selectedChannelId?: string,
+  fixedChannelId?: string,
   // Injected
   dispatch: Function,
   uploadImage: Function,
@@ -40,6 +41,7 @@ const MiniComposer = ({
   publishThread,
   history,
   selectedChannelId: defaultSelectedChannel,
+  fixedChannelId,
 }: Props) => {
   const titleEditor = useRef();
   const bodyEditor = useRef();
@@ -149,7 +151,7 @@ const MiniComposer = ({
 
   const { pathname, search } = getComposerLink({
     communityId: community.id,
-    channelId: selectedChannelId,
+    channelId: fixedChannelId || selectedChannelId,
   });
 
   return (
@@ -297,15 +299,17 @@ const MiniComposer = ({
               }}
             >
               <div css={{ display: 'flex', alignItems: 'center' }}>
-                <ChannelSelector
-                  id={community.id}
-                  onChannelChange={id => {
-                    setSelectedChannelId(id);
-                  }}
-                  selectedCommunityId={community.id}
-                  selectedChannelId={selectedChannelId}
-                  css={{ marginLeft: 0 }}
-                />
+                {!fixedChannelId && (
+                  <ChannelSelector
+                    id={community.id}
+                    onChannelChange={id => {
+                      setSelectedChannelId(id);
+                    }}
+                    selectedCommunityId={community.id}
+                    selectedChannelId={selectedChannelId}
+                    css={{ marginLeft: 0 }}
+                  />
+                )}
                 <Link
                   to={{
                     pathname,
