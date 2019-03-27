@@ -283,7 +283,11 @@ const MiniComposer = ({
                   {...getRootProps({
                     refKey: 'ref',
                   })}
-                  css={{ width: '100%', position: 'relative' }}
+                  css={{
+                    width: '100%',
+                    position: 'relative',
+                    marginBottom: '8px',
+                  }}
                 >
                   <input {...getInputProps()} />
                   <MentionsInput
@@ -292,20 +296,27 @@ const MiniComposer = ({
                       border: `1px solid ${theme.bg.border}`,
                       borderRadius: '8px',
                       width: '100%',
-                      marginBottom: '8px',
                       input: {
                         fontSize: '16px',
                         minHeight: '80px',
                         padding: '12px',
                       },
                     }}
-                    ref={bodyEditor}
+                    inputRef={bodyEditor}
                     value={body}
                     onChange={changeBody}
                     placeholder="Elaborate here if necessary (optional)"
                   />
 
-                  <DropImageOverlay visible={isDragActive} />
+                  <DropImageOverlay
+                    css={{
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                    }}
+                    visible={isDragActive}
+                  />
                 </div>
               )}
             </Dropzone>

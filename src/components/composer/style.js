@@ -14,9 +14,15 @@ export const DropzoneWrapper = styled.div`
   bottom 0;
 `;
 
-export const DropImageOverlay = (props: { visible: boolean }) => {
+export const DropImageOverlay = (props: {
+  visible: boolean,
+  className?: string,
+}) => {
   return (
-    <DropImageOverlayWrapper visible={props.visible}>
+    <DropImageOverlayWrapper
+      visible={props.visible}
+      className={props.className}
+    >
       <Icon glyph="photo" />
       <h3>Drop image to upload</h3>
     </DropImageOverlayWrapper>
