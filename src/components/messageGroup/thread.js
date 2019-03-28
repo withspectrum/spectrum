@@ -32,8 +32,6 @@ const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
     setLastSeen(thread.currentUserLastSeen);
   }, [thread.id]);
 
-  console.log({ lastSeen });
-
   let hasInjectedUnseenRobo;
   return (
     <MessagesWrapper data-cy="message-group">
