@@ -79,15 +79,7 @@ const getCommunityByMatchOptions = {
     variables: {
       slug: communitySlug,
     },
-    /*
-      don't change this fetch policy
-      its required to make the new community creation flow work
-      after a user creates their community, they have a button to view
-      the community or go to settings - if this does not follow a cache hit
-      with a network request, the client will think the community does
-      not exist
-    */
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 
