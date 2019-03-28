@@ -65,12 +65,11 @@ type Props = {
   notification: Object,
   currentUser: Object,
   markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
 };
 
 export class NewChannelNotification extends React.Component<Props> {
   render() {
-    const { notification } = this.props;
+    const { notification, markSingleNotificationSeen } = this.props;
 
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context);
@@ -80,7 +79,10 @@ export class NewChannelNotification extends React.Component<Props> {
         : 'A new channel was';
 
     return (
-      <SegmentedNotificationCard isSeen={notification.isSeen}>
+      <SegmentedNotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <CreatedContext>
           <Icon glyph="community" />
           <TextContent pointer={true}>

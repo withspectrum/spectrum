@@ -21,11 +21,13 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
+  markSingleNotificationSeen: Function,
 };
 
 export const NewThreadReactionNotification = ({
   notification,
   currentUser,
+  markSingleNotificationSeen,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
@@ -36,7 +38,11 @@ export const NewThreadReactionNotification = ({
   );
 
   return (
-    <NotificationCard isSeen={notification.isSeen} key={notification.id}>
+    <NotificationCard
+      onClick={() => markSingleNotificationSeen(notification.id)}
+      isSeen={notification.isSeen}
+      key={notification.id}
+    >
       <CardLink
         to={{
           pathname: getThreadLink(notification.context.payload),

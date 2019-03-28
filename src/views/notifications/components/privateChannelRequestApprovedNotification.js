@@ -21,12 +21,15 @@ type Props = {
   notification: Object,
   currentUser: Object,
   markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
 };
 
 export class PrivateChannelRequestApproved extends React.Component<Props> {
   render() {
-    const { notification, currentUser } = this.props;
+    const {
+      notification,
+      currentUser,
+      markSingleNotificationSeen,
+    } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, true);
     const event = parseEvent(notification.event);
@@ -35,7 +38,10 @@ export class PrivateChannelRequestApproved extends React.Component<Props> {
     const channel = notification.entities[0].payload;
 
     return (
-      <NotificationCard isSeen={notification.isSeen}>
+      <NotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <CardLink
           to={`/${notification.context.payload.slug}/${
             notification.entities[0].payload.slug

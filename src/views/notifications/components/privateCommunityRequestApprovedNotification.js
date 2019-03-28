@@ -16,19 +16,25 @@ type Props = {
   notification: Object,
   currentUser: Object,
   markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
 };
 
 export class PrivateCommunityRequestApproved extends React.Component<Props> {
   render() {
-    const { notification, currentUser } = this.props;
+    const {
+      notification,
+      currentUser,
+      markSingleNotificationSeen,
+    } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, true);
     const event = parseEvent(notification.event);
     const date = parseNotificationDate(notification.modifiedAt);
 
     return (
-      <NotificationCard isSeen={notification.isSeen}>
+      <NotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <CardLink to={`/${notification.context.payload.slug}/`} />
         <CardContent>
           <ApprovedContext>

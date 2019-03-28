@@ -25,7 +25,6 @@ type Props = {
   notification: Object,
   currentUser: Object,
   markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
   approvePendingCommunityMember: Function,
   blockPendingCommunityMember: Function,
 };
@@ -37,6 +36,7 @@ class PrivateCommunityRequestSentComponent extends React.Component<Props> {
       currentUser,
       approvePendingCommunityMember,
       blockPendingCommunityMember,
+      markSingleNotificationSeen,
     } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, true);
@@ -49,7 +49,10 @@ class PrivateCommunityRequestSentComponent extends React.Component<Props> {
     };
 
     return (
-      <SegmentedNotificationCard isSeen={notification.isSeen}>
+      <SegmentedNotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <Link
           to={`/${
             notification.context.payload.slug

@@ -23,12 +23,12 @@ type Props = {
   currentUser: Object,
   history?: Object,
   markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
 };
 
 export const NewMessageNotification = ({
   notification,
   currentUser,
+  markSingleNotificationSeen,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
@@ -42,7 +42,10 @@ export const NewMessageNotification = ({
   }
 
   return (
-    <NotificationCard isSeen={notification.isSeen}>
+    <NotificationCard
+      onClick={() => markSingleNotificationSeen(notification.id)}
+      isSeen={notification.isSeen}
+    >
       <CardLink
         to={{
           pathname: getThreadLink(notification.context.payload),
