@@ -31,6 +31,50 @@ type Props = {
 };
 
 class ChannelList extends React.Component<Props> {
+  sortChannelsBySlug = (array: Array<any>): Array<?any> => {
+    if (!array || array.length === 0) return [];
+
+    const generalChannel = array.find(channel => channel.slug === 'general');
+    const withoutGeneral = array.filter(channel => channel.slug !== 'general');
+    const sortedWithoutGeneral = withoutGeneral.sort((a, b) => {
+      if (a.slug < b.slug) return -1;
+      if (a.slug > b.slug) return 1;
+      return 0;
+    });
+    if (generalChannel) {
+      sortedWithoutGeneral.unshift(generalChannel);
+      return sortedWithoutGeneral;
+    } else {
+      return sortedWithoutGeneral;
+    }
+  };
+
+  sortChannelsByOrderRank = (array: Array<any>): Array<?any> => {
+    if (!array || array.length === 0) return [];
+
+    return array.sort((a, b) => {
+      // channels with no orderRank will be moved to last
+      if (a.orderRank === null || a.orderRank === undefined) return 1;
+      if (b.orderRank === null || b.orderRank === undefined) return -1;
+
+      if (a.orderRank < b.orderRank) return -1;
+      if (a.orderRank > b.orderRank) return 1;
+
+      return 0;
+    });
+  };
+
+  sortChannels = (channels: Array<any>): Array<?any> => {
+    if (!channels || channels.length === 0) return [];
+
+    const areChannelsHaveOrderRank = channels.some(
+      ({ orderRank }) => typeof orderRank === 'number'
+    );
+
+    return areChannelsHaveOrderRank
+      ? this.sortChannelsByOrderRank(channels)
+      : this.sortChannelsBySlug(channels);
+  };
   render() {
     const {
       data: { community },
@@ -39,7 +83,9 @@ class ChannelList extends React.Component<Props> {
     } = this.props;
 
     if (community) {
-      const channels = community.channelConnection.edges.map(c => c && c.node);
+      const channels = this.sortChannels(
+        community.channelConnection.edges.map(c => c && c.node)
+      );
 
       return (
         <SectionCard data-cy="channel-list">

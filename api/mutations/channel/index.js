@@ -13,6 +13,7 @@ import enableChannelTokenJoin from './enableChannelTokenJoin';
 import disableChannelTokenJoin from './disableChannelTokenJoin';
 import resetChannelJoinToken from './resetChannelJoinToken';
 import updateChannelSlackBotLinks from './updateChannelSlackBotLinks';
+import reorderChannels from './reorderChannels';
 
 module.exports = {
   Mutation: {
@@ -30,5 +31,6 @@ module.exports = {
     disableChannelTokenJoin,
     resetChannelJoinToken,
     updateChannelSlackBotLinks,
+    reorderChannels,
   },
 };

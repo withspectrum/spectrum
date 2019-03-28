@@ -22,6 +22,7 @@ export type ChannelInfoType = {
   community: {
     ...$Exact<CommunityInfoType>,
   },
+  orderRank: number,
 };
 
 export default gql`
@@ -44,6 +45,7 @@ export default gql`
     community {
       ...communityInfo
     }
+    orderRank
   }
   ${communityInfoFragment}
 `;

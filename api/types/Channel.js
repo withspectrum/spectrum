@@ -86,6 +86,7 @@ const Channel = /* GraphQL */ `
     owners: [User] @cost(complexity: 3)
     joinSettings: JoinSettings
     slackSettings: ChannelSlackSettings
+    orderRank: Int
   }
 
   extend type Query {
@@ -122,6 +123,11 @@ const Channel = /* GraphQL */ `
     id: ID!
   }
 
+  input ReorderChannels {
+    id: ID!
+    orderRank: Int!
+  }
+
   extend type Mutation {
     createChannel(input: CreateChannelInput!): Channel
       @rateLimit(max: 10, window: "10m")
@@ -137,6 +143,7 @@ const Channel = /* GraphQL */ `
     enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
     disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
     resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel
+    reorderChannels(input: [ReorderChannels]): [Channel]
   }
 `;
 

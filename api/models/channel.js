@@ -446,6 +446,24 @@ const getChannelsOnlineMemberCounts = (channelIds: Array<string>) => {
     .run();
 };
 
+export type ReorderChannelsInput = {
+  id: string,
+  orderRank: number,
+};
+
+const reorderChannels = (channelOrderRanks: Array<ReorderChannelsInput>) => {
+  return Promise.all(
+    channelOrderRanks.map(({ id, orderRank }) =>
+      db
+        .table('channels')
+        .get(id)
+        .update({ orderRank }, { returnChanges: true })
+        .run()
+        .then(() => db.table('channels').get(id))
+    )
+  );
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -467,6 +485,7 @@ module.exports = {
   decrementMemberCount,
   setMemberCount,
   getChannelsOnlineMemberCounts,
+  reorderChannels,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

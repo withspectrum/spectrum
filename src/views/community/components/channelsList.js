@@ -26,7 +26,7 @@ type Props = {
 };
 
 class Component extends React.Component<Props> {
-  sortChannels = (array: Array<any>): Array<?any> => {
+  sortChannelsBySlug = (array: Array<any>): Array<?any> => {
     if (!array || array.length === 0) return [];
 
     const generalChannel = array.find(channel => channel.slug === 'general');
@@ -43,6 +43,34 @@ class Component extends React.Component<Props> {
       return sortedWithoutGeneral;
     }
   };
+
+  sortChannelsByOrderRank = (array: Array<any>): Array<?any> => {
+    if (!array || array.length === 0) return [];
+
+    return array.sort((a, b) => {
+      // channels with no orderRank will be moved to last
+      if (a.orderRank === null || a.orderRank === undefined) return 1;
+      if (b.orderRank === null || b.orderRank === undefined) return -1;
+
+      if (a.orderRank < b.orderRank) return -1;
+      if (a.orderRank > b.orderRank) return 1;
+
+      return 0;
+    });
+  };
+
+  sortChannels = (channels: Array<any>): Array<?any> => {
+    if (!channels || channels.length === 0) return [];
+
+    const areChannelsHaveOrderRank = channels.some(
+      ({ orderRank }) => typeof orderRank === 'number'
+    );
+
+    return areChannelsHaveOrderRank
+      ? this.sortChannelsByOrderRank(channels)
+      : this.sortChannelsBySlug(channels);
+  };
+
   render() {
     const {
       isLoading,
