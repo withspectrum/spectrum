@@ -29,5 +29,6 @@ export const BodyContainer = styled.div`
   div,
   textarea {
     line-height: 1.4 !important;
+    word-break: break-word;
   }
 `;
