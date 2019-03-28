@@ -15,6 +15,7 @@ import {
   Label,
   IconWrapper,
   Divider,
+  DesktopMenuIconsCover,
 } from './style';
 import Icon from 'src/components/icon';
 import NavHead from './navHead';
@@ -46,6 +47,8 @@ const Navigation = (props: Props) => {
             />
 
             <NavigationGrid isOpen={navigationIsOpen}>
+              <DesktopMenuIconsCover />
+
               <Route path="/about">
                 {({ match }) => (
                   <Tooltip content="Home" placement={'left'}>
@@ -194,6 +197,7 @@ const Navigation = (props: Props) => {
             />
 
             <NavigationGrid isOpen={navigationIsOpen}>
+              <DesktopMenuIconsCover />
               <GlobalComposerTab />
               <Route path="/messages">
                 {({ match }) => <DirectMessagesTab isActive={!!match} />}

@@ -73,6 +73,17 @@ export const NavigationWrapper = styled.div`
   }
 `;
 
+export const DesktopMenuIconsCover = styled.div`
+  position: fixed;
+  width: ${NAVBAR_WIDTH - 1}px;
+  height: 40px;
+  border-bottom: 1px solid ${theme.bg.border};
+  background: #fff;
+  top: 0;
+  display: none;
+  z-index: 1;
+`;
+
 export const NavigationGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -92,6 +103,10 @@ export const NavigationGrid = styled.div`
   ${isDesktopApp() &&
     css`
       padding-top: 40px;
+
+      ${DesktopMenuIconsCover} {
+        display: block;
+      }
     `}
 
   &::-webkit-scrollbar {
