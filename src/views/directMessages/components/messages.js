@@ -36,6 +36,8 @@ class MessagesWithData extends React.Component<Props, State> {
   subscription: ?Function;
 
   componentDidMount() {
+    this.subscribe();
+
     const thread = this.props.data.directMessagethread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
     if (thread) {
@@ -43,8 +45,6 @@ class MessagesWithData extends React.Component<Props, State> {
       if (!elem) return;
       elem.scrollTop = elem.scrollHeight;
     }
-
-    this.subscribe();
   }
 
   componentWillUnmount() {
