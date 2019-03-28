@@ -20,6 +20,7 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
+  markSingleNotificationSeen: Function,
 };
 type State = {
   communityName: string,
@@ -56,14 +57,21 @@ export class MentionThreadNotification extends React.Component<Props, State> {
   }
 
   render() {
-    const { notification, currentUser } = this.props;
+    const {
+      notification,
+      currentUser,
+      markSingleNotificationSeen,
+    } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
 
     return (
-      <SegmentedNotificationCard isSeen={notification.isSeen}>
+      <SegmentedNotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <ThreadContext>
           <SpecialContext>
             <Icon glyph="mention" />
