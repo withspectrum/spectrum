@@ -36,6 +36,7 @@ export const RowWithAvatar = styled.div`
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
   grid-gap: 16px;
+  flex: 1;
 
   &:hover {
     background: ${theme.bg.wash};
