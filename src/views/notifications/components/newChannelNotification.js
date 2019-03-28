@@ -64,7 +64,7 @@ const NewChannel = compose(
 type Props = {
   notification: Object,
   currentUser: Object,
-  markSingleNotificationSeen?: Function,
+  markSingleNotificationSeen: Function,
 };
 
 export class NewChannelNotification extends React.Component<Props> {

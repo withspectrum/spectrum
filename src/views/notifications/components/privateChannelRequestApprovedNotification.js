@@ -20,7 +20,7 @@ import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 type Props = {
   notification: Object,
   currentUser: Object,
-  markSingleNotificationSeen?: Function,
+  markSingleNotificationSeen: Function,
 };
 
 export class PrivateChannelRequestApproved extends React.Component<Props> {

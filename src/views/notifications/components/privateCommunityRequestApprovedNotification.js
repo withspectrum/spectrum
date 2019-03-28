@@ -15,7 +15,7 @@ import { CardLink, CardContent } from 'src/components/threadFeedCard/style';
 type Props = {
   notification: Object,
   currentUser: Object,
-  markSingleNotificationSeen?: Function,
+  markSingleNotificationSeen: Function,
 };
 
 export class PrivateCommunityRequestApproved extends React.Component<Props> {

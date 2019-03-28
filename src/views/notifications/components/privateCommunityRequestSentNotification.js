@@ -24,7 +24,7 @@ import GetCommunityMember from './getCommunityMember';
 type Props = {
   notification: Object,
   currentUser: Object,
-  markSingleNotificationSeen?: Function,
+  markSingleNotificationSeen: Function,
   approvePendingCommunityMember: Function,
   blockPendingCommunityMember: Function,
 };

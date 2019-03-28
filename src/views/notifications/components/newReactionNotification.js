@@ -20,7 +20,7 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
-  markSingleNotificationSeen?: Function,
+  markSingleNotificationSeen: Function,
 };
 
 export const NewReactionNotification = ({
