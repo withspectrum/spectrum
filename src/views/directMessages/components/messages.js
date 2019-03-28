@@ -36,6 +36,14 @@ class MessagesWithData extends React.Component<Props, State> {
   subscription: ?Function;
 
   componentDidMount() {
+    const thread = this.props.data.directMessagethread;
+    // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
+    if (thread) {
+      const elem = document.getElementById('main');
+      if (!elem) return;
+      elem.scrollTop = elem.scrollHeight;
+    }
+
     this.subscribe();
   }
 
@@ -58,21 +66,6 @@ class MessagesWithData extends React.Component<Props, State> {
       !prev.data.directMessageThread &&
       curr.data.directMessageThread &&
       curr.data.directMessageThread.messageConnection.edges.length > 0
-    ) {
-      return {
-        type: 'bottom',
-      };
-    }
-
-    // same thread, loaded again
-    if (
-      prev.data.directMessageThread &&
-      // was loading
-      prev.data.networkStatus === 1 &&
-      // not loading any more
-      curr.data.networkStatus === 7 &&
-      curr.data.directMessageThread &&
-      curr.data.directMessageThread.id === prev.data.directMessageThread.id
     ) {
       return {
         type: 'bottom',
