@@ -147,7 +147,7 @@ const EditingChatInput = (props: Props) => {
           data-cy="edit-message-save"
           onClick={submit}
         >
-          Save
+          {saving ? 'Saving' : 'Save'}
         </PrimaryOutlineButton>
       </EditActions>
     </React.Fragment>

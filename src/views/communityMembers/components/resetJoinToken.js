@@ -58,7 +58,7 @@ class ResetJoinToken extends React.Component<Props, State> {
           onClick={this.reset}
           data-cy="refresh-join-link-token"
         >
-          Reset this link
+          {isLoading ? 'Resetting...' : 'Reset this link'}
         </OutlineButton>
       </div>
     );

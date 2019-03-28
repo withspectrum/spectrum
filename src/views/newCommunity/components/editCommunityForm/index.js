@@ -300,7 +300,7 @@ class CommunityWithData extends React.Component<Props, State> {
             onClick={this.save}
             disabled={photoSizeError}
           >
-            Save & Continue
+            {isLoading ? 'Saving...' : 'Save & Continue'}
           </Button>
         </Actions>
       </FormContainer>

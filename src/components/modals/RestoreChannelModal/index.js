@@ -85,7 +85,7 @@ class RestoreChannelModal extends React.Component<Props, State> {
             <Actions>
               <TextButton onClick={this.close}>Cancel</TextButton>
               <PrimaryOutlineButton loading={isLoading} onClick={this.restore}>
-                Restore Channel
+                {isLoading ? 'Restoring...' : 'Restore Channel'}
               </PrimaryOutlineButton>
             </Actions>
           </Form>

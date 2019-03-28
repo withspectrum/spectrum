@@ -102,7 +102,7 @@ class JoinChannel extends React.Component<Props, State> {
                 : 'join-channel-login-upsell'
             }
           >
-            {label}
+            {isLoading ? 'Joining...' : label}
           </Button>
         </JoinChannelContent>
       </JoinChannelContainer>

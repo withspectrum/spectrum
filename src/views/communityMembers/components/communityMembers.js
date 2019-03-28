@@ -308,7 +308,7 @@ class CommunityMembers extends React.Component<Props, State> {
                           loading={isFetchingMore}
                           onClick={fetchMore}
                         >
-                          Load more
+                          {isFetchingMore ? 'Loading...' : 'Load more'}
                         </FetchMore>
                       </SectionCardFooter>
                     )}

@@ -70,6 +70,8 @@ const Watercooler = (props: Props) => {
   };
 
   if (community) {
+    const buttonLabel =
+      community && community.watercoolerId ? 'Disable' : 'Enable';
     return (
       <SectionCard data-cy="community-settings-branded-login">
         <SectionTitle>Open chat</SectionTitle>
@@ -90,7 +92,7 @@ const Watercooler = (props: Props) => {
             onClick={community.watercoolerId ? disable : enable}
             type="submit"
           >
-            {community && community.watercoolerId ? 'Disable' : 'Enable'}
+            {saving ? 'Saving...' : buttonLabel}
           </OutlineButton>
         </SectionCardFooter>
       </SectionCard>

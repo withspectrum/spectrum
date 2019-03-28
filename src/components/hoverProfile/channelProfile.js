@@ -83,12 +83,14 @@ class HoverProfile extends Component<ProfileProps> {
                         icon={'checkmark'}
                         loading={state.isLoading}
                       >
-                        Joined
+                        {state.isLoading ? 'Leaving...' : 'Joined'}
                       </OutlineButton>
                     );
                   } else {
                     return (
-                      <Button loading={state.isLoading}>Join channel</Button>
+                      <Button loading={state.isLoading}>
+                        {state.isLoading ? 'Joining...' : 'Join channel'}
+                      </Button>
                     );
                   }
                 }}
