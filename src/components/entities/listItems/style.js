@@ -36,6 +36,7 @@ export const RowWithAvatar = styled.div`
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
   grid-gap: 16px;
+  flex: 1;
 
   &:hover {
     background: ${theme.bg.wash};
@@ -65,8 +66,9 @@ export const Label = styled.div`
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
-  display: inline-flex;
+  display: inline-block;
   align-items: center;
+  min-width: 0;
   ${Truncate};
 
   .icon {
@@ -106,4 +108,8 @@ export const Actions = styled.div`
   color: ${theme.text.alt};
   flex: 1;
   padding-top: 4px;
+`;
+
+export const ChannelActions = styled(Actions)`
+  flex-direction: row;
 `;

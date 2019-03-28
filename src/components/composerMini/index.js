@@ -25,7 +25,7 @@ import type { CommunityInfoType } from 'shared/graphql/fragments/community/commu
 import type { History } from 'react-router-dom';
 import { DISCARD_DRAFT_MESSAGE } from 'src/components/composer';
 import { openModal } from 'src/actions/modals';
-import { Container } from './style';
+import { Container, BodyContainer } from './style';
 
 type Props = {
   community: CommunityInfoType,
@@ -278,23 +278,13 @@ const MiniComposer = ({
         {!expanded && <PrimaryButton tabIndex={-1}>Post</PrimaryButton>}
       </div>
       {expanded && (
-        <div
-          css={{
-            width: '100%',
-            paddingLeft: '48px',
-            paddingRight: '8px',
-            marginTop: '8px',
-            fontSize: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-          }}
-        >
+        <BodyContainer>
           <Dropzone
             accept={['image/gif', 'image/jpeg', 'image/png', 'video/mp4']}
             disableClick
             multiple={false}
             onDropAccepted={uploadFiles}
+            style={{ lineHeight: '1.4' }}
           >
             {({ getRootProps, getInputProps, isDragActive }) => (
               <div
@@ -316,6 +306,7 @@ const MiniComposer = ({
                     border: `1px solid ${theme.bg.border}`,
                     borderRadius: '8px',
                     width: '100%',
+                    lineHeight: '1.4',
                     input: {
                       fontSize: '16px',
                       minHeight: '80px',
@@ -404,7 +395,7 @@ const MiniComposer = ({
               </PrimaryButton>
             </div>
           </div>
-        </div>
+        </BodyContainer>
       )}
     </Container>
   );

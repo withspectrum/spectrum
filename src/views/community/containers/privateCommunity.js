@@ -31,9 +31,13 @@ export const PrivateCommunity = (props: Props) => {
 
   const primaryAction = ({ isLoading }) =>
     isPending ? (
-      <PrimaryButton isLoading={isLoading}>Cancel request</PrimaryButton>
+      <PrimaryButton isLoading={isLoading}>
+        {isLoading ? 'Canceling...' : 'Cancel request'}
+      </PrimaryButton>
     ) : (
-      <PrimaryButton isLoading={isLoading}>Request to join</PrimaryButton>
+      <PrimaryButton isLoading={isLoading}>
+        {isLoading ? 'Requesting...' : 'Request to join'}
+      </PrimaryButton>
     );
 
   return (

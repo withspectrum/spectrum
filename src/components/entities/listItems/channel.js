@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
@@ -8,8 +8,10 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import Icon from 'src/components/icon';
 import JoinChannelWrapper from 'src/components/joinChannelWrapper';
 import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
+import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import { OutlineButton, PrimaryOutlineButton } from 'src/components/button';
-import { Row, Content, Label, Description, Actions } from './style';
+import Tooltip from 'src/components/tooltip';
+import { Row, Content, Label, Description, ChannelActions } from './style';
 
 type Props = {
   channel: ?ChannelInfoType,
@@ -22,6 +24,7 @@ type Props = {
 
 const Channel = (props: Props) => {
   const { channel, name, description, children, currentUser } = props;
+  const [isHoveringNotifications, setIsHoveringNotifications] = useState(false);
   if (!channel) return null;
 
   const renderAction = () => {
@@ -59,6 +62,57 @@ const Channel = (props: Props) => {
     );
   };
 
+  const renderNotificationPreferences = () => {
+    if (!currentUser) return null;
+
+    const { community, channelPermissions } = channel;
+    const { communityPermissions } = community;
+
+    const isCommunityMember = communityPermissions.isMember;
+    if (!isCommunityMember) return null;
+
+    const { receiveNotifications, isMember } = channelPermissions;
+    if (!isMember) return null;
+
+    const tipText = receiveNotifications
+      ? 'Mute notifications'
+      : 'Enable channel notifications';
+    const glyph = receiveNotifications
+      ? isHoveringNotifications
+        ? 'mute'
+        : 'notification'
+      : isHoveringNotifications
+      ? 'notification'
+      : 'mute';
+
+    return (
+      <ToggleChannelNotifications
+        channel={channel}
+        render={({ isLoading }) => (
+          <Tooltip content={tipText}>
+            <span style={{ marginLeft: '8px', display: 'flex' }}>
+              <OutlineButton
+                disabled={isLoading}
+                onMouseEnter={() => setIsHoveringNotifications(true)}
+                onMouseLeave={() => setIsHoveringNotifications(false)}
+                style={{ padding: '4px' }}
+                size={'small'}
+              >
+                <Icon
+                  style={{
+                    marginTop: '-1px',
+                  }}
+                  glyph={glyph}
+                  size={24}
+                />
+              </OutlineButton>
+            </span>
+          </Tooltip>
+        )}
+      />
+    );
+  };
+
   return (
     <ErrorBoundary>
       <Link to={`/${channel.community.slug}/${channel.slug}`}>
@@ -76,10 +130,11 @@ const Channel = (props: Props) => {
             {description && <Description>{description}</Description>}
           </Content>
 
-          <Actions>
+          <ChannelActions>
             {renderAction()}
+            {renderNotificationPreferences()}
             {children}
-          </Actions>
+          </ChannelActions>
         </Row>
       </Link>
     </ErrorBoundary>

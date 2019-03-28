@@ -72,7 +72,11 @@ class HoverProfile extends Component<ProfileProps> {
               <JoinCommunityWrapper
                 community={community}
                 render={({ isLoading }) => {
-                  return <Button loading={isLoading}>Join</Button>;
+                  return (
+                    <Button loading={isLoading}>
+                      {isLoading ? 'Joining...' : 'Join'}
+                    </Button>
+                  );
                 }}
               />
             )}

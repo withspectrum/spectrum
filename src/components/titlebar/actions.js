@@ -12,7 +12,7 @@ import {
 } from 'src/components/button';
 import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import getComposerLink from 'src/helpers/get-composer-link';
-import JoinChannel from 'src/components/joinCommunityWrapper';
+import JoinChannel from 'src/components/joinChannelWrapper';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -77,7 +77,7 @@ export const MobileChannelAction = (props: ChannelProps) => {
 
   return (
     <JoinChannel
-      channelId={channel.id}
+      channel={channel}
       render={({ isLoading }) => (
         <PrimaryButton size={'small'} isLoading={isLoading}>
           {isLoading ? 'Joining...' : 'Join'}

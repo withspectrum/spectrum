@@ -28,7 +28,7 @@ class Menu extends React.Component<Props, State> {
     return (
       <Wrapper darkContext={darkContext}>
         <Icon
-          dataCy={'community-menu-open'}
+          data-cy={'community-menu-open'}
           glyph={'menu'}
           onClick={() => this.toggleMenu()}
         />

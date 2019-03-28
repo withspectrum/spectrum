@@ -16,6 +16,7 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
+  markSingleNotificationSeen: Function,
 };
 type State = {
   communityName: string,
@@ -29,14 +30,21 @@ type State = {
 
 export class MentionMessageNotification extends React.Component<Props, State> {
   render() {
-    const { notification, currentUser } = this.props;
+    const {
+      notification,
+      currentUser,
+      markSingleNotificationSeen,
+    } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
 
     return (
-      <NotificationCard isSeen={notification.isSeen}>
+      <NotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <CardLink
           to={{
             pathname: getThreadLink(notification.context.payload),

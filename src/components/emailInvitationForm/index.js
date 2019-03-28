@@ -419,7 +419,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
             onClick={this.sendInvitations}
             disabled={hasCustomMessage && customMessageError}
           >
-            Send Invitations
+            {isLoading ? 'Sending...' : 'Send Invitations'}
           </OutlineButton>
         </SectionCardFooter>
       </div>

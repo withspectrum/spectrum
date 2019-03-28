@@ -23,6 +23,7 @@ import WebPushManager from 'src/helpers/web-push-manager';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { setTitlebarProps } from 'src/actions/titlebar';
@@ -44,6 +45,7 @@ import { PrimaryButton, OutlineButton } from 'src/components/button';
 
 type Props = {
   markAllNotificationsSeen?: Function,
+  markSingleNotificationSeen: Function,
   subscribeToWebPush: Function,
   dispatch: Dispatch<Object>,
   currentUser: Object,
@@ -184,6 +186,13 @@ class NotificationsPure extends React.Component<Props, State> {
     track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
+  markSingleNotificationSeen = (id: string) => {
+    const { markSingleNotificationSeen } = this.props;
+    return markSingleNotificationSeen(id).catch(err => {
+      // ignore errors for now
+    });
+  };
+
   render() {
     const {
       currentUser,
@@ -220,7 +229,7 @@ class NotificationsPure extends React.Component<Props, State> {
                       isLoading={this.state.webPushPromptLoading}
                       css={{ marginRight: '16px' }}
                     >
-                      Enable push notifications
+                      {isLoading ? 'Enabling...' : 'Enable push notifications'}
                     </OutlineButton>
                   )}
                   <PrimaryButton
@@ -240,6 +249,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <NewMessageNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -250,6 +262,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <NewReactionNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -260,6 +275,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <NewThreadReactionNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -270,6 +288,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <NewChannelNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -280,6 +301,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <NewUserInCommunityNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -294,6 +318,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <CommunityInviteNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -304,6 +331,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <MentionMessageNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -314,6 +344,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <MentionThreadNotification
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -324,6 +357,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <PrivateChannelRequestSent
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -334,6 +370,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <PrivateChannelRequestApproved
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -344,6 +383,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <PrivateCommunityRequestSent
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -354,6 +396,9 @@ class NotificationsPure extends React.Component<Props, State> {
                           <PrivateCommunityRequestApproved
                             notification={notification}
                             currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
                           />
                         </ErrorBoundary>
                       );
@@ -408,6 +453,7 @@ export default compose(
   subscribeToWebPush,
   getNotifications,
   markNotificationsSeenMutation,
+  markSingleNotificationSeenMutation,
   viewNetworkHandler,
   withCurrentUser,
   // $FlowIssue

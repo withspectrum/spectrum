@@ -367,7 +367,7 @@ class EditForm extends React.Component<Props, State> {
               type="submit"
               data-cy="community-settings-edit-save-button"
             >
-              Save
+              {isLoading ? 'Saving...' : 'Save'}
             </PrimaryOutlineButton>
             <TertiaryActionContainer>
               {community.communityPermissions.isOwner && (

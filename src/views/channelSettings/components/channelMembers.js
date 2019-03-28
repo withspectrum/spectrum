@@ -42,7 +42,7 @@ class ChannelMembers extends Component<Props> {
         channel.memberConnection.edges.map(member => member && member.node);
 
       return (
-        <SectionCard>
+        <SectionCard data-cy="channel-members">
           <SectionTitle>Members</SectionTitle>
 
           <ListContainer>
@@ -77,7 +77,7 @@ class ChannelMembers extends Component<Props> {
                   loading={isFetchingMore}
                   onClick={() => fetchMore()}
                 >
-                  Load more
+                  {isFetchingMore ? 'Loading...' : 'Load more'}
                 </FetchMoreButton>
               </ListFooter>
             )}

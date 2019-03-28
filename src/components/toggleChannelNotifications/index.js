@@ -23,7 +23,9 @@ type State = { isLoading: boolean };
 class ToggleChannelNotifications extends React.Component<Props, State> {
   state = { isLoading: false };
 
-  init = () => {
+  init = e => {
+    e && e.preventDefault() && e.stopPropogation();
+
     this.setState({
       isLoading: true,
     });
@@ -57,8 +59,8 @@ class ToggleChannelNotifications extends React.Component<Props, State> {
           toggleChannelNotifications.channelPermissions.receiveNotifications;
         const type = value ? 'success' : 'neutral';
         const str = value
-          ? 'Notifications activated!'
-          : 'Notifications turned off.';
+          ? 'Channel notifications enabled!'
+          : 'Channel notifications disabled.';
         this.props.dispatch(addToastWithTimeout(type, str));
         return;
       })

@@ -25,6 +25,8 @@ export const DesktopTitlebar = (props: Props) => (
       position: 'sticky',
       top: '0',
       zIndex: 9000,
+      height: '62px',
+      maxHeight: '62px',
     }}
     {...props}
   />

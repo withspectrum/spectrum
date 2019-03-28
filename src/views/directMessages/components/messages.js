@@ -37,6 +37,14 @@ class MessagesWithData extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
+
+    const thread = this.props.data.directMessageThread;
+    // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
+    if (thread) {
+      const elem = document.getElementById('main');
+      if (!elem) return;
+      elem.scrollTop = elem.scrollHeight;
+    }
   }
 
   componentWillUnmount() {
@@ -63,6 +71,7 @@ class MessagesWithData extends React.Component<Props, State> {
         type: 'bottom',
       };
     }
+
     // New messages
     if (
       prev.data.directMessageThread &&
