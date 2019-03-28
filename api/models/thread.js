@@ -6,7 +6,7 @@ import {
   trackQueue,
   searchQueue,
 } from 'shared/bull/queues';
-const { parseRange } = require('./utils');
+const { parseRange, NEW_DOCUMENTS } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
@@ -760,12 +760,30 @@ export const decrementReactionCount = (threadId: string) => {
     .run();
 };
 
+const hasChanged = (field: string) =>
+  db
+    .row('old_val')(field)
+    .ne(db.row('new_val')(field));
+
 const getUpdatedThreadsChangefeed = () =>
   db
     .table('threads')
     .changes({
       includeInitial: false,
-    })('new_val')
+    })
+    .filter(
+      NEW_DOCUMENTS.or(
+        hasChanged('content')
+          .or(hasChanged('lastActive'))
+          .or(hasChanged('channelId'))
+          .or(hasChanged('communityId'))
+          .or(hasChanged('creatorId'))
+          .or(hasChanged('isPublished'))
+          .or(hasChanged('modifiedAt'))
+          .or(hasChanged('messageCount'))
+          .or(hasChanged('reactionCount'))
+      )
+    )('new_val')
     .run();
 
 export const listenToUpdatedThreads = (cb: Function): Function => {
