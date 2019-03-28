@@ -246,7 +246,7 @@ class ChannelWithData extends React.Component<Props, State> {
                 loading={isLoading}
                 data-cy="save-button"
               >
-                Save
+                {isLoading ? 'Saving...' : 'Save'}
               </PrimaryOutlineButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>
@@ -257,7 +257,7 @@ class ChannelWithData extends React.Component<Props, State> {
                         color="text.placeholder"
                         hoverColor="warn.alt"
                         onClick={e => this.triggerDeleteChannel(e, channel.id)}
-                        dataCy="delete-channel-button"
+                        data-cy="delete-channel-button"
                       />
                     </span>
                   </Tooltip>

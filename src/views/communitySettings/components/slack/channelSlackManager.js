@@ -61,6 +61,7 @@ class ChannelSlackManager extends React.Component<Props> {
         <Select
           onChange={this.handleSlackChannelChange}
           defaultValue={selectedSlackChannelId}
+          style={{ maxWidth: '170px' }}
         >
           <option value={''}>{'# '}</option>
           {slackChannels.map(channel => (

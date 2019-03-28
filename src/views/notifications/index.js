@@ -220,7 +220,7 @@ class NotificationsPure extends React.Component<Props, State> {
                       isLoading={this.state.webPushPromptLoading}
                       css={{ marginRight: '16px' }}
                     >
-                      Enable push notifications
+                      {isLoading ? 'Enabling...' : 'Enable push notifications'}
                     </OutlineButton>
                   )}
                   <PrimaryButton

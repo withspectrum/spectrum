@@ -282,7 +282,7 @@ class Message extends React.Component<Props, State> {
                       }
                     >
                       <Icon
-                        dataCy={
+                        data-cy={
                           hasReacted
                             ? 'inline-unlike-action'
                             : 'inline-like-action'
@@ -304,7 +304,7 @@ class Message extends React.Component<Props, State> {
                   {canEditMessage && (
                     <Tooltip content={'Edit'}>
                       <Action onClick={this.initEditMessage}>
-                        <Icon dataCy="edit-message" glyph="edit" size={20} />
+                        <Icon data-cy="edit-message" glyph="edit" size={20} />
                       </Action>
                     </Tooltip>
                   )}
@@ -313,7 +313,7 @@ class Message extends React.Component<Props, State> {
                     <Tooltip content={'Delete'}>
                       <Action onClick={this.deleteMessage}>
                         <Icon
-                          dataCy="delete-message"
+                          data-cy="delete-message"
                           glyph="delete"
                           size={20}
                         />
@@ -323,7 +323,11 @@ class Message extends React.Component<Props, State> {
 
                   <Tooltip content={'Reply'}>
                     <Action onClick={this.replyToMessage}>
-                      <Icon dataCy="reply-to-message" glyph="reply" size={20} />
+                      <Icon
+                        data-cy="reply-to-message"
+                        glyph="reply"
+                        size={20}
+                      />
                     </Action>
                   </Tooltip>
 
@@ -344,7 +348,7 @@ class Message extends React.Component<Props, State> {
                             }}
                           >
                             <Icon
-                              dataCy={
+                              data-cy={
                                 hasReacted ? 'unlike-action' : 'like-action'
                               }
                               glyph={hasReacted ? 'like-fill' : 'like'}
@@ -380,7 +384,7 @@ class Message extends React.Component<Props, State> {
                       <Tooltip content={'Link to message'}>
                         <Action>
                           <Icon
-                            dataCy="link-to-message"
+                            data-cy="link-to-message"
                             glyph="link"
                             size={20}
                           />

@@ -125,7 +125,7 @@ const ActionsDropdown = (props: Props) => {
                 <Icon
                   glyph="settings"
                   onClick={() => setFlyoutOpen(!flyoutOpen)}
-                  dataCy="thread-actions-dropdown-trigger"
+                  data-cy="thread-actions-dropdown-trigger"
                 />
               </span>
             );
@@ -195,14 +195,19 @@ const ActionsDropdown = (props: Props) => {
                             onClick={togglePinThread}
                             data-cy={'thread-dropdown-pin'}
                             loading={isPinningThread}
-                            disabled={isPinningThread}
                           >
                             <Icon
                               size={24}
                               glyph={isPinned ? 'pin-fill' : 'pin'}
                             />
                             <Label>
-                              {isPinned ? 'Unpin thread' : 'Pin thread'}
+                              {isPinned
+                                ? isPinningThread
+                                  ? 'Unpinning...'
+                                  : 'Unpin thread'
+                                : isPinningThread
+                                ? 'Pinning...'
+                                : 'Pin thread'}
                             </Label>
                           </TextButton>
                         </FlyoutRow>
@@ -226,7 +231,6 @@ const ActionsDropdown = (props: Props) => {
                             onClick={lockThread}
                             data-cy={'thread-dropdown-lock'}
                             loading={isLockingThread}
-                            disabled={isLockingThread}
                           >
                             <Icon
                               size={24}
@@ -235,7 +239,13 @@ const ActionsDropdown = (props: Props) => {
                               }
                             />
                             <Label>
-                              {thread.isLocked ? 'Unlock chat' : 'Lock chat'}
+                              {thread.isLocked
+                                ? isLockingThread
+                                  ? 'Unlocking'
+                                  : 'Unlock chat'
+                                : isLockingThread
+                                ? 'Locking...'
+                                : 'Lock chat'}
                             </Label>
                           </TextButton>
                         </FlyoutRow>

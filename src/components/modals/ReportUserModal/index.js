@@ -141,7 +141,7 @@ class ReportUserModal extends React.Component<Props, State> {
                 loading={isLoading}
                 onClick={this.submit}
               >
-                Send report
+                {isLoading ? 'Sending...' : 'Send report'}
               </PrimaryOutlineButton>
             </Actions>
           </Form>
