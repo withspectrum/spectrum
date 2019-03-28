@@ -63,6 +63,18 @@ class MessagesWithData extends React.Component<Props, State> {
         type: 'bottom',
       };
     }
+
+    // same thread, loaded again
+    if (
+      prev.data.directMessageThread &&
+      curr.data.directMessageThread &&
+      curr.data.directMessageThread.id === prev.data.directMessageThread.id
+    ) {
+      return {
+        type: 'bottom',
+      };
+    }
+
     // New messages
     if (
       prev.data.directMessageThread &&
