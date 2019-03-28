@@ -127,7 +127,7 @@ class BanUserModal extends React.Component<Props, State> {
                 loading={isLoading}
                 onClick={this.submit}
               >
-                Ban User
+                {isLoading ? 'Banning...' : 'Ban User'}
               </WarnButton>
             </Actions>
           </Form>

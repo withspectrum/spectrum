@@ -35,7 +35,7 @@ export class PrivateChannelRequestApproved extends React.Component<Props> {
     const channel = notification.entities[0].payload;
 
     return (
-      <NotificationCard>
+      <NotificationCard isSeen={notification.isSeen}>
         <CardLink
           to={`/${notification.context.payload.slug}/${
             notification.entities[0].payload.slug

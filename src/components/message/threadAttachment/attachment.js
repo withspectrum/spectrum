@@ -32,7 +32,7 @@ class Attachment extends React.Component<Props> {
         <Container data-cy="thread-attachment">
           <LinkWrapper
             onClick={e => e.stopPropagation()}
-            to={{ pathname: getThreadLink(thread) }}
+            to={{ pathname: getThreadLink(thread), state: { modal: true } }}
           />
           <AvatarWrapper>
             <UserAvatar user={thread.author.user} size={32} />

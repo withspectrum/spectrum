@@ -1,59 +1,98 @@
 import data from '../../shared/testing/data';
 const user = data.users.find(user => user.username === 'brian');
 
-const pressEscape = () => cy.get('body').trigger('keydown', { keyCode: 27 });
+const pressEscape = () =>
+  cy.get('[data-cy="modal-container"]').trigger('keydown', { keyCode: 27 });
 
 const communityBeforeUrlIsValid = () =>
   cy.url().should('eq', 'http://localhost:3000/spectrum?tab=posts');
 const channelBeforeUrlIsValid = () =>
   cy.url().should('eq', 'http://localhost:3000/spectrum/general?tab=posts');
 
-describe('composer modal route', () => {
-  beforeEach(() => {
-    cy.auth(user.id);
-  });
+describe('thread modal route', () => {
+  const threadSlider = () => cy.get('[data-cy="modal-container"]');
+  const threadSliderClose = () => cy.get('[data-cy="thread-slider-close"]');
 
-  const threadComposerWrapper = () =>
-    cy.get('[data-cy="thread-composer-wrapper"]');
-  const threadComposer = () => cy.get('[data-cy="thread-composer"]');
-  const communityComposerPlaceholder = () =>
-    cy.get('[data-cy="community-thread-compose-button"]');
-  const channelComposerPlaceholder = () =>
-    cy.get('[data-cy="channel-thread-compose-button"]');
-
-  it('handles community view', () => {
+  it('handles esc key', () => {
     cy.visit('/spectrum');
-    communityBeforeUrlIsValid();
-    communityComposerPlaceholder().click();
-    threadComposer().should('be.visible');
-    threadComposerWrapper().should('be.visible');
-    cy.url().should(
+    cy.get('[data-cy="thread-card"]')
+      .first()
+      .click();
+    threadSlider().should('be.visible');
+    cy.url(
       'eq',
-      'http://localhost:3000/new/thread?composerCommunityId=1'
+      'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
     );
 
     pressEscape();
 
-    threadComposer().should('not.be.visible');
-    threadComposerWrapper().should('not.be.visible');
     communityBeforeUrlIsValid();
+    threadSlider().should('not.be.visible');
   });
 
-  it('handles channel view', () => {
-    cy.visit('/spectrum/general');
-    channelBeforeUrlIsValid();
-    channelComposerPlaceholder().click();
-    threadComposer().should('be.visible');
-    threadComposerWrapper().should('be.visible');
-    cy.url().should(
+  it('handles overlay click', () => {
+    cy.visit('/spectrum');
+    cy.get('[data-cy="thread-card"]')
+      .first()
+      .click();
+    threadSlider().should('be.visible');
+    cy.url(
       'eq',
-      'http://localhost:3000/new/thread?composerChannelId=1&composerCommunityId=1'
+      'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
+    );
+
+    cy.get('[data-cy="overlay"]').click(200, 200, { force: true });
+
+    communityBeforeUrlIsValid();
+    threadSlider().should('not.be.visible');
+  });
+
+  it('handles close click', () => {
+    cy.visit('/spectrum');
+    cy.get('[data-cy="thread-card"]')
+      .first()
+      .click();
+    threadSlider().should('be.visible');
+    cy.url(
+      'eq',
+      'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
+    );
+
+    threadSliderClose().click();
+
+    communityBeforeUrlIsValid();
+    threadSlider().should('not.be.visible');
+  });
+
+  it('handles channel feed', () => {
+    cy.visit('/spectrum/general');
+    cy.get('[data-cy="thread-card"]')
+      .first()
+      .click();
+    threadSlider().should('be.visible');
+    cy.url(
+      'eq',
+      'http://localhost:3000/spectrum/spectrum/general/yet-another-thread~thread-9'
     );
 
     pressEscape();
 
-    threadComposer().should('not.be.visible');
-    threadComposerWrapper().should('not.be.visible');
     channelBeforeUrlIsValid();
+    threadSlider().should('not.be.visible');
+  });
+
+  it('handles thread attachment', () => {
+    cy.auth(user.id);
+    cy.visit('/spectrum/private/yet-another-thread~thread-6');
+    cy.get('[data-cy="thread-attachment"]')
+      .should('be.visible')
+      .first()
+      .click();
+    threadSlider().should('be.visible');
+    pressEscape();
+    cy.url(
+      'eq',
+      'http://localhost:3000/spectrum/private/yet-another-thread~thread-6'
+    );
   });
 });

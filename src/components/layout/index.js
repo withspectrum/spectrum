@@ -25,6 +25,7 @@ export const ViewGrid = styled.main.attrs({
 })`
   display: grid;
   grid-area: main;
+  height: 100%;
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;

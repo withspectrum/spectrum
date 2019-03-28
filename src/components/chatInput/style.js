@@ -107,6 +107,12 @@ export const Input = styled(MentionsInput).attrs({
     font-size: 16px;
   }
 
+  div,
+  textarea {
+    line-height: 1.4 !important;
+    word-break: break-word;
+  }
+
   &::placeholder {
     color: ${props =>
       props.networkDisabled

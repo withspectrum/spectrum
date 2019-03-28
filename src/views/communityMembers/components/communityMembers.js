@@ -138,7 +138,7 @@ class CommunityMembers extends React.Component<Props, State> {
     const { user, ...permissions } = communityMember;
     return (
       <React.Fragment>
-        <Row style={{ position: 'relative', alignItems: 'center' }}>
+        <Row style={{ position: 'relative' }}>
           <UserListItem
             userObject={user}
             key={user.id}
@@ -308,7 +308,7 @@ class CommunityMembers extends React.Component<Props, State> {
                           loading={isFetchingMore}
                           onClick={fetchMore}
                         >
-                          Load more
+                          {isFetchingMore ? 'Loading...' : 'Load more'}
                         </FetchMore>
                       </SectionCardFooter>
                     )}

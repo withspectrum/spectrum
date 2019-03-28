@@ -11,7 +11,7 @@ import {
   Overlay,
   ThreadContainer,
   CloseButton,
-  ThreadContainerBackground,
+  ThreadBackground,
 } from './style';
 
 type Props = {
@@ -49,18 +49,18 @@ const ThreadSlider = (props: Props) => {
 
   return (
     <ErrorBoundary>
-      <Container data-cy="thread-slider">
-        <Overlay onClick={closeSlider} data-cy="thread-slider-overlay" />
+      <Container data-cy="modal-container">
+        <ThreadContainer>
+          <ThreadView isModal css={{ width: '100%' }} threadId={threadId}>
+            <Overlay onClick={closeSlider} data-cy="overlay" />
+
+            <ThreadBackground />
+          </ThreadView>
+        </ThreadContainer>
 
         <CloseButton data-cy="thread-slider-close" onClick={closeSlider}>
           <Icon glyph="view-close" size={32} />
         </CloseButton>
-
-        <ThreadContainerBackground />
-
-        <ThreadContainer>
-          <ThreadView threadId={threadId} />
-        </ThreadContainer>
       </Container>
     </ErrorBoundary>
   );

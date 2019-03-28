@@ -63,7 +63,7 @@ export class MentionThreadNotification extends React.Component<Props, State> {
     const context = parseContext(notification.context, currentUser);
 
     return (
-      <SegmentedNotificationCard>
+      <SegmentedNotificationCard isSeen={notification.isSeen}>
         <ThreadContext>
           <SpecialContext>
             <Icon glyph="mention" />

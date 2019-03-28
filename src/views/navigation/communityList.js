@@ -44,9 +44,7 @@ const CommunityListItem = props => {
     <Tooltip content={community.name} placement={'left'}>
       <AvatarGrid isActive={isActive}>
         <AvatarLink
-          to={`/${community.slug}?tab=${
-            community.watercoolerId ? 'chat' : 'posts'
-          }`}
+          to={`/${community.slug}?tab=posts`}
           onClick={onClick}
           {...getAccessibilityActiveState(isActive)}
         >

@@ -135,7 +135,7 @@ const Community = /* GraphQL */ `
     subscriptions: [StripeSubscription]
   }
 
-  type Community {
+  type Community @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date
     name: String!
@@ -150,6 +150,7 @@ const Community = /* GraphQL */ `
     isPrivate: Boolean
     lastActive: Date
     communityPermissions: CommunityPermissions @cost(complexity: 1)
+
     channelConnection: CommunityChannelsConnection @cost(complexity: 1)
     members(
       first: Int = 10
@@ -164,16 +165,21 @@ const Community = /* GraphQL */ `
     metaData: CommunityMetaData @cost(complexity: 10)
     memberGrowth: GrowthData @cost(complexity: 10)
     conversationGrowth: GrowthData @cost(complexity: 3)
+
     topMembers: [CommunityMember] @cost(complexity: 10)
+
     topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
+
     watercooler: Thread
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
     slackSettings: CommunitySlackSettings @cost(complexity: 2)
+
     watercoolerId: String
     slackImport: SlackImport
       @cost(complexity: 2)
       @deprecated(reason: "Use slack settings field instead")
+
     memberConnection(
       first: Int = 10
       after: String
@@ -196,11 +202,12 @@ const Community = /* GraphQL */ `
 
   extend type Query {
     community(id: ID, slug: LowercaseString): Community
+      @cacheControl(maxAge: 1200)
     communities(
       slugs: [LowercaseString]
       ids: [ID]
       curatedContentType: String
-    ): [Community]
+    ): [Community] @cacheControl(maxAge: 1200)
     topCommunities(amount: Int = 20): [Community!]
       @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]

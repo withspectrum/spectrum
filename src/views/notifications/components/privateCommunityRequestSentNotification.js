@@ -49,7 +49,7 @@ class PrivateCommunityRequestSentComponent extends React.Component<Props> {
     };
 
     return (
-      <SegmentedNotificationCard>
+      <SegmentedNotificationCard isSeen={notification.isSeen}>
         <Link
           to={`/${
             notification.context.payload.slug

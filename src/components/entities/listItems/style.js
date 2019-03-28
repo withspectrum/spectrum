@@ -44,6 +44,7 @@ export const RowWithAvatar = styled.div`
   background: ${theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
   grid-gap: 16px;
+  flex: 1;
 
   &:hover {
     background: ${theme.bg.wash};
@@ -73,7 +74,8 @@ export const Label = styled.div`
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   ${Truncate};
 
   .icon {

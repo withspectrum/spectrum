@@ -1,8 +1,11 @@
 // @flow
 const debug = require('debug')('api:graphql');
 import { ApolloServer } from 'apollo-server-express';
+import responseCachePlugin from 'apollo-server-plugin-response-cache';
 import depthLimit from 'graphql-depth-limit';
 import costAnalysis from 'graphql-cost-analysis';
+import { RedisCache } from 'apollo-server-cache-redis';
+import { config } from 'shared/cache/redis';
 import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
@@ -119,8 +122,24 @@ const server = new ProtectedApolloServer({
   maxFileSize: 25 * 1024 * 1024, // 25MB
   engine: false,
   tracing: false,
-  cacheControl: false,
   validationRules: [depthLimit(10)],
+  cacheControl: {
+    calculateHttpHeaders: false,
+    // Cache everything for at least a minute since we only cache public responses
+    defaultMaxAge: 60,
+  },
+  cache: new RedisCache({
+    ...config,
+    prefix: 'apollo-cache:',
+  }),
+  plugins: [
+    responseCachePlugin({
+      sessionId: ({ context }) => (context.user ? context.user.id : null),
+      // Only cache public responses
+      shouldReadFromCache: ({ context }) => !context.user,
+      shouldWriteToCache: ({ context }) => !context.user,
+    }),
+  ],
 });
 
 export default server;

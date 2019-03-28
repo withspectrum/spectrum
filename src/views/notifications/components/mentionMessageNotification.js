@@ -36,7 +36,7 @@ export class MentionMessageNotification extends React.Component<Props, State> {
     const context = parseContext(notification.context, currentUser);
 
     return (
-      <NotificationCard>
+      <NotificationCard isSeen={notification.isSeen}>
         <CardLink
           to={{
             pathname: getThreadLink(notification.context.payload),

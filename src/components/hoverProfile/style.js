@@ -49,11 +49,19 @@ export const Title = styled.h2`
   line-height: 1.2;
 `;
 
+export const Username = styled.h3`
+  font-size: 16px;
+  font-weight: 400;
+  color: ${theme.text.alt};
+  line-height: 1.2;
+  margin-top: 4px;
+`;
+
 export const Description = styled.p`
   font-size: 14px;
   font-weight: 400;
   color: ${theme.text.secondary};
-  margin-top: 4px;
+  margin-top: 8px;
   line-height: 1.4;
   white-space: pre-wrap;
 

@@ -89,7 +89,10 @@ const User = (props: Props) => {
           {name && (
             <Label title={name}>
               {name}
-              {badges && badges.map((b, i) => <Badge key={i} type={b} />)}
+              {badges &&
+                badges.map((b, i) => (
+                  <Badge style={{ marginLeft: '8px' }} key={i} type={b} />
+                ))}
             </Label>
           )}
 

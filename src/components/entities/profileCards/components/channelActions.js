@@ -2,7 +2,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
-import getComposerLink from 'src/helpers/get-composer-link';
 import {
   OutlineButton,
   PrimaryOutlineButton,
@@ -21,12 +20,7 @@ export const UnconnectedChannelActions = (props: Props) => {
   const { community } = channel;
   const { isOwner, isModerator } = community.communityPermissions;
   const isTeamMember = isOwner || isModerator;
-  const { channelPermissions, isArchived } = channel;
-
-  const { pathname, search } = getComposerLink({
-    communityId: community.id,
-    channelId: channel.id,
-  });
+  const { channelPermissions } = channel;
 
   if (channelPermissions.isMember) {
     return (
@@ -52,15 +46,6 @@ export const UnconnectedChannelActions = (props: Props) => {
             </HoverWarnOutlineButton>
           )}
         />
-
-        {!isArchived && (
-          <PrimaryOutlineButton
-            data-cy="channel-thread-compose-button"
-            to={{ pathname, search, state: { modal: true } }}
-          >
-            New Post
-          </PrimaryOutlineButton>
-        )}
       </ActionsRowContainer>
     );
   }

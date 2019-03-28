@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Gradient } from 'src/components/globals';
 
 export const Span = styled.span`
-  display: flex;
+  display: inline-flex;
   color: ${theme.text.reverse};
   background-color: ${theme.text.alt};
   text-transform: uppercase;

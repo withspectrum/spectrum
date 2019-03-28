@@ -42,7 +42,15 @@ export const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender.username}`}>{sender.name}</Link> replied to your{' '}
-          <Link to={{ pathname: getThreadLink(thread) }}>thread</Link>:
+          <Link
+            to={{
+              pathname: getThreadLink(thread),
+              state: { modal: true },
+            }}
+          >
+            thread
+          </Link>
+          :
         </span>
       );
     default:

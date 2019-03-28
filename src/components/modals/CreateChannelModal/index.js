@@ -352,7 +352,7 @@ class CreateChannelModal extends React.Component<Props, State> {
                 loading={loading}
                 onClick={this.create}
               >
-                Create Channel
+                {loading ? 'Creating...' : 'Create Channel'}
               </PrimaryOutlineButton>
             </Actions>
 

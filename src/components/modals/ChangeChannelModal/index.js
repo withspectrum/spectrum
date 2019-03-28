@@ -129,7 +129,7 @@ class ChangeChannelModal extends React.Component<Props, State> {
                   onClick={this.saveNewChannel}
                   disabled={activeChannel === thread.channel.id}
                 >
-                  Save
+                  {this.state.isLoading ? 'Saving...' : 'Save'}
                 </PrimaryOutlineButton>
               </Actions>
             </Section>

@@ -122,7 +122,7 @@ class SendSlackInvitations extends React.Component<Props, State> {
             loading={isLoading}
             disabled={!!customMessageError}
           >
-            Send invitations
+            {isLoading ? 'Sending...' : 'Send invitations'}
           </Button>
         </SectionCardFooter>
       </SectionCard>

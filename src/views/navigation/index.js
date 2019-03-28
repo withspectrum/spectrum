@@ -23,7 +23,7 @@ import NotificationsTab from './notificationsTab';
 import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
-import { NavigationContext } from 'src/routes';
+import { NavigationContext } from 'src/helpers/navigation-context';
 
 type Props = {
   history: History,
@@ -155,7 +155,7 @@ const Navigation = (props: Props) => {
 
               <Route path="/login">
                 {({ match }) => (
-                  <Tooltip content="login" placement={'left'}>
+                  <Tooltip content="Log in or sign up" placement={'left'}>
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/login'}

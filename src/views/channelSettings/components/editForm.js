@@ -246,7 +246,7 @@ class ChannelWithData extends React.Component<Props, State> {
                 loading={isLoading}
                 data-cy="save-button"
               >
-                Save
+                {isLoading ? 'Saving...' : 'Save'}
               </PrimaryOutlineButton>
               {slug !== 'general' && (
                 <TertiaryActionContainer>

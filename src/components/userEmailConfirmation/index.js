@@ -101,7 +101,7 @@ class UserEmailConfirmation extends React.Component<Props, State> {
           </Input>
 
           <Button onClick={this.init} loading={isLoading}>
-            Send
+            {isLoading ? 'Sending...' : 'Send'}
           </Button>
         </EmailForm>
 

@@ -24,6 +24,7 @@ import { CommunityAvatar } from 'src/components/avatar';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
+import MiniComposer from 'src/components/composerMini';
 import MembersList from './components/MembersList';
 import {
   ViewGrid,
@@ -34,6 +35,7 @@ import {
 import { SidebarSection } from 'src/views/community/style';
 import CommunitySidebar from 'src/components/communitySidebar';
 import { FeedsContainer } from './style';
+import { InfoContainer } from '../community/style';
 
 const ThreadFeedWithData = compose(
   connect(),
@@ -213,6 +215,15 @@ class ChannelView extends React.Component<Props> {
                     </Segment>
 
                     <Segment
+                      onClick={() => this.handleSegmentClick('info')}
+                      isActive={selectedView === 'info'}
+                      data-cy="channel-info-tab"
+                      hideOnDesktop
+                    >
+                      Info
+                    </Segment>
+
+                    <Segment
                       onClick={() => this.handleSegmentClick('search')}
                       isActive={selectedView === 'search'}
                       data-cy="channel-search-tab"
@@ -221,28 +232,65 @@ class ChannelView extends React.Component<Props> {
                     </Segment>
                   </SegmentedControl>
 
-                  {// thread list
-                  selectedView === 'posts' && (
-                    <ThreadFeedWithData
-                      viewContext="channelProfile"
-                      id={channel.id}
-                      currentUser={isLoggedIn}
-                      channelId={channel.id}
-                    />
+                  {selectedView === 'posts' && (
+                    <React.Fragment>
+                      {currentUser && isMember && !channel.isArchived && (
+                        <MiniComposer
+                          community={community}
+                          fixedChannelId={channel.id}
+                          currentUser={currentUser}
+                        />
+                      )}
+                      <ThreadFeedWithData
+                        viewContext="channelProfile"
+                        id={channel.id}
+                        currentUser={isLoggedIn}
+                        channelId={channel.id}
+                      />
+                    </React.Fragment>
                   )}
 
-                  {//search
-                  selectedView === 'search' && (
+                  {selectedView === 'search' && (
                     <ErrorBoundary>
                       <Search channel={channel} />
                     </ErrorBoundary>
                   )}
 
-                  {// members grid
-                  selectedView === 'members' && (
+                  {selectedView === 'members' && (
                     <ErrorBoundary>
                       <MembersList id={channel.id} />
                     </ErrorBoundary>
+                  )}
+
+                  {selectedView === 'info' && (
+                    <InfoContainer>
+                      <SidebarSection>
+                        <ChannelProfileCard channel={channel} />
+                      </SidebarSection>
+
+                      {isLoggedIn && userHasPermissions && !channel.isArchived && (
+                        <ErrorBoundary>
+                          <SidebarSection>
+                            <NotificationsToggle
+                              value={
+                                channel.channelPermissions.receiveNotifications
+                              }
+                              channel={channel}
+                            />
+                          </SidebarSection>
+                        </ErrorBoundary>
+                      )}
+
+                      {/* user is signed in and has permissions to view pending users */}
+                      {isLoggedIn && (isOwner || isGlobalOwner) && (
+                        <ErrorBoundary>
+                          <PendingUsersNotification
+                            channel={channel}
+                            id={channel.id}
+                          />
+                        </ErrorBoundary>
+                      )}
+                    </InfoContainer>
                   )}
                 </FeedsContainer>
               </PrimaryColumn>

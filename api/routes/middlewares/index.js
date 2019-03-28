@@ -8,6 +8,12 @@ middlewares.use(threadParamRedirect);
 import bodyParser from 'body-parser';
 middlewares.use(bodyParser.json());
 
+middlewares.use((req, res, next) => {
+  if (req.method === 'POST' && req.url !== '/api') console.log('POST', req.url);
+
+  next();
+});
+
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
   middlewares.use(logging);
