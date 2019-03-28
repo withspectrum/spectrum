@@ -67,6 +67,10 @@ class MessagesWithData extends React.Component<Props, State> {
     // same thread, loaded again
     if (
       prev.data.directMessageThread &&
+      // was loading
+      prev.data.networkStatus === 1 &&
+      // not loading any more
+      curr.data.networkStatus === 7 &&
       curr.data.directMessageThread &&
       curr.data.directMessageThread.id === prev.data.directMessageThread.id
     ) {
