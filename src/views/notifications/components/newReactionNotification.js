@@ -20,13 +20,13 @@ type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
-  markSingleNotificationSeen?: Function,
-  markSingleNotificationAsSeenInState?: Function,
+  markSingleNotificationSeen: Function,
 };
 
 export const NewReactionNotification = ({
   notification,
   currentUser,
+  markSingleNotificationSeen,
 }: Props) => {
   const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
@@ -34,7 +34,11 @@ export const NewReactionNotification = ({
   const context = parseContext(notification.context);
 
   return (
-    <NotificationCard isSeen={notification.isSeen} key={notification.id}>
+    <NotificationCard
+      onClick={() => markSingleNotificationSeen(notification.id)}
+      isSeen={notification.isSeen}
+      key={notification.id}
+    >
       <CardLink
         to={{
           // TODO(@mxstbr): Make this open in the modal
