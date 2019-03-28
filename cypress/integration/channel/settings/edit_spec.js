@@ -22,7 +22,7 @@ describe('edit a channel', () => {
 
   it('should edit a channel', () => {
     cy.get('[data-cy="channel-overview"]').should('be.visible');
-
+    cy.get('[data-cy="channel-members"]').should('be.visible');
     cy.get('[data-cy="channel-name-input"]')
       .should('be.visible')
       .click()
