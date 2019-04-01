@@ -11,7 +11,6 @@ import { addToastWithTimeout } from 'src/actions/toasts';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
-import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
@@ -48,7 +47,6 @@ type State = {
 type Props = {
   thread: GetThreadType,
   setThreadLock: Function,
-  pinThread: Function,
   editThread: Function,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
@@ -362,42 +360,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
-  togglePinThread = () => {
-    const { pinThread, thread, dispatch } = this.props;
-    const isPinned = thread.community.pinnedThreadId === thread.id;
-    const communityId = thread.community.id;
-
-    if (thread.channel.isPrivate) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Only threads in public channels can be pinned.'
-        )
-      );
-    }
-
-    this.setState({
-      isPinningThread: true,
-    });
-
-    return pinThread({
-      threadId: thread.id,
-      communityId,
-      value: isPinned ? null : thread.id,
-    })
-      .then(() => {
-        this.setState({
-          isPinningThread: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isPinningThread: false,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   render() {
     const { currentUser, thread } = this.props;
 
@@ -487,7 +449,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
             currentUser={currentUser}
             thread={thread}
             saveEdit={this.saveEdit}
-            togglePinThread={this.togglePinThread}
             isSavingEdit={isSavingEdit}
             threadLock={this.threadLock}
             triggerDelete={this.triggerDelete}
@@ -507,7 +468,6 @@ const ThreadDetail = compose(
   setThreadLockMutation,
   deleteThreadMutation,
   editThreadMutation,
-  pinThreadMutation,
   uploadImageMutation,
   withRouter
 )(ThreadDetailPure);

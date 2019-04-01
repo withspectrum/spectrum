@@ -11,20 +11,20 @@ import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
   thread: Object,
   toggleEdit: Function,
-  isPinningThread: boolean,
-  togglePinThread: Function,
   isLockingThread: boolean,
   lockThread: Function,
   triggerDelete: Function,
   // Injected
   currentUser: Object,
   dispatch: Function,
+  pinThread: Function,
   toggleThreadNotifications: Function,
 };
 
@@ -35,8 +35,7 @@ const ActionsDropdown = (props: Props) => {
     toggleThreadNotifications,
     currentUser,
     toggleEdit,
-    isPinningThread,
-    togglePinThread,
+    pinThread,
     isLockingThread,
     lockThread,
     triggerDelete,
@@ -112,6 +111,32 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const isPinned = thread.community.pinnedThreadId === thread.id;
+  const [isPinningThread, setIsPinningThread] = React.useState(false);
+  const togglePinThread = () => {
+    if (thread.channel.isPrivate) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Only threads in public channels can be pinned.'
+        )
+      );
+    }
+
+    setIsPinningThread(true);
+
+    return pinThread({
+      threadId: thread.id,
+      communityId: thread.community.id,
+      value: isPinned ? null : thread.id,
+    })
+      .then(() => {
+        setIsPinningThread(false);
+      })
+      .catch(err => {
+        setIsPinningThread(false);
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
 
   const [flyoutOpen, setFlyoutOpen] = useState(false);
 
@@ -277,5 +302,6 @@ const ActionsDropdown = (props: Props) => {
 export default compose(
   withCurrentUser,
   connect(),
-  toggleThreadNotificationsMutation
+  toggleThreadNotificationsMutation,
+  pinThreadMutation
 )(ActionsDropdown);
