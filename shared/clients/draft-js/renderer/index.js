@@ -164,19 +164,19 @@ export const createRenderer = (options: Options) => {
       LINK: (children: Array<Node>, data: DataObj, { key }: KeyObj) => {
         const link = data.url || data.href;
 
-        if (typeof link !== 'string') {
-          return (
-            <a key={key} href={link} target="_blank" rel="noopener noreferrer">
-              {children}
-            </a>
-          );
+        if (link) {
+          const regexp = new RegExp(SPECTRUM_URLS, 'ig');
+          const match = regexp.exec(link);
+          if (match && match[0] && match[1]) {
+            return <Link to={match[1]}>{children}</Link>;
+          }
         }
 
-        const regexp = new RegExp(SPECTRUM_URLS, 'ig');
-        const match = regexp.exec(link);
-        if (match && match[0] && match[1]) {
-          return <Link to={match[1]}>{children}</Link>;
-        }
+        return (
+          <a key={key} href={link} target="_blank" rel="noopener noreferrer">
+            {children}
+          </a>
+        );
       },
       IMAGE: (
         children: Array<Node>,
