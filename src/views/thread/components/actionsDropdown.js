@@ -20,7 +20,6 @@ type Props = {
   toggleEdit: Function,
   isLockingThread: boolean,
   lockThread: Function,
-  triggerDelete: Function,
   // Injected
   currentUser: Object,
   dispatch: Function,
@@ -38,7 +37,6 @@ const ActionsDropdown = (props: Props) => {
     pinThread,
     isLockingThread,
     lockThread,
-    triggerDelete,
   } = props;
   if (!currentUser) return null;
 
@@ -136,6 +134,41 @@ const ActionsDropdown = (props: Props) => {
         setIsPinningThread(false);
         dispatch(addToastWithTimeout('error', err.message));
       });
+  };
+
+  const triggerDelete = e => {
+    e.preventDefault();
+
+    let message;
+
+    if (isCommunityOwner && !thread.isAuthor) {
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.community.name
+      } community, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else if (isChannelOwner && !thread.isAuthor) {
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.channel.name
+      } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else {
+      message = 'Are you sure you want to delete this thread?';
+    }
+
+    track(events.THREAD_DELETED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
+    return dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: thread.id,
+        entity: 'thread',
+        message,
+        extraProps: {
+          thread,
+        },
+      })
+    );
   };
 
   const [flyoutOpen, setFlyoutOpen] = useState(false);

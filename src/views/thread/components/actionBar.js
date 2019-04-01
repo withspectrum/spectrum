@@ -35,7 +35,6 @@ type Props = {
   toggleEdit: Function,
   saveEdit: Function,
   pinThread: Function,
-  triggerDelete: Function,
   threadLock: Function,
   isSavingEdit: boolean,
   title: string,
@@ -177,7 +176,6 @@ class ActionBar extends React.Component<Props> {
               lockThread={this.props.threadLock}
               isLockingThread={this.props.isLockingThread}
               isPinningThread={this.props.isPinningThread}
-              triggerDelete={this.props.triggerDelete}
             />
           </div>
         </ActionBarContainer>

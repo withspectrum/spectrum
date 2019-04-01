@@ -140,46 +140,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
-  triggerDelete = e => {
-    e.preventDefault();
-    const { thread, dispatch } = this.props;
-
-    const threadId = thread.id;
-    const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner = thread.community.communityPermissions.isOwner;
-
-    let message;
-
-    if (isCommunityOwner && !thread.isAuthor) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.community.name
-      } community, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else if (isChannelOwner && !thread.isAuthor) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.channel.name
-      } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else {
-      message = 'Are you sure you want to delete this thread?';
-    }
-
-    track(events.THREAD_DELETED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
-    return dispatch(
-      openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id: threadId,
-        entity: 'thread',
-        message,
-        extraProps: {
-          thread,
-        },
-      })
-    );
-  };
-
   toggleEdit = () => {
     const { isEditing } = this.state;
     const { thread } = this.props;
@@ -451,7 +411,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
             saveEdit={this.saveEdit}
             isSavingEdit={isSavingEdit}
             threadLock={this.threadLock}
-            triggerDelete={this.triggerDelete}
             isEditing={isEditing}
             title={this.state.title}
             isLockingThread={isLockingThread}
