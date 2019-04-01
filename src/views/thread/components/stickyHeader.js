@@ -10,6 +10,7 @@ import { convertTimestampToDate } from 'shared/time-formatting';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { useAppScroller } from 'src/hooks/useAppScroller';
+import ActionsDropdown from './actionsDropdown';
 import {
   StickyHeaderContent,
   CommunityHeaderName,
@@ -52,6 +53,15 @@ const StickyHeader = (props: Props) => {
 
       {channel.channelPermissions.isMember && (
         <StickyHeaderActionsContainer>
+          <ActionsDropdown
+            thread={thread}
+            // toggleEdit={this.props.toggleEdit}
+            // lockThread={this.props.threadLock}
+            // isLockingThread={this.props.isLockingThread}
+            // isPinningThread={this.props.isPinningThread}
+            // togglePinThread={this.props.togglePinThread}
+            // triggerDelete={this.props.triggerDelete}
+          />
           <LikeButton thread={thread} />
         </StickyHeaderActionsContainer>
       )}
