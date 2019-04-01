@@ -8,8 +8,6 @@ import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
-import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
@@ -40,8 +38,6 @@ type State = {
   flyoutOpen?: ?boolean,
   error?: ?string,
   parsedBody: ?Object,
-  isLockingThread: boolean,
-  isPinningThread: boolean,
 };
 
 type Props = {
@@ -57,8 +53,6 @@ type Props = {
 
 class ThreadDetailPure extends React.Component<Props, State> {
   state = {
-    isLockingThread: false,
-    isPinningThread: false,
     isEditing: false,
     parsedBody: null,
     body: '',
@@ -108,37 +102,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       this.setThreadState();
     }
   }
-
-  threadLock = () => {
-    const { setThreadLock, dispatch, thread } = this.props;
-    const value = !thread.isLocked;
-    const threadId = thread.id;
-
-    this.setState({
-      isLockingThread: true,
-    });
-
-    setThreadLock({
-      threadId,
-      value,
-    })
-      .then(({ data: { setThreadLock } }) => {
-        this.setState({
-          isLockingThread: false,
-        });
-        if (setThreadLock.isLocked) {
-          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
-        } else {
-          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
-        }
-      })
-      .catch(err => {
-        this.setState({
-          isLockingThread: false,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
 
   toggleEdit = () => {
     const { isEditing } = this.state;
@@ -323,12 +286,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
   render() {
     const { currentUser, thread } = this.props;
 
-    const {
-      isEditing,
-      isSavingEdit,
-      isLockingThread,
-      isPinningThread,
-    } = this.state;
+    const { isEditing, isSavingEdit } = this.state;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
@@ -410,11 +368,8 @@ class ThreadDetailPure extends React.Component<Props, State> {
             thread={thread}
             saveEdit={this.saveEdit}
             isSavingEdit={isSavingEdit}
-            threadLock={this.threadLock}
             isEditing={isEditing}
             title={this.state.title}
-            isLockingThread={isLockingThread}
-            isPinningThread={isPinningThread}
             uploadFiles={this.uploadFiles}
           />
         </ErrorBoundary>
@@ -424,8 +379,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
 }
 
 const ThreadDetail = compose(
-  setThreadLockMutation,
-  deleteThreadMutation,
   editThreadMutation,
   uploadImageMutation,
   withRouter

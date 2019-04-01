@@ -12,19 +12,19 @@ import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
   thread: Object,
-  toggleEdit: Function,
-  isLockingThread: boolean,
-  lockThread: Function,
+  toggleEdit?: Function,
   // Injected
   currentUser: Object,
   dispatch: Function,
   pinThread: Function,
   toggleThreadNotifications: Function,
+  setThreadLock: Function,
 };
 
 const ActionsDropdown = (props: Props) => {
@@ -35,8 +35,7 @@ const ActionsDropdown = (props: Props) => {
     currentUser,
     toggleEdit,
     pinThread,
-    isLockingThread,
-    lockThread,
+    setThreadLock,
   } = props;
   if (!currentUser) return null;
 
@@ -53,11 +52,12 @@ const ActionsDropdown = (props: Props) => {
   const isCommunityOwner = currentUser && communityPermissions.isOwner;
 
   const shouldRenderEditThreadAction =
-    isThreadAuthor ||
-    isChannelModerator ||
-    isCommunityModerator ||
-    isChannelOwner ||
-    isCommunityOwner;
+    (isThreadAuthor ||
+      isChannelModerator ||
+      isCommunityModerator ||
+      isChannelOwner ||
+      isCommunityOwner) &&
+    toggleEdit;
 
   const shouldRenderMoveThreadAction = isCommunityModerator || isCommunityOwner;
 
@@ -132,6 +132,30 @@ const ActionsDropdown = (props: Props) => {
       })
       .catch(err => {
         setIsPinningThread(false);
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  const [isLockingThread, setIsLockingThread] = React.useState(false);
+  const lockThread = () => {
+    const value = !thread.isLocked;
+    const threadId = thread.id;
+
+    setIsLockingThread(true);
+    setThreadLock({
+      threadId,
+      value,
+    })
+      .then(({ data: { setThreadLock } }) => {
+        setIsLockingThread(false);
+        if (setThreadLock.isLocked) {
+          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
+        } else {
+          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
+        }
+      })
+      .catch(err => {
+        setIsLockingThread(false);
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -336,5 +360,6 @@ export default compose(
   withCurrentUser,
   connect(),
   toggleThreadNotificationsMutation,
-  pinThreadMutation
+  pinThreadMutation,
+  setThreadLockMutation
 )(ActionsDropdown);
