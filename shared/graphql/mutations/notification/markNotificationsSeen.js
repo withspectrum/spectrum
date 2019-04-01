@@ -15,6 +15,9 @@ const markNotificationsSeenOptions = {
   props: ({ mutate }: { mutate: Function }) => ({
     markAllNotificationsSeen: () =>
       mutate({
+        optimisticResponse: {
+          markAllNotificationsSeen: true,
+        },
         update: store => {
           const data = store.readQuery({ query: getNotificationsQuery });
 
