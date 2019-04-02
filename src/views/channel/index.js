@@ -9,7 +9,6 @@ import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
-import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
@@ -267,19 +266,6 @@ class ChannelView extends React.Component<Props> {
                       <SidebarSection>
                         <ChannelProfileCard channel={channel} />
                       </SidebarSection>
-
-                      {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                        <ErrorBoundary>
-                          <SidebarSection>
-                            <NotificationsToggle
-                              value={
-                                channel.channelPermissions.receiveNotifications
-                              }
-                              channel={channel}
-                            />
-                          </SidebarSection>
-                        </ErrorBoundary>
-                      )}
 
                       {/* user is signed in and has permissions to view pending users */}
                       {isLoggedIn && (isOwner || isGlobalOwner) && (
