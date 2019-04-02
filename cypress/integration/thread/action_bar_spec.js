@@ -195,7 +195,9 @@ describe('action bar renders', () => {
       cy.auth(publicThreadAuthor.id);
 
       openSettingsDropdown();
-
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'be.visible'
+      );
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const title = 'Some new thread';
@@ -209,6 +211,9 @@ describe('action bar renders', () => {
 
       // undo the edit
       openSettingsDropdown();
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
+        'be.visible'
+      );
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
