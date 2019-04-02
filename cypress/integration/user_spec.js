@@ -14,11 +14,8 @@ const publicAuthoredThreads = threads.filter(thread => {
 });
 
 describe('User View', () => {
-  beforeEach(() => {
-    cy.visit(`/users/${user.username}`);
-  });
-
   it('should render', () => {
+    cy.visit(`/users/${user.username}`);
     cy.get('[data-cy="user-view"]').should('be.visible');
     cy.contains(user.username);
     cy.contains(user.name);
@@ -31,6 +28,8 @@ describe('User View', () => {
   });
 
   it('should list the public communities a user is a member of, including their rep in that community', () => {
+    cy.visit(`/users/${user.username}`);
+    cy.get('[data-cy="user-view"]').should('be.visible');
     const usersCommunities = data.usersCommunities.filter(
       ({ userId }) => userId === user.id
     );
@@ -40,9 +39,6 @@ describe('User View', () => {
     );
     communities.forEach(community => {
       cy.contains(community.name);
-      const userCommunity = usersCommunities.find(
-        ({ communityId }) => communityId === community.id
-      );
     });
   });
 });

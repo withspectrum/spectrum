@@ -73,7 +73,22 @@ class ToggleChannelNotifications extends React.Component<Props, State> {
   };
 
   render() {
-    return <div onClick={this.init}>{this.props.render(this.state)}</div>;
+    const { channel } = this.props;
+    const { channelPermissions } = channel;
+    const { receiveNotifications } = channelPermissions;
+
+    return (
+      <div
+        data-cy={
+          receiveNotifications
+            ? 'channel-notifications-enabled'
+            : 'channel-notifications-muted'
+        }
+        onClick={this.init}
+      >
+        {this.props.render(this.state)}
+      </div>
+    );
   }
 }
 

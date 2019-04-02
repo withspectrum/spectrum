@@ -98,7 +98,6 @@ describe('post username creation redirects', () => {
     setUsernameIsVisible();
     saveUsername();
     cy.url().should('include', '/spectrum/general');
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
   });
 
   it('should redirect to previously viewed page 3', () => {
@@ -130,7 +129,6 @@ describe('post username creation redirects', () => {
     setUsernameIsVisible();
     saveUsername();
     cy.url().should('include', '/payments/private');
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
   });
 
   it('should take user to explore if no previously viewed page', () => {

@@ -1,8 +1,9 @@
 // @flow
 import theme from 'shared/theme';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Truncate } from 'src/components/globals';
 import { Link } from 'react-router-dom';
+import { hexa } from 'src/components/globals';
 
 export const CardLink = styled(Link)`
   display: block;
@@ -16,7 +17,8 @@ export const Row = styled.div`
   grid-template-rows: auto;
   grid-template-areas: 'content actions';
   grid-template-columns: 1fr auto;
-  background: ${theme.bg.default};
+  background: ${props =>
+    props.isActive ? hexa(theme.text.default, 0.04) : theme.bg.default};
   border-bottom: 1px solid ${theme.bg.divider};
   grid-gap: 16px;
 
@@ -24,6 +26,12 @@ export const Row = styled.div`
     background: ${theme.bg.wash};
     cursor: pointer;
   }
+
+  ${props =>
+    props.isActive &&
+    css`
+      box-shadow: inset 3px 0 0 ${theme.text.default};
+    `}
 `;
 
 export const RowWithAvatar = styled.div`

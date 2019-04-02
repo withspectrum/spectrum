@@ -39,13 +39,6 @@ describe('public channel', () => {
   it('should render profile', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
   });
-
-  it('should contain channel metadata', () => {
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
-    cy.contains(community.name);
-    cy.contains(publicChannel.description);
-    cy.contains(publicChannel.name);
-  });
 });
 
 describe('public channel in private community signed out', () => {
@@ -95,11 +88,6 @@ describe('archived channel', () => {
 
   it('should render profile', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
-  });
-
-  it('should contain archived tag', () => {
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
-    cy.contains('Archived');
   });
 });
 

@@ -32,16 +32,21 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.24);
+  z-index: 0;
 `;
 
 export const ThreadBackground = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   bottom: 0;
   background: ${theme.bg.wash};
-  width: ${MAX_WIDTH + 32}px;
+  width: ${MAX_WIDTH}px;
   left: 50%;
-  transform: translateX(calc(-50% + 32px));
+  transform: translateX(calc(-50%));
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    width: 100%;
+  }
 `;
 
 export const ThreadContainer = styled.div`
