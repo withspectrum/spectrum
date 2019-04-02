@@ -8,10 +8,7 @@ import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
-import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
-import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
@@ -41,14 +38,11 @@ type State = {
   flyoutOpen?: ?boolean,
   error?: ?string,
   parsedBody: ?Object,
-  isLockingThread: boolean,
-  isPinningThread: boolean,
 };
 
 type Props = {
   thread: GetThreadType,
   setThreadLock: Function,
-  pinThread: Function,
   editThread: Function,
   dispatch: Dispatch<Object>,
   currentUser: ?Object,
@@ -59,8 +53,6 @@ type Props = {
 
 class ThreadDetailPure extends React.Component<Props, State> {
   state = {
-    isLockingThread: false,
-    isPinningThread: false,
     isEditing: false,
     parsedBody: null,
     body: '',
@@ -110,77 +102,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       this.setThreadState();
     }
   }
-
-  threadLock = () => {
-    const { setThreadLock, dispatch, thread } = this.props;
-    const value = !thread.isLocked;
-    const threadId = thread.id;
-
-    this.setState({
-      isLockingThread: true,
-    });
-
-    setThreadLock({
-      threadId,
-      value,
-    })
-      .then(({ data: { setThreadLock } }) => {
-        this.setState({
-          isLockingThread: false,
-        });
-        if (setThreadLock.isLocked) {
-          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
-        } else {
-          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
-        }
-      })
-      .catch(err => {
-        this.setState({
-          isLockingThread: false,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
-  triggerDelete = e => {
-    e.preventDefault();
-    const { thread, dispatch } = this.props;
-
-    const threadId = thread.id;
-    const isChannelOwner = thread.channel.channelPermissions.isOwner;
-    const isCommunityOwner = thread.community.communityPermissions.isOwner;
-
-    let message;
-
-    if (isCommunityOwner && !thread.isAuthor) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.community.name
-      } community, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else if (isChannelOwner && !thread.isAuthor) {
-      message = `You are about to delete another person's thread. As the owner of the ${
-        thread.channel.name
-      } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
-    } else {
-      message = 'Are you sure you want to delete this thread?';
-    }
-
-    track(events.THREAD_DELETED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
-    return dispatch(
-      openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id: threadId,
-        entity: 'thread',
-        message,
-        extraProps: {
-          thread,
-        },
-      })
-    );
-  };
 
   toggleEdit = () => {
     const { isEditing } = this.state;
@@ -362,51 +283,10 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
   };
 
-  togglePinThread = () => {
-    const { pinThread, thread, dispatch } = this.props;
-    const isPinned = thread.community.pinnedThreadId === thread.id;
-    const communityId = thread.community.id;
-
-    if (thread.channel.isPrivate) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Only threads in public channels can be pinned.'
-        )
-      );
-    }
-
-    this.setState({
-      isPinningThread: true,
-    });
-
-    return pinThread({
-      threadId: thread.id,
-      communityId,
-      value: isPinned ? null : thread.id,
-    })
-      .then(() => {
-        this.setState({
-          isPinningThread: false,
-        });
-      })
-      .catch(err => {
-        this.setState({
-          isPinningThread: false,
-        });
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
   render() {
     const { currentUser, thread } = this.props;
 
-    const {
-      isEditing,
-      isSavingEdit,
-      isLockingThread,
-      isPinningThread,
-    } = this.state;
+    const { isEditing, isSavingEdit } = this.state;
 
     const createdAt = new Date(thread.createdAt).getTime();
     const timestamp = convertTimestampToDate(createdAt);
@@ -487,14 +367,9 @@ class ThreadDetailPure extends React.Component<Props, State> {
             currentUser={currentUser}
             thread={thread}
             saveEdit={this.saveEdit}
-            togglePinThread={this.togglePinThread}
             isSavingEdit={isSavingEdit}
-            threadLock={this.threadLock}
-            triggerDelete={this.triggerDelete}
             isEditing={isEditing}
             title={this.state.title}
-            isLockingThread={isLockingThread}
-            isPinningThread={isPinningThread}
             uploadFiles={this.uploadFiles}
           />
         </ErrorBoundary>
@@ -504,10 +379,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
 }
 
 const ThreadDetail = compose(
-  setThreadLockMutation,
-  deleteThreadMutation,
   editThreadMutation,
-  pinThreadMutation,
   uploadImageMutation,
   withRouter
 )(ThreadDetailPure);
