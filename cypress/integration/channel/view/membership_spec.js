@@ -8,10 +8,6 @@ const community = data.communities.find(
   community => community.id === publicChannel.communityId
 );
 
-const { userId: ownerInChannelId } = data.usersChannels.find(
-  ({ channelId, isOwner }) => channelId === publicChannel.id && isOwner
-);
-
 const { userId: memberInChannelId } = data.usersChannels.find(
   ({ channelId, isMember, isOwner }) =>
     channelId === publicChannel.id && isMember && !isOwner
