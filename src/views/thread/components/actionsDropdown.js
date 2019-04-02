@@ -11,21 +11,20 @@ import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
+import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
+import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import { track, events, transformations } from 'src/helpers/analytics';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
   thread: Object,
-  toggleEdit: Function,
-  isPinningThread: boolean,
-  togglePinThread: Function,
-  isLockingThread: boolean,
-  lockThread: Function,
-  triggerDelete: Function,
+  toggleEdit?: Function,
   // Injected
   currentUser: Object,
   dispatch: Function,
+  pinThread: Function,
   toggleThreadNotifications: Function,
+  setThreadLock: Function,
 };
 
 const ActionsDropdown = (props: Props) => {
@@ -35,11 +34,8 @@ const ActionsDropdown = (props: Props) => {
     toggleThreadNotifications,
     currentUser,
     toggleEdit,
-    isPinningThread,
-    togglePinThread,
-    isLockingThread,
-    lockThread,
-    triggerDelete,
+    pinThread,
+    setThreadLock,
   } = props;
   if (!currentUser) return null;
 
@@ -56,11 +52,12 @@ const ActionsDropdown = (props: Props) => {
   const isCommunityOwner = currentUser && communityPermissions.isOwner;
 
   const shouldRenderEditThreadAction =
-    isThreadAuthor ||
-    isChannelModerator ||
-    isCommunityModerator ||
-    isChannelOwner ||
-    isCommunityOwner;
+    (isThreadAuthor ||
+      isChannelModerator ||
+      isCommunityModerator ||
+      isChannelOwner ||
+      isCommunityOwner) &&
+    toggleEdit;
 
   const shouldRenderMoveThreadAction = isCommunityModerator || isCommunityOwner;
 
@@ -112,6 +109,91 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const isPinned = thread.community.pinnedThreadId === thread.id;
+  const [isPinningThread, setIsPinningThread] = React.useState(false);
+  const togglePinThread = () => {
+    if (thread.channel.isPrivate) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Only threads in public channels can be pinned.'
+        )
+      );
+    }
+
+    setIsPinningThread(true);
+
+    return pinThread({
+      threadId: thread.id,
+      communityId: thread.community.id,
+      value: isPinned ? null : thread.id,
+    })
+      .then(() => {
+        setIsPinningThread(false);
+      })
+      .catch(err => {
+        setIsPinningThread(false);
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  const [isLockingThread, setIsLockingThread] = React.useState(false);
+  const lockThread = () => {
+    const value = !thread.isLocked;
+    const threadId = thread.id;
+
+    setIsLockingThread(true);
+    setThreadLock({
+      threadId,
+      value,
+    })
+      .then(({ data: { setThreadLock } }) => {
+        setIsLockingThread(false);
+        if (setThreadLock.isLocked) {
+          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
+        } else {
+          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
+        }
+      })
+      .catch(err => {
+        setIsLockingThread(false);
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  const triggerDelete = e => {
+    e.preventDefault();
+
+    let message;
+
+    if (isCommunityOwner && !thread.isAuthor) {
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.community.name
+      } community, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else if (isChannelOwner && !thread.isAuthor) {
+      message = `You are about to delete another person's thread. As the owner of the ${
+        thread.channel.name
+      } channel, you have permission to do this. The thread author will be notified that this thread was deleted.`;
+    } else {
+      message = 'Are you sure you want to delete this thread?';
+    }
+
+    track(events.THREAD_DELETED_INITED, {
+      thread: transformations.analyticsThread(thread),
+      channel: transformations.analyticsChannel(thread.channel),
+      community: transformations.analyticsCommunity(thread.community),
+    });
+
+    return dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: thread.id,
+        entity: 'thread',
+        message,
+        extraProps: {
+          thread,
+        },
+      })
+    );
+  };
 
   const [flyoutOpen, setFlyoutOpen] = useState(false);
 
@@ -277,5 +359,7 @@ const ActionsDropdown = (props: Props) => {
 export default compose(
   withCurrentUser,
   connect(),
-  toggleThreadNotificationsMutation
+  toggleThreadNotificationsMutation,
+  pinThreadMutation,
+  setThreadLockMutation
 )(ActionsDropdown);

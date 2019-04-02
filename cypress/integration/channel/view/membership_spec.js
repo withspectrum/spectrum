@@ -25,20 +25,26 @@ const QUIET_USER_ID = constants.QUIET_USER_ID;
 
 const leave = () => {
   cy.get('[data-cy="channel-leave-button"]')
+    .last()
     .should('be.visible')
     .contains('Member');
 
-  cy.get('[data-cy="channel-leave-button"]').click();
+  cy.get('[data-cy="channel-leave-button"]')
+    .last()
+    .click();
 
   cy.get('[data-cy="channel-join-button"]').contains(`Join channel`);
 };
 
 const join = () => {
   cy.get('[data-cy="channel-join-button"]')
+    .last()
     .should('be.visible')
     .contains('Join channel');
 
-  cy.get('[data-cy="channel-join-button"]').click();
+  cy.get('[data-cy="channel-join-button"]')
+    .last()
+    .click();
 
   cy.get('[data-cy="channel-leave-button"]').contains(`Member`);
 };
