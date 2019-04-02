@@ -53,15 +53,7 @@ const StickyHeader = (props: Props) => {
 
       {channel.channelPermissions.isMember && (
         <StickyHeaderActionsContainer>
-          <ActionsDropdown
-            thread={thread}
-            // toggleEdit={this.props.toggleEdit}
-            // lockThread={this.props.threadLock}
-            // isLockingThread={this.props.isLockingThread}
-            // isPinningThread={this.props.isPinningThread}
-            // togglePinThread={this.props.togglePinThread}
-            // triggerDelete={this.props.triggerDelete}
-          />
+          <ActionsDropdown thread={thread} />
           <LikeButton thread={thread} />
         </StickyHeaderActionsContainer>
       )}
