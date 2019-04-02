@@ -55,10 +55,10 @@ const Share = ({ community, onboarding }) => {
             You’re ready to start building your community - you can view it now,
             or manage your settings at any time
           </Description>
-          <OutlineButton href={`/${community.slug}/settings`}>
+          <OutlineButton to={`/${community.slug}/settings`}>
             View community settings
           </OutlineButton>
-          <PrimaryButton href={`/${community.slug}`}>
+          <PrimaryButton to={`/${community.slug}`}>
             Go to my community
           </PrimaryButton>
         </ButtonRow>

@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import communityInfoFragment from '../../fragments/community/communityInfo';
+import { getCommunityBySlugQuery } from '../../queries/community/getCommunity';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 
 export type CreateCommunityType = {
@@ -39,6 +40,16 @@ const createCommunityOptions = {
         },
       }),
   }),
+  options: {
+    refetchQueries: result => [
+      {
+        query: getCommunityBySlugQuery,
+        variables: {
+          slug: result.data.createCommunity.slug,
+        },
+      },
+    ],
+  },
 };
 
 export default graphql(createCommunityMutation, createCommunityOptions);

@@ -25,6 +25,13 @@ const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
   const { isOwner, isModerator } = communityPermissions;
   const canModerate = isOwner || isModerator;
 
+  // Cache last seen in case the user replies to the thread
+  const [lastSeen, setLastSeen] = React.useState(currentUserLastSeen);
+
+  React.useEffect(() => {
+    setLastSeen(thread.currentUserLastSeen);
+  }, [thread.id]);
+
   let hasInjectedUnseenRobo;
   return (
     <MessagesWrapper data-cy="message-group">
@@ -64,9 +71,9 @@ const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
         // group as last seen in the UI
         // NOTE(@mxstbr): Maybe we should split the group eventually
         if (
-          !!currentUserLastSeen &&
+          !!lastSeen &&
           new Date(group[group.length - 1].timestamp).getTime() >
-            new Date(currentUserLastSeen).getTime() &&
+            new Date(lastSeen).getTime() &&
           !me &&
           !hasInjectedUnseenRobo
         ) {
