@@ -135,10 +135,10 @@ export const AvatarGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: start;
-  color: ${props => (props.isActive ? theme.brand.default : theme.text.alt)};
+  color: ${props => (props.isActive ? theme.text.default : theme.text.alt)};
   font-weight: ${props => (props.isActive ? '600' : '500')};
   background: ${props =>
-    props.isActive ? hexa(theme.brand.default, 0.04) : theme.bg.default};
+    props.isActive ? hexa(theme.text.default, 0.04) : theme.bg.default};
 
   a img {
     opacity: ${props => (props.isActive ? '1' : '0.4')};
@@ -148,7 +148,7 @@ export const AvatarGrid = styled.div`
   ${props =>
     props.isActive &&
     css`
-      box-shadow: inset 3px 0 0 ${theme.brand.default};
+      box-shadow: inset 3px 0 0 ${theme.text.default};
 
       img,
       a img {
