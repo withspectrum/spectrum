@@ -9,6 +9,7 @@ export const HasNextPage = styled(Link)`
   align-items: center;
   justify-content: center;
   text-decoration: none;
+  background: ${theme.bg.default};
   width: 100%;
 `;
 

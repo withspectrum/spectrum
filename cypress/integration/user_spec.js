@@ -39,9 +39,6 @@ describe('User View', () => {
     );
     communities.forEach(community => {
       cy.contains(community.name);
-      const userCommunity = usersCommunities.find(
-        ({ communityId }) => communityId === community.id
-      );
     });
   });
 });
