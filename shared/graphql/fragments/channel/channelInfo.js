@@ -1,7 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import communityInfoFragment from '../community/communityInfo';
+import communityMetaFragment from '../community/communityMetaData';
 import type { CommunityInfoType } from '../community/communityInfo';
+import type { CommunityMetaDataType } from '../community/communityMetaData';
 
 export type ChannelInfoType = {
   id: string,
@@ -21,6 +23,7 @@ export type ChannelInfoType = {
   },
   community: {
     ...$Exact<CommunityInfoType>,
+    ...$Exact<CommunityMetaDataType>,
   },
 };
 
@@ -43,7 +46,9 @@ export default gql`
     }
     community {
       ...communityInfo
+      ...communityMetaData
     }
   }
   ${communityInfoFragment}
+  ${communityMetaFragment}
 `;

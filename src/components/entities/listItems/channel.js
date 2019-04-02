@@ -20,10 +20,18 @@ type Props = {
   description?: ?string,
   currentUser: ?Object,
   children?: React$Node,
+  isActive?: boolean,
 };
 
 const Channel = (props: Props) => {
-  const { channel, name, description, children, currentUser } = props;
+  const {
+    channel,
+    name,
+    description,
+    children,
+    currentUser,
+    isActive = false,
+  } = props;
   const [isHoveringNotifications, setIsHoveringNotifications] = useState(false);
   if (!channel) return null;
 
@@ -116,7 +124,7 @@ const Channel = (props: Props) => {
   return (
     <ErrorBoundary>
       <Link to={`/${channel.community.slug}/${channel.slug}`}>
-        <Row>
+        <Row isActive={isActive}>
           <Content>
             {name && (
               <Label title={name}>

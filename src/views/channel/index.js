@@ -9,7 +9,6 @@ import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
-import NotificationsToggle from './components/notificationsToggle';
 import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
@@ -33,6 +32,7 @@ import {
   SecondaryColumn,
 } from 'src/components/layout';
 import { SidebarSection } from 'src/views/community/style';
+import CommunitySidebar from 'src/components/communitySidebar';
 import { FeedsContainer } from './style';
 import { InfoContainer } from '../community/style';
 
@@ -80,17 +80,9 @@ class ChannelView extends React.Component<Props> {
         channel: transformations.analyticsChannel(channel),
         community: transformations.analyticsCommunity(channel.community),
       });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { dispatch } = this.props;
-
-    if (this.props.data.channel) {
-      const { channel } = this.props.data;
-      dispatch(
+      this.props.dispatch(
         setTitlebarProps({
-          title: `# ${this.props.data.channel.name}`,
+          title: `# ${channel.name}`,
           titleIcon: (
             <CommunityAvatar
               isClickable={false}
@@ -102,21 +94,42 @@ class ChannelView extends React.Component<Props> {
         })
       );
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { dispatch } = this.props;
 
     if (
-      (!prevProps.data.channel && this.props.data.channel) ||
-      (prevProps.data.channel &&
-        this.props.data.channel &&
-        prevProps.data.channel.id !== this.props.data.channel.id)
+      this.props.data.channel &&
+      prevProps.data.channel &&
+      this.props.data.channel.id !== prevProps.data.channel.id
     ) {
       const { channel } = this.props.data;
-
-      if (channel) {
-        track(events.CHANNEL_VIEWED, {
-          channel: transformations.analyticsChannel(channel),
-          community: transformations.analyticsCommunity(channel.community),
+      dispatch(
+        setTitlebarProps({
+          title: `# ${channel.name}`,
+          titleIcon: (
+            <CommunityAvatar
+              isClickable={false}
+              community={channel.community}
+              size={24}
+            />
+          ),
+          rightAction: <MobileChannelAction channel={channel} />,
+        })
+      );
+      track(events.CHANNEL_VIEWED, {
+        channel: transformations.analyticsChannel(channel),
+        community: transformations.analyticsCommunity(channel.community),
+      });
+      const { location, history } = this.props;
+      const { search } = location;
+      const { tab } = querystring.parse(search);
+      if (!tab)
+        history.replace({
+          ...location,
+          search: querystring.stringify({ tab: 'posts' }),
         });
-      }
     }
   }
 
@@ -141,9 +154,8 @@ class ChannelView extends React.Component<Props> {
     const selectedView = tab;
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
-      const { isMember, isOwner, isModerator } = channel.channelPermissions;
+      const { isMember, isOwner } = channel.channelPermissions;
       const { community } = channel;
-      const userHasPermissions = isMember || isOwner || isModerator;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
 
@@ -168,20 +180,7 @@ class ChannelView extends React.Component<Props> {
           <ViewGrid>
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
-                <SidebarSection>
-                  <ChannelProfileCard channel={channel} />
-                </SidebarSection>
-
-                {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                  <ErrorBoundary>
-                    <SidebarSection>
-                      <NotificationsToggle
-                        value={channel.channelPermissions.receiveNotifications}
-                        channel={channel}
-                      />
-                    </SidebarSection>
-                  </ErrorBoundary>
-                )}
+                <CommunitySidebar community={channel.community} />
 
                 {/* user is signed in and has permissions to view pending users */}
                 {isLoggedIn && (isOwner || isGlobalOwner) && (
@@ -266,19 +265,6 @@ class ChannelView extends React.Component<Props> {
                       <SidebarSection>
                         <ChannelProfileCard channel={channel} />
                       </SidebarSection>
-
-                      {isLoggedIn && userHasPermissions && !channel.isArchived && (
-                        <ErrorBoundary>
-                          <SidebarSection>
-                            <NotificationsToggle
-                              value={
-                                channel.channelPermissions.receiveNotifications
-                              }
-                              channel={channel}
-                            />
-                          </SidebarSection>
-                        </ErrorBoundary>
-                      )}
 
                       {/* user is signed in and has permissions to view pending users */}
                       {isLoggedIn && (isOwner || isGlobalOwner) && (
