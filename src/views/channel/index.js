@@ -154,9 +154,8 @@ class ChannelView extends React.Component<Props> {
     const selectedView = tab;
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
-      const { isMember, isOwner, isModerator } = channel.channelPermissions;
+      const { isMember, isOwner } = channel.channelPermissions;
       const { community } = channel;
-      const userHasPermissions = isMember || isOwner || isModerator;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;
 
