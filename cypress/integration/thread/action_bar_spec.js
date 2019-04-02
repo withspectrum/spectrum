@@ -29,26 +29,36 @@ const memberInChannelUser = data.users.find(u => u.id === constants.BRYN_ID);
 const lockThread = () => {
   // lock the thread
   cy.get('[data-cy="thread-dropdown-lock"]').contains('Lock chat');
-  cy.get('[data-cy="thread-dropdown-lock"]').click();
+  cy.get('[data-cy="thread-dropdown-lock"]')
+    .first()
+    .click();
   cy.get('[data-cy="thread-dropdown-lock"]').contains('Unlock chat');
 
   // unlock the thread
-  cy.get('[data-cy="thread-dropdown-lock"]').click();
+  cy.get('[data-cy="thread-dropdown-lock"]')
+    .first()
+    .click();
   cy.get('[data-cy="thread-dropdown-lock"]').contains('Lock chat');
 };
 
 const pinThread = () => {
   // pin the thread
-  cy.get('[data-cy="thread-dropdown-pin"]').click();
+  cy.get('[data-cy="thread-dropdown-pin"]')
+    .first()
+    .click();
   cy.get('[data-cy="thread-dropdown-pin"]').contains('Unpin');
 
   // unpin the thread
-  cy.get('[data-cy="thread-dropdown-pin"]').click();
+  cy.get('[data-cy="thread-dropdown-pin"]')
+    .first()
+    .click();
   cy.get('[data-cy="thread-dropdown-pin"]').contains('Pin');
 };
 
 const triggerThreadDelete = () => {
-  cy.get('[data-cy="thread-dropdown-delete"]').click();
+  cy.get('[data-cy="thread-dropdown-delete"]')
+    .first()
+    .click();
   cy.get('[data-cy="delete-button"]').should('be.visible');
   cy.get('div.ReactModal__Overlay')
     .should('be.visible')
@@ -56,7 +66,9 @@ const triggerThreadDelete = () => {
 };
 
 const triggerMovingThread = () => {
-  cy.get('[data-cy="thread-dropdown-move"]').click();
+  cy.get('[data-cy="thread-dropdown-move"]')
+    .first()
+    .click();
   cy.get('[data-cy="move-thread-modal"]').should('be.visible');
   cy.get('div.ReactModal__Overlay')
     .should('be.visible')
@@ -65,8 +77,9 @@ const triggerMovingThread = () => {
 
 const openSettingsDropdown = () => {
   cy.get('[data-cy="thread-actions-dropdown-trigger"]')
+    .last()
     .should('be.visible')
-    .click();
+    .click({ force: true });
 };
 
 describe('action bar renders', () => {

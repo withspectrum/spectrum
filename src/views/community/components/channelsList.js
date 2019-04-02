@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Route } from 'react-router';
 import compose from 'recompose/compose';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -96,7 +97,15 @@ class Component extends React.Component<Props> {
               if (!channel) return null;
               return (
                 <ErrorBoundary key={channel.id}>
-                  <ChannelListItem channel={channel} name={channel.name} />
+                  <Route path={`/${channel.community.slug}/${channel.slug}`}>
+                    {({ match }) => (
+                      <ChannelListItem
+                        channel={channel}
+                        name={channel.name}
+                        isActive={!!match}
+                      />
+                    )}
+                  </Route>
                 </ErrorBoundary>
               );
             })}

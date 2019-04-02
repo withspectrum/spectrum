@@ -48,11 +48,6 @@ describe('sidebar components on thread view', () => {
 
       // loaded join button which directs to login
       cy.get('[data-cy="profile-join-button"]').should('be.visible');
-
-      // loaded more conversations component
-      cy.get('[data-cy="trending-conversations"]')
-        .scrollIntoView()
-        .should('be.visible');
     });
   });
 
@@ -73,11 +68,6 @@ describe('sidebar components on thread view', () => {
       cy.get('[data-cy="profile-join-button"]')
         .scrollIntoView()
         .should('be.visible');
-
-      // loaded more conversations component
-      cy.get('[data-cy="trending-conversations"]')
-        .scrollIntoView()
-        .should('be.visible');
     });
   });
 
@@ -96,11 +86,6 @@ describe('sidebar components on thread view', () => {
 
       // loaded join button which directs to login
       cy.get('[data-cy="community-profile-card"]')
-        .scrollIntoView()
-        .should('be.visible');
-
-      // loaded more conversations component
-      cy.get('[data-cy="trending-conversations"]')
         .scrollIntoView()
         .should('be.visible');
     });

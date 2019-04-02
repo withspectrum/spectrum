@@ -17,31 +17,27 @@ import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icon';
 import { PrimaryOutlineButton } from 'src/components/button';
+import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
   PrimaryColumn,
   SecondaryColumn,
+  SingleColumnGrid,
 } from 'src/components/layout';
-import {
-  CommunityProfileCard,
-  ChannelProfileCard,
-} from 'src/components/entities';
-import { SidebarSection } from 'src/views/community/style';
 import ChatInput from 'src/components/chatInput';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import MessagesSubscriber from '../components/messagesSubscriber';
-import TrendingThreads from '../components/trendingThreads';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
 import DesktopAppUpsell from '../components/desktopAppUpsell';
-import TopBottomButtons from '../components/topBottomButtons';
 import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
+import CommunitySidebar from 'src/components/communitySidebar';
 import { ErrorBoundary } from 'src/components/error';
 
 type Props = {
@@ -181,124 +177,107 @@ const ThreadContainer = (props: Props) => {
   const { isMember } = communityPermissions;
   const canChat = !isLocked && !channel.isArchived && isMember;
 
+  const renderPrimaryColumn = fullWidth => (
+    <PrimaryColumn fullWidth={fullWidth}>
+      {/*
+        This <Stretch> container makes sure that the thread detail and messages
+        component are always at least the height of the screen, minus the
+        height of the chat input. This is necessary because we always want
+        the chat input at the bottom of the view, so it must always be tricked
+        into thinking that its preceeding sibling is full-height.
+      */}
+      <Stretch
+        isModal={isModal}
+        data-cy={isModal ? 'thread-is-modal' : undefined}
+      >
+        <ErrorBoundary>
+          <StickyHeader thread={thread} />
+        </ErrorBoundary>
+
+        <ThreadDetail
+          thread={thread}
+          toggleEdit={() => setEditing(!isEditing)}
+        />
+
+        {!isEditing && (
+          <React.Fragment>
+            <MessagesSubscriber
+              id={thread.id}
+              thread={thread}
+              isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+              onMessagesLoaded={updateMentionSuggestions}
+            />
+
+            {canChat && (
+              <ChatInputWrapper>
+                <ChatInput
+                  threadType="story"
+                  threadId={thread.id}
+                  participants={mentionSuggestions}
+                />
+              </ChatInputWrapper>
+            )}
+
+            {!canChat && !isLocked && (
+              <ChatInputWrapper>
+                <JoinCommunity
+                  community={community}
+                  render={({ isLoading }) => (
+                    <LockedMessages>
+                      <PrimaryOutlineButton
+                        isLoading={isLoading}
+                        icon={'door-enter'}
+                        data-cy="join-community-chat-upsell"
+                      >
+                        {isLoading ? 'Joining...' : 'Join community to chat'}
+                      </PrimaryOutlineButton>
+                    </LockedMessages>
+                  )}
+                />
+              </ChatInputWrapper>
+            )}
+
+            {isLocked && (
+              <ChatInputWrapper>
+                <LockedMessages>
+                  <Icon glyph={'private'} size={24} />
+                  <LockedText>This conversation has been locked</LockedText>
+                </LockedMessages>
+              </ChatInputWrapper>
+            )}
+
+            {channel.isArchived && (
+              <ChatInputWrapper>
+                <LockedMessages>
+                  <Icon glyph={'private'} size={24} />
+                  <LockedText>This channel has been archived</LockedText>
+                </LockedMessages>
+              </ChatInputWrapper>
+            )}
+          </React.Fragment>
+        )}
+      </Stretch>
+    </PrimaryColumn>
+  );
+
   return (
     <React.Fragment>
       <ThreadHead thread={thread} />
-      <TopBottomButtons />
       <ViewGrid className={className} data-cy="thread-view">
         {children}
-        <SecondaryPrimaryColumnGrid>
-          <SecondaryColumn>
-            <SidebarSection>
-              <CommunityProfileCard community={community} />
-            </SidebarSection>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <ChannelProfileCard
-                  hideActions
-                  hideCommunityMeta
-                  channel={channel}
-                />
-              </SidebarSection>
-            </ErrorBoundary>
-
-            <ErrorBoundary>
-              <SidebarSection>
-                <TrendingThreads id={community.id} />
-              </SidebarSection>
-            </ErrorBoundary>
-
-            <ErrorBoundary>
-              <DesktopAppUpsell />
-            </ErrorBoundary>
-          </SecondaryColumn>
-
-          <PrimaryColumn>
-            {/*
-              This <Stretch> container makes sure that the thread detail and messages
-              component are always at least the height of the screen, minus the
-              height of the chat input. This is necessary because we always want
-              the chat input at the bottom of the view, so it must always be tricked
-              into thinking that its preceeding sibling is full-height.
-            */}
-            <Stretch
-              isModal={isModal}
-              data-cy={isModal ? 'thread-is-modal' : undefined}
-            >
+        {isModal ? (
+          <SingleColumnGrid>{renderPrimaryColumn(true)}</SingleColumnGrid>
+        ) : (
+          <SecondaryPrimaryColumnGrid>
+            <SecondaryColumn>
+              <CommunitySidebar community={thread.community} />
               <ErrorBoundary>
-                <StickyHeader thread={thread} />
+                <DesktopAppUpsell />
               </ErrorBoundary>
-
-              <ThreadDetail
-                thread={thread}
-                toggleEdit={() => setEditing(!isEditing)}
-              />
-
-              {!isEditing && (
-                <React.Fragment>
-                  <MessagesSubscriber
-                    id={thread.id}
-                    thread={thread}
-                    isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
-                    onMessagesLoaded={updateMentionSuggestions}
-                  />
-
-                  {canChat && (
-                    <ChatInputWrapper>
-                      <ChatInput
-                        threadType="story"
-                        threadId={thread.id}
-                        participants={mentionSuggestions}
-                      />
-                    </ChatInputWrapper>
-                  )}
-
-                  {!canChat && !isLocked && (
-                    <ChatInputWrapper>
-                      <JoinCommunity
-                        community={community}
-                        render={({ isLoading }) => (
-                          <LockedMessages>
-                            <PrimaryOutlineButton
-                              isLoading={isLoading}
-                              icon={'door-enter'}
-                              data-cy="join-community-chat-upsell"
-                            >
-                              {isLoading
-                                ? 'Joining...'
-                                : 'Join community to chat'}
-                            </PrimaryOutlineButton>
-                          </LockedMessages>
-                        )}
-                      />
-                    </ChatInputWrapper>
-                  )}
-
-                  {isLocked && (
-                    <ChatInputWrapper>
-                      <LockedMessages>
-                        <Icon glyph={'private'} size={24} />
-                        <LockedText>
-                          This conversation has been locked
-                        </LockedText>
-                      </LockedMessages>
-                    </ChatInputWrapper>
-                  )}
-
-                  {channel.isArchived && (
-                    <ChatInputWrapper>
-                      <LockedMessages>
-                        <Icon glyph={'private'} size={24} />
-                        <LockedText>This channel has been archived</LockedText>
-                      </LockedMessages>
-                    </ChatInputWrapper>
-                  )}
-                </React.Fragment>
-              )}
-            </Stretch>
-          </PrimaryColumn>
-        </SecondaryPrimaryColumnGrid>
+            </SecondaryColumn>
+            {renderPrimaryColumn(false)}
+          </SecondaryPrimaryColumnGrid>
+        )}
       </ViewGrid>
     </React.Fragment>
   );
