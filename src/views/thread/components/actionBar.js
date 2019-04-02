@@ -10,7 +10,6 @@ import compose from 'recompose/compose';
 import { PrimaryOutlineButton, TextButton } from 'src/components/button';
 import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import { track, events } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
@@ -33,12 +32,9 @@ type Props = {
   currentUser: Object,
   isEditing: boolean,
   dispatch: Dispatch<Object>,
-  toggleThreadNotifications: Function,
   toggleEdit: Function,
   saveEdit: Function,
-  togglePinThread: Function,
   pinThread: Function,
-  triggerDelete: Function,
   threadLock: Function,
   isSavingEdit: boolean,
   title: string,
@@ -180,8 +176,6 @@ class ActionBar extends React.Component<Props> {
               lockThread={this.props.threadLock}
               isLockingThread={this.props.isLockingThread}
               isPinningThread={this.props.isPinningThread}
-              togglePinThread={this.props.togglePinThread}
-              triggerDelete={this.props.triggerDelete}
             />
           </div>
         </ActionBarContainer>
@@ -190,7 +184,4 @@ class ActionBar extends React.Component<Props> {
   }
 }
 
-export default compose(
-  connect(),
-  toggleThreadNotificationsMutation
-)(ActionBar);
+export default compose(connect())(ActionBar);
