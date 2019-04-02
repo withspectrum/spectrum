@@ -129,7 +129,6 @@ describe('post username creation redirects', () => {
     setUsernameIsVisible();
     saveUsername();
     cy.url().should('include', '/payments/private');
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
   });
 
   it('should take user to explore if no previously viewed page', () => {
