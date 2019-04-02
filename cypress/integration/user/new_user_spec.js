@@ -98,7 +98,6 @@ describe('post username creation redirects', () => {
     setUsernameIsVisible();
     saveUsername();
     cy.url().should('include', '/spectrum/general');
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
   });
 
   it('should redirect to previously viewed page 3', () => {

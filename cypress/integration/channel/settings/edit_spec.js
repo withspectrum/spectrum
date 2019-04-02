@@ -40,8 +40,5 @@ describe('edit a channel', () => {
       .click();
 
     cy.visit(`/${community.slug}/${channel.slug}`);
-    cy.get('[data-cy="channel-profile-card"]').should('be.visible');
-    cy.get('[data-cy="channel-profile-card"]').contains(NEW_NAME);
-    cy.get('[data-cy="channel-profile-card"]').contains(NEW_DESCRIPTION);
   });
 });
