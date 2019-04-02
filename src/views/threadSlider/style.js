@@ -43,6 +43,10 @@ export const ThreadBackground = styled.div`
   width: ${MAX_WIDTH}px;
   left: 50%;
   transform: translateX(calc(-50%));
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    width: 100%;
+  }
 `;
 
 export const ThreadContainer = styled.div`
