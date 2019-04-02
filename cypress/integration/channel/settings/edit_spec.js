@@ -40,5 +40,6 @@ describe('edit a channel', () => {
       .click();
 
     cy.visit(`/${community.slug}/${channel.slug}`);
+    cy.contains(NEW_NAME);
   });
 });
