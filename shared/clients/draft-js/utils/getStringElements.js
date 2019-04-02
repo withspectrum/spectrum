@@ -2,6 +2,7 @@
 export const getStringElements = (arr: Array<mixed>): Array<string> => {
   return arr
     .map(elem => {
+      if (!elem) return null;
       if (Array.isArray(elem)) return getStringElements(elem);
       if (typeof elem === 'string') return elem;
       // Handle React elements being passed as array elements
