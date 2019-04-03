@@ -48,5 +48,8 @@ module.exports = {
     isPro,
     recurringPayments,
     invoices,
+    // Always return isOnline: true for current user
+    isOnline: ({ isOnline, id }, _: any, { user }) =>
+      user && user.id === id ? true : isOnline,
   },
 };
