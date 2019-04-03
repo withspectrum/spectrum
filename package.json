@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
@@ -222,7 +222,7 @@
     "event-stream": "3.3.4"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node build-hyperion/main.js",
+    "start": "NODE_ENV=production node main.js",
     "start:athena": "cross-env NODE_ENV=production node build-athena/main.js",
     "start:hermes": "cross-env NODE_ENV=production node build-hermes/main.js",
     "start:chronos": "cross-env NODE_ENV=production node build-chronos/main.js",
@@ -241,7 +241,6 @@
     "dev:hyperion": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,hyperion*,-hyperion:resolvers cross-env DIR=hyperion backpack",
     "dev:analytics": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=build*,analytics*,-analytics:resolvers cross-env DIR=analytics backpack",
     "dev:desktop": "(cd desktop && yarn run dev)",
-    "build": "npm run build:web && npm run build:hyperion",
     "prebuild:api": "rimraf build-api",
     "build:api": "cross-env NODE_PATH=./ cross-env DIR=api backpack build",
     "postbuild:api": "cp api/package.json build-api/package.json && cp now.json build-api/now.json && cpy cacert build-api",
@@ -263,8 +262,9 @@
     "prebuild:analytics": "rimraf build-analytics",
     "build:analytics": "cross-env NODE_PATH=./ cross-env DIR=analytics backpack build",
     "postbuild:analytics": "cp analytics/package.json build-analytics/package.json && cp now.json build-analytics/now.json && cpy cacert build-analytics",
-    "prebuild:hyperion": "rimraf build-hyperion",
+    "prebuild:hyperion": "rimraf build && yarn run build:web && rimraf build-hyperion",
     "build:hyperion": "cross-env NODE_PATH=./ cross-env DIR=hyperion backpack build",
+    "postbuild:hyperion": "cp -r build build-hyperion && cp now.json build-hyperion && cp yarn.lock build-hyperion && cp package.json build-hyperion && cp cacert build-hyperion",
     "build:web": "cross-env NODE_PATH=./ react-app-rewired build",
     "build:desktop": "(cd desktop && yarn run package:all)",
     "test:desktop": "(cd desktop && yarn run package:test)",
