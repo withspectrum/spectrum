@@ -17,6 +17,7 @@ import totalReputation from './totalReputation';
 import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
 import githubProfile from './githubProfile';
+import type { GraphQLContext } from '../../';
 
 // no-op resolvers to transition while removing payments
 import type { DBUser } from 'shared/types';
@@ -49,7 +50,7 @@ module.exports = {
     recurringPayments,
     invoices,
     // Always return isOnline: true for current user
-    isOnline: ({ isOnline, id }, _: any, { user }) =>
+    isOnline: ({ isOnline, id }: DBUser, _: any, { user }: GraphQLContext) =>
       user && user.id === id ? true : isOnline,
   },
 };
