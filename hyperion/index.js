@@ -35,22 +35,27 @@ addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 // Serve static files from the build folder
 app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), {
-    index: false,
-    setHeaders: (res, path) => {
-      // Don't cache the serviceworker in the browser
-      if (path.indexOf('sw.js') > -1) {
-        res.setHeader('Cache-Control', 'no-store, no-cache');
-        return;
-      }
+  express.static(
+    path.resolve(
+      process.env.NODE_ENV === 'production' ? './build' : '../build/'
+    ),
+    {
+      index: false,
+      setHeaders: (res, path) => {
+        // Don't cache the serviceworker in the browser
+        if (path.indexOf('sw.js') > -1) {
+          res.setHeader('Cache-Control', 'no-store, no-cache');
+          return;
+        }
 
-      if (path.endsWith('.js')) {
-        // Cache static files in now CDN for seven days
-        // (the filename changes if the file content changes, so we can cache these forever)
-        res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
-      }
-    },
-  })
+        if (path.endsWith('.js')) {
+          // Cache static files in now CDN for seven days
+          // (the filename changes if the file content changes, so we can cache these forever)
+          res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
+        }
+      },
+    }
+  )
 );
 
 // In dev the static files from the root public folder aren't moved to the build folder by create-react-app
