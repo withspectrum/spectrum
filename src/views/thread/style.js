@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
-import { MEDIA_BREAK, PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,

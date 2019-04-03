@@ -3,7 +3,12 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import theme from 'shared/theme';
 import { hexa, Truncate } from 'src/components/globals';
-import { MEDIA_BREAK, NAVBAR_WIDTH } from 'src/components/layout';
+import {
+  MEDIA_BREAK,
+  NAVBAR_WIDTH,
+  NAVBAR_EXPANDED_WIDTH,
+  MIN_WIDTH_TO_EXPAND_NAVIGATION,
+} from 'src/components/layout';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Overlay = styled.div`
@@ -45,6 +50,12 @@ export const BlackDot = styled.span`
     left: 40px;
     top: 0px;
   }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    background: ${theme.warn.alt};
+    left: 40px;
+    top: 0px;
+  }
 `;
 
 export const NavigationWrapper = styled.div`
@@ -70,6 +81,10 @@ export const NavigationWrapper = styled.div`
     height: 100vh;
     z-index: 9997;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.16);
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    width: ${NAVBAR_EXPANDED_WIDTH}px;
   }
 `;
 
@@ -120,7 +135,20 @@ export const NavigationGrid = styled.div`
     top: 0;
     z-index: 9999 /* on top of overlay and titlebar */;
     width: 100%;
-    max-width: 256px;
+    max-width: ${NAVBAR_EXPANDED_WIDTH}px;
+    grid-gap: 0px;
+    padding: 12px 0;
+
+    ${isDesktopApp() &&
+      css`
+        padding-top: 40px;
+      `}
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    z-index: 9999 /* on top of overlay and titlebar */;
+    width: 100%;
+    max-width: ${NAVBAR_EXPANDED_WIDTH}px;
     grid-gap: 0px;
     padding: 12px 0;
 
@@ -183,6 +211,14 @@ export const AvatarGrid = styled.div`
       opacity: 1;
     }
   }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    img,
+    a img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+  }
 `;
 
 export const AvatarLink = styled(Link)`
@@ -194,6 +230,12 @@ export const AvatarLink = styled(Link)`
   position: relative;
 
   @media (max-width: ${MEDIA_BREAK}px) {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 8px 20px 8px 12px;
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
     flex-direction: row;
     justify-content: flex-start;
     padding: 8px 20px 8px 12px;
@@ -230,9 +272,14 @@ export const Label = styled.span`
   margin-left: 12px;
   padding-right: 12px;
   ${Truncate};
+  display: none;
 
-  @media (min-width: ${MEDIA_BREAK}px) {
-    display: none;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: block;
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    display: block;
   }
 `;
 

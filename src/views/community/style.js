@@ -58,7 +58,7 @@ export const ListItemLabel = styled.div`
 export const SidebarSection = styled.section`
   background: ${theme.bg.default};
   border: 1px solid ${theme.bg.border};
-  margin-top: 16px;
+  margin-top: 24px;
   border-radius: 4px;
 
   @media (max-width: ${MEDIA_BREAK}px) {

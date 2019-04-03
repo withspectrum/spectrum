@@ -4,7 +4,7 @@ import theme from 'shared/theme';
 import { zIndex } from 'src/components/globals';
 import {
   MEDIA_BREAK,
-  MAX_WIDTH,
+  MIN_MAX_WIDTH,
   TITLEBAR_HEIGHT,
   NAVBAR_WIDTH,
 } from 'src/components/layout';
@@ -40,7 +40,7 @@ export const ThreadBackground = styled.div`
   top: 0;
   bottom: 0;
   background: ${theme.bg.wash};
-  width: ${MAX_WIDTH}px;
+  width: ${MIN_MAX_WIDTH}px;
   left: 50%;
   transform: translateX(calc(-50%));
 
