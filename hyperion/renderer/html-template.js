@@ -11,11 +11,9 @@ const bootstrapBundleRegex = /(bootstrap)\.(?:.*\.)?js$/;
 let bundles;
 try {
   bundles = fs.readdirSync(
-    path.join(
-      process.env.NODE_ENV === 'production'
-        ? './build/static/js'
-        : '../../build/static/js'
-    )
+    process.env.NODE_ENV === 'production'
+      ? './build/static/js'
+      : path.join(__dirname, '../../build/static/js')
   );
 } catch (err) {
   console.error(err);

@@ -36,9 +36,9 @@ addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 // Serve static files from the build folder
 app.use(
   express.static(
-    path.resolve(
-      process.env.NODE_ENV === 'production' ? './build' : '../build/'
-    ),
+    process.env.NODE_ENV === 'production'
+      ? './build'
+      : path.join(__dirname, '../build/'),
     {
       index: false,
       setHeaders: (res, path) => {
