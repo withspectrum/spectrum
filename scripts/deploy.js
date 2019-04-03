@@ -67,35 +67,6 @@ if (!flags.prod) {
 
 console.log(`\nDeploying to ${flags.prod ? 'production' : 'alpha'}!\n`);
 
-// Hyperion needs to be deployed especially
-if (servers.indexOf('hyperion') > -1) {
-  servers = servers.filter(w => w !== 'hyperion');
-  console.log(`\n---hyperion---`);
-  console.log(`Deploying hyperion`);
-  exec(now(), {
-    stdio: 'inherit',
-  });
-  console.log('Aliasing to hyperion.workers.spectrum.chat');
-  exec(
-    now(`alias hyperion.${flags.prod ? 'workers' : 'alpha'}.spectrum.chat`),
-    {
-      stdio: 'inherit',
-    }
-  );
-  console.log('Clearing cache');
-  exec(
-    now(
-      `alias -r rules${!flags.prod ? '-alpha' : ''}.json ${
-        !flags.prod ? 'alpha.' : ''
-      }spectrum.chat`
-    ),
-    {
-      stdio: 'inherit',
-    }
-  );
-  console.log('hyperion is live!\n');
-}
-
 if (servers.length > 0) {
   console.log('Installing fresh dependencies...');
   exec('yarn');
@@ -127,6 +98,21 @@ if (servers.length > 0) {
     });
 
     console.log(`${server} is live!`);
+
+    if (server === 'hyperion') {
+      console.log('Clearing hyperion cache...');
+      exec(
+        now(
+          `alias -r rules${!flags.prod ? '-alpha' : ''}.json ${
+            !flags.prod ? 'alpha.' : ''
+          }spectrum.chat`
+        ),
+        {
+          stdio: 'inherit',
+        }
+      );
+      console.log('Cache cleared!');
+    }
     console.log('Deleting old deploy(s)...');
     exec(now(`rm --safe --yes build-${server}`), {
       stdio: 'inherit',

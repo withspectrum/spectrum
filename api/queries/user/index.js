@@ -17,6 +17,7 @@ import totalReputation from './totalReputation';
 import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
 import githubProfile from './githubProfile';
+import isOnline from './isOnline';
 
 // no-op resolvers to transition while removing payments
 import type { DBUser } from 'shared/types';
@@ -48,5 +49,6 @@ module.exports = {
     isPro,
     recurringPayments,
     invoices,
+    isOnline,
   },
 };

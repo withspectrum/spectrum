@@ -45,6 +45,7 @@ class ProtectedApolloServer extends ApolloServer {
   }
 }
 
+let connections = 0;
 const server = new ProtectedApolloServer({
   schema,
   formatError: createErrorFormatter(),
@@ -77,7 +78,7 @@ const server = new ProtectedApolloServer({
   subscriptions: {
     path: '/websocket',
     onDisconnect: rawSocket => {
-      statsd.increment('websocket.connections', -1);
+      statsd.gauge('ws.connections', (connections -= 1));
       return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => id && setUserOnline(id, false))
         .catch(err => {
@@ -85,7 +86,7 @@ const server = new ProtectedApolloServer({
         });
     },
     onConnect: (connectionParams, rawSocket) => {
-      statsd.increment('websocket.connections', 1);
+      statsd.gauge('ws.connections', (connections += 1));
       return getUserIdFromReq(rawSocket.upgradeReq)
         .then(id => (id ? setUserOnline(id, true) : null))
         .then(user => {

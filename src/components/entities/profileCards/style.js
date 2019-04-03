@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import theme from 'shared/theme';
 import { Truncate } from 'src/components/globals';
-import { MEDIA_BREAK, SECONDARY_COLUMN_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK, MAX_SECONDARY_COLUMN_WIDTH } from 'src/components/layout';
 
 export const ProfileContainer = styled.div`
   display: flex;
@@ -21,8 +21,8 @@ export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
-  max-height: ${SECONDARY_COLUMN_WIDTH / 3}px;
+  min-height: ${MAX_SECONDARY_COLUMN_WIDTH / 3}px;
+  max-height: ${MAX_SECONDARY_COLUMN_WIDTH / 3}px;
   background-color: ${theme.text.default};
   overflow: hidden;
   background-image: url(${props => props.src});

@@ -149,7 +149,7 @@ module.exports = function override(config, env) {
   config.plugins.unshift(
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
-      filename: 'static/js/[name].js',
+      filename: 'static/js/[name].[hash].js',
       minChunks: Infinity,
     })
   );
