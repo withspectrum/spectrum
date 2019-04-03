@@ -43,6 +43,7 @@ export const getHeader = ({
   metaTags: string,
   nonce: string,
 }) => {
+  // prettier-ignore
   return html`
     <!DOCTYPE html>
     <html lang="en">
@@ -202,10 +203,7 @@ export const getHeader = ({
         </script>
       </head>
       <body>
-        <div id="root"></div>
-      </body>
-    </html>
-  `;
+        <div id="root">`;
 };
 
 export const getFooter = ({
