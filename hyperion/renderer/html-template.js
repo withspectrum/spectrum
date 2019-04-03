@@ -6,6 +6,7 @@ import serialize from 'serialize-javascript';
 
 // Match main.asdf123.js in production mode or bundle.js in dev mode
 const mainBundleRegex = /(main|bundle)\.(?:.*\.)?js$/;
+const bootstrapBundleRegex = /(bootstrap)\.(?:.*\.)?js$/;
 
 let bundles;
 try {
@@ -25,7 +26,10 @@ try {
 
 // Get the main bundle filename
 const mainBundle = bundles.find(bundle => mainBundleRegex.test(bundle));
-if (!mainBundle) {
+const bootstrapBundle = bundles.find(bundle =>
+  bootstrapBundleRegex.test(bundle)
+);
+if (!mainBundle || !bootstrapBundle) {
   throw new Error(
     'It looks like you didn\'t run "yarn run dev:web" or "yarn run build:web" before starting hyperion. Please wait until either of them completes before starting hyperion.'
   );
@@ -225,7 +229,7 @@ export const getFooter = ({
   )}</script>
       <script nonce="${nonce}">window.__DATA__=${serialize(data)}</script>
       <script defer="defer" type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Symbol.iterator"></script>
-      <script type="text/javascript" src="/static/js/bootstrap.js"></script>
+      ${createScriptTag({ src: `/static/js/${bootstrapBundle}` })}
       ${bundles.map(src => createScriptTag({ src }))}
       ${createScriptTag({ src: `/static/js/${mainBundle}` })}
     </body>
