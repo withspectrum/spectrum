@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { Route, type History } from 'react-router-dom';
 import Tooltip from 'src/components/tooltip';
+import { MIN_WIDTH_TO_EXPAND_NAVIGATION } from 'src/components/layout';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import { ErrorBoundary } from 'src/components/error';
 import {
@@ -40,8 +41,15 @@ const CommunityListItem = props => {
 
   const appControlSymbol = '⌘';
 
+  const isWideViewport =
+    window && window.innerWidth > MIN_WIDTH_TO_EXPAND_NAVIGATION;
+
   return (
-    <Tooltip content={community.name} placement={'left'}>
+    <Tooltip
+      content={community.name}
+      placement={'left'}
+      isEnabled={!isWideViewport}
+    >
       <AvatarGrid isActive={isActive}>
         <AvatarLink
           to={`/${community.slug}?tab=posts`}
