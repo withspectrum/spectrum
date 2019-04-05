@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": "^10.0.0"
-  },
   "dependencies": {
     "algoliasearch": "^3.32.1",
     "apollo-local-query": "^0.3.1",
