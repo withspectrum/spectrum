@@ -269,6 +269,10 @@ export const Shortcut = styled.span`
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    display: none;
+  }
 `;
 
 export const Label = styled.span`
