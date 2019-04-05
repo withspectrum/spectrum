@@ -98,6 +98,22 @@ class ChannelView extends React.Component<Props> {
 
   componentDidUpdate(prevProps) {
     const { dispatch } = this.props;
+    if (!prevProps.data.channel && this.props.data.channel) {
+      const { channel } = this.props.data;
+      dispatch(
+        setTitlebarProps({
+          title: `# ${channel.name}`,
+          titleIcon: (
+            <CommunityAvatar
+              isClickable={false}
+              community={channel.community}
+              size={24}
+            />
+          ),
+          rightAction: <MobileChannelAction channel={channel} />,
+        })
+      );
+    }
 
     if (
       this.props.data.channel &&
