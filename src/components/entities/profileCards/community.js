@@ -6,7 +6,6 @@ import { CommunityActions } from './components/communityActions';
 import { CommunityMeta } from './components/communityMeta';
 import { ProfileContainer, CoverPhoto, ProfileAvatarContainer } from './style';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 
 type Props = {
   community: CommunityInfoType,

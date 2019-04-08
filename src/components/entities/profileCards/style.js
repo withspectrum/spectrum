@@ -100,6 +100,15 @@ export const Description = styled.p`
   line-height: 1.4;
   color: ${theme.text.secondary};
   word-break: break-word;
+
+  a {
+    color: ${theme.text.default};
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const MetaLinksContainer = styled.div`

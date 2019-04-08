@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { Match } from 'react-router';
+import Head from 'src/components/head';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
 import { PrimaryOutlineButton } from 'src/components/button';
@@ -76,6 +77,7 @@ class DirectMessages extends React.Component<Props, State> {
               <ExistingThread id={activeThreadId} match={match} />
             ) : (
               <NoCommunitySelected>
+                <Head title={'Messages'} />
                 <div>
                   <NoCommunityHeading>
                     No conversation selected
