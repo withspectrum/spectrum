@@ -16,6 +16,7 @@ import uploadImage, {
   type UploadImageInput,
   type UploadImageType,
 } from 'shared/graphql/mutations/uploadImage';
+import Head from 'src/components/head';
 import { TextButton } from 'src/components/button';
 import { PrimaryButton } from 'src/components/button';
 import Tooltip from 'src/components/tooltip';
@@ -481,6 +482,7 @@ class ComposerWithData extends React.Component<Props, State> {
 
     return (
       <Wrapper data-cy="thread-composer-wrapper">
+        <Head title={'New post'} description={'Write a new post'} />
         <Overlay
           isModal={isModal}
           onClick={this.discardDraft}

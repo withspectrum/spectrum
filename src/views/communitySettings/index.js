@@ -99,15 +99,8 @@ class CommunitySettings extends React.Component<Props> {
         community,
       };
 
-      const activeItem = subnavItems.find(
-        ({ activeLabel }) => activeLabel === activeTab
-      );
-      let title = community.name;
-      if (activeItem && activeItem.label !== 'Settings') {
-        title += ` ${activeItem.label} Settings`;
-      } else {
-        title += ' Settings';
-      }
+      let title = community.name + ' settings';
+
       return (
         <React.Fragment>
           <Head title={title} />
