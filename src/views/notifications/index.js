@@ -215,7 +215,6 @@ class NotificationsPure extends React.Component<Props, State> {
 
       notifications = deduplicateChildren(notifications, 'id');
       notifications = sortByDate(notifications, 'modifiedAt', 'desc');
-
       return (
         <React.Fragment>
           <Head title={title} description={description} />

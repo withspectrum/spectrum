@@ -97,6 +97,10 @@ export const DesktopMenuIconsCover = styled.div`
   top: 0;
   display: none;
   z-index: 1;
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    width: ${NAVBAR_EXPANDED_WIDTH - 1}px;
+  }
 `;
 
 export const NavigationGrid = styled.div`
@@ -263,6 +267,10 @@ export const Shortcut = styled.span`
   margin-bottom: -4px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
     display: none;
   }
 `;

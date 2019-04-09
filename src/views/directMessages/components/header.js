@@ -16,7 +16,14 @@ const Header = ({ thread, currentUser }) => {
   );
 
   // don't show the header in a 1:1 dm because we already have the titlebar
-  if (trimmedUsers.length === 1) return null;
+  if (trimmedUsers.length === 1) {
+    return (
+      <Head
+        title={`Conversation with ${trimmedUsers[0].name}`}
+        description={`Conversation with ${trimmedUsers[0].name}`}
+      />
+    );
+  }
 
   const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>

@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Tooltip from 'src/components/tooltip';
 import compose from 'recompose/compose';
+import { MIN_WIDTH_TO_EXPAND_NAVIGATION } from 'src/components/layout';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import Icon from 'src/components/icon';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -38,6 +39,9 @@ type Props = {
 
 const NotificationsTab = (props: Props) => {
   const { count, data, isActive, match, currentUser } = props;
+
+  const isWideViewport =
+    window && window.innerWidth > MIN_WIDTH_TO_EXPAND_NAVIGATION;
 
   // $FlowIssue Subscribe on mount
   React.useEffect(() => {
@@ -100,7 +104,11 @@ const NotificationsTab = (props: Props) => {
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
-        <Tooltip content="Notifications" placement={'left'}>
+        <Tooltip
+          content="Notifications"
+          placement={'left'}
+          isEnabled={!isWideViewport}
+        >
           <AvatarGrid isActive={isActive}>
             <AvatarLink
               to={'/notifications'}

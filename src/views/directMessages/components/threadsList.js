@@ -140,7 +140,8 @@ class ThreadsList extends React.Component<Props, State> {
 
     if (!dmDataExists && dmData.loading) {
       return (
-        <div>
+        <ThreadsListScrollContainer>
+          <DesktopTitlebar title={'Messages'} />
           <LoadingDM />
           <LoadingDM />
           <LoadingDM />
@@ -152,7 +153,7 @@ class ThreadsList extends React.Component<Props, State> {
           <LoadingDM />
           <LoadingDM />
           <LoadingDM />
-        </div>
+        </ThreadsListScrollContainer>
       );
     }
 

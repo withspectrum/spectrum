@@ -25,6 +25,7 @@ import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
 import { NavigationContext } from 'src/helpers/navigation-context';
+import { MIN_WIDTH_TO_EXPAND_NAVIGATION } from 'src/components/layout';
 
 type Props = {
   history: History,
@@ -36,6 +37,8 @@ const Navigation = (props: Props) => {
   const { currentUser, history, isLoadingCurrentUser } = props;
   const isMarketingPage = isViewingMarketingPage(history, currentUser);
   if (isMarketingPage) return null;
+  const isWideViewport =
+    window && window.innerWidth > MIN_WIDTH_TO_EXPAND_NAVIGATION;
   if (!isLoadingCurrentUser && !currentUser) {
     return (
       <NavigationContext.Consumer>
@@ -51,7 +54,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/about">
                 {({ match }) => (
-                  <Tooltip content="Home" placement={'left'}>
+                  <Tooltip
+                    content="Home"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/about'}
@@ -72,7 +79,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/features">
                 {({ match }) => (
-                  <Tooltip content="Features" placement={'left'}>
+                  <Tooltip
+                    content="Features"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/features'}
@@ -93,7 +104,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/support">
                 {({ match }) => (
-                  <Tooltip content="Support" placement={'left'}>
+                  <Tooltip
+                    content="Support"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/support'}
@@ -114,7 +129,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/apps">
                 {({ match }) => (
-                  <Tooltip content="Apps" placement={'left'}>
+                  <Tooltip
+                    content="Apps"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/apps'}
@@ -135,7 +154,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/explore">
                 {({ match }) => (
-                  <Tooltip content="Explore" placement={'left'}>
+                  <Tooltip
+                    content="Explore"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/explore'}
@@ -158,7 +181,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/login">
                 {({ match }) => (
-                  <Tooltip content="Log in or sign up" placement={'left'}>
+                  <Tooltip
+                    content="Log in or sign up"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid isActive={!!match}>
                       <AvatarLink
                         to={'/login'}
@@ -208,7 +235,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/explore">
                 {({ match }) => (
-                  <Tooltip content="Explore" placement={'left'}>
+                  <Tooltip
+                    content="Explore"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid
                       isActive={
                         match && match.url === '/explore' && match.isExact
@@ -235,7 +266,11 @@ const Navigation = (props: Props) => {
 
               <Route path="/users/:username">
                 {({ match }) => (
-                  <Tooltip content="Profile" placement={'left'}>
+                  <Tooltip
+                    content="Profile"
+                    placement={'left'}
+                    isEnabled={!isWideViewport}
+                  >
                     <AvatarGrid
                       isActive={
                         match &&
@@ -280,7 +315,11 @@ const Navigation = (props: Props) => {
                   <Divider />
                   <Route path="/new/community">
                     {({ match }) => (
-                      <Tooltip content="Create a community" placement={'left'}>
+                      <Tooltip
+                        content="Create a community"
+                        placement={'left'}
+                        isEnabled={!isWideViewport}
+                      >
                         <AvatarGrid
                           isActive={
                             match &&
