@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import { addToastWithTimeout } from 'src/actions/toasts';
+import Head from 'src/components/head';
 import { Upsell404Channel } from 'src/components/upsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
@@ -185,17 +186,25 @@ class ChannelSettings extends React.Component<Props> {
       };
 
       return (
-        <ViewGrid>
-          <View>
-            <Header
-              subheading={subheading}
-              heading={`${channel.name} Settings ${
-                channel.isArchived ? '(Archived)' : ''
-              }`}
-            />
-            <ActiveView />
-          </View>
-        </ViewGrid>
+        <React.Fragment>
+          <Head
+            title={`${channel.name} settings`}
+            description={`Settings for the ${channel.name} channel in ${
+              channel.community.name
+            }`}
+          />
+          <ViewGrid>
+            <View>
+              <Header
+                subheading={subheading}
+                heading={`${channel.name} Settings ${
+                  channel.isArchived ? '(Archived)' : ''
+                }`}
+              />
+              <ActiveView />
+            </View>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 

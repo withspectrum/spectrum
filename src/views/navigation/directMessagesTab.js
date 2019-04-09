@@ -14,8 +14,8 @@ import getUnreadDMQuery, {
 import markDirectMessageNotificationsSeenMutation from 'shared/graphql/mutations/notification/markDirectMessageNotificationsSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/helpers/navigation-context';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import { withCurrentUser } from 'src/components/withCurrentUser';
+import { MIN_WIDTH_TO_EXPAND_NAVIGATION } from 'src/components/layout';
 import formatNotification from 'shared/notification-to-text';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
@@ -76,12 +76,19 @@ const DirectMessagesTab = (props: Props) => {
     window.interop.setBadgeCount(unseenCount);
   }
 
+  const isWideViewport =
+    window && window.innerWidth > MIN_WIDTH_TO_EXPAND_NAVIGATION;
+
   return (
     <NavigationContext.Consumer>
       {({ setNavigationIsOpen }) => (
         <Route path="/messages">
           {({ match }) => (
-            <Tooltip content="Messages" placement={'left'}>
+            <Tooltip
+              content="Messages"
+              placement={'left'}
+              isEnabled={!isWideViewport}
+            >
               <AvatarGrid isActive={match && match.url.includes('/messages')}>
                 <AvatarLink
                   to={'/messages'}

@@ -27,14 +27,15 @@ export const MobileCommunityAction = (props: CommunityProps) => {
 
   if (isMember) {
     return (
-      <WhiteIconButton
+      <OutlineButton
+        size={'small'}
         to={{
           pathname,
           search,
         }}
       >
-        <Icon glyph={'post'} size={32} />
-      </WhiteIconButton>
+        New post
+      </OutlineButton>
     );
   }
 
@@ -64,14 +65,15 @@ export const MobileChannelAction = (props: ChannelProps) => {
 
   if (isMember) {
     return (
-      <WhiteIconButton
+      <OutlineButton
+        size={'small'}
         to={{
           pathname,
           search,
         }}
       >
-        <Icon glyph={'post'} size={32} />
-      </WhiteIconButton>
+        New post
+      </OutlineButton>
     );
   }
 

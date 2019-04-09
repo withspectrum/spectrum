@@ -391,7 +391,6 @@ export const NullMessagesWrapper = styled.div`
   flex: 1;
   color: ${theme.text.alt};
   flex-direction: column;
-  opacity: 0.8;
   width: 100%;
   background: ${theme.bg.default};
 
