@@ -2,17 +2,12 @@
 import {
   getCommunities,
   getCommunitiesBySlug,
-  getCommunitiesMemberCounts,
   getCommunitiesChannelCounts,
+  getCommunitiesOnlineMemberCounts,
+  getCommunitiesMemberCounts,
 } from '../models/community';
 import { getCommunitiesSettings } from '../models/communitySettings';
-import { getCommunitiesRecurringPayments } from '../models/recurringPayment';
 import createLoader from './create-loader';
-
-export const __createCommunityRecurringPaymentsLoader = createLoader(
-  communities => getCommunitiesRecurringPayments(communities),
-  'group'
-);
 
 export const __createCommunityLoader = createLoader(communities =>
   getCommunities(communities)
@@ -30,6 +25,11 @@ export const __createCommunityMemberCountLoader = createLoader(
 
 export const __createCommunityChannelCountLoader = createLoader(
   communityIds => getCommunitiesChannelCounts(communityIds),
+  'group'
+);
+
+export const __createCommunityOnlineMemberCountLoader = createLoader(
+  communityIds => getCommunitiesOnlineMemberCounts(communityIds),
   'group'
 );
 

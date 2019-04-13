@@ -1,0 +1,100 @@
+{
+  "subject": "Someone replied in 'thead title'",
+  "preheader": "View 1 new message from Someone",
+  "recipient": {
+    "coverPhoto": "",
+    "createdAt": "2018-08-12T16:13:06.326Z",
+    "description": "",
+    "email": "email",
+    "fbProviderId": null,
+    "firstName": null,
+    "githubProviderId": null,
+    "googleProviderId": null,
+    "id": "1",
+    "isOnline": false,
+    "isParticipant": true,
+    "lastName": null,
+    "lastSeen": "2018-08-15T17:26:00.057Z",
+    "modifiedAt": "2018-08-12T16:11:44.726Z",
+    "name": "Name",
+    "profilePhoto": "",
+    "providerId": null,
+    "receiveNotifications": true,
+    "termsLastAcceptedAt": "2018-08-12T16:11:38.286Z",
+    "threadId": "1",
+    "timezone": -240,
+    "userId": "1",
+    "username": "username",
+    "website": ""
+  },
+  "unsubscribeToken": "foo",
+  "singleThreadMuteToken": "bar",
+  "data": {
+    "threads": [
+      {
+        "channelId": "1",
+        "communityId": "1",
+        "content": {
+          "body": "{\"blocks\":[{\"key\":\"foo\",\"text\":\"content\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+          "title": "thread title"
+        },
+        "createdAt": "2018-08-12T16:13:06.126Z",
+        "creatorId": "1",
+        "id": "1",
+        "isLocked": false,
+        "isPublished": true,
+        "lastActive": "2018-12-09T22:17:51.405Z",
+        "messageCount": 12,
+        "modifiedAt": null,
+        "reactionCount": 0,
+        "score": -1132.408545457775,
+        "scoreUpdatedAt": "2018-12-09T04:02:10.253Z",
+        "type": "DRAFTJS",
+        "community": {
+          "administratorEmail": "email",
+          "coverPhoto": "",
+          "createdAt": "2017-11-08T19:26:29.401Z",
+          "creatorId": "1",
+          "description": "Description",
+          "id": "1",
+          "isPrivate": false,
+          "memberCount": 1,
+          "modifiedAt": "2018-08-28T08:08:37.492Z",
+          "name": "Community Name",
+          "pinnedThreadId": "1",
+          "profilePhoto": "",
+          "slug": "community-slug",
+          "watercoolerId": "1",
+          "website": "website"
+        },
+        "channel": {
+          "communityId": "1",
+          "createdAt": "2017-11-08T19:26:29.753Z",
+          "description": "General Chatter",
+          "id": "1",
+          "isDefault": true,
+          "isPrivate": false,
+          "memberCount": 1,
+          "name": "General",
+          "slug": "general"
+        },
+        "replies": [
+          {
+            "id": "1",
+            "sender": {
+              "id": "1",
+              "profilePhoto": "",
+              "name": "User Name",
+              "username": "username"
+            },
+            "content": {
+              "body": "<p class='reply' style='font-weight: 400; font-size: 16px;background: #E6ECF7;margin-bottom: 2px;padding: 8px 12px;border-radius: 12px;display: block;max-width: 100%;margin-top: 0!important;color: #16171A;'>this is the message</p>"
+            }
+          }
+        ],
+        "repliesCount": 1,
+        "muteThreadToken": "foo"
+      }
+    ]
+  }
+}

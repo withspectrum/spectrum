@@ -1,18 +1,83 @@
 // @flow
+import theme from 'shared/theme';
+import compose from 'recompose/compose';
 import React from 'react';
+import { connect } from 'react-redux';
 import styled, { css } from 'styled-components';
-import Link from 'src/components/link';
-import { Transition, zIndex } from '../globals';
-import { theme } from 'src/components/theme';
+import { Link } from 'react-router-dom';
+import { Transition, zIndex } from 'src/components/globals';
+import { UserHoverProfile } from 'src/components/hoverProfile';
+import type { Node } from 'react';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { MEDIA_BREAK } from 'src/components/layout';
+
+const UsernameWrapper = styled.span`
+  color: ${props =>
+    props.me
+      ? props.theme.special.default
+      : props.theme.space.default}!important;
+  background: ${props =>
+    props.me ? props.theme.special.wash : props.theme.space.wash}!important;
+  padding: 0px 4px 1px;
+  border-radius: 4px;
+  position: relative;
+  display: inline-block;
+  line-height: 1.4;
+  &:hover {
+    text-decoration: underline;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+`;
+
+type MentionProps = {
+  children: Node,
+  username: string,
+  currentUser: ?Object,
+};
+
+class MentionWithCurrentUser extends React.Component<MentionProps> {
+  render() {
+    const { username, currentUser, children } = this.props;
+    const me = currentUser && currentUser.username === username;
+    return (
+      <UsernameWrapper me={me}>
+        <UserHoverProfile username={username}>
+          <Link to={`/users/${username}`} onClick={e => e.stopPropagation()}>
+            {children}
+          </Link>
+        </UserHoverProfile>
+      </UsernameWrapper>
+    );
+  }
+}
+
+export const Mention = compose(
+  withCurrentUser,
+  connect()
+)(MentionWithCurrentUser);
+
+export const customStyleFn = (style: Object, block: Object) => {
+  if (style.first() === 'CODE' && block.getType() === 'unstyled')
+    return {
+      border: `1px solid ${theme.bg.border}`,
+      borderRadius: '4px',
+      backgroundColor: theme.bg.wash,
+      padding: '1px 4px',
+      fontFamily: 'monospace',
+      color: theme.warn.alt,
+    };
+  return style;
+};
 
 export const customStyleMap = {
-  CODE: {
-    border: `1px solid ${theme.bg.border}`,
-    borderRadius: '4px',
-    backgroundColor: theme.bg.wash,
-    padding: '1px 4px',
-    fontFamily: 'monospace',
-    color: theme.warn.alt,
+  blockquote: {
+    lineHeight: '1.5',
+    borderLeft: `4px solid ${theme.bg.border}`,
+    color: `${theme.text.alt}`,
+    padding: '4px 12px 4px 16px',
   },
 };
 
@@ -28,15 +93,15 @@ export const Wrapper = styled.div`
 
 export const MediaRow = styled.div`
   display: flex;
-  background: ${props => props.theme.bg.wash};
-  border-top: 2px solid ${props => props.theme.bg.border};
+  background: ${theme.bg.wash};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   margin-left: -24px;
   margin-bottom: -24px;
   margin-top: 16px;
   width: calc(100% + 48px);
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     position: absolute;
     top: calc(100% - 90px);
   }
@@ -44,9 +109,10 @@ export const MediaRow = styled.div`
 
 export const ComposerBase = styled.div`
   position: relative;
-  flex: none;
-  flex-direction: column;
-  display: flex;
+  flex: 1;
+  max-height: ${props => (props.isOpen ? 'calc(100vh - 160px)' : 'auto')};
+  overflow-y: ${props => (props.isOpen ? 'scroll' : 'auto')};
+  padding-left: ${props => (props.isOpen ? '25px' : '0')};
 
   > label {
     position: absolute;
@@ -55,7 +121,7 @@ export const ComposerBase = styled.div`
     bottom: -11px;
     padding: 0;
     margin: 0;
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 `;
 
@@ -77,7 +143,7 @@ export const Action = styled.div`
 
   label > div,
   label > button > div {
-    color: ${props => props.theme.text.reverse};
+    color: ${theme.text.reverse};
   }
 `;
 
@@ -88,27 +154,31 @@ export const Expander = styled.div`
   justify-content: flex-start;
   padding: 4px;
   border-radius: 12px;
+  margin-left: 5px;
 
   > button > div {
-    color: ${props => props.theme.text.placeholder};
+    color: ${theme.text.placeholder};
+    background-color: white;
+    border-radius: 12px;
   }
 
   > button:hover > div {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 
   ${props =>
     props.inserting &&
     css`
-      background-color: ${props => props.theme.brand.alt};
+      background-color: ${theme.brand.alt};
       transition: ${Transition.hover.on};
 
       > button > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
+        background-color: transparent;
       }
 
       > button:hover > div {
-        color: ${props => props.theme.brand.wash};
+        color: ${theme.brand.wash};
       }
 
       ${Action} {
@@ -120,7 +190,7 @@ export const Expander = styled.div`
 export const EmbedUI = styled.form`
   display: flex;
   flex-direction: row;
-  background-color: ${props => props.theme.brand.alt};
+  background-color: ${theme.brand.alt};
   border-radius: 12px;
 
   label {
@@ -167,7 +237,7 @@ export const EmbedUI = styled.form`
       button {
         display: inline-block;
         background-color: transparent;
-        color: ${props => props.theme.text.reverse};
+        color: ${theme.text.reverse};
         margin-right: 16px;
         font-size: 14px;
         line-height: 1;
@@ -176,17 +246,13 @@ export const EmbedUI = styled.form`
         transition: ${Transition.hover.off};
 
         &:hover {
-          background-color: ${props => props.theme.brand.dark};
+          background-color: ${theme.brand.dark};
           border-radius: 8px;
           transition: ${Transition.hover.on};
         }
       }
     `};
 `;
-
-export const Mention = (props: any) => {
-  return <Link to={`/users/${props.username}`}>{props.children}</Link>;
-};
 
 export const EmbedContainer = styled.div`
   position: relative;

@@ -1,0 +1,21 @@
+{
+  "subject": "Welcome to Spectrum!",
+  "user": {
+    "coverPhoto": null,
+    "createdAt": "2018-12-09T22:28:17.872Z",
+    "description": "",
+    "email": "email",
+    "fbProviderId": null,
+    "githubProviderId": null,
+    "googleProviderId": null,
+    "id": "1",
+    "lastSeen": "2018-12-09T22:28:17.872Z",
+    "modifiedAt": null,
+    "name": "Full Name",
+    "profilePhoto": "",
+    "providerId": null,
+    "termsLastAcceptedAt": "2018-12-09T22:28:17.872Z",
+    "username": null,
+    "website": ""
+  }
+}

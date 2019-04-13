@@ -2,27 +2,21 @@
 import * as React from 'react';
 import { ActorsRow } from './actorsRow';
 import { parseNotificationDate, parseContext, parseActors } from '../utils';
-import Icon from '../../../components/icons';
+import Icon from 'src/components/icon';
 import {
   TextContent,
-  AttachmentsWash,
   Content,
   NotificationCard,
-  NotificationListRow,
   SpecialContext,
 } from '../style';
-import { Author, MessageGroup } from '../../../components/messageGroup/style';
-import { AuthorAvatar, AuthorByline } from '../../../components/messageGroup';
-import Message from '../../../components/message';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
+import { CardLink } from 'src/components/threadFeedCard/style';
+import getThreadLink from 'src/helpers/get-thread-link';
 
 type Props = {
   notification: Object,
   currentUser: Object,
   history?: Object,
+  markSingleNotificationSeen: Function,
 };
 type State = {
   communityName: string,
@@ -36,90 +30,37 @@ type State = {
 
 export class MentionMessageNotification extends React.Component<Props, State> {
   render() {
-    const { notification, currentUser } = this.props;
+    const {
+      notification,
+      currentUser,
+      markSingleNotificationSeen,
+    } = this.props;
 
     const actors = parseActors(notification.actors, currentUser, false);
-    const author = actors.asObjects[0];
     const date = parseNotificationDate(notification.modifiedAt);
     const context = parseContext(notification.context, currentUser);
-    const message =
-      notification.entities.length > 0
-        ? notification.entities[0].payload
-        : null;
 
     return (
-      <NotificationCard>
+      <NotificationCard
+        onClick={() => markSingleNotificationSeen(notification.id)}
+        isSeen={notification.isSeen}
+      >
         <CardLink
           to={{
-            pathname: window.location.pathname,
-            search: `?thread=${notification.context.id}`,
+            pathname: getThreadLink(notification.context.payload),
           }}
         />
         <SpecialContext>
           <Icon glyph="mention" />
+          <ActorsRow actors={actors.asObjects} />
+        </SpecialContext>
+        <Content>
           <TextContent pointer={true}>
             {actors.asObjects[0].name} mentioned you in {context.asString}{' '}
             {date}
           </TextContent>
-        </SpecialContext>
-        <Content>
-          <AttachmentsWash>
-            {message && (
-              <Author style={{ marginTop: '0' }}>
-                <AuthorAvatar user={author} />
-                <MessageGroup me={false}>
-                  <AuthorByline user={author} me={false} />
-
-                  <Message
-                    message={message}
-                    link={`#${message.id}`}
-                    me={false}
-                    canModerate={false}
-                    pending={message.id < 0}
-                    currentUser={currentUser}
-                    context={'notification'}
-                  />
-                </MessageGroup>
-              </Author>
-            )}
-          </AttachmentsWash>
         </Content>
       </NotificationCard>
-    );
-  }
-}
-
-export class MiniMentionMessageNotification extends React.Component<
-  Props,
-  State
-> {
-  render() {
-    const { notification, currentUser } = this.props;
-
-    const actors = parseActors(notification.actors, currentUser, false);
-    const date = parseNotificationDate(notification.modifiedAt);
-    const context = parseContext(notification.context, currentUser);
-
-    return (
-      <NotificationListRow isSeen={notification.isSeen}>
-        <CardLink
-          to={{
-            pathname: window.location.pathname,
-            search: `?thread=${notification.context.id}`,
-          }}
-        />
-        <CardContent>
-          <SpecialContext>
-            <Icon glyph="mention" />
-            <ActorsRow actors={actors.asObjects} />
-          </SpecialContext>
-          <Content>
-            <TextContent pointer={false}>
-              {actors.asString} mentioned you in {context.asString} {date}
-            </TextContent>
-          </Content>
-        </CardContent>
-      </NotificationListRow>
     );
   }
 }

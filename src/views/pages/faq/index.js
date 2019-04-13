@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { track } from 'src/helpers/events';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
 import {
@@ -11,15 +10,19 @@ import {
   SectionDescription,
 } from '../pricing/style';
 import { PrivacyTermsList } from '../terms/style';
+import Head from 'src/components/head';
 
 class FAQ extends React.Component<{}> {
-  componentDidMount() {
-    track('FAQ page', 'viewed', null);
-  }
+  componentDidMount() {}
 
   render() {
     return (
       <Wrapper data-cy="faq-page">
+        <Head
+          title={'Spectrum · FAQ'}
+          description={'Frequently asked questions about Spectrum'}
+        />
+
         <ContentContainer>
           <Heading>Frequently Asked Questions</Heading>
 

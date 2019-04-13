@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { NotificationEventType, DBNotification } from 'shared/types';
 import { TIME_BUFFER } from '../queues/constants';
 import { NEW_DOCUMENTS } from 'api/models/utils';
@@ -32,7 +32,7 @@ export const checkForExistingNotification = (
       return notifications[0];
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return null;
     });
 };
@@ -78,6 +78,15 @@ export const getNotifications = (notificationIds: Array<string>) => {
     .eqJoin('id', db.table('usersNotifications'), { index: 'notificationId' })
     .without({ right: ['id'] })
     .zip()
+    .run();
+};
+
+export const getNotification = (
+  notificationId: string
+): Promise<DBNotification> => {
+  return db
+    .table('notifications')
+    .get(notificationId)
     .run();
 };
 

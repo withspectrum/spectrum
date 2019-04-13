@@ -1,14 +1,22 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { processReputationEventQueue } from 'shared/bull/queues';
-const { NEW_DOCUMENTS, parseRange } = require('./utils');
+import {
+  processReputationEventQueue,
+  trackQueue,
+  searchQueue,
+} from 'shared/bull/queues';
+const { parseRange, NEW_DOCUMENTS } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
+import { events } from 'shared/analytics';
+
+const NOT_WATERCOOLER = thread =>
+  db.not(thread.hasFields('watercooler')).or(thread('watercooler').eq(false));
 
 export const getThread = (threadId: string): Promise<DBThread> => {
   return db
@@ -17,14 +25,25 @@ export const getThread = (threadId: string): Promise<DBThread> => {
     .run();
 };
 
-export const getThreads = (
-  threadIds: Array<string>
-): Promise<Array<DBThread>> => {
+// prettier-ignore
+export const getThreads = (threadIds: Array<string>): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .getAll(...threadIds)
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
+};
+
+export const getThreadById = (threadId: string): Promise<?DBThread> => {
+  return db
+    .table('threads')
+    .getAll(threadId)
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0];
+    });
 };
 
 // this is used to get all threads that need to be marked as deleted whenever a channel is deleted
@@ -36,10 +55,10 @@ export const getThreadsByChannelToDelete = (channelId: string) => {
     .run();
 };
 
-export const getThreadsByChannel = (
-  channelId: string,
-  { first, after }: PaginationOptions
-): Promise<Array<DBThread>> => {
+// prettier-ignore
+export const getThreadsByChannel = (channelId: string, options: PaginationOptions): Promise<Array<DBThread>> => {
+  const { first, after } = options
+
   return db
     .table('threads')
     .between(
@@ -57,23 +76,37 @@ export const getThreadsByChannel = (
     .run();
 };
 
+// prettier-ignore
+type GetThreadsByChannelPaginationOptions = {
+  first: number,
+  after: number,
+  sort: 'latest' | 'trending'
+};
+
 export const getThreadsByChannels = (
   channelIds: Array<string>,
-  { first, after }: PaginationOptions
+  options: GetThreadsByChannelPaginationOptions
 ): Promise<Array<DBThread>> => {
+  const { first, after, sort = 'latest' } = options;
+
+  let order = [db.desc('lastActive'), db.desc('createdAt')];
+  // If we want the top threads, first sort by the score and then lastActive
+  if (sort === 'trending') order.unshift(db.desc('score'));
+
   return db
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
+    .filter(thread =>
+      db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread))
+    )
+    .orderBy(...order)
     .skip(after || 0)
     .limit(first || 999999)
     .run();
 };
 
-export const getThreadsByCommunity = (
-  communityId: string
-): Promise<Array<DBThread>> => {
+// prettier-ignore
+export const getThreadsByCommunity = (communityId: string): Promise<Array<DBThread>> => {
   return db
     .table('threads')
     .between([communityId, db.minval], [communityId, db.maxval], {
@@ -82,26 +115,23 @@ export const getThreadsByCommunity = (
       rightBound: 'open',
     })
     .orderBy({ index: db.desc('communityIdAndLastActive') })
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
     .run();
 };
 
-export const getThreadsByCommunityInTimeframe = (
-  communityId: string,
-  range: Timeframe
-): Promise<Array<Object>> => {
+// prettier-ignore
+export const getThreadsByCommunityInTimeframe = (communityId: string, range: Timeframe): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
     .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
     .run();
 };
 
-export const getThreadsInTimeframe = (
-  range: Timeframe
-): Promise<Array<Object>> => {
+// prettier-ignore
+export const getThreadsInTimeframe = (range: Timeframe): Promise<Array<Object>> => {
   const { current } = parseRange(range);
   return db
     .table('threads')
@@ -112,10 +142,8 @@ export const getThreadsInTimeframe = (
 
 // We do not filter by deleted threads intentionally to prevent users from spam
 // creating/deleting threads
-export const getThreadsByUserAsSpamCheck = (
-  userId: string,
-  timeframe: number = 60 * 10
-): Promise<Array<?DBThread>> => {
+// prettier-ignore
+export const getThreadsByUserAsSpamCheck = (userId: string, timeframe: number = 60 * 10): Promise<Array<?DBThread>> => {
   return db
     .table('threads')
     .getAll(userId, { index: 'creatorId' })
@@ -135,14 +163,27 @@ export const getThreadsByUserAsSpamCheck = (
 export const getViewableThreadsByUser = async (
   evalUser: string,
   currentUser: string,
-  { first, after }: PaginationOptions
+  options: PaginationOptions
 ): Promise<Array<DBThread>> => {
+  const { first, after } = options;
   // get a list of the channelIds the current user is allowed to see threads
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
-    .getAll(currentUser, { index: 'userId' })
-    .filter({ isBlocked: false, isMember: true })
+    .getAll(
+      [currentUser, 'member'],
+      [currentUser, 'moderator'],
+      [currentUser, 'owner'],
+      {
+        index: 'userIdAndRole',
+      }
+    )
     .map(userChannel => userChannel('channelId'))
+    .run();
+
+  const getCurrentUserCommunityIds = db
+    .table('usersCommunities')
+    .getAll([currentUser, true], { index: 'userIdAndIsMember' })
+    .map(userCommunity => userCommunity('communityId'))
     .run();
 
   // get a list of the channels where the user posted a thread
@@ -152,9 +193,22 @@ export const getViewableThreadsByUser = async (
     .map(thread => thread('channelId'))
     .run();
 
-  const [currentUsersChannelIds, publishedChannelIds] = await Promise.all([
+  const getPublishedCommunityIds = db
+    .table('threads')
+    .getAll(evalUser, { index: 'creatorId' })
+    .map(thread => thread('communityId'))
+    .run();
+
+  const [
+    currentUsersChannelIds,
+    publishedChannelIds,
+    currentUsersCommunityIds,
+    publishedCommunityIds,
+  ] = await Promise.all([
     getCurrentUsersChannelIds,
     getPublishedChannelIds,
+    getCurrentUserCommunityIds,
+    getPublishedCommunityIds,
   ]);
 
   // get a list of all the channels that are public
@@ -165,16 +219,32 @@ export const getViewableThreadsByUser = async (
     .map(channel => channel('id'))
     .run();
 
-  const allIds = [...currentUsersChannelIds, ...publicChannelIds];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
-  const validIds = intersection(distinctIds, publishedChannelIds);
+  const publicCommunityIds = await db
+    .table('communities')
+    .getAll(...publishedCommunityIds)
+    .filter({ isPrivate: false })
+    .map(community => community('id'))
+    .run();
+
+  const allIds = [
+    ...currentUsersChannelIds,
+    ...currentUsersCommunityIds,
+    ...publicChannelIds,
+    ...publicCommunityIds,
+  ];
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
+  let validChannelIds = intersection(distinctIds, publishedChannelIds);
+  let validCommunityIds = intersection(distinctIds, publishedCommunityIds);
 
   // takes ~70ms for a heavy load
   return await db
     .table('threads')
     .getAll(evalUser, { index: 'creatorId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .filter(thread => db.expr(validIds).contains(thread('channelId')))
+    .filter(thread => db.expr(validChannelIds).contains(thread('channelId')))
+    .filter(thread =>
+      db.expr(validCommunityIds).contains(thread('communityId'))
+    )
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first)
@@ -184,15 +254,18 @@ export const getViewableThreadsByUser = async (
     });
 };
 
-export const getPublicThreadsByUser = (
-  evalUser: string,
-  { first, after }: PaginationOptions
-): Promise<Array<DBThread>> => {
+// prettier-ignore
+export const getPublicThreadsByUser = (evalUser: string, options: PaginationOptions): Promise<Array<DBThread>> => {
+  const { first, after } = options
   return db
     .table('threads')
     .getAll(evalUser, { index: 'creatorId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .eqJoin('channelId', db.table('channels'))
+    .filter({ right: { isPrivate: false } })
+    .without('right')
+    .zip()
+    .eqJoin('communityId', db.table('communities'))
     .filter({ right: { isPrivate: false } })
     .without('right')
     .zip()
@@ -205,35 +278,66 @@ export const getPublicThreadsByUser = (
 export const getViewableParticipantThreadsByUser = async (
   evalUser: string,
   currentUser: string,
-  { first, after }: PaginationOptions
+  options: PaginationOptions
 ): Promise<Array<DBThread>> => {
+  const { first, after } = options;
   // get a list of the channelIds the current user is allowed to see threads for
   const getCurrentUsersChannelIds = db
     .table('usersChannels')
-    .getAll(currentUser, { index: 'userId' })
-    .filter({ isBlocked: false, isMember: true })
+    .getAll(
+      [currentUser, 'member'],
+      [currentUser, 'moderator'],
+      [currentUser, 'owner'],
+      {
+        index: 'userIdAndRole',
+      }
+    )
     .map(userChannel => userChannel('channelId'))
+    .run();
+
+  const getCurrentUserCommunityIds = db
+    .table('usersCommunities')
+    .getAll([currentUser, true], { index: 'userIdAndIsMember' })
+    .map(userCommunity => userCommunity('communityId'))
     .run();
 
   // get a list of the channels where the user participated in a thread
   const getParticipantChannelIds = db
     .table('usersThreads')
-    .getAll(evalUser, { index: 'userId' })
-    .filter({ isParticipant: true })
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
     .eqJoin('threadId', db.table('threads'))
     .zip()
     .pluck('channelId', 'threadId')
     .run();
 
-  const [currentUsersChannelIds, participantChannelIds] = await Promise.all([
+  const getParticipantCommunityIds = db
+    .table('usersThreads')
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
+    .eqJoin('threadId', db.table('threads'))
+    .zip()
+    .pluck('communityId', 'threadId')
+    .run();
+
+  const [
+    currentUsersChannelIds,
+    participantChannelIds,
+    currentUsersCommunityIds,
+    participantCommunityIds,
+  ] = await Promise.all([
     getCurrentUsersChannelIds,
     getParticipantChannelIds,
+    getCurrentUserCommunityIds,
+    getParticipantCommunityIds,
   ]);
 
-  const participantThreadIds = participantChannelIds.map(c => c.threadId);
+  const participantThreadIds = participantChannelIds.map(c => c && c.threadId);
   const distinctParticipantChannelIds = participantChannelIds
     .map(c => c.channelId)
-    .filter((x, i, a) => a.indexOf(x) == i);
+    .filter((x, i, a) => a.indexOf(x) === i);
+
+  const distinctParticipantCommunityIds = participantCommunityIds
+    .map(c => c.communityId)
+    .filter((x, i, a) => a.indexOf(x) === i);
 
   // get a list of all the channels that are public
   const publicChannelIds = await db
@@ -243,15 +347,37 @@ export const getViewableParticipantThreadsByUser = async (
     .map(channel => channel('id'))
     .run();
 
-  const allIds = [...currentUsersChannelIds, ...publicChannelIds];
-  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) == i);
-  const validIds = intersection(distinctIds, distinctParticipantChannelIds);
+  const publicCommunityIds = await db
+    .table('communities')
+    .getAll(...distinctParticipantCommunityIds)
+    .filter({ isPrivate: false })
+    .map(community => community('id'))
+    .run();
+
+  const allIds = [
+    ...currentUsersChannelIds,
+    ...publicChannelIds,
+    ...currentUsersCommunityIds,
+    ...publicCommunityIds,
+  ];
+  const distinctIds = allIds.filter((x, i, a) => a.indexOf(x) === i);
+  let validChannelIds = intersection(
+    distinctIds,
+    distinctParticipantChannelIds
+  );
+  let validCommunityIds = intersection(
+    distinctIds,
+    distinctParticipantCommunityIds
+  );
 
   return await db
     .table('threads')
     .getAll(...participantThreadIds)
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .filter(thread => db.expr(validIds).contains(thread('channelId')))
+    .filter(thread => db.expr(validChannelIds).contains(thread('channelId')))
+    .filter(thread =>
+      db.expr(validCommunityIds).contains(thread('communityId'))
+    )
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first)
@@ -261,14 +387,12 @@ export const getViewableParticipantThreadsByUser = async (
     });
 };
 
-export const getPublicParticipantThreadsByUser = (
-  evalUser: string,
-  { first, after }: PaginationOptions
-): Promise<Array<DBThread>> => {
+// prettier-ignore
+export const getPublicParticipantThreadsByUser = (evalUser: string, options: PaginationOptions): Promise<Array<DBThread>> => {
+  const { first, after } = options
   return db
     .table('usersThreads')
-    .getAll(evalUser, { index: 'userId' })
-    .filter({ isParticipant: true })
+    .getAll([evalUser, true], { index: 'userIdAndIsParticipant' })
     .eqJoin('threadId', db.table('threads'))
     .without({
       left: [
@@ -286,6 +410,10 @@ export const getPublicParticipantThreadsByUser = (
     .filter({ right: { isPrivate: false } })
     .without('right')
     .zip()
+    .eqJoin('communityId', db.table('communities'))
+    .filter({ right: { isPrivate: false } })
+    .without('right')
+    .zip()
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .skip(after || 0)
     .limit(first || 10)
@@ -295,11 +423,19 @@ export const getPublicParticipantThreadsByUser = (
     });
 };
 
-/*
-  A thread may receive a field 'filesToUpload' if it contains images. We destructure
-  the incoming argument in order to ignore that field and only return the rest
-  of the thread fields
-*/
+export const getWatercoolerThread = (
+  communityId: string
+): Promise<?DBThread> => {
+  return db
+    .table('threads')
+    .getAll([communityId, true], { index: 'communityIdAndWatercooler' })
+    .run()
+    .then(result => {
+      if (!Array.isArray(result) || result.length === 0) return null;
+      return result[0];
+    });
+};
+
 export const publishThread = (
   // eslint-disable-next-line
   { filesToUpload, ...thread }: Object,
@@ -316,21 +452,33 @@ export const publishThread = (
         isPublished: true,
         isLocked: false,
         edits: [],
+        reactionCount: 0,
+        messageCount: 0,
       }),
       { returnChanges: true }
     )
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
+
+      searchQueue.add({
+        id: thread.id,
+        type: 'thread',
+        event: 'created',
+      });
+
+      trackQueue.add({
+        userId,
+        event: events.THREAD_CREATED,
+        context: { threadId: thread.id },
+      });
+
       return thread;
     });
 };
 
-export const setThreadLock = (
-  threadId: string,
-  value: boolean,
-  userId: string
-): Promise<DBThread> => {
+// prettier-ignore
+export const setThreadLock = (threadId: string, value: boolean, userId: string, byModerator: boolean = false): Promise<DBThread> => {
   return (
     db
       .table('threads')
@@ -346,35 +494,44 @@ export const setThreadLock = (
         { returnChanges: true }
       )
       .run()
-      .then(
-        result =>
-          result.changes.length > 0
-            ? result.changes[0].new_val
-            : db
-                .table('threads')
-                .get(threadId)
-                .run()
-      )
+      .then(async () => {
+        const thread = await getThreadById(threadId)
+
+        const event = value
+          ? byModerator
+            ? events.THREAD_LOCKED_BY_MODERATOR
+            : events.THREAD_LOCKED
+          : byModerator
+            ? events.THREAD_UNLOCKED_BY_MODERATOR
+            : events.THREAD_UNLOCKED
+
+        trackQueue.add({
+          userId,
+          event,
+          context: { threadId }
+        })
+
+        return thread
+      })
   );
 };
 
-export const setThreadLastActive = (threadId: string, value: Date) =>
-  db
+export const setThreadLastActive = (threadId: string, value: Date) => {
+  return db
     .table('threads')
     .get(threadId)
     .update({ lastActive: value })
     .run();
+};
 
-/*
-  Non-destructively delete a thread by setting the `deletedAt` field to a date.
-  After a thread is deleted, set `receiveNotifications` to false for all users who were participants or had subscribed to notifications.
-*/
-export const deleteThread = (threadId: string): Promise<Boolean> => {
+// prettier-ignore
+export const deleteThread = (threadId: string, userId: string): Promise<Boolean> => {
   return db
     .table('threads')
     .get(threadId)
     .update(
       {
+        deletedBy: userId,
         deletedAt: new Date(),
       },
       {
@@ -387,11 +544,23 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
       Promise.all([
         result,
         turnOffAllThreadNotifications(threadId),
-        deleteMessagesInThread(threadId),
+        deleteMessagesInThread(threadId, userId),
       ])
     )
     .then(([result]) => {
       const thread = result.changes[0].new_val;
+
+      searchQueue.add({
+        id: thread.id,
+        type: 'thread',
+        event: 'deleted'
+      })
+
+      trackQueue.add({
+        userId,
+        event: events.THREAD_DELETED,
+        context: { threadId },
+      });
 
       processReputationEventQueue.add({
         userId: thread.creatorId,
@@ -405,37 +574,30 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
 
 type File = FileUpload;
 
-type Attachment = {
-  attachmentType: string,
-  data: string,
-};
-
 export type EditThreadInput = {
   threadId: string,
   content: {
     title: string,
     body: ?string,
   },
-  attachments?: ?Array<Attachment>,
   filesToUpload?: ?Array<File>,
 };
+
 // shouldUpdate arguemnt is used to prevent a thread from being marked as edited when the images are uploaded at publish time
-export const editThread = (
-  input: EditThreadInput,
-  shouldUpdate: boolean = true
-): Promise<DBThread> => {
+// prettier-ignore
+export const editThread = (input: EditThreadInput, userId: string, shouldUpdate: boolean = true): Promise<DBThread> => {
   return db
     .table('threads')
     .get(input.threadId)
     .update(
       {
         content: input.content,
-        attachments: input.attachments,
         modifiedAt: shouldUpdate ? new Date() : null,
+        editedBy: userId,
         edits: db.row('edits').append({
           content: db.row('content'),
-          attachments: db.row('attachments'),
           timestamp: new Date(),
+          editedBy: db.row('editedBy').default(db.row('creatorId'))
         }),
       },
       { returnChanges: 'always' }
@@ -445,8 +607,30 @@ export const editThread = (
       // if an update happened
       if (result.replaced === 1) {
         const thread = result.changes[0].new_val;
+
+        searchQueue.add({
+          id: thread.id,
+          type: 'thread',
+          event: 'edited'
+        })
+
+        trackQueue.add({
+          userId,
+          event: events.THREAD_EDITED,
+          context: { threadId: input.threadId }
+        })
+
         return thread;
       }
+
+      trackQueue.add({
+        userId,
+        event: events.THREAD_EDITED_FAILED,
+        context: { threadId: input.threadId },
+        properties: {
+          reason: 'no changes'
+        }
+      })
 
       // an update was triggered from the client, but no data was changed
       return result.changes[0].old_val;
@@ -481,7 +665,7 @@ export const updateThreadWithImages = (id: string, body: string) => {
     });
 };
 
-export const moveThread = (id: string, channelId: string) => {
+export const moveThread = (id: string, channelId: string, userId: string) => {
   return db
     .table('threads')
     .get(id)
@@ -493,16 +677,93 @@ export const moveThread = (id: string, channelId: string) => {
     )
     .run()
     .then(result => {
-      if (result.replaced === 1) return result.changes[0].new_val;
+      if (result.replaced === 1) {
+        const thread = result.changes[0].new_val;
+
+        searchQueue.add({
+          id: thread.id,
+          type: 'thread',
+          event: 'moved',
+        });
+
+        trackQueue.add({
+          userId,
+          event: events.THREAD_MOVED,
+          context: { threadId: id },
+        });
+
+        return thread;
+      }
+
+      trackQueue.add({
+        userId,
+        event: events.THREAD_MOVED_FAILED,
+        context: { threadId: id },
+        properties: {
+          reason: 'no changes',
+        },
+      });
+
       return null;
     });
+};
+
+export const incrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
+};
+
+export const incrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementReactionCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      reactionCount: db
+        .row('reactionCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
 };
 
 const hasChanged = (field: string) =>
   db
     .row('old_val')(field)
     .ne(db.row('new_val')(field));
-const LAST_ACTIVE_CHANGED = hasChanged('lastActive');
 
 const getUpdatedThreadsChangefeed = () =>
   db
@@ -510,7 +771,19 @@ const getUpdatedThreadsChangefeed = () =>
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(LAST_ACTIVE_CHANGED))('new_val')
+    .filter(
+      NEW_DOCUMENTS.or(
+        hasChanged('content')
+          .or(hasChanged('lastActive'))
+          .or(hasChanged('channelId'))
+          .or(hasChanged('communityId'))
+          .or(hasChanged('creatorId'))
+          .or(hasChanged('isPublished'))
+          .or(hasChanged('modifiedAt'))
+          .or(hasChanged('messageCount'))
+          .or(hasChanged('reactionCount'))
+      )
+    )('new_val')
     .run();
 
 export const listenToUpdatedThreads = (cb: Function): Function => {

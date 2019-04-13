@@ -9,6 +9,8 @@ const {
   PREVIOUS_MEMBER_USER_ID,
   CHANNEL_MODERATOR_USER_ID,
   COMMUNITY_MODERATOR_USER_ID,
+  SINGLE_CHANNEL_COMMUNITY_USER_ID,
+  NEW_USER_ID,
   DATE,
 } = constants;
 
@@ -125,6 +127,34 @@ module.exports = [
     coverPhoto:
       'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
     email: 'hi@communitymoderatorboy.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: SINGLE_CHANNEL_COMMUNITY_USER_ID,
+    name: 'Single community person',
+    description: 'Im a member of one community',
+    website: '',
+    username: 'single-community-user',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@singlecommunity.io',
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
+  },
+  {
+    id: NEW_USER_ID,
+    name: 'New user',
+    description: 'Just joined spectrum',
+    website: '',
+    username: null,
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    email: 'hi@newuser.io',
     createdAt: new Date(DATE),
     lastSeen: new Date(DATE),
   },

@@ -3,21 +3,21 @@ import * as React from 'react';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-import { closeModal } from '../../../actions/modals';
+import { closeModal } from 'src/actions/modals';
 import { connect } from 'react-redux';
-import { TextButton, Button } from '../../buttons';
+import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
 import type { MoveThreadType } from 'shared/graphql/mutations/thread/moveThread';
-import { track } from '../../../helpers/events';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import Icon from '../../icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Icon from 'src/components/icon';
 import { IconContainer } from '../RepExplainerModal/style';
 import { Actions, modalStyles, Section, Title, Subtitle } from './style';
 import ChannelSelector from './channelSelector';
+import type { Dispatch } from 'redux';
 
 type Props = {
   thread: any,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   isOpen: boolean,
   moveThread: Function,
 };
@@ -42,16 +42,20 @@ class ChangeChannelModal extends React.Component<Props, State> {
 
   saveNewChannel = () => {
     const { activeChannel } = this.state;
-    const { thread: { id }, dispatch } = this.props;
+    const {
+      thread: { id },
+      dispatch,
+    } = this.props;
+
     this.setState({
       isLoading: true,
     });
+
     return this.props
       .moveThread({ threadId: id, channelId: activeChannel })
       .then(({ data }: MoveThreadType) => {
         const { moveThread } = data;
         if (moveThread) {
-          track('thread', 'moved', null);
           dispatch(
             addToastWithTimeout('success', 'Channel changed successfully.')
           );
@@ -97,7 +101,7 @@ class ChangeChannelModal extends React.Component<Props, State> {
               <IconContainer>
                 <Icon glyph={'private'} size={64} />
               </IconContainer>
-              <Title>This thread can't be moved</Title>
+              <Title>This thread can’t be moved</Title>
               <Subtitle>
                 This thread was posted in the private channel{' '}
                 {thread.channel.name} - threads in private channels cannot be
@@ -119,17 +123,14 @@ class ChangeChannelModal extends React.Component<Props, State> {
               />
 
               <Actions>
-                <TextButton onClick={this.closeModal} color={'warn.alt'}>
-                  Cancel
-                </TextButton>
-                <Button
+                <TextButton onClick={this.closeModal}>Cancel</TextButton>
+                <PrimaryOutlineButton
                   loading={this.state.isLoading}
-                  color="warn"
                   onClick={this.saveNewChannel}
                   disabled={activeChannel === thread.channel.id}
                 >
-                  Save
-                </Button>
+                  {this.state.isLoading ? 'Saving...' : 'Save'}
+                </PrimaryOutlineButton>
               </Actions>
             </Section>
           )}
@@ -140,5 +141,8 @@ class ChangeChannelModal extends React.Component<Props, State> {
 }
 
 const map = state => ({ isOpen: state.modals.isOpen });
-// $FlowIssue
-export default compose(connect(map), moveThreadMutation)(ChangeChannelModal);
+export default compose(
+  // $FlowIssue
+  connect(map),
+  moveThreadMutation
+)(ChangeChannelModal);

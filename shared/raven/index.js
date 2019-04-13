@@ -20,7 +20,7 @@ if (
     captureException: noop,
     setUserContext: noop,
     config: () => ({ install: noop }),
-    requestHandler: (req, res, next) => next(),
+    requestHandler: () => (req, res, next) => next(),
     parsers: {
       parseRequest: noop,
     },

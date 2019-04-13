@@ -1,13 +1,15 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
-import { zIndex } from '../globals';
+import { zIndex } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Container = styled.div`
   display: grid;
   grid-gap: 16px;
   align-items: flex-end;
   padding: 16px 0;
-  @media (min-width: 768px) {
+  @media (min-width: ${MEDIA_BREAK}px) {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
@@ -24,10 +26,9 @@ export const SigninButton = styled.div`
   align-self: flex-start;
   align-items: center;
   justify-content: flex-start;
-  color: ${({ theme }) => theme.text.reverse};
-  border-radius: 8px;
-  padding: 8px;
-  padding-right: 16px;
+  color: ${theme.text.reverse};
+  border-radius: 32px;
+  padding: 8px 16px;
   font-size: 15px;
   font-weight: 600;
   position: relative;
@@ -74,7 +75,7 @@ export const TwitterButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.twitter.default};
 
   &:after {
-    color: ${props => props.theme.social.twitter.default};
+    color: ${theme.social.twitter.default};
   }
 `;
 
@@ -85,7 +86,7 @@ export const FacebookButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.facebook.default};
 
   &:after {
-    color: ${props => props.theme.social.facebook.default};
+    color: ${theme.social.facebook.default};
   }
 `;
 
@@ -96,7 +97,7 @@ export const GoogleButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.google.default};
 
   &:after {
-    color: ${props => props.theme.social.google.default};
+    color: ${theme.social.google.default};
   }
 `;
 
@@ -107,6 +108,6 @@ export const GithubButton = styled(SigninButton)`
     props.preferred ? '#fff' : props.theme.social.github.default};
 
   &:after {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;

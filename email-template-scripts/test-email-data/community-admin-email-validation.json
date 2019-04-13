@@ -1,0 +1,20 @@
+{
+  "subject": "Confirm new administrator email for the Test community",
+  "preheader": "Confirm the new administrator email below",
+  "validateToken": "1",
+  "community": {
+    "administratorEmail": "email",
+    "coverPhoto": null,
+    "createdAt": "2018-12-09T19:31:18.615Z",
+    "creatorId": "1",
+    "description": "Description",
+    "id": "1",
+    "isPrivate": false,
+    "memberCount": 0,
+    "modifiedAt": null,
+    "name": "Test",
+    "profilePhoto": null,
+    "slug": "slug",
+    "website": "website"
+  }
+}

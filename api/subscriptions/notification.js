@@ -1,6 +1,5 @@
 // @flow
 const debug = require('debug')('api:subscriptions:notification');
-import { withFilter } from 'graphql-subscriptions';
 const {
   listenToNewNotifications,
   listenToNewDirectMessageNotifications,
@@ -27,7 +26,7 @@ module.exports = {
         info: GraphQLResolveInfo
       ) => {
         if (!user || !user.id)
-          throw new UserError(
+          return new UserError(
             'Can only listen to notifications when signed in.'
           );
 
@@ -52,7 +51,7 @@ module.exports = {
         info: GraphQLResolveInfo
       ) => {
         if (!user || !user.id)
-          throw new UserError(
+          return new UserError(
             'Can only listen to notifications when signed in.'
           );
 

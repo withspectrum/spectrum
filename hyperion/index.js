@@ -1,20 +1,29 @@
 // @flow
-console.log('Hyperion starting...');
 const debug = require('debug')('hyperion');
+import 'raf/polyfill';
+debug('Hyperion starting...');
 debug('logging with debug enabled');
-// $FlowFixMe
-require('isomorphic-fetch');
+require('isomorphic-fetch'); // prevent https://github.com/withspectrum/spectrum/issues/3032
+import fs from 'fs';
+import statsd from 'shared/middlewares/statsd';
 import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
-import { getUser } from 'api/models/user';
+// TODO: This is the only thing that connects hyperion to the db
+// we should get rid of this if at all possible
+import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
+import rateLimiter from 'shared/middlewares/rate-limiter';
 import addSecurityMiddleware from 'shared/middlewares/security';
 
 const PORT = process.env.PORT || 3006;
+const ONE_HOUR = 3600;
 
 const app = express();
+
+// Instantiate the statsd middleware as soon as possible to get accurate time tracking
+app.use(statsd);
 
 // Trust the now proxy
 app.set('trust proxy', true);
@@ -22,7 +31,50 @@ app.set('trust proxy', true);
 app.use(toobusy);
 
 // Security middleware.
-addSecurityMiddleware(app);
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
+
+// Serve static files from the build folder
+app.use(
+  express.static(
+    process.env.NODE_ENV === 'production'
+      ? './build'
+      : path.join(__dirname, '../build/'),
+    {
+      index: false,
+      setHeaders: (res, path) => {
+        // Don't cache the serviceworker in the browser
+        if (path.indexOf('sw.js') > -1) {
+          res.setHeader('Cache-Control', 'no-store, no-cache');
+          return;
+        }
+
+        if (path.endsWith('.js')) {
+          // Cache static files in now CDN for seven days
+          // (the filename changes if the file content changes, so we can cache these forever)
+          res.setHeader('Cache-Control', `s-maxage=${ONE_HOUR}`);
+        }
+      },
+    }
+  )
+);
+
+// In dev the static files from the root public folder aren't moved to the build folder by create-react-app
+// so we just tell Express to serve those too
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'public'), { index: false })
+  );
+}
+
+app.use(
+  rateLimiter({
+    max: 13,
+    duration: '20s',
+  })
+);
+
+import bodyParser from 'body-parser';
+app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'development') {
   const logging = require('shared/middlewares/logging');
@@ -78,19 +130,32 @@ if (process.env.NODE_ENV === 'development') {
 import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 
-import bodyParser from 'body-parser';
-app.use(bodyParser.json());
-
 import session from 'shared/middlewares/session';
 app.use(session);
 
 import passport from 'passport';
+// Setup use serialization
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, typeof user === 'string' ? user : JSON.stringify(user));
 });
 
-passport.deserializeUser((id, done) => {
-  getUser({ id })
+// NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+// to avoid having to go to the db on every single request. We have to handle both
+// cases here, as more and more users use Spectrum again we go to the db less and less
+passport.deserializeUser((data, done) => {
+  // Fast path: try to JSON.parse the data if it works, we got the user data, yay!
+  try {
+    const user = JSON.parse(data);
+    // Make sure more than the user ID is in the data by checking any other required
+    // field for existance
+    if (user.id && user.createdAt) {
+      return done(null, user);
+    }
+    // Ignore JSON parsing errors
+  } catch (err) {}
+
+  // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
+  getUserById(data)
     .then(user => {
       done(null, user);
     })
@@ -105,21 +170,16 @@ app.use(passport.session());
 import threadParamRedirect from 'shared/middlewares/thread-param';
 app.use(threadParamRedirect);
 
-// Static files
-app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-);
-
-// In dev the static files from the root public folder aren't moved to the build folder by create-react-app
-// so we just tell Express to serve those too
-if (process.env.NODE_ENV === 'development') {
-  app.use(
-    express.static(path.resolve(__dirname, '..', 'public'), { index: false })
-  );
-}
-
-import cache from './cache';
-app.use(cache);
+app.get('*', (req: express$Request, res, next) => {
+  // Electron requests should only be client-side rendered
+  if (
+    req.headers['user-agent'] &&
+    req.headers['user-agent'].indexOf('Electron') > -1
+  ) {
+    return res.sendFile(path.resolve(__dirname, '../build/index.html'));
+  }
+  next();
+});
 
 import renderer from './renderer';
 app.get('*', renderer);
@@ -148,7 +208,7 @@ process.on('uncaughtException', async err => {
 
 Loadable.preloadAll().then(() => {
   app.listen(PORT);
-  console.log(
+  debug(
     `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
 });

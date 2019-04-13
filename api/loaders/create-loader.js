@@ -1,5 +1,4 @@
 // @flow
-//$FlowFixMe
 import DataLoader from 'dataloader';
 import unique from 'shared/unique-elements';
 import type { Loader, DataLoaderOptions } from './types';
@@ -26,7 +25,7 @@ const createLoader = (
 // https://github.com/facebook/dataloader/blob/master/examples/RethinkDB.md
 function indexResults(results, indexField, cacheKeyFn) {
   var indexedResults = new Map();
-  results.forEach(res => {
+  results.filter(Boolean).forEach(res => {
     const key =
       typeof indexField === 'function' ? indexField(res) : res[indexField];
     indexedResults.set(cacheKeyFn(key), res);

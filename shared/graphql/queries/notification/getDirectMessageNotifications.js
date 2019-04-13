@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import idx from 'idx';
 import notificationInfoFragment from '../../fragments/notification/notificationInfo';
 import type { NotificationInfoType } from '../../fragments/notification/notificationInfo';
 import { subscribeToDirectMessageNotifications } from '../../subscriptions';
@@ -45,13 +46,18 @@ export const getDirectMessageNotificationsOptions = {
   props: (props: any) => ({
     ...props,
     refetch: () => props.data.refetch(),
-    subscribeToDMs: () => {
+    subscribeToDMs: (callback?: Function) => {
       return props.data.subscribeToMore({
         document: subscribeToDirectMessageNotifications,
         updateQuery: (prev, { subscriptionData }) => {
-          const newNotification = subscriptionData.data.dmNotificationAdded;
-
+          const newNotification = idx(
+            subscriptionData,
+            _ => _.data.dmNotificationAdded
+          );
           if (!newNotification) return prev;
+
+          if (callback) callback(newNotification);
+
           const notificationNode = {
             ...newNotification,
             __typename: 'Notification',

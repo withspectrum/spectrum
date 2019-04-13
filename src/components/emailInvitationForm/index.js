@@ -3,26 +3,28 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Textarea from 'react-textarea-autosize';
-import { addToastWithTimeout } from '../../actions/toasts';
-import Icon from '../icons';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import Icon from 'src/components/icon';
 import isEmail from 'validator/lib/isEmail';
 import sendCommunityEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-// import sendChannelEmailInvitations from 'shared/graphql/mutations/community/sendCommunityEmailInvites';
-import { Button } from '../buttons';
+import { OutlineButton } from 'src/components/button';
 import { Error } from '../formElements';
-import { SectionCardFooter } from '../settingsViews/style';
+import { SectionCardFooter } from 'src/components/settingsViews/style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   EmailInviteForm,
   EmailInviteInput,
-  AddRow,
+  Action,
+  ActionAsLabel,
+  ActionHelpText,
   RemoveRow,
-  CustomMessageToggle,
   CustomMessageTextAreaStyles,
+  HiddenInput,
 } from './style';
 
 type Props = {
   id: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   sendEmailInvites: Function,
 };
@@ -37,16 +39,20 @@ type ContactProps = {
 type State = {
   isLoading: boolean,
   contacts: Array<ContactProps>,
+  importError: string,
   hasCustomMessage: boolean,
   customMessageString: string,
   customMessageError: boolean,
+  inputValue: ?string,
 };
 
 class EmailInvitationForm extends React.Component<Props, State> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       isLoading: false,
+      importError: '',
       contacts: [
         {
           email: '',
@@ -70,6 +76,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
       hasCustomMessage: false,
       customMessageString: '',
       customMessageError: false,
+      inputValue: '',
     };
   }
 
@@ -87,7 +94,7 @@ class EmailInvitationForm extends React.Component<Props, State> {
     this.setState({ isLoading: true });
 
     let validContacts = contacts
-      .filter(contact => contact.error === false)
+      .filter(contact => !contact.error)
       .filter(contact => contact.email !== currentUser.email)
       .filter(contact => contact.email.length > 0)
       .filter(contact => isEmail(contact.email))
@@ -234,6 +241,96 @@ class EmailInvitationForm extends React.Component<Props, State> {
     });
   };
 
+  handleFile = evt => {
+    this.setState({
+      importError: '',
+    });
+
+    // Only show loading indicator for large files
+    // where it takes > 200ms to load
+    const timeout = setTimeout(() => {
+      this.setState({
+        isLoading: true,
+      });
+    }, 200);
+
+    const reader = new FileReader();
+    reader.onload = file => {
+      clearTimeout(timeout);
+      this.setState({
+        isLoading: false,
+      });
+
+      let parsed;
+      try {
+        if (typeof reader.result !== 'string') return;
+        parsed = JSON.parse(reader.result);
+      } catch (err) {
+        this.setState({
+          importError: 'Only .json files are supported for import.',
+        });
+        return;
+      }
+
+      if (!Array.isArray(parsed)) {
+        this.setState({
+          importError:
+            'Your JSON data is in the wrong format. Please provide either an array of emails ["hi@me.com"] or an array of objects with an "email" property and (optionally) a "name" property [{ "email": "hi@me.com", "name": "Me" }].',
+        });
+        return;
+      }
+
+      const formatted = parsed.map(value => {
+        if (typeof value === 'string')
+          return {
+            email: value,
+          };
+
+        return {
+          email: value.email,
+          firstName: value.firstName || value.name,
+          lastName: value.lastName,
+        };
+      });
+
+      const validated = formatted
+        .map(value => {
+          if (!isEmail(value.email)) return { ...value, error: true };
+          return value;
+        })
+        .filter(Boolean);
+
+      if (validated.length > 5000) {
+        this.setState({
+          importError: 'Cannot invite more than 5,000 emails.',
+        });
+        return;
+      }
+
+      const consolidated = [
+        ...this.state.contacts.filter(
+          contact =>
+            contact.email.length > 0 ||
+            contact.firstName.length > 0 ||
+            contact.lastName.length > 0
+        ),
+        ...validated,
+      ];
+
+      const unique = consolidated.filter(
+        (obj, i) =>
+          consolidated.findIndex(a => a['email'] === obj['email']) === i
+      );
+
+      this.setState({
+        contacts: unique,
+        inputValue: '',
+      });
+    };
+
+    reader.readAsText(evt.target.files[0]);
+  };
+
   render() {
     const {
       contacts,
@@ -241,10 +338,12 @@ class EmailInvitationForm extends React.Component<Props, State> {
       hasCustomMessage,
       customMessageString,
       customMessageError,
+      importError,
     } = this.state;
 
     return (
       <div>
+        {importError && <Error>{importError}</Error>}
         {contacts.map((contact, i) => {
           return (
             <EmailInviteForm key={i}>
@@ -270,14 +369,28 @@ class EmailInvitationForm extends React.Component<Props, State> {
           );
         })}
 
-        <AddRow onClick={this.addRow}>+ Add another</AddRow>
+        <Action onClick={this.addRow}>
+          <Icon glyph="plus" size={20} /> Add row
+        </Action>
+        <ActionAsLabel mb="8px">
+          <HiddenInput
+            value={this.state.inputValue}
+            type="file"
+            accept=".json"
+            onChange={this.handleFile}
+          />
+          <Icon size={20} glyph="upload" /> Import emails
+        </ActionAsLabel>
+        <ActionHelpText>
+          Upload a .json file with an array of up to 5,000 email addresses.
+        </ActionHelpText>
 
-        <CustomMessageToggle onClick={this.toggleCustomMessage}>
+        <Action onClick={this.toggleCustomMessage}>
           <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
           {hasCustomMessage
             ? 'Remove custom message'
             : 'Optional: Add a custom message to your invitation'}
-        </CustomMessageToggle>
+        </Action>
 
         {hasCustomMessage && (
           <Textarea
@@ -294,37 +407,28 @@ class EmailInvitationForm extends React.Component<Props, State> {
           />
         )}
 
-        {hasCustomMessage &&
-          customMessageError && (
-            <Error>
-              Your custom invitation message can be up to 500 characters.
-            </Error>
-          )}
+        {hasCustomMessage && customMessageError && (
+          <Error>
+            Your custom invitation message can be up to 500 characters.
+          </Error>
+        )}
 
         <SectionCardFooter>
-          <Button
+          <OutlineButton
             loading={isLoading}
             onClick={this.sendInvitations}
             disabled={hasCustomMessage && customMessageError}
           >
-            Send Invitations
-          </Button>
+            {isLoading ? 'Sending...' : 'Send Invitations'}
+          </OutlineButton>
         </SectionCardFooter>
       </div>
     );
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export const CommunityInvitationForm = compose(
-  // $FlowIssue
-  connect(map),
-  sendCommunityEmailInvitations
+  withCurrentUser,
+  sendCommunityEmailInvitations,
+  connect()
 )(EmailInvitationForm);
-
-// export const ChannelInvitationForm = compose(
-//   // $FlowIssue
-//   connect(map),
-//   sendChannelEmailInvitations
-// )(EmailInvitationForm);

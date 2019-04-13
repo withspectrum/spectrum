@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`new thread should get new thread string 1`] = `"<span class=\\"newMessageCount\\">New thread</span>"`;
+
+exports[`new thread should get thread with more than one new message string 1`] = `"<span class=\\"newMessageCount\\" style=\\"color: #E2197A;\\">2 new messages</span>"`;
+
+exports[`new thread should get thread with new and total string 1`] = `"<span class=\\"totalMessageCount\\">10 messages </span><span class=\\"newMessageCount\\" style=\\"color: #E2197A;\\">(2 new)</span>"`;
+
+exports[`new thread should get thread with one new message string 1`] = `"<span class=\\"newMessageCount\\" style=\\"color: #E2197A;\\">1 new message</span>"`;

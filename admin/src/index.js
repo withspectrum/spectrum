@@ -5,7 +5,7 @@ import { Router } from 'react-router';
 import { ApolloProvider } from 'react-apollo';
 import { ThemeProvider } from 'styled-components';
 import { Provider } from 'react-redux';
-import { theme } from './components/theme';
+import { theme } from 'shared/theme';
 import { client } from './api';
 import { initStore } from './store';
 import Routes from './routes';

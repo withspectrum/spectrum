@@ -1,15 +1,44 @@
 /* eslint no-eval: 0 */
+import theme from 'shared/theme';
 import styled, { css, keyframes } from 'styled-components';
 
 export const Gradient = (g1, g2) =>
   css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
 
-export const Truncate = width => css`
+export const Truncate = () => css`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
 `;
+
+export const tint = (hex: string, amount: number) => {
+  let R = parseInt(hex.substring(1, 3), 16);
+  let G = parseInt(hex.substring(3, 5), 16);
+  let B = parseInt(hex.substring(5, 7), 16);
+
+  const getSingle = (number: number) =>
+    parseInt((number * (100 + amount)) / 100, 10);
+
+  R = getSingle(R);
+  G = getSingle(G);
+  B = getSingle(B);
+
+  R = R < 255 ? R : 255;
+  G = G < 255 ? G : 255;
+  B = B < 255 ? B : 255;
+
+  const getDouble = (number: number) =>
+    number.toString(16).length === 1
+      ? `0${number.toString(16)}`
+      : number.toString(16);
+
+  const RR = getDouble(R);
+  const GG = getDouble(G);
+  const BB = getDouble(B);
+
+  return `#${RR}${GG}${BB}`;
+};
 
 export const hexa = (hex, alpha) => {
   var r = parseInt(hex.slice(1, 3), 16),
@@ -69,7 +98,7 @@ export const zIndex = new function() {
   this.dropDown = this.chrome + 1; // dropDowns shouldn't appear behind the navBar
 
   this.slider = window.innerWidth < 768 ? this.chrome + 1 : this.chrome; // slider should appear significantly above the base to leave room for other elements
-  this.composer = this.slider - 2; // composer should never appear above the slider
+  this.composer = 4000; // should cover all screen except toasts
   this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
   this.flyout = this.chatInput + 3; // flyout may overlap with chatInput and should take precedence
 
@@ -113,14 +142,14 @@ export const Spinner = styled.span`
     margin-left: ${props =>
       props.size !== undefined ? `-${props.size / 2}px` : '-8px'};
     border-radius: 50%;
-    border: ${props => '2px'} solid
+    border: 2px solid
       ${props =>
         props.color
           ? eval(`props.theme.${props.color}`)
           : props.theme.brand.alt};
     border-top-color: transparent;
     border-right-color: ${props =>
-      props.color ? `props.theme.${props.color}` : props.theme.brand.alt};
+      props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
@@ -134,7 +163,7 @@ export const Label = styled.label`
   font-weight: 500;
   font-size: 0.875rem;
   letter-spacing: -0.4px;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
 
   &:not(:first-of-type) {
     margin-top: 1.5rem;
@@ -152,7 +181,7 @@ export const PrefixLabel = styled.label`
   padding-left: 0.875rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
 
   > input {
     margin-left: 2px;
@@ -161,11 +190,11 @@ export const PrefixLabel = styled.label`
 
 export const Input = styled.input`
   flex: 1 0 auto;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${theme.bg.default};
   font-weight: 500;
   width: 100%;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  border: 0.125rem solid ${theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.5rem 0.75rem;
   margin-top: 0.125rem;
@@ -178,86 +207,86 @@ export const Input = styled.input`
       width: initial;
       margin-right: 0.5rem;
     `} &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const TextArea = styled.textarea`
   flex: 1 0 auto;
   width: 100%;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${theme.bg.default};
   font-weight: 500;
   font-size: 0.875rem;
-  border: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  border: 0.125rem solid ${theme.bg.inactive};
   border-radius: 0.25rem;
   padding: 0.75rem;
   margin-top: 0.125rem;
   box-shadow: none;
 
   &::placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &::-webkit-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-moz-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
   &:-ms-input-placeholder {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const UnderlineInput = styled.input`
   font-size: inherit;
   font-weight: inherit;
-  color: ${({ theme }) => theme.text.default};
-  border-bottom: 0.125rem solid ${({ theme }) => theme.bg.inactive};
+  color: ${theme.text.default};
+  border-bottom: 0.125rem solid ${theme.bg.inactive};
 
   &:focus {
-    border-color: ${({ theme }) => theme.brand.default};
+    border-color: ${theme.brand.default};
   }
 `;
 
 export const H1 = styled.h1`
   ${fontStack};
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   font-weight: 900;
   font-size: 1.5rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;
 
 export const H2 = styled.h2`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.25;
+  line-height: 1.3;
   margin: 0;
   padding: 0;
 `;
 
 export const H3 = styled.h3`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 1rem;
@@ -267,7 +296,7 @@ export const H3 = styled.h3`
 `;
 
 export const H4 = styled.h4`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 0.875rem;
@@ -277,7 +306,7 @@ export const H4 = styled.h4`
 `;
 
 export const H5 = styled.h5`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 500;
   font-size: 0.75rem;
@@ -287,7 +316,7 @@ export const H5 = styled.h5`
 `;
 
 export const H6 = styled.h6`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 600;
   text-transform: uppercase;
@@ -298,7 +327,7 @@ export const H6 = styled.h6`
 `;
 
 export const P = styled.p`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 400;
   font-size: 0.875rem;
@@ -308,7 +337,7 @@ export const P = styled.p`
 `;
 
 export const Span = styled.span`
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   ${fontStack};
   font-weight: 400;
   font-size: 0.875rem;
@@ -329,191 +358,6 @@ export const FlexCol = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-`;
-
-const returnTooltip = props => {
-  switch (props.tipLocation) {
-    case 'top-left':
-      return `
-          &:after {
-            bottom: calc(100% + 4px);
-            right: 0;
-          }
-          &:before {
-            bottom: 100%;
-            right: 0;
-            transform: translateX(-100%);
-            border-bottom-width: 0;
-            border-top-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'top-right':
-      return `
-          &:after {
-            bottom: calc(100% + 4px);
-            left: 0;
-          }
-          &:before {
-            bottom: 100%;
-            left: 0;
-            transform: translateX(100%);
-            border-bottom-width: 0;
-            border-top-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'top':
-      return `
-          &:after {
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-          }
-          &:before {
-            bottom: calc(100% + 3px);
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom-width: 0;
-            border-top-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'right':
-    default:
-      return `
-          &:after {
-            top: 50%;
-            left: calc(100% + 4px);
-            transform: translateY(-50%);
-          }
-          &:before{
-            top: calc(50% - 5px);
-            left: 100%;
-            border-left-width: 0;
-            border-right-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'bottom-left':
-      return `
-          &:after {
-            top: calc(100% + 4px);
-            right: 0;
-          }
-          &:before {
-            top: 100%;
-            right: 0;
-            transform: translateX(-100%);
-            border-top-width: 0;
-            border-bottom-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'bottom-right':
-      return `
-          &:after {
-            top: calc(100% + 4px);
-            left: 0;
-          }
-          &:before {
-            top: 100%;
-            left: 0;
-            transform: translateX(100%);
-            border-top-width: 0;
-            border-bottom-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-    case 'bottom':
-      return `
-        &:after {
-          top: calc(100% + 8px);
-          left: 50%;
-          transform: translateX(-50%);
-        }
-        &:before {
-          top: calc(100% + 3px);
-          left: 50%;
-          transform: translateX(-50%);
-          border-top-width: 0;
-          border-bottom-color: ${
-            props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-          };
-        }
-      `;
-    case 'left':
-      return `
-          &:after {
-            right: calc(100% + 4px);
-            top: 50%;
-            transform: translateY(-50%);
-          }
-          &:before{
-            right: 100%;
-            top: calc(50% - 5px);
-            border-right-width: 0;
-            border-left-color: ${
-              props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse
-            };
-          }
-      `;
-  }
-};
-
-export const Tooltip = props => css`
-  position: relative;
-
-  &:after,
-  &:before {
-    line-height: 1;
-    user-select: none;
-    pointer-events: none;
-    position: absolute;
-    opacity: 0;
-    display: block;
-    text-transform: none;
-  }
-
-  &:before {
-    content: '';
-    z-index: ${zIndex.tooltip + 1};
-    border: 6px solid transparent;
-  }
-
-  &:after {
-    content: ${props.tipText && !props.onboarding
-      ? `'${CSS.escape(props.tipText)}'`
-      : "''"};
-    z-index: ${zIndex.tooltip};
-    ${fontStack};
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 8px;
-    max-width: 21em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-shadow: ${Shadow.mid} ${hexa(props.theme.bg.reverse, 0.25)};
-    background: ${props.theme.bg.reverse};
-    color: ${props.theme.text.reverse};
-  }
-
-  ${props.tipText && !props.onboarding ? returnTooltip(props) : ''};
-
-  &:hover:after,
-  &:hover:before {
-    opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
-  }
 `;
 
 export const Onboarding = props => css`
@@ -557,12 +401,10 @@ export const Onboarding = props => css`
     box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
   }
 
-  ${props.onboarding ? returnTooltip(props) : ''};
-
   &:after,
   &:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 
@@ -571,12 +413,12 @@ export const HorizontalRule = styled(FlexRow)`
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  color: ${props => props.theme.bg.border};
+  color: ${theme.bg.border};
 
   hr {
     display: inline-block;
     flex: 1 0 auto;
-    border-top: 1px solid ${props => props.theme.bg.border};
+    border-top: 1px solid ${theme.bg.border};
   }
 
   div {

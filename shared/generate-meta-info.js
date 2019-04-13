@@ -7,9 +7,9 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-var draft = require('./draft-utils');
 var truncate = require('./truncate');
 var striptags = require('striptags');
+var toPlainText = require('./clients/draft-js/utils/plaintext').toPlainText;
 
 var DEFAULT_META = {
   title: 'Spectrum',
@@ -90,7 +90,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
   switch (type) {
     case 'explore': {
       return {
-        title: 'Explore · Spectrum',
+        title: 'Explore',
         description: 'Explore some of the communities on Spectrum',
       };
     }
@@ -104,7 +104,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
         data &&
         data.body &&
         (data.type === 'DRAFTJS'
-          ? draft.toPlainText(draft.toState(JSON.parse(data.body)))
+          ? toPlainText(JSON.parse(data.body))
           : data.body);
       return setDefault({
         title: data && data.title + ' · ' + data.communityName,
@@ -113,7 +113,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
     }
     case 'user': {
       return setDefault({
-        title: data && data.name + ' (@' + data.username + ')',
+        title: data && data.name + ' · @' + data.username,
         description: data && data.description,
       });
     }
@@ -137,6 +137,12 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
       return setDefault({
         title: data && data.title,
         description: data && data.description,
+      });
+    }
+    case 'notifications': {
+      return setDefault({
+        title: 'Notifications',
+        description: 'Notifications on Spectrum',
       });
     }
     default: {

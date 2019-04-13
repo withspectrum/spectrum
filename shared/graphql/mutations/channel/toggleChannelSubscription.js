@@ -12,6 +12,12 @@ export type ToggleChannelSubscriptionType = {
   },
 };
 
+export type ToggleChannelSubscriptionProps = {
+  toggleChannelSubscription: ({
+    channelId: string,
+  }) => Promise<ToggleChannelSubscriptionType>,
+};
+
 export const toggleChannelSubscriptionMutation = gql`
   mutation toggleChannelSubscription($channelId: ID!) {
     toggleChannelSubscription(channelId: $channelId) {
@@ -23,7 +29,7 @@ export const toggleChannelSubscriptionMutation = gql`
 
 const toggleChannelSubscriptionOptions = {
   options: {
-    refetchQueries: ['getCurrentUserProfile', 'getEverythingThreads'],
+    refetchQueries: ['getCommunityThreadConnection'],
   },
   props: ({ mutate }) => ({
     toggleChannelSubscription: ({ channelId }: { channelId: string }) =>

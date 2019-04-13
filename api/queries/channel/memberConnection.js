@@ -4,12 +4,20 @@ import type { GraphQLContext } from '../../';
 import type { DBChannel } from 'shared/types';
 import { getMembersInChannel } from '../../models/usersChannels';
 import { encode, decode } from '../../utils/base64';
+import { canViewChannel } from '../../utils/permissions';
 
-export default (
-  { id }: DBChannel,
+export default async (
+  channel: DBChannel,
   { first, after }: PaginationOptions,
-  { loaders }: GraphQLContext
+  ctx: GraphQLContext
 ) => {
+  const { loaders, user: currentUser } = ctx;
+  const { id, isPrivate } = channel;
+
+  if (isPrivate) {
+    if (!(await canViewChannel(currentUser, id, loaders))) return null;
+  }
+
   const cursor = decode(after);
   // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
   const lastDigits = cursor.match(/-(\d+)$/);

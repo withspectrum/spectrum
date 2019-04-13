@@ -1,15 +1,21 @@
+// @flow
 import React from 'react';
-// $FlowFixMe
 import { connect } from 'react-redux';
-import { Container, ErrorToast, SuccessToast, NeutralToast } from './style';
+import {
+  ToastsContainer,
+  ErrorToast,
+  SuccessToast,
+  NeutralToast,
+  NotificationToast,
+} from './style';
 
-const ToastsPure = ({ toasts }): React$Element<any> => {
-  if (!toasts) {
-    return <span />;
+const ToastsPure = ({ toasts }): ?React$Element<any> => {
+  if (!toasts || toasts.length === 0) {
+    return null;
   }
 
   return (
-    <Container>
+    <ToastsContainer>
       {toasts.map(toast => {
         const { kind, timeout, message, id } = toast;
         switch (kind) {
@@ -19,35 +25,50 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
               cleanedMessage = message.replace('GraphQL error: ', '');
             }
             return (
-              <ErrorToast key={id} timeout={timeout}>
+              <ErrorToast data-cy={'toast-error'} key={id} timeout={timeout}>
                 {cleanedMessage}
               </ErrorToast>
             );
           }
           case 'success': {
             return (
-              <SuccessToast key={id} timeout={timeout}>
+              <SuccessToast
+                data-cy={`toast-success`}
+                key={id}
+                timeout={timeout}
+              >
                 {message}
               </SuccessToast>
             );
           }
           case 'neutral': {
             return (
-              <NeutralToast key={id} timeout={timeout}>
+              <NeutralToast
+                data-cy={`toast-neutral`}
+                key={id}
+                timeout={timeout}
+              >
                 {message}
               </NeutralToast>
             );
           }
+          case 'notification': {
+            return (
+              <NotificationToast key={id} timeout={timeout}>
+                {message}
+              </NotificationToast>
+            );
+          }
           default: {
-            return <span />;
+            return null;
           }
         }
       })}
-    </Container>
+    </ToastsContainer>
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state): Object => ({
   toasts: state.toasts.toasts,
 });
 export default connect(mapStateToProps)(ToastsPure);

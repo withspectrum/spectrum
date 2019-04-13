@@ -1,86 +1,60 @@
 // @flow
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import {
-  getUserPermissionsInChannel,
-  removeMembersInChannel,
-} from '../../models/usersChannels';
-import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getChannels, deleteChannel } from '../../models/channel';
+import { removeMembersInChannel } from '../../models/usersChannels';
+import { getChannelById, deleteChannel } from '../../models/channel';
 import { getThreadsByChannelToDelete, deleteThread } from '../../models/thread';
+import {
+  isAuthedResolver as requireAuth,
+  canModerateChannel,
+} from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { channelId }: { channelId: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  channelId: string,
+};
 
-  // user must be authed to delete a channel
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this channel.'
-    );
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { channelId } = args;
+  const { user, loaders } = ctx;
+
+  if (!await canModerateChannel(user.id, channelId, loaders)) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_DELETED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'no permission',
+      },
+    });
+    return new UserError('You don’t have permission to manage this channel');
   }
 
-  const [channels, currentUserChannelPermissions] = await Promise.all([
-    // get the channel to evaluate
-    getChannels([channelId]),
-    // get the channel's permissions
-    getUserPermissionsInChannel(channelId, currentUser.id),
-  ]);
+  const channel = await getChannelById(channelId);
 
-  // select the channel to evaluate
-  const channelToEvaluate = channels && channels[0];
+  if (channel.slug === 'general') {
+    trackQueue.add({
+      userId: user.id,
+      event: events.CHANNEL_DELETED_FAILED,
+      context: { channelId },
+      properties: {
+        reason: 'general channel',
+      },
+    });
 
-  // if channel wasn't found or was previously deleted, something
-  // has gone wrong and we need to escape
-  if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-    return new UserError("Channel doesn't exist");
-  }
-
-  if (channelToEvaluate.slug === 'general') {
     return new UserError("The general channel can't be deleted");
   }
 
-  // get the community parent of the channel being deleted
-  const currentUserCommunityPermissions = await getUserPermissionsInCommunity(
-    channelToEvaluate.communityId,
-    currentUser.id
+  const [allThreadsInChannel] = await Promise.all([
+    getThreadsByChannelToDelete(channelId),
+    deleteChannel(channelId, user.id),
+    removeMembersInChannel(channelId),
+  ]);
+
+  if (allThreadsInChannel.length === 0) return true;
+
+  return allThreadsInChannel.map(
+    async thread => await deleteThread(thread.id, user.id)
   );
-
-  if (
-    currentUserCommunityPermissions.isOwner ||
-    currentUserChannelPermissions.isOwner ||
-    currentUserCommunityPermissions.isModerator ||
-    currentUserChannelPermissions.isModerator
-  ) {
-    // all checks passed
-    // delete the channel requested from the client side user
-    const deleteTheInputChannel = deleteChannel(channelId);
-
-    // get all the threads in the channel to prepare for deletion
-    const getAllThreadsInChannel = getThreadsByChannelToDelete(channelId);
-
-    // update all the UsersChannels objects in the db to be non-members
-    const removeRelationships = removeMembersInChannel(channelId);
-
-    // eslint-disable-next-line
-    const [allThreadsInChannel, __, ___] = await Promise.all([
-      getAllThreadsInChannel,
-      deleteTheInputChannel,
-      removeRelationships,
-    ]);
-
-    // if there were no threads in that channel, we are done
-    if (allThreadsInChannel.length === 0) return true;
-
-    // otherwise we need to mark all the threads in that channel
-    // as deleted
-    return allThreadsInChannel.map(thread => deleteThread(thread.id));
-  }
-
-  return new UserError(
-    "You don't have permission to make changes to this channel"
-  );
-};
+});

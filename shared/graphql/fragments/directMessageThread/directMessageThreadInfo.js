@@ -1,22 +1,18 @@
 // @flow
 import gql from 'graphql-tag';
+import type { UserInfoType } from '../user/userInfo';
 
-type Participant = {
-  id: string,
-  name: string,
-  profilePhoto: string,
-  username: string,
-  lastSeen: ?Date,
-  lastActive: ?Date,
+export type ParticipantType = {
+  ...$Exact<UserInfoType>,
   userId: string,
-  isOnline: boolean,
+  lastSeen: string,
 };
 
 export type DirectMessageThreadInfoType = {
   id: string,
-  snippet: ?string,
-  threadLastActive: ?Date,
-  participants: Array<Participant>,
+  threadLastActive: Date,
+  snippet: string,
+  participants: Array<ParticipantType>,
 };
 
 export default gql`

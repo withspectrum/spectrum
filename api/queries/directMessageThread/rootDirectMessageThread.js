@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../../';
-import { canViewDMThread } from './utils';
+import { canViewDMThread } from '../../utils/permissions';
 
 export default async (
   _: any,
@@ -10,7 +10,7 @@ export default async (
   // signed out users should never be able to request a dm thread
   if (!user || !user.id) return null;
 
-  const canViewThread = await canViewDMThread(id, user.id, { loaders });
+  const canViewThread = await canViewDMThread(user.id, id, loaders);
 
   if (!canViewThread) return null;
 

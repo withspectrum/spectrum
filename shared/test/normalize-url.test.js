@@ -21,6 +21,10 @@ const testCases: TestCases = {
     'github.com',
     'https://github.com',
   ],
+  'should block malicious links': [
+    'javascript:alert(document.cookie)',
+    'about:blank',
+  ],
 };
 
 Object.keys(testCases).forEach(name => {

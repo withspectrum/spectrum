@@ -1,7 +1,10 @@
 //@flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
+import { trackQueue } from 'shared/bull/queues';
+import { events } from 'shared/analytics';
+import { getDirectMessageThreadRecords } from './usersDirectMessageThreads';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
@@ -10,21 +13,21 @@ export type DBDirectMessageThread = {
   threadLastActive: Date,
 };
 
-const getDirectMessageThread = (
-  directMessageThreadId: string
-): Promise<DBDirectMessageThread> => {
+// prettier-ignore
+const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
     .get(directMessageThreadId)
-    .run();
+    .run()
+    .then(res => res && !res.deletedAt ? res : null);
 };
 
-const getDirectMessageThreads = (
-  ids: Array<string>
-): Promise<Array<DBDirectMessageThread>> => {
+// prettier-ignore
+const getDirectMessageThreads = (ids: Array<string>): Promise<Array<DBDirectMessageThread>> => {
   return db
     .table('directMessageThreads')
     .getAll(...ids)
+    .filter(row => row.hasFields('deletedAt').not())
     .run();
 };
 
@@ -36,6 +39,7 @@ const getDirectMessageThreadsByUser = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
+    .filter(row => row.hasFields('deletedAt').not())
     .eqJoin('threadId', db.table('directMessageThreads'))
     .without({
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
@@ -47,7 +51,8 @@ const getDirectMessageThreadsByUser = (
     .run();
 };
 
-const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
+// prettier-ignore
+const createDirectMessageThread = (isGroup: boolean, userId: string): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .insert(
@@ -60,12 +65,20 @@ const createDirectMessageThread = (isGroup: boolean): DBDirectMessageThread => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      trackQueue.add({
+        userId,
+        event: events.DIRECT_MESSAGE_THREAD_CREATED,
+        properties: {
+          isGroup
+        }
+      })
+      return result.changes[0].new_val
+    });
 };
 
-const setDirectMessageThreadLastActive = (
-  id: string
-): DBDirectMessageThread => {
+// prettier-ignore
+const setDirectMessageThreadLastActive = (id: string): DBDirectMessageThread => {
   return db
     .table('directMessageThreads')
     .get(id)
@@ -88,19 +101,32 @@ const getUpdatedDirectMessageThreadChangefeed = () =>
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
-    .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
-    .without({
-      right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
-    })
-    .zip()
     .run();
 
-const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+const listenToUpdatedDirectMessageThreadRecords = (cb: Function) => {
   return createChangefeed(
     getUpdatedDirectMessageThreadChangefeed,
     cb,
     'listenToUpdatedDirectMessageThreads'
   );
+};
+
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  // NOTE(@mxstbr): Running changefeeds on eqJoin's does not work well, so we
+  // hack around that by listening to record changes and then "faking" an eqJoin
+  // by doing another db query!
+  return listenToUpdatedDirectMessageThreadRecords(directMessageThread => {
+    getDirectMessageThreadRecords(directMessageThread.id).then(
+      usersDirectMessageThread => {
+        usersDirectMessageThread.forEach(userDirectMessageThread => {
+          cb({
+            ...userDirectMessageThread,
+            ...directMessageThread,
+          });
+        });
+      }
+    );
+  });
 };
 
 // prettier-ignore

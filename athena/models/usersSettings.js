@@ -1,5 +1,5 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { DBUsersSettings } from 'shared/types';
 
 export const getUsersSettings = (userId: string): Promise<?DBUsersSettings> => {

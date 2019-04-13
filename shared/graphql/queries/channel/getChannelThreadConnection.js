@@ -45,6 +45,7 @@ const getChannelThreadConnectionOptions = {
       channel,
       networkStatus,
       subscribeToMore,
+      refetch,
     },
   }) => ({
     data: {
@@ -52,6 +53,7 @@ const getChannelThreadConnectionOptions = {
       loading,
       networkStatus,
       channel,
+      refetch,
       threadConnection: channel && channel.threadConnection,
       threads:
         channel && channel.threadConnection
@@ -62,11 +64,20 @@ const getChannelThreadConnectionOptions = {
         channel && channel.threadConnection
           ? channel.threadConnection.pageInfo.hasNextPage
           : false,
-      subscribeToUpdatedThreads: () => {
+      subscribeToUpdatedThreads: (channelIds?: Array<string>) => {
+        const variables = channelIds
+          ? {
+              variables: {
+                channelIds,
+              },
+            }
+          : {};
         return subscribeToMore({
           document: subscribeToUpdatedThreads,
+          ...variables,
           updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
+            const updatedThread =
+              subscriptionData.data && subscriptionData.data.threadUpdated;
             if (!updatedThread) return prev;
 
             const thisChannelId = ownProps.channelId;
@@ -76,8 +87,7 @@ const getChannelThreadConnectionOptions = {
             const newThreads = updatedThreadShouldAppearInContext
               ? parseRealtimeThreads(
                   prev.channel.threadConnection.edges,
-                  updatedThread,
-                  ownProps.dispatch
+                  updatedThread
                 ).filter(thread => thread.node.channel.id === thisChannelId)
               : [...prev.channel.threadConnection.edges];
 

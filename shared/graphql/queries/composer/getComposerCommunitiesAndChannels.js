@@ -30,7 +30,6 @@ type ChannelNode = {
     isArchived: boolean,
     community: {
       id: string,
-      isPro: boolean,
     },
     channelPermissions: {
       isMember: boolean,
@@ -84,7 +83,6 @@ export const getComposerCommunitiesAndChannelsQuery = gql`
             isArchived
             community {
               id
-              isPro
             }
             channelPermissions {
               isMember

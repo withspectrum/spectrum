@@ -1,8 +1,7 @@
-//@flow
+// @flow
 /**
  * The combined schema out of types and resolvers (queries, mutations and subscriptions)
  */
-//$FlowFixMe
 const {
   makeExecutableSchema,
   addSchemaLevelResolveFunction,
@@ -11,7 +10,6 @@ const debug = require('debug')('api:resolvers');
 const logExecutions = require('graphql-log')({
   logger: debug,
 });
-//$FlowFixMe
 const { merge } = require('lodash');
 import UserError from './utils/UserError';
 
@@ -20,15 +18,17 @@ const generalTypes = require('./types/general');
 
 const Thread = require('./types/Thread');
 const Channel = require('./types/Channel');
+const ChannelSlackSettings = require('./types/ChannelSlackSettings');
 const Community = require('./types/Community');
+const CommunitySlackSettings = require('./types/CommunitySlackSettings');
 const Message = require('./types/Message');
 const Reaction = require('./types/Reaction');
 const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
-const Invoice = require('./types/Invoice');
 const Search = require('./types/Search');
+const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
 
@@ -43,11 +43,12 @@ const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
 const searchQueries = require('./queries/search');
 const communityMemberQueries = require('./queries/communityMember');
+const communitySlackSettingsQueries = require('./queries/communitySlackSettings');
+const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
-const recurringPaymentMutations = require('./mutations/recurringPayment');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
 const directMessageThreadMutations = require('./mutations/directMessageThread');
@@ -55,34 +56,48 @@ const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
 const communityMemberMutations = require('./mutations/communityMember');
+const fileMutations = require('./mutations/files');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
 const threadSubscriptions = require('./subscriptions/thread');
+const communitySubscriptions = require('./subscriptions/community');
+
+const rateLimit = require('./utils/rate-limit-directive').default;
+
+const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 const Root = /* GraphQL */ `
-	# The dummy queries and mutations are necessary because
-	# graphql-js cannot have empty root types and we only extend
-	# these types later on
-	# Ref: apollographql/graphql-tools#293
-	type Query {
-		dummy: String
-	}
+  directive @rateLimit(
+    max: Int
+    window: Int
+    message: String
+    identityArgs: [String]
+    arrayLengthField: String
+  ) on FIELD_DEFINITION
 
-	type Mutation {
-		dummy: String
-	}
+  # The dummy queries and mutations are necessary because
+  # graphql-js cannot have empty root types and we only extend
+  # these types later on
+  # Ref: apollographql/graphql-tools#293
+  type Query {
+    dummy: String
+  }
 
-	type Subscription {
-		dummy: String
-	}
+  type Mutation {
+    dummy: String
+  }
 
-	schema {
-		query: Query
-		mutation: Mutation
-		subscription: Subscription
-	}
+  type Subscription {
+    dummy: String
+  }
+
+  schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+  }
 `;
 
 const resolvers = merge(
@@ -100,23 +115,26 @@ const resolvers = merge(
   metaQueries,
   searchQueries,
   communityMemberQueries,
+  communitySlackSettingsQueries,
+  channelSlackSettingsQueries,
   // mutations
   messageMutations,
   threadMutations,
   directMessageThreadMutations,
   reactionMutations,
-  recurringPaymentMutations,
   communityMutations,
   channelMutations,
   notificationMutations,
   userMutations,
   metaMutations,
   communityMemberMutations,
+  fileMutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
   directMessageThreadSubscriptions,
-  threadSubscriptions
+  threadSubscriptions,
+  communitySubscriptions
 );
 
 if (process.env.NODE_ENV === 'development' && debug.enabled) {
@@ -131,8 +149,10 @@ const schema = makeExecutableSchema({
     generalTypes,
     Root,
     Community,
+    CommunitySlackSettings,
     CommunityMember,
     Channel,
+    ChannelSlackSettings,
     Thread,
     ThreadParticipant,
     Message,
@@ -145,13 +165,18 @@ const schema = makeExecutableSchema({
     Search,
   ],
   resolvers,
+  schemaDirectives: IS_PROD
+    ? {
+        rateLimit,
+      }
+    : {},
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {
-  console.log('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
+  console.error('\n\n⚠️ ----MAINTENANCE MODE ENABLED----⚠️\n\n');
   addSchemaLevelResolveFunction(schema, () => {
     throw new UserError(
-      "We're currently undergoing planned maintenance. We'll be back by 3pm UTC, please check https://twitter.com/withspectrum for ongoing updates!"
+      "We're currently undergoing planned maintenance. We'll be back soon, please check https://twitter.com/withspectrum for ongoing updates!"
     );
   });
 }

@@ -44,66 +44,70 @@ export const getCurrentUserDMThreadConnectionOptions = {
   // $FlowFixMe
   props: props => ({
     ...props,
-    fetchMore: () =>
-      props.data.fetchMore({
-        query: LoadMoreDirectMessageThreads,
-        variables: {
-          after:
-            props.data.user.directMessageThreadsConnection.edges[
-              props.data.user.directMessageThreadsConnection.edges.length - 1
-            ].cursor,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult.user) {
-            return prev;
-          }
+    dmData: {
+      ...props.data,
+      fetchMore: () =>
+        props.data.fetchMore({
+          query: LoadMoreDirectMessageThreads,
+          variables: {
+            after:
+              props.data.user.directMessageThreadsConnection.edges[
+                props.data.user.directMessageThreadsConnection.edges.length - 1
+              ].cursor,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.user) {
+              return prev;
+            }
 
-          const foo = {
-            ...prev,
-            user: {
-              ...prev.user,
+            const foo = {
+              ...prev,
+              user: {
+                ...prev.user,
+                directMessageThreadsConnection: {
+                  ...prev.user.directMessageThreadsConnection,
+                  pageInfo: {
+                    ...prev.user.directMessageThreadsConnection.pageInfo,
+                    ...fetchMoreResult.user.directMessageThreadsConnection
+                      .pageInfo,
+                  },
+                  edges: [
+                    ...prev.user.directMessageThreadsConnection.edges,
+                    ...fetchMoreResult.user.directMessageThreadsConnection
+                      .edges,
+                  ],
+                },
+              },
+            };
+            return foo;
+          },
+        }),
+      subscribeToUpdatedDirectMessageThreads: () => {
+        return props.data.subscribeToMore({
+          document: subscribeToUpdatedDirectMessageThreads,
+          updateQuery: (prev, { subscriptionData }) => {
+            const updatedDirectMessageThread =
+              subscriptionData.data.directMessageThreadUpdated;
+            if (!updatedDirectMessageThread) return prev;
+
+            // Add the new notification to the data
+            return Object.assign({}, prev, {
+              ...prev,
               directMessageThreadsConnection: {
                 ...prev.user.directMessageThreadsConnection,
-                pageInfo: {
-                  ...prev.user.directMessageThreadsConnection.pageInfo,
-                  ...fetchMoreResult.user.directMessageThreadsConnection
-                    .pageInfo,
-                },
                 edges: [
                   ...prev.user.directMessageThreadsConnection.edges,
-                  ...fetchMoreResult.user.directMessageThreadsConnection.edges,
+                  {
+                    node: updatedDirectMessageThread,
+                    cursor: '__this-is-a-cursor__',
+                    __typename: 'DirectMessageThread',
+                  },
                 ],
               },
-            },
-          };
-          return foo;
-        },
-      }),
-    subscribeToUpdatedDirectMessageThreads: () => {
-      return props.data.subscribeToMore({
-        document: subscribeToUpdatedDirectMessageThreads,
-        updateQuery: (prev, { subscriptionData }) => {
-          const updatedDirectMessageThread =
-            subscriptionData.data.directMessageThreadUpdated;
-          if (!updatedDirectMessageThread) return prev;
-
-          // Add the new notification to the data
-          return Object.assign({}, prev, {
-            ...prev,
-            directMessageThreadsConnection: {
-              ...prev.user.directMessageThreadsConnection,
-              edges: [
-                ...prev.user.directMessageThreadsConnection.edges,
-                {
-                  node: updatedDirectMessageThread,
-                  cursor: '__this-is-a-cursor__',
-                  __typename: 'DirectMessageThread',
-                },
-              ],
-            },
-          });
-        },
-      });
+            });
+          },
+        });
+      },
     },
   }),
 };

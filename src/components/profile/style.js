@@ -1,5 +1,7 @@
+// @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import {
   FlexRow,
   FlexCol,
@@ -8,10 +10,12 @@ import {
   zIndex,
   Shadow,
   hexa,
-} from '../globals';
-import { Button, OutlineButton, IconButton } from '../buttons';
-import { ReputationWrapper } from '../reputation/style';
-import Card from '../card';
+} from 'src/components/globals';
+import { Button, OutlineButton } from 'src/components/button';
+import { ReputationWrapper } from 'src/components/reputation/style';
+import Icon from 'src/components/icon';
+import Card from 'src/components/card';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -30,7 +34,7 @@ export const ProfileHeaderLink = styled(Link)`
 
   &:hover h3 {
     transition: ${Transition.hover.on};
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
@@ -44,7 +48,7 @@ export const ProfileHeaderNoLink = styled.div`
 
   &:hover h3 {
     transition: ${Transition.hover.on};
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
@@ -54,14 +58,14 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   min-width: 0;
 `;
 
-export const ProfileHeaderAction = styled(IconButton)`
+export const ProfileHeaderAction = styled(Icon)`
   margin-left: 16px;
   flex: 0 0 auto;
 `;
 
 export const Title = styled.h3`
   font-size: 16px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   font-weight: 700;
   line-height: 1.2;
   transition: ${Transition.hover.off};
@@ -69,15 +73,15 @@ export const Title = styled.h3`
 
 export const FullTitle = styled(Title)`
   font-size: 24px;
-  margin-top: 8px;
+  margin-top: 16px;
 `;
 
 export const FullProfile = styled.div`
   margin-left: 32px;
   margin-top: -64px;
-  background-color: ${props => props.theme.bg.default};
+  background-color: ${theme.bg.default};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin-top: -48px;
   }
 `;
@@ -86,7 +90,7 @@ export const Subtitle = styled.div`
   display: flex;
   align-items: center;
   font-size: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   line-height: 1.2;
   margin-top: 4px;
 
@@ -104,15 +108,15 @@ export const Subtitle = styled.div`
 `;
 
 export const Description = styled.div`
-  font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  font-size: 16px;
+  color: ${theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
   white-space: pre-wrap;
 
   a {
     font-weight: 500;
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
 
     &:hover {
       text-decoration: underline;
@@ -123,37 +127,30 @@ export const Description = styled.div`
 export const FullDescription = styled.div`
   padding: 0;
   margin-top: 16px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
+
+  p {
+    white-space: pre-wrap;
+    margin-bottom: 24px;
+  }
+
+  a {
+    color: ${theme.text.secondary};
+  }
+
+  a:hover {
+    color: ${theme.text.default};
+    text-decoration: none;
+  }
 
   > ${ReputationWrapper} {
-    margin-top: 16px;
+    margin-top: 0px;
 
     span {
       margin-left: 4px;
       font-size: 16px;
       font-weight: 400;
     }
-  }
-`;
-
-export const ExtLink = styled(FlexRow)`
-  align-items: center;
-  color: ${({ theme }) => theme.brand.alt};
-  font-weight: 600;
-  transition: ${Transition.hover.off};
-  ${Truncate};
-  font-size: 16px;
-  margin: 12px 0;
-
-  > a:hover {
-    text-decoration: underline;
-    transition: ${Transition.hover.on};
-  }
-
-  > div {
-    color: ${({ theme }) => theme.text.alt};
-    margin-right: 4px;
-    margin-top: 1px;
   }
 `;
 
@@ -180,10 +177,10 @@ export const ActionOutline = styled(OutlineButton)`
 
 export const Meta = styled.div`
   background: #f8fbfe;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   padding: 8px 16px;
   width: 100%;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 4px 4px;
 `;
 
 export const MetaList = styled.ul``;
@@ -191,10 +188,10 @@ export const MetaList = styled.ul``;
 export const MetaListItem = styled.li`
   list-style-type: none;
   font-size: 14px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  font-weight: 500;
+  color: ${theme.text.alt};
   padding: 8px 0;
-  border-top: 2px solid ${props => props.theme.bg.border};
+  border-top: 2px solid ${theme.bg.border};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -220,7 +217,7 @@ export const Label = styled.span`
 `;
 
 export const Count = styled.span`
-  font-weight: 700;
+  font-weight: 500;
 `;
 
 export const CoverLink = styled(ProfileHeaderLink)`
@@ -233,7 +230,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
 
 export const CoverTitle = styled(Title)`
   font-size: 20px;
-  margin-top: 8px;
+  margin-top: 16px;
   text-align: center;
 `;
 
@@ -244,8 +241,8 @@ export const CoverSubtitle = styled(Subtitle)`
 `;
 
 export const CoverDescription = styled(Description)`
-  text-align: center;
   flex: auto;
+  margin-top: 8px;
 `;
 
 // had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
@@ -255,53 +252,36 @@ export const ProfileCard = styled(Card)`
     padding: 16px;
 
     h4 > a:hover {
-      color: ${({ theme }) => theme.brand.alt};
+      color: ${theme.brand.alt};
       text-decoration: underline;
     }
   }
 `;
 
-export const ProUpgrade = styled.div`
-  margin: 16px;
-  margin-top: 0;
-  display: flex;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-
-  button {
-    width: 100%;
-    text-align: center;
-  }
+export const ThreadProfileCard = styled(ProfileCard)`
+  border-radius: 4px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 `;
-
-// export const ReputationContainer = styled.div`
-//   border-top: 2px solid ${props => props.theme.bg.border};
-//   padding: 12px 0;
-//   margin: 0 16px;
-//   display: flex;
-//   color: ${props => props.theme.text.alt};
-// `;
 
 export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;
   height: ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.brand.default};
+  background-color: ${theme.brand.default};
   background-image: url('${props => props.url}');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+  border-radius: ${props => (props.large ? '4px' : '4px 4px 0 0')};
 `;
 
 export const Container = styled.div`
-  background: ${props => props.theme.bg.default};
-  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  background: ${theme.bg.default};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   flex: 0 0 22%;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 4px;
   position: relative;
   z-index: ${zIndex.card};
   margin: 16px;

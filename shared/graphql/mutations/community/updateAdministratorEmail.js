@@ -8,10 +8,6 @@ export type UpdateAdministratorEmailType = {
   data: {
     updateAdministratorEmail: {
       ...$Exact<CommunityInfoType>,
-      billingSettings: {
-        administratorEmail: ?string,
-        pendingAdministratorEmail: ?string,
-      },
     },
   },
 };
@@ -20,10 +16,6 @@ export const updateAdministratorEmailMutation = gql`
   mutation updateAdministratorEmail($input: UpdateAdministratorEmailInput!) {
     updateAdministratorEmail(input: $input) {
       ...communityInfo
-      billingSettings {
-        administratorEmail
-        pendingAdministratorEmail
-      }
     }
   }
   ${communityInfoFragment}

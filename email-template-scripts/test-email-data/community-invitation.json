@@ -1,0 +1,48 @@
+{
+  "subject": "Someone has invited you to join the Test community on Spectrum",
+  "preheader": "Come join the conversation with Someone",
+  "sender": {
+    "createdAt": "2018-08-10T13:47:29.509Z",
+    "description": "",
+    "email": "email",
+    "fbProviderId": null,
+    "firstName": null,
+    "githubProviderId": null,
+    "googleProviderId": null,
+    "id": "1",
+    "isOnline": false,
+    "lastName": null,
+    "lastSeen": "2018-12-01T16:22:38.178Z",
+    "modifiedAt": "2018-08-10T13:48:11.240Z",
+    "name": "Someone",
+    "providerId": null,
+    "termsLastAcceptedAt": "2018-08-10T13:47:29.509Z",
+    "timezone": -180,
+    "username": "username",
+    "website": "website",
+    "profilePhoto": "",
+    "coverPhoto": ""
+  },
+  "recipient": {
+    "email": "email",
+    "firstName": "First",
+    "lastName": "Last"
+  },
+  "community": {
+    "administratorEmail": "email",
+    "createdAt": "2018-12-01T16:17:50.271Z",
+    "creatorId": "1",
+    "description": "Description",
+    "id": "1",
+    "isPrivate": false,
+    "memberCount": 1,
+    "modifiedAt": "2018-12-01T16:20:14.754Z",
+    "name": "Community Name",
+    "slug": "community-slug",
+    "website": "website",
+    "profilePhoto": "",
+    "coverPhoto": ""
+  },
+  "customMessage": "This is a custom message!",
+  "joinPath": "community-slug"
+}

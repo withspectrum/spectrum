@@ -1,7 +1,8 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
-import { zIndex } from '../../../../components/globals';
+import { zIndex } from 'src/components/globals';
 
 export const Container = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ export const Container = styled.div`
 export const Line = styled.span`
   position: absolute;
   height: 2px;
-  background: ${props => props.theme.bg.border};
+  background: ${theme.bg.border};
   top: 50%;
   left: 24px;
   right: 24px;

@@ -4,10 +4,12 @@ import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/get
 import UserEditForm from './editForm';
 import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
-import Invoices from './invoices';
 import DeleteAccountForm from './deleteAccountForm';
-import RecurringPaymentsList from './recurringPaymentsList';
+import DownloadDataForm from './downloadDataForm';
+import Logout from './logout';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 type Props = {
   user: GetCurrentUserSettingsType,
@@ -20,15 +22,30 @@ class Overview extends React.Component<Props> {
     return (
       <SectionsContainer>
         <Column>
-          <UserEditForm user={user} />
-          <DeleteAccountForm id={user.id} />
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <UserEditForm user={user} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <DeleteAccountForm id={user.id} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <DownloadDataForm user={user} />
+          </ErrorBoundary>
         </Column>
         <Column>
-          <RecurringPaymentsList user={user} />
-          <EmailSettings user={user} />
-          {'serviceWorker' in navigator &&
-            'PushManager' in window && <NotificationSettings largeOnly />}
-          <Invoices />
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            <EmailSettings user={user} />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallbackComponent={SettingsFallback}>
+            {!isDesktopApp() &&
+              'serviceWorker' in navigator &&
+              'PushManager' in window && <NotificationSettings largeOnly />}
+          </ErrorBoundary>
+
+          <Logout />
         </Column>
       </SectionsContainer>
     );

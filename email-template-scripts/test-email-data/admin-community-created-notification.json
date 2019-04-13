@@ -1,0 +1,39 @@
+{
+  "subject": "New community: Community Name",
+  "user": {
+    "coverPhoto": "",
+    "createdAt": "2018-08-12T19:08:00.405Z",
+    "description": "description",
+    "email": "email",
+    "fbProviderId": null,
+    "githubProviderId": null,
+    "githubUsername": null,
+    "googleProviderId": null,
+    "id": "1",
+    "isOnline": false,
+    "lastSeen": "2018-12-06T21:45:55.870Z",
+    "modifiedAt": "2018-08-12T19:08:40.616Z",
+    "name": "User Name",
+    "profilePhoto": "",
+    "providerId": null,
+    "termsLastAcceptedAt": "2018-08-12T19:08:00.405Z",
+    "timezone": -420,
+    "username": "username",
+    "website": "website"
+  },
+  "community": {
+    "administratorEmail": "email",
+    "coverPhoto": null,
+    "createdAt": "2018-12-09T19:31:18.615Z",
+    "creatorId": "1",
+    "description": "Description",
+    "id": "1",
+    "isPrivate": false,
+    "memberCount": 0,
+    "modifiedAt": null,
+    "name": "Community Name",
+    "profilePhoto": null,
+    "slug": "community-slug",
+    "website": "website"
+  }
+}

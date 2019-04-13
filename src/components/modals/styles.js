@@ -1,9 +1,9 @@
 // @flow
-// $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { zIndex } from '../globals';
-import { isMobile } from '../../helpers/utils';
-import { IconButton } from '../buttons';
+import { isMobile } from 'src/helpers/utils';
+import Icon from 'src/components/icon';
 
 /*
   This is the global stylesheet for all modal components. Its styles will wrap
@@ -31,7 +31,7 @@ export const modalStyles = (maxWidth: number = 360) => {
       bottom: 0,
       overflowY: 'visible',
       overflowX: 'hidden',
-      zIndex: zIndex.modal - 1,
+      zIndex: 9998,
       padding: '1.2rem',
     },
     // modal root
@@ -42,7 +42,7 @@ export const modalStyles = (maxWidth: number = 360) => {
       borderRadius: '12px',
       border: '0',
       padding: '0',
-      zIndex: zIndex.modal,
+      zIndex: 9999,
       width: '100%',
       maxWidth: `${maxWidth}px`,
       top: 'auto',
@@ -64,7 +64,7 @@ export const ModalBody = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  background-color: ${({ theme }) => theme.bg.default};
+  background-color: ${theme.bg.default};
   overflow: visible;
 `;
 
@@ -77,32 +77,33 @@ export const Title = styled.div`
 export const Header = styled.div`
   padding: 20px 24px 0;
   display: ${props => (props.noHeader ? 'none' : 'flex')};
+  justify-content: space-between;
 `;
 
 export const ModalContent = styled.div``;
 
 export const Footer = styled.div``;
 
-export const CloseButton = styled(IconButton)`
+export const CloseButton = styled(Icon)`
   position: absolute;
   right: 8px;
   top: 8px;
   z-index: ${zIndex.modal + 1};
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${theme.text.placeholder};
 
   &:hover {
-    color: ${({ theme }) => theme.warn.alt};
+    color: ${theme.warn.alt};
   }
 `;
 
 export const Description = styled.p`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   padding: 8px 0 16px;
   line-height: 1.4;
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 `;
 
@@ -110,12 +111,12 @@ export const UpsellDescription = styled(Description)`
   padding: 8px 12px;
   margin: 8px 0;
   border-radius: 4px;
-  border: 1px solid ${props => props.theme.success.border};
-  background: ${props => props.theme.success.wash};
-  color: ${props => props.theme.success.dark};
+  border: 1px solid ${theme.success.border};
+  background: ${theme.success.wash};
+  color: ${theme.success.dark};
 
   a {
-    color: ${props => props.theme.success.default};
+    color: ${theme.success.default};
     font-weight: 700;
     display: block;
     margin-top: 4px;
@@ -126,24 +127,7 @@ export const Notice = styled(Description)`
   padding: 8px 16px;
   margin: 8px 0;
   border-radius: 4px;
-  background: ${props => props.theme.special.wash};
-  border: 2px solid ${props => props.theme.special.border};
-  color: ${props => props.theme.special.dark};
-`;
-
-export const PoweredByStripeFooter = styled.div`
-  width: 100%;
-  background: ${props => props.theme.bg.wash};
-  border-top: 1px solid ${props => props.theme.bg.border};
-  padding: 8px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.secondary};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    margin-left: 4px;
-  }
+  background: ${theme.special.wash};
+  border: 2px solid ${theme.special.border};
+  color: ${theme.special.dark};
 `;

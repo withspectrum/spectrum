@@ -2,11 +2,20 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
+import type { PublishThreadInput } from '../../../../api/mutations/thread/publishThread';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 
-export type PublishThreadType = {
+export type { PublishThreadInput };
+
+export type PublishThreadProps = {
+  publishThread: (
+    thread: $PropertyType<PublishThreadInput, 'thread'>
+  ) => Promise<PublishThreadResultType>,
+};
+
+export type PublishThreadResultType = {
   data: {
-    publishThread: {
+    publishThread?: {
       ...$Exact<ThreadInfoType>,
       channel: {
         id: string,
@@ -18,30 +27,6 @@ export type PublishThreadType = {
       },
     },
   },
-};
-
-type Attachment = {
-  attachmentType: string,
-  data: string,
-};
-
-type File = {
-  name: string,
-  type: string,
-  size: number,
-  path: string,
-};
-
-type PublishThreadInput = {
-  channelId: string,
-  communityId: string,
-  type: 'SLATE' | 'DRAFTJS',
-  content: {
-    title: string,
-    body?: string,
-  },
-  attachments?: ?Array<Attachment>,
-  filesToUpload?: ?Array<File>,
 };
 
 export const publishThreadMutation = gql`
@@ -63,7 +48,7 @@ export const publishThreadMutation = gql`
 
 const publishThreadOptions = {
   props: ({ mutate }) => ({
-    publishThread: (thread: PublishThreadInput) =>
+    publishThread: (thread: $PropertyType<PublishThreadInput, 'thread'>) =>
       mutate({
         variables: {
           thread,

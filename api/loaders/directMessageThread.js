@@ -1,7 +1,7 @@
 // @flow
 import { getDirectMessageThreads } from '../models/directMessageThread';
 import { getMembersInDirectMessageThreads } from '../models/usersDirectMessageThreads';
-import { getLastMessages } from '../models/message';
+import { getLastMessageOfThreads } from '../models/message';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
@@ -15,8 +15,8 @@ export const __createDirectMessageParticipantsLoader = createLoader(
 );
 
 export const __createDirectMessageSnippetLoader = createLoader(
-  threads => getLastMessages(threads),
-  'group'
+  threads => getLastMessageOfThreads(threads),
+  'threadId'
 );
 
 export default () => {

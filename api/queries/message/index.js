@@ -6,6 +6,7 @@ import author from './author';
 import thread from './thread';
 import reactions from './reactions';
 import parent from './parent';
+import content from './content';
 
 module.exports = {
   Query: {
@@ -18,5 +19,6 @@ module.exports = {
     thread,
     reactions,
     parent,
+    content,
   },
 };

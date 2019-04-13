@@ -15,15 +15,16 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import { getThreadNotificationUsers } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { getUserById } from '../../models/user';
+import { getUserById } from 'shared/db/queries/user';
 import { getMessageById } from '../../models/message';
 import { sendMentionNotificationQueue } from 'shared/bull/queues';
 import type { MessageNotificationJobData, Job } from 'shared/bull/types';
 import type { DBMessage } from 'shared/types';
+import { messageTypeObj } from 'shared/draft-utils/process-message-content';
 
 export default async (job: Job<MessageNotificationJobData>) => {
   const { message: incomingMessage } = job.data;
@@ -34,6 +35,9 @@ export default async (job: Job<MessageNotificationJobData>) => {
       incomingMessage.threadId
     }`
   );
+
+  // Do not send notification emails for bot messages
+  if (incomingMessage.bot) return;
 
   // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
   const existing = await checkForExistingNotification(
@@ -95,7 +99,7 @@ export default async (job: Job<MessageNotificationJobData>) => {
 
   // convert the message body to be checked for mentions
   const body =
-    incomingMessage.messageType === 'draftjs'
+    incomingMessage.messageType === messageTypeObj.draftjs
       ? toPlainText(toState(JSON.parse(incomingMessage.content.body)))
       : incomingMessage.content.body;
 
@@ -176,8 +180,8 @@ export default async (job: Job<MessageNotificationJobData>) => {
   );
 
   return Promise.all(formatAndBufferPromises).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

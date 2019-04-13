@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 
+  START_CONFIG
+  { 
+    "production": {
+      "version": "f32a3a1b-9d86-4c92-932c-fd94e7498cfb",
+      "template": "d-82812e47e2ea458c8ded5be8d3de4f48"
+    }
+  }
+  END_CONFIG
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{{subject}}}</title>
+  </head>
+
+<body style='font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif'>
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    {{preheader}}
+  </div>
+
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+  </div>
+
+  <p><strong>Daily active communities:</strong></p>
+  <ul>
+    <li>Total ({{data.dacCount}})</li>
+    <li>New: <p class="green" style="color:#00B88B">{{data.newDac}}</p>
+    </li>
+    <li>Lost: <p class="red" style="color:#C21F3A">{{data.lostDac}}</p>
+    </li>
+  </ul>
+
+  <p><strong>Weekly active communities:</strong></p>
+  <ul>
+    <li>Total ({{data.wacCount}})</li>
+    <li>New: <p class="green" style="color:#00B88B">{{data.newWac}}</p>
+    </li>
+    <li>Lost: <p class="red" style="color:#C21F3A">{{data.lostWac}}</p>
+    </li>
+  </ul>
+
+  <p><strong>Monthly active communities:</strong></p>
+  <ul>
+    <li>Total ({{data.macCount}})</li>
+    <li>New: <p class="green" style="color:#00B88B">{{data.newMac}}</p>
+    </li>
+    <li>Lost: <p class="red" style="color:#C21F3A">{{data.lostMac}}</p>
+    </li>
+  </ul>
+</body>
+
+</html>

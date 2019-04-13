@@ -1,6 +1,7 @@
 // @flow
 export type EntityTypes =
   | 'REACTION'
+  | 'THREAD_REACTION'
   | 'MESSAGE'
   | 'THREAD'
   | 'CHANNEL'
@@ -10,6 +11,7 @@ export type EntityTypes =
 
 export type EventTypes =
   | 'REACTION_CREATED'
+  | 'THREAD_REACTION_CREATED'
   | 'MESSAGE_CREATED'
   | 'THREAD_CREATED'
   | 'THREAD_EDITED'

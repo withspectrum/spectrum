@@ -8,11 +8,11 @@ Object {
       "memberConnection": Object {
         "edges": Array [
           Object {
-            "cursor": "OC0x",
+            "cursor": "My0x",
             "node": Object {
               "contextPermissions": null,
-              "id": "8",
-              "name": "Channel moderator",
+              "id": "3",
+              "name": "Bryn Jackson",
             },
           },
           Object {
@@ -40,11 +40,11 @@ Object {
             },
           },
           Object {
-            "cursor": "My01",
+            "cursor": "OC01",
             "node": Object {
               "contextPermissions": null,
-              "id": "3",
-              "name": "Bryn Jackson",
+              "id": "8",
+              "name": "Channel moderator",
             },
           },
         ],

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 
+  START_CONFIG
+  { 
+    "production": {
+      "version": "c326641d-3a18-40df-a4d3-69864c7a04de",
+      "template": "d-b3f8d36ef3354ce987a352ce39893432"
+    }
+  }
+  END_CONFIG
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{{subject}}}</title>
+</head>
+
+<body>
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    {{preheader}}
+  </div>
+
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+  </div>
+
+  <p><strong>New slack import:</strong></p>
+  <ul>
+    <li>Community: <a href="https://spectrum.chat/{{ community.slug }}">{{data.community.name}}</a>
+</li>
+    <li>{{data.invitedCount}} members invited</li>
+    <li>Slack team name: {{data.teamName}}</li>
+  </ul>
+
+  <p><strong>Community owner:</strong></p>
+  <ul>
+    <li><a href="https://spectrum.chat/users/{{ data.user.username }}">{{data.user.name}}</a></li>
+    <li>About: {{data.user.description}}</li>
+    <li>Joined Spectrum: {{data.user.createdAt}}</li>
+    <li>Email: <a href="mailto:{{ user.email }}">{{data.user.email}}</a>
+</li>
+  </ul>
+</body>
+
+</html>

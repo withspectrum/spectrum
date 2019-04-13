@@ -7,6 +7,7 @@ global.window = {
     host: 'spectrum.chat',
     hash: '',
   },
+  addEventListener: () => {},
 };
 global.localStorage = {
   getItem: () => null,

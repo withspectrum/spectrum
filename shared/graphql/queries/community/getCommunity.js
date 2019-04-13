@@ -71,10 +71,15 @@ export const getCommunityByMatchQuery = gql`
 `;
 
 const getCommunityByMatchOptions = {
-  options: ({ match: { params: { communitySlug } } }) => ({
+  options: ({
+    match: {
+      params: { communitySlug },
+    },
+  }) => ({
     variables: {
       slug: communitySlug,
     },
+    fetchPolicy: 'cache-first',
   }),
 };
 

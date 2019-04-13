@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`existing users should handle no reputation gain 1`] = `"You didn’t gain any reputation last week. You have a total of 10 reputation across all of your communities."`;
+
+exports[`existing users should handle reputation gain 1`] = `"You gained 10 reputation last week. You have a total of 20 reputation across all of your communities - well done!"`;
+
+exports[`first-time users should be told when they haven't gained any reputation 1`] = `"You didn’t gain any reputation last week. Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have."`;
+
+exports[`first-time users should get an explanation what reputation is 1`] = `"You gained 10 reputation last week. Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have."`;
+
+exports[`should handle a daily timeframe 1`] = `"You gained 10 reputation yesterday. You have a total of 20 reputation across all of your communities - well done!"`;
+
+exports[`should handle a daily timeframe 2`] = `"You didn’t gain any reputation yesterday. Reputation is an indicator of how active and constructive you are across all your communities. The more great conversations you start or join, the more reputation you will have."`;

@@ -6,17 +6,14 @@ const {
   BRIAN_ID,
   MAX_ID,
   BRYN_ID,
-  CHANNEL_MODERATOR_USER_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
+  PRIVATE_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
-  PAYMENTS_GENERAL_CHANNEL_ID,
-  PAYMENTS_PRIVATE_CHANNEL_ID,
-  SPECTRUM_DELETED_CHANNEL_ID,
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
   DELETED_COMMUNITY_ID,
   SPECTRUM_COMMUNITY_ID,
-  PAYMENTS_COMMUNITY_ID,
+  PRIVATE_COMMUNITY_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
 } = constants;
 
@@ -36,7 +33,6 @@ module.exports = [
         toJSON(fromPlainText('This is it, we got a thread here'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE),
@@ -50,6 +46,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE),
     lastActive: new Date(DATE),
+    messageCount: 4,
+    reactionCount: 0,
   },
   {
     id: 'thread-2',
@@ -66,7 +64,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 1),
@@ -80,6 +77,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 1),
     lastActive: new Date(DATE + 1),
+    messageCount: 4,
+    reactionCount: 0,
   },
   {
     id: 'thread-3',
@@ -96,7 +95,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -110,6 +108,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
 
   {
@@ -127,7 +127,6 @@ module.exports = [
         toJSON(fromPlainText('This is it, we got a thread here'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE),
@@ -141,6 +140,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE),
     lastActive: new Date(DATE),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-5',
@@ -157,7 +158,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 1),
@@ -171,6 +171,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 1),
     lastActive: new Date(DATE + 1),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-6',
@@ -187,7 +189,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -201,6 +202,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-7',
@@ -217,7 +220,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -232,6 +234,8 @@ module.exports = [
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
     deletedAt: new Date(DATE + 3),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-8',
@@ -248,7 +252,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -262,6 +265,8 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
   {
     id: 'thread-9',
@@ -278,7 +283,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -309,7 +313,6 @@ module.exports = [
         toJSON(fromPlainText('This is just another thread'))
       ),
     },
-    attachments: [],
     edits: [
       {
         timestamp: new Date(DATE + 2),
@@ -323,5 +326,102 @@ module.exports = [
     ],
     modifiedAt: new Date(DATE + 2),
     lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
+  },
+  {
+    id: 'thread-11',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: SPECTRUM_GENERAL_CHANNEL_ID,
+    communityId: SPECTRUM_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: true,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Deleted thread',
+      body: JSON.stringify(toJSON(fromPlainText('This is a deleted thread'))),
+    },
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Deleted thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is a deleted thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+    deletedAt: new Date(DATE + 3),
+    messageCount: 0,
+    reactionCount: 0,
+  },
+
+  {
+    id: 'thread-12',
+    createdAt: new Date(DATE + 2),
+    creatorId: BRYN_ID,
+    channelId: DELETED_COMMUNITY_DELETED_CHANNEL_ID,
+    communityId: DELETED_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+    deletedAt: new Date(DATE),
+    messageCount: 0,
+    reactionCount: 0,
+  },
+
+  {
+    id: 'thread-13',
+    createdAt: new Date(DATE + 2),
+    creatorId: MAX_ID,
+    channelId: PRIVATE_GENERAL_CHANNEL_ID,
+    communityId: PRIVATE_COMMUNITY_ID,
+    isPublished: true,
+    isLocked: false,
+    type: 'DRAFTJS',
+    content: {
+      title: 'Yet another thread',
+      body: JSON.stringify(
+        toJSON(fromPlainText('This is just another thread'))
+      ),
+    },
+    edits: [
+      {
+        timestamp: new Date(DATE + 2),
+        content: {
+          title: 'Yet another thread',
+          body: JSON.stringify(
+            toJSON(fromPlainText('This is just another thread'))
+          ),
+        },
+      },
+    ],
+    modifiedAt: new Date(DATE + 2),
+    lastActive: new Date(DATE + 2),
+    messageCount: 0,
+    reactionCount: 0,
   },
 ];

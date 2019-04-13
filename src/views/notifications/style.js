@@ -1,6 +1,6 @@
 // @flow
-// $FlowFixMe
-import styled from 'styled-components';
+import theme from 'shared/theme';
+import styled, { css } from 'styled-components';
 import {
   FlexRow,
   FlexCol,
@@ -9,24 +9,35 @@ import {
   hexa,
   Shadow,
   zIndex,
-} from '../../components/globals';
-import { HorizontalRule } from '../../components/globals';
-import Card from '../../components/card';
-import { IconButton } from '../../components/buttons';
+  Truncate,
+} from 'src/components/globals';
+import { HorizontalRule } from 'src/components/globals';
+import Card from 'src/components/card';
+import { SingleColumnGrid } from 'src/components/layout';
+import Icon from 'src/components/icon';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
 `;
 
-export const NotificationCard = styled(Card)`
+export const NotificationCard = styled.div`
   padding: 16px;
+  width: 100%;
   padding-bottom: 24px;
   overflow: hidden;
-  transition: ${Transition.hover.off};
+  position: relative;
+  border-bottom: 1px solid ${props => props.theme.bg.border};
+  ${props =>
+    props.isSeen === false &&
+    css`
+      box-shadow: inset 2px 0 0 ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 
   &:hover {
-    transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
+    background: ${props =>
+      props.isSeen ? theme.bg.wash : hexa(theme.brand.default, 0.06)};
   }
 `;
 
@@ -34,17 +45,26 @@ export const SegmentedNotificationCard = styled(Card)`
   padding: 0;
   padding-top: 16px;
   transition: ${Transition.hover.off};
+  border-radius: 0;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
 
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
+
+  ${props =>
+    props.isSeen === false &&
+    css`
+      border-left: 2px solid ${theme.brand.default};
+      background: ${hexa(theme.brand.default, 0.06)};
+    `}
 `;
 
 export const ContentHeading = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   margin: 8px 0;
 `;
 
@@ -61,7 +81,7 @@ export const ContentWash = styled(Content)`
   margin: 0;
   background-color: ${props => hexa(props.theme.bg.wash, 0.75)};
   border-radius: ${props => (props.mini ? '0' : '0 0 8px 8px')};
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
   padding: 8px;
   padding-top: 0;
 `;
@@ -103,7 +123,7 @@ export const ChatMessage = styled.p`
   padding: 12px 16px;
   border-radius: 16px;
   font-size: 14px;
-  background-color: ${({ theme }) => theme.generic.alt};
+  background-color: ${theme.generic.alt};
   background-image: ${({ theme }) =>
     Gradient(theme.generic.alt, theme.generic.default)};
   float: left;
@@ -114,10 +134,10 @@ export const ChatMessage = styled.p`
 export const NotificationListRow = styled(FlexCol)`
   padding: 16px;
   padding-top: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
   justify-content: center;
   align-items: flex-start;
-  color: ${({ theme }) => theme.text.default};
+  color: ${theme.text.default};
   position: relative;
   z-index: ${zIndex.card};
   flex: none;
@@ -151,10 +171,11 @@ export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
   max-width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const ActorPhotoItem = styled.div`
-  margin-right: 4px;
+  margin: 2px 4px 2px 0;
 `;
 
 export const ActorPhoto = styled.img`
@@ -174,29 +195,41 @@ export const ContextRow = styled(FlexRow)`
 `;
 
 export const SuccessContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.success.alt};
+  color: ${theme.success.alt};
 `;
 
 export const SpecialContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.special.default};
+  color: ${theme.special.default};
 `;
 
 export const ReactionContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.warn.alt};
+  color: ${theme.warn.alt};
 `;
 
 export const JoinContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.space.default};
+  color: ${theme.space.default};
+`;
+
+export const RequestContext = styled(ContextRow)`
+  color: ${theme.special.alt};
+`;
+
+export const ApprovedContext = styled(ContextRow)`
+  color: ${theme.success.default};
 `;
 
 export const ThreadContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
 
+export const ThreadReactionContext = styled(ContextRow)`
+  color: ${theme.brand.alt};
+`;
+
 export const CreatedContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.brand.alt};
+  color: ${theme.brand.alt};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
@@ -204,17 +237,18 @@ export const CreatedContext = styled(ContextRow)`
 export const TextContent = styled.p`
   font-size: 14px;
   font-weight: 400;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
   padding-right: 16px;
+  margin-left: 32px;
 
   a {
     font-weight: 600;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
 
     &:hover {
-      color: ${props => props.theme.brand.alt};
+      color: ${theme.brand.alt};
       text-decoration: underline;
     }
   }
@@ -237,7 +271,7 @@ export const BubbleGroupContainer = styled(FlexCol)`
 export const Timestamp = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
 `;
 
 export const AttachmentsWash = styled(FlexCol)`
@@ -246,19 +280,86 @@ export const AttachmentsWash = styled(FlexCol)`
   flex: none;
 `;
 
-export const RequestCard = styled(Card)`
+export const StickyHeader = styled.div`
+  display: flex;
+  position: relative;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 16px 16px 24px;
+  justify-content: flex-end;
+  padding: 16px;
+  background: ${props => props.theme.bg.default};
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid ${theme.bg.border};
+  z-index: 10;
 
-  > p {
-    font-weight: 700;
-    font-size: 16px;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
   }
 `;
 
-export const CloseRequest = styled(IconButton)`
+export const CloseRequest = styled(Icon)`
   margin-left: 8px;
-  color: ${props => props.theme.text.placeholder};
+  color: ${theme.text.placeholder};
+`;
+
+export const ButtonsRow = styled.div`
+  display: flex;
+  align-items: center;
+  align-content: stretch;
+  padding: 0 16px;
+
+  div {
+    display: flex;
+    flex: 1 0 auto;
+    margin-right: 8px;
+  }
+
+  div:last-child {
+    margin-right: 0;
+  }
+
+  button {
+    display: flex;
+    flex: 1 0 auto;
+  }
+`;
+
+export const ChannelCard = styled.div`
+  padding: 0 16px;
+  border-radius: 8px;
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.default, 0.1)};
+  margin: 8px;
+  background: ${theme.bg.default};
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    display: flex;
+    flex: 1 0 auto;
+  }
+`;
+
+export const ChannelName = styled.p`
+  display: flex;
+  flex: 1 0 auto;
+  padding: 16px 8px 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${theme.text.default};
+  ${Truncate};
+`;
+
+export const ToggleNotificationsContainer = styled.div`
+  display: flex;
+  color: ${theme.text.alt};
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+`;
+
+export const StyledSingleColumn = styled(SingleColumnGrid)`
+  border-left: 1px solid ${theme.bg.border};
+  border-right: 1px solid ${theme.bg.border};
 `;

@@ -14,6 +14,7 @@ import moderators from './moderators';
 import owners from './owners';
 import isArchived from './isArchived';
 import joinSettings from './joinSettings';
+import slackSettings from './slackSettings';
 
 module.exports = {
   Query: {
@@ -33,5 +34,6 @@ module.exports = {
     owners,
     isArchived,
     joinSettings,
+    slackSettings,
   },
 };

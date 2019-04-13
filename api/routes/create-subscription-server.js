@@ -4,7 +4,7 @@ import { execute, subscribe } from 'graphql';
 
 import schema from '../schema';
 import createLoaders from '../loaders';
-import { getUser, setUserOnline } from '../models/user';
+import { setUserOnline } from 'shared/db/queries/user';
 import { getUserIdFromReq } from '../utils/session-store';
 import createErrorFormatter from '../utils/create-graphql-error-formatter';
 
@@ -18,34 +18,6 @@ const createSubscriptionsServer = (server: any, path: string) => {
       execute,
       subscribe,
       schema,
-      onOperation: (_: any, params: Object) => {
-        const errorFormatter = createErrorFormatter();
-        params.formatError = errorFormatter;
-        return params;
-      },
-      onDisconnect: rawSocket => {
-        getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => {
-            setUserOnline(id, false);
-          })
-          .catch(err => {
-            // Ignore errors
-          });
-      },
-      onConnect: (connectionParams, rawSocket) =>
-        getUserIdFromReq(rawSocket.upgradeReq)
-          .then(id => setUserOnline(id, true))
-          .then(user => {
-            return {
-              user,
-              loaders: createLoaders({ cache: false }),
-            };
-          })
-          .catch(err => {
-            return {
-              loaders: createLoaders({ cache: false }),
-            };
-          }),
     },
     {
       server,

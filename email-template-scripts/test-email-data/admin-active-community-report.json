@@ -1,0 +1,14 @@
+{
+  "subject": "Active Community Report",
+  "data": {
+    "dacCount": 3,
+    "wacCount": 6,
+    "macCount": 9,
+    "newDac": "one, two three",
+    "newWac": "four five six",
+    "newMac": "seven eight nine",
+    "lostDac": "ten",
+    "lostWac": "eleven",
+    "lostMac": "twelve"
+  }
+}

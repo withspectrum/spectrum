@@ -181,7 +181,6 @@ const generateThread = (communityId, channelId, creatorId) => {
     communityId,
     isPublished: faker.random.boolean(),
     content,
-    attachments: [],
     type: 'DRAFTJS',
     lastActive: faker.date.between(createdAt, new Date()),
     edits: [
@@ -244,7 +243,6 @@ const generateMessage = (senderId, threadId, threadType) => {
     content: {
       body: casual.text(),
     },
-    attachments: [],
     messageType: 'text',
     timestamp: faker.date.past(2),
   };

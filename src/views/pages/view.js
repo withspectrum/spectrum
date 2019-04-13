@@ -1,19 +1,19 @@
 // @flow
+import theme from 'shared/theme';
 import React from 'react';
 import styled from 'styled-components';
-import Link from 'src/components/link';
-import Icon from '../../components/icons';
-import Avatar from '../../components/avatar';
-import {
-  Shadow,
-  Gradient,
-  FlexCol,
-  Transition,
-  HorizontalRule,
-} from '../../components/globals';
+import { Link } from 'react-router-dom';
+import Icon from 'src/components/icon';
+import { UserAvatar } from 'src/components/avatar';
+import { FlexCol, Transition, HorizontalRule } from 'src/components/globals';
 import Search from '../explore/components/search';
-import Section from '../../components/themedSection';
-import { Conversation, Discover } from '../../components/illustrations';
+import Section from 'src/components/themedSection';
+import {
+  PrimaryButton,
+  WhiteOutlineButton,
+  WhiteButton,
+} from 'src/components/button';
+import { Conversation, Discover } from 'src/components/illustrations';
 import {
   AbstractLogo,
   BootstrapLogo,
@@ -35,16 +35,20 @@ import {
   BulletCopy,
   Flexer,
   PrimaryCTA,
-  SecondaryCTA,
   Content,
 } from './style';
+import { track, events } from 'src/helpers/analytics';
+import { MEDIA_BREAK } from 'src/components/layout';
 
-type Props = Object;
-
-export const Overview = (props: Props) => {
+export const Overview = () => {
   const ThisContent = styled(Content)`
     max-width: 100vw;
     margin-top: 92px;
+    margin-bottom: 80px;
+
+    @media (max-width: 640px) {
+      margin-bottom: 40px;
+    }
   `;
 
   const Text = styled(FlexCol)`
@@ -53,7 +57,7 @@ export const Overview = (props: Props) => {
     align-items: flex-start;
     z-index: 2;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-top: 0;
       margin-bottom: 16px;
       text-align: center;
@@ -66,7 +70,7 @@ export const Overview = (props: Props) => {
     font-weight: 500;
     max-width: 580px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       text-align: center;
     }
   `;
@@ -75,27 +79,28 @@ export const Overview = (props: Props) => {
     margin-bottom: 16px;
     font-size: 40px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       font-size: 24px;
     }
   `;
 
-  const Actions = styled(Flexer)`
+  const Actions = styled.div`
+    display: flex;
     margin-top: 48px;
+    width: 100%;
     align-items: flex-start;
-    justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
+      flex-direction: column;
       align-items: center;
     }
   `;
 
-  const ThisSecondaryCTA = styled(SecondaryCTA)`
+  const ThisSecondaryCTA = styled(WhiteOutlineButton)`
     margin-left: 16px;
     font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       margin-top: 16px;
     }
@@ -114,8 +119,12 @@ export const Overview = (props: Props) => {
     }
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 16px;
+  const ThisPrimaryCTA = styled(WhiteButton)`
+    color: ${theme.brand.alt};
+
+    &:hover {
+      color: ${theme.brand.default};
+    }
   `;
 
   const Img = styled.img`
@@ -134,7 +143,7 @@ export const Overview = (props: Props) => {
       display: none;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: none;
     }
   `;
@@ -155,14 +164,18 @@ export const Overview = (props: Props) => {
             that are built to last.
           </ThisCopy>
           <Actions>
-            <Link to="/login">
-              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
-            </Link>
-            <Link to="/new/community">
-              <ThisSecondaryCTA icon="plus-fill">
-                Create your community
-              </ThisSecondaryCTA>
-            </Link>
+            <ThisPrimaryCTA
+              to="/login"
+              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+            >
+              Join Spectrum
+            </ThisPrimaryCTA>
+            <ThisSecondaryCTA
+              to="/new/community"
+              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+            >
+              Create your community
+            </ThisSecondaryCTA>
           </Actions>
         </ThisText>
         <Img src={'/img/diagram.svg'} alt="" />
@@ -171,7 +184,7 @@ export const Overview = (props: Props) => {
   );
 };
 
-export const Centralized = (props: Props) => {
+export const Centralized = () => {
   const ThisContent = styled(Content)`
     img {
       margin: 24px 0;
@@ -181,7 +194,7 @@ export const Centralized = (props: Props) => {
   const Text = styled(FlexCol)`
     margin: 40px 16px 64px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-top: 20px;
       margin-bottom: 44px;
     }
@@ -192,27 +205,19 @@ export const Centralized = (props: Props) => {
     margin-top: 16px;
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
+  const ThisPrimaryCTA = styled(PrimaryButton)`
     margin-top: 32px;
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
   `;
 
   const Actions = styled.div`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: flex;
       justify-content: center;
     }
   `;
 
   const ThisTagline = styled(Tagline)`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-bottom: 0;
     }
   `;
@@ -225,7 +230,7 @@ export const Centralized = (props: Props) => {
     align-items: center;
     flex-wrap: wrap;
     z-index: 2;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 
     img {
       margin-top: 32px;
@@ -253,11 +258,12 @@ export const Centralized = (props: Props) => {
             wins!
           </ThisCopy>
           <Actions>
-            <Link to="/explore">
-              <ThisPrimaryCTA icon="explore">
-                Explore communities
-              </ThisPrimaryCTA>
-            </Link>
+            <ThisPrimaryCTA
+              to="/explore"
+              onClick={() => track(events.HOME_PAGE_EXPLORE_CLICKED)}
+            >
+              Explore communities
+            </ThisPrimaryCTA>
           </Actions>
         </Text>
       </ThisContent>
@@ -276,19 +282,18 @@ export const Centralized = (props: Props) => {
   );
 };
 
-export const CommunitySearch = (props: Props) => {
+export const CommunitySearch = () => {
   const ThisContent = styled(Content)`
     flex-direction: column;
     width: 640px;
     align-content: center;
     align-self: center;
     margin-top: 40px;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
     padding: 16px;
 
     @media (max-width: 640px) {
       margin-top: 80px;
-      margin-bottom: 0;
       width: 100%;
     }
   `;
@@ -304,7 +309,7 @@ export const CommunitySearch = (props: Props) => {
     text-align: center;
     max-width: 640px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       text-align: left;
     }
   `;
@@ -322,13 +327,13 @@ export const CommunitySearch = (props: Props) => {
   );
 };
 
-export const Chat = (props: Props) => {
+export const Chat = () => {
   const ThisContent = styled(Content)`
     overflow: hidden;
-    margin: 40px 16px;
+    margin: 40px 16px 80px;
 
-    @media (max-width: 768px) {
-      margin-bottom: 0;
+    @media (max-width: ${MEDIA_BREAK}px) {
+      margin-bottom: 40px;
     }
   `;
 
@@ -337,27 +342,19 @@ export const Chat = (props: Props) => {
     margin-top: 16px;
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    background-color: ${props => props.theme.brand.alt};
-    background-image: ${props =>
-      Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    color: ${props => props.theme.text.reverse};
-    margin-top: 32px;
-
-    &:hover {
-      color: ${props => props.theme.text.reverse};
-    }
-  `;
+  const ThisPrimaryCTA = styled(PrimaryButton)``;
 
   const Actions = styled.div`
-    @media (max-width: 768px) {
+    margin-top: 32px;
+
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: flex;
       justify-content: center;
     }
   `;
 
   const ThisTagline = styled(Tagline)`
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-bottom: 0;
     }
   `;
@@ -379,11 +376,14 @@ export const Chat = (props: Props) => {
           </ThisCopy>
 
           <Actions>
-            <Link to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9">
-              <ThisPrimaryCTA icon="message-fill">
-                Check out a conversation
-              </ThisPrimaryCTA>
-            </Link>
+            <ThisPrimaryCTA
+              to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9"
+              onClick={() =>
+                track(events.HOME_PAGE_EXAMPLE_CONVERSATION_CLICKED)
+              }
+            >
+              Check out a conversation
+            </ThisPrimaryCTA>
           </Actions>
         </FlexCol>
       </ThisContent>
@@ -391,13 +391,15 @@ export const Chat = (props: Props) => {
   );
 };
 
-export const Sell = (props: Props) => {
+export const Sell = () => {
   const Text = styled(FlexCol)`
     align-items: center;
     margin: 40px 0;
   `;
 
-  const ThisContent = styled(Content)``;
+  const ThisContent = styled(Content)`
+    margin-bottom: 80px;
+  `;
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 0;
@@ -460,19 +462,20 @@ export const Sell = (props: Props) => {
         </Text>
       </ThisContent>
       <Actions>
-        <Link to="/new/community">
-          <PrimaryCTA icon="plus-fill">
-            Start building your community
-          </PrimaryCTA>
-        </Link>
+        <PrimaryCTA
+          to="/new/community"
+          onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+        >
+          Start building your community
+        </PrimaryCTA>
       </Actions>
     </ThisSection>
   );
 };
 
-export const Yours = (props: Props) => {
+export const Yours = () => {
   const ThisContent = styled(Content)`
-    margin: 60px 16px 16px;
+    margin: 60px 16px 80px;
     font-size: 18px;
     align-items: center;
     text-align: left;
@@ -483,26 +486,16 @@ export const Yours = (props: Props) => {
     align-self: center;
   `;
 
-  const ThisSecondaryCTA = styled(SecondaryCTA)`
+  const ThisSecondaryCTA = styled(WhiteOutlineButton)`
     margin-left: 16px;
-    font-size: 16px;
-    border: 2px solid ${props => props.theme.text.reverse};
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       margin-left: 0;
       margin-top: 16px;
     }
   `;
 
-  const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 16px;
-    color: ${props => props.theme.text.default};
-
-    &:hover {
-      color: ${props => props.theme.brand.alt};
-      box-shadow: ${Shadow.high} #000;
-    }
-  `;
+  const ThisPrimaryCTA = styled(WhiteButton)``;
 
   const Actions = styled(Flexer)`
     margin-top: 32px;
@@ -512,7 +505,7 @@ export const Yours = (props: Props) => {
       display: inline-block;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       justify-content: center;
     }
   `;
@@ -527,7 +520,7 @@ export const Yours = (props: Props) => {
     flex-wrap: wrap;
     margin-left: -32px;
 
-    @media (max-width: 768px) {
+    @media (max-width: ${MEDIA_BREAK}px) {
       display: none;
     }
   `;
@@ -541,7 +534,7 @@ export const Yours = (props: Props) => {
     min-width: 320px;
     flex: none;
     box-shadow: 0 8px 16px #000;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
     position: relative;
     padding: 24px;
     transition: ${Transition.hover.off};
@@ -549,11 +542,11 @@ export const Yours = (props: Props) => {
     margin-left: 32px;
 
     &:hover {
-      box-shadow: 0 0px 32px ${props => props.theme.brand.alt};
+      box-shadow: 0 0px 32px ${theme.brand.alt};
       transition: ${Transition.hover.on};
 
       > div {
-        color: ${props => props.theme.brand.alt};
+        color: ${theme.brand.alt};
         transition: ${Transition.hover.on};
       }
     }
@@ -582,14 +575,14 @@ export const Yours = (props: Props) => {
     }
 
     span {
-      color: ${props => props.theme.text.alt};
+      color: ${theme.text.alt};
       font-weight: 400;
       margin-left: 4px;
     }
   `;
 
   const Rule = styled(HorizontalRule)`
-    color: ${props => props.theme.brand.border};
+    color: ${theme.brand.border};
     transition: ${Transition.hover.off};
 
     hr {
@@ -614,11 +607,14 @@ export const Yours = (props: Props) => {
                 okay, honestly Spectrum is the best thing that happened to me
                 regarding social interaction in 2017
               </Pullquote>
-              <Signature to="/users/Traykov">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum.imgix.net/users/ZN37gjzZ31PKVPmd6E4ZTlZJa7Z2/5sasho.png.0.17582088793809425?auto=compress&w=64&dpr=2&format=png"
-                />Alexander Traykov<span>@Traykov</span>
+              <Signature to="/users/traykov">
+                <UserAvatar
+                  size={40}
+                  username={'traykov'}
+                  isClickable={false}
+                />
+                Alexander Traykov
+                <span>@Traykov</span>
               </Signature>
             </Quote>
             <Quote>
@@ -633,10 +629,9 @@ export const Yours = (props: Props) => {
                 and interact. Except realtime and trolling-free
               </Pullquote>
               <Signature to="/users/rauchg">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F871555682608136205%2FyMs8Gnot_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=cc42ed724e75265fbb959ec43c910be2"
-                />Guillermo Rauch <span>@rauchg</span>
+                <UserAvatar size={40} username={'rauchg'} isClickable={false} />
+                Guillermo Rauch
+                <span>@rauchg</span>
               </Signature>
             </Quote>
             <Quote>
@@ -650,22 +645,29 @@ export const Yours = (props: Props) => {
                 and been lovely to be a part of the unique communities.
               </Pullquote>
               <Signature to="/users/tayler-m-odea">
-                <Avatar
-                  size={'40'}
-                  src="https://spectrum-imgp.imgix.net/https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F900025975278157824%2FmydeOAGa_normal.jpg?w=128&h=128&ixlib=js-1.1.1&s=a50556fe67cb087d5083b9d1342711ab"
-                />Tayler O’Dea <span>@tayler-m-odea</span>
+                <UserAvatar
+                  size={40}
+                  username={'tayler-m-odea'}
+                  isClickable={false}
+                />
+                Tayler O’Dea
+                <span>@tayler-m-odea</span>
               </Signature>
             </Quote>
           </Quotes>
           <Actions>
-            <Link to="/login">
-              <ThisPrimaryCTA icon="welcome">Join Spectrum</ThisPrimaryCTA>
-            </Link>
-            <Link to="/explore">
-              <ThisSecondaryCTA icon="explore">
-                Explore communities
-              </ThisSecondaryCTA>
-            </Link>
+            <ThisPrimaryCTA
+              to="/login"
+              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
+            >
+              Join Spectrum
+            </ThisPrimaryCTA>
+            <ThisSecondaryCTA
+              to="/explore"
+              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
+            >
+              Explore communities
+            </ThisSecondaryCTA>
           </Actions>
         </FlexCol>
       </ThisContent>

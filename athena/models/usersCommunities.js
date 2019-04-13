@@ -1,15 +1,14 @@
 // @flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 
 export const getMembersInCommunity = (
   communityId: string
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isMember: true, receiveNotifications: true })
-    .run()
-    .then(users => users.map(user => user.userId));
+    .getAll([communityId, true], { index: 'communityIdAndIsMember' })
+    .filter({ receiveNotifications: true })('userId')
+    .run();
 };
 
 export const getOwnersInCommunity = (
@@ -17,10 +16,8 @@ export const getOwnersInCommunity = (
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isOwner: true })
-    .run()
-    .then(users => users.map(user => user.userId));
+    .getAll([communityId, true], { index: 'communityIdAndIsOwner' })('userId')
+    .run();
 };
 
 export const getModeratorsInCommunity = (
@@ -28,10 +25,10 @@ export const getModeratorsInCommunity = (
 ): Promise<Array<string>> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isModerator: true })
-    .run()
-    .then(users => users.map(user => user.userId));
+    .getAll([communityId, true], { index: 'communityIdAndIsModerator' })(
+      'userId'
+    )
+    .run();
 };
 
 export const getUserPermissionsInCommunity = (
@@ -40,8 +37,7 @@ export const getUserPermissionsInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ userId })
+    .getAll([userId, communityId], { index: 'userIdAndCommunityId' })
     .run()
     .then(data => {
       // if a record exists

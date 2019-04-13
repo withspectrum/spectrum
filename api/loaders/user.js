@@ -3,8 +3,7 @@ import {
   getUsers,
   getUsersThreadCount,
   getUsersByUsername,
-} from '../models/user';
-import { getUsersRecurringPayments } from '../models/recurringPayment';
+} from 'shared/db/queries/user';
 import {
   getUsersPermissionsInCommunities,
   getUsersTotalReputation,
@@ -12,7 +11,6 @@ import {
 import { getUsersPermissionsInChannels } from '../models/usersChannels';
 import { getThreadsNotificationStatusForUsers } from '../models/usersThreads';
 import createLoader from './create-loader';
-import type { Loader } from './types';
 
 export const __createUserLoader = createLoader(users => getUsers(users), 'id');
 
@@ -24,11 +22,6 @@ export const __createUserByUsernameLoader = createLoader(
 export const __createUserThreadCountLoader = createLoader(
   users => getUsersThreadCount(users),
   'id'
-);
-
-export const __createUserRecurringPaymentsLoader = createLoader(
-  users => getUsersRecurringPayments(users),
-  'group'
 );
 
 export const __createUserPermissionsInCommunityLoader = createLoader(

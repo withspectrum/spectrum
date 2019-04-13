@@ -4,9 +4,20 @@ import { graphql } from 'react-apollo';
 import directMessageThreadInfoFragment from '../../fragments/directMessageThread/directMessageThreadInfo';
 import type { DirectMessageThreadInfoType } from '../../fragments/directMessageThread/directMessageThreadInfo';
 import { getCurrentUserDMThreadConnectionQuery } from '../../queries/directMessageThread/getCurrentUserDMThreadConnection';
+import type { CreateDirectMessageThreadInput } from '../../../../api/mutations/directMessageThread/createDirectMessageThread';
 
 export type CreateDirectMessageThreadType = {
-  ...$Exact<DirectMessageThreadInfoType>,
+  data: {
+    createDirectMessageThread: {
+      ...$Exact<DirectMessageThreadInfoType>,
+    },
+  },
+};
+
+export type CreateDirectMessageThreadProps = {
+  createDirectMessageThread: (
+    input: CreateDirectMessageThreadType
+  ) => Promise<CreateDirectMessageThreadType>,
 };
 
 export const createDirectMessageThreadMutation = gql`

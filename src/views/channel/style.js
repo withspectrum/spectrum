@@ -1,128 +1,9 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
-import Card from '../../components/card';
-import { Transition, zIndex } from '../../components/globals';
-import { SegmentedControl } from '../../components/segmentedControl';
-import { FullProfile, FullDescription } from 'src/components/profile/style';
-import { ListContainer } from 'src/components/listItems/style';
-
-export const Grid = styled.main`
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) 3fr minmax(240px, 2fr);
-  grid-template-rows: 160px 1fr;
-  grid-template-areas: 'cover cover cover' 'meta content extras';
-  grid-column-gap: 32px;
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  background-color: ${props => props.theme.bg.default};
-
-  @media (max-width: 1280px) {
-    grid-template-columns: 240px 1fr;
-    grid-template-rows: 80px 1fr;
-    grid-template-areas: 'cover cover' 'meta content';
-  }
-
-  @media (max-width: 768px) {
-    grid-template-rows: 80px auto 1fr;
-    grid-template-columns: 100%;
-    grid-column-gap: 0;
-    grid-row-gap: 16px;
-    grid-template-areas: 'cover' 'meta' 'content';
-  }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Meta = styled(Column)`
-  grid-area: meta;
-
-  > ${FullProfile} {
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
-
-  @media (max-width: 768px) {
-    > ${FullProfile} {
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-
-    ${FullDescription} {
-      display: none;
-    }
-  }
-
-  ${ListContainer} {
-    margin: 8px 0 0 32px;
-    width: auto;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
-  }
-
-  > div:nth-of-type(2) {
-    display: flex;
-    flex: none;
-    margin: 16px 0 0 32px;
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-    }
-  }
-
-  > button,
-  > a > button {
-    margin-top: 16px;
-    margin-left: 32px;
-    width: calc(100% - 32px);
-
-    @media (max-width: 768px) {
-      margin-left: 0;
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 0 32px;
-
-    > div {
-      margin-left: 0;
-    }
-  }
-`;
-export const Content = styled(Column)`
-  grid-area: content;
-  min-width: 0;
-  align-items: stretch;
-
-  @media (max-width: 1280px) and (min-width: 768px) {
-    padding-right: 32px;
-  }
-
-  @media (max-width: 768px) {
-    > ${SegmentedControl} > div {
-      margin-top: 0;
-    }
-  }
-`;
-
-export const Extras = styled(Column)`
-  grid-area: extras;
-
-  @media (max-width: 1280px) {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    padding-right: 32px;
-  }
-`;
+import Card from 'src/components/card';
+import { Transition, zIndex, Truncate } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const ColumnHeading = styled.div`
   display: flex;
@@ -132,24 +13,22 @@ export const ColumnHeading = styled.div`
   font-weight: 500;
   padding: 8px 16px 12px;
   margin-top: 24px;
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 2px solid ${theme.bg.border};
 `;
 
 export const SearchContainer = styled(Card)`
-  border-bottom: 2px solid ${props => props.theme.bg.border};
+  border-bottom: 1px solid ${theme.bg.border};
+  background: ${theme.bg.wash};
   position: relative;
   z-index: ${zIndex.search};
   width: 100%;
-  display: block;
-  min-height: 64px;
+  display: flex;
+  padding: 8px 12px;
   transition: ${Transition.hover.off};
+  display: flex;
+  align-items: center;
 
-  &:hover {
-    transition: none;
-    border-bottom: 2px solid ${props => props.theme.brand.alt};
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     border-radius: 0;
     pointer-events: all;
     margin-bottom: 0;
@@ -157,31 +36,96 @@ export const SearchContainer = styled(Card)`
 `;
 
 export const SearchInput = styled.input`
-  justify-content: flex-start;
+  display: flex;
+  flex: 1 0 auto;
   align-items: center;
-  cursor: pointer;
-  padding: 20px;
-  color: ${props => props.theme.text.default};
+  width: 100%;
+  padding: 12px 16px;
+  color: ${theme.text.default};
   transition: ${Transition.hover.off};
-  font-size: 20px;
-  font-weight: 800;
-  margin-left: 8px;
-  width: 97%;
-  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 100px;
+  background: ${theme.bg.default};
+  border: 1px solid ${theme.bg.border};
+
+  &:focus {
+    border: 1px solid ${theme.text.secondary};
+  }
 `;
 
 export const MessageIconContainer = styled.div`
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 
   &:hover {
-    color: ${props => props.theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;
 
 export const UserListItemContainer = styled.div`
-  border-bottom: 1px solid ${props => props.theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.wash};
+`;
+
+export const CommunityContext = styled.div`
+  display: flex;
+  margin-top: 32px;
+  margin-left: 32px;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    margin-top: 16px;
+  }
+`;
+
+export const CommunityName = styled.h5`
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 16px;
+  color: ${theme.text.secondary};
+
+  ${Truncate};
+`;
+
+export const ChannelName = styled.h3`
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  margin-left: 32px;
+  color: ${theme.text.default};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    margin-left: 0;
+  }
+`;
+
+export const ChannelDescription = styled.h4`
+  font-size: 18px;
+  font-weight: 400;
+  margin-left: 32px;
+  margin-bottom: 16px;
+  color: ${theme.text.alt};
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    margin-left: 0;
+  }
+`;
+
+export const MetadataContainer = styled.div`
+  margin-left: 32px;
+
+  @media (max-width: ${MEDIA_BREAK}px;) {
+    margin-left: 8px;
+  }
+`;
+
+export const FeedsContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+  background: ${theme.bg.default};
 `;

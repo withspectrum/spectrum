@@ -2,49 +2,55 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
-// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
-import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
+import { NewThreadReactionNotification } from './components/newThreadReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
-import { NewThreadNotification } from './components/newThreadNotification';
 import { CommunityInviteNotification } from './components/communityInviteNotification';
 import { MentionMessageNotification } from './components/mentionMessageNotification';
 import { MentionThreadNotification } from './components/mentionThreadNotification';
 import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { PrivateChannelRequestApproved } from './components/privateChannelRequestApprovedNotification';
 import { PrivateChannelRequestSent } from './components/privateChannelRequestSentNotification';
-import { Column } from '../../components/column';
-import AppViewWrapper from '../../components/appViewWrapper';
-import Head from '../../components/head';
-import Titlebar from '../../views/titlebar';
-import {
-  displayLoadingNotifications,
-  LoadingThread,
-} from '../../components/loading';
-import { FlexCol } from '../../components/globals';
-import { sortByDate } from '../../helpers/utils';
-import WebPushManager from '../../helpers/web-push-manager';
-import { track } from '../../helpers/events';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { PrivateCommunityRequestApproved } from './components/privateCommunityRequestApprovedNotification';
+import { PrivateCommunityRequestSent } from './components/privateCommunityRequestSentNotification';
+import Head from 'src/components/head';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { sortByDate } from 'src/helpers/utils';
+import WebPushManager from 'src/helpers/web-push-manager';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import getNotifications from 'shared/graphql/queries/notification/getNotifications';
 import markNotificationsSeenMutation from 'shared/graphql/mutations/notification/markNotificationsSeen';
+import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { subscribeToWebPush } from 'shared/graphql/subscriptions';
-import { UpsellSignIn, UpsellNullNotifications } from '../../components/upsell';
-import ViewError from '../../components/viewError';
-import BrowserNotificationRequest from './components/browserNotificationRequest';
 import generateMetaInfo from 'shared/generate-meta-info';
-import viewNetworkHandler from '../../components/viewNetworkHandler';
+import { setTitlebarProps } from 'src/actions/titlebar';
+import viewNetworkHandler, {
+  type ViewNetworkHandlerType,
+} from 'src/components/viewNetworkHandler';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary } from 'src/components/error';
+import { isDesktopApp } from 'src/helpers/desktop-app-utils';
+import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
+import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
+import { ViewGrid } from 'src/components/layout';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
+import { StyledSingleColumn, StickyHeader } from './style';
+import { updateNotificationsCount } from 'src/actions/notifications';
+import NextPageButton from 'src/components/nextPageButton';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 
 type Props = {
   markAllNotificationsSeen?: Function,
+  markSingleNotificationSeen: Function,
   subscribeToWebPush: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   currentUser: Object,
   isFetchingMore: boolean,
+  ...$Exact<ViewNetworkHandlerType>,
   data: {
     networkStatus: number,
     fetchMore: Function,
@@ -52,12 +58,15 @@ type Props = {
     notifications: {
       edges: Array<Object>,
     },
+    refetch: Function,
   },
+  networkOnline: boolean,
+  websocketConnection: WebsocketConnectionType,
 };
+
 type State = {
   showWebPushPrompt: boolean,
   webPushPromptLoading: boolean,
-  scrollElement: any,
 };
 
 class NotificationsPure extends React.Component<Props, State> {
@@ -67,11 +76,11 @@ class NotificationsPure extends React.Component<Props, State> {
     this.state = {
       showWebPushPrompt: false,
       webPushPromptLoading: false,
-      scrollElement: null,
     };
   }
 
   markAllNotificationsSeen = () => {
+    this.props.dispatch(updateNotificationsCount('notifications', 0));
     this.props.markAllNotificationsSeen &&
       this.props.markAllNotificationsSeen().catch(err => {
         console.error('Error marking all notifications seen: ', err);
@@ -79,13 +88,17 @@ class NotificationsPure extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const scrollElement = document.getElementById('scroller-for-thread-feed');
-    this.markAllNotificationsSeen();
-    this.setState({
-      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
-      // the AppViewWrapper which is the scrolling part of the site.
-      scrollElement,
-    });
+    const { dispatch } = this.props;
+    dispatch(
+      setTitlebarProps({
+        title: 'Notifications',
+        rightAction: (
+          <OutlineButton onClick={() => this.markAllNotificationsSeen()}>
+            Mark all seen
+          </OutlineButton>
+        ),
+      })
+    );
 
     WebPushManager.getPermissionState()
       .then(result => {
@@ -102,7 +115,9 @@ class NotificationsPure extends React.Component<Props, State> {
 
         WebPushManager.getSubscription()
           .then(subscription => {
-            if (!subscription) track('browser push notifications', 'prompted');
+            if (!subscription) {
+              track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
+            }
             this.setState({
               showWebPushPrompt: !subscription,
             });
@@ -117,22 +132,32 @@ class NotificationsPure extends React.Component<Props, State> {
       });
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
+    if (curr.networkOnline !== nextProps.networkOnline) return true;
+    if (curr.websocketConnection !== nextProps.websocketConnection) return true;
     // fetching more
     if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
       return false;
     return true;
   }
 
+  componentDidUpdate(prev: Props) {
+    const curr = this.props;
+    const didReconnect = useConnectionRestored({ curr, prev });
+    if (didReconnect && curr.data.refetch) {
+      curr.data.refetch();
+    }
+  }
+
   subscribeToWebPush = () => {
-    track('browser push notifications', 'prompt triggered');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     this.setState({
       webPushPromptLoading: true,
     });
     WebPushManager.subscribe()
       .then(subscription => {
-        track('browser push notifications', 'subscribed');
+        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
@@ -140,7 +165,7 @@ class NotificationsPure extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track('browser push notifications', 'blocked');
+        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -158,195 +183,278 @@ class NotificationsPure extends React.Component<Props, State> {
     this.setState({
       showWebPushPrompt: false,
     });
-    track('browser push notifications', 'dismissed');
+    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
+  };
+
+  markSingleNotificationSeen = (id: string) => {
+    const { markSingleNotificationSeen } = this.props;
+    return markSingleNotificationSeen(id).catch(err => {
+      // ignore errors for now
+    });
   };
 
   render() {
-    const { currentUser, data } = this.props;
-    if (!currentUser) {
-      return (
-        <AppViewWrapper>
-          <Column type={'primary'}>
-            <UpsellSignIn />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-
-    if (!data || data.error || data.loading) {
-      return (
-        <AppViewWrapper>
-          <ViewError />
-        </AppViewWrapper>
-      );
-    }
+    const {
+      currentUser,
+      data,
+      isLoading,
+      hasError,
+      isFetchingMore,
+    } = this.props;
 
     const { title, description } = generateMetaInfo({
       type: 'notifications',
     });
 
-    if (!data.notifications || data.notifications.edges.length === 0) {
+    if (data.notifications && data.notifications.edges.length > 0) {
+      let notifications = data.notifications.edges
+        .map(notification => parseNotification(notification.node))
+        .filter(
+          notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+        );
+
+      notifications = deduplicateChildren(notifications, 'id');
+      notifications = sortByDate(notifications, 'modifiedAt', 'desc');
       return (
-        <AppViewWrapper>
-          <Column type={'primary'}>
-            <Head title={title} description={description} />
-            <UpsellNullNotifications />
-          </Column>
-        </AppViewWrapper>
+        <React.Fragment>
+          <Head title={title} description={description} />
+          <ViewGrid>
+            <StyledSingleColumn>
+              <div>
+                <StickyHeader>
+                  {!isDesktopApp() && this.state.showWebPushPrompt && (
+                    <OutlineButton
+                      onClick={this.subscribeToWebPush}
+                      isLoading={this.state.webPushPromptLoading}
+                      css={{ marginRight: '16px' }}
+                    >
+                      {isLoading ? 'Enabling...' : 'Enable push notifications'}
+                    </OutlineButton>
+                  )}
+                  <PrimaryButton
+                    disabled={notifications.every(
+                      notification => notification.isSeen
+                    )}
+                    onClick={() => this.markAllNotificationsSeen()}
+                  >
+                    Mark all seen
+                  </PrimaryButton>
+                </StickyHeader>
+                {notifications.map(notification => {
+                  switch (notification.event) {
+                    case 'MESSAGE_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewMessageNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'REACTION_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewReactionNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'THREAD_REACTION_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewThreadReactionNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'CHANNEL_CREATED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewChannelNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'USER_JOINED_COMMUNITY': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <NewUserInCommunityNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'THREAD_CREATED': {
+                      // deprecated - we no longer show this notification type in-app
+                      return null;
+                    }
+                    case 'COMMUNITY_INVITE': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <CommunityInviteNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'MENTION_MESSAGE': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <MentionMessageNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'MENTION_THREAD': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <MentionThreadNotification
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_CHANNEL_REQUEST_SENT': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateChannelRequestSent
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateChannelRequestApproved
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_COMMUNITY_REQUEST_SENT': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateCommunityRequestSent
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    case 'PRIVATE_COMMUNITY_REQUEST_APPROVED': {
+                      return (
+                        <ErrorBoundary key={notification.id}>
+                          <PrivateCommunityRequestApproved
+                            notification={notification}
+                            currentUser={currentUser}
+                            markSingleNotificationSeen={
+                              this.markSingleNotificationSeen
+                            }
+                          />
+                        </ErrorBoundary>
+                      );
+                    }
+                    default: {
+                      return null;
+                    }
+                  }
+                })}
+
+                {data.hasNextPage && (
+                  <NextPageButton
+                    isFetchingMore={isFetchingMore}
+                    fetchMore={data.fetchMore}
+                    bottomOffset={-100}
+                  >
+                    Load more notifications
+                  </NextPageButton>
+                )}
+              </div>
+            </StyledSingleColumn>
+          </ViewGrid>
+        </React.Fragment>
       );
     }
 
-    let notifications = data.notifications.edges
-      .map(notification => parseNotification(notification.node))
-      .filter(
-        notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
-      );
+    if (isLoading) {
+      return <LoadingView />;
+    }
 
-    notifications = deduplicateChildren(notifications, 'id');
-    notifications = sortByDate(notifications, 'modifiedAt', 'desc');
+    if (hasError) {
+      return <ErrorView />;
+    }
 
-    const { scrollElement } = this.state;
-
+    // no issues loading, but the user doesnt have notifications yet
     return (
-      <FlexCol style={{ flex: '1 1 auto', maxHeight: 'calc(100% - 48px)' }}>
-        <Head title={title} description={description} />
-        <Titlebar title={'Notifications'} provideBack={false} noComposer />
-        <AppViewWrapper>
-          <Column type={'primary'}>
-            {this.state.showWebPushPrompt && (
-              <BrowserNotificationRequest
-                onSubscribe={this.subscribeToWebPush}
-                onDismiss={this.dismissWebPushRequest}
-                loading={this.state.webPushPromptLoading}
-              />
-            )}
-            <InfiniteList
-              pageStart={0}
-              loadMore={data.fetchMore}
-              isLoadingMore={this.props.isFetchingMore}
-              hasMore={data.hasNextPage}
-              loader={<LoadingThread />}
-              useWindow={false}
-              initialLoad={false}
-              scrollElement={scrollElement}
-              threshold={750}
-              className={'scroller-for-notifications'}
-            >
-              {notifications.map(notification => {
-                switch (notification.event) {
-                  case 'MESSAGE_CREATED': {
-                    return (
-                      <NewMessageNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'REACTION_CREATED': {
-                    return (
-                      <NewReactionNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'CHANNEL_CREATED': {
-                    return (
-                      <NewChannelNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'USER_JOINED_COMMUNITY': {
-                    return (
-                      <NewUserInCommunityNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'THREAD_CREATED': {
-                    return (
-                      <NewThreadNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'COMMUNITY_INVITE': {
-                    return (
-                      <CommunityInviteNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'MENTION_MESSAGE': {
-                    return (
-                      <MentionMessageNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'MENTION_THREAD': {
-                    return (
-                      <MentionThreadNotification
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'PRIVATE_CHANNEL_REQUEST_SENT': {
-                    return (
-                      <PrivateChannelRequestSent
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  case 'PRIVATE_CHANNEL_REQUEST_APPROVED': {
-                    return (
-                      <PrivateChannelRequestApproved
-                        key={notification.id}
-                        notification={notification}
-                        currentUser={currentUser}
-                      />
-                    );
-                  }
-                  default: {
-                    return null;
-                  }
-                }
-              })}
-            </InfiniteList>
-          </Column>
-        </AppViewWrapper>
-      </FlexCol>
+      <ErrorView
+        emoji="😙"
+        heading="No notifications...yet"
+        subheading="Looks like you’re new around here! When you start receiving notifications about conversations on Spectrum, they'll show up here."
+      />
     );
   }
 }
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
+const map = state => ({
+  networkOnline: state.connectionStatus.networkOnline,
+  websocketConnection: state.connectionStatus.websocketConnection,
 });
 
 export default compose(
   subscribeToWebPush,
   getNotifications,
-  displayLoadingNotifications,
   markNotificationsSeenMutation,
+  markSingleNotificationSeenMutation,
+  viewNetworkHandler,
+  withCurrentUser,
   // $FlowIssue
-  connect(mapStateToProps),
-  viewNetworkHandler
+  connect(map)
 )(NotificationsPure);

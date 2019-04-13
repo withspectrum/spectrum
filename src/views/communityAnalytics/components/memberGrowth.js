@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 import compose from 'recompose/compose';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import { Loading } from '../../../components/loading';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import { Loading } from 'src/components/loading';
 import {
   SectionCard,
   SectionSubtitle,
   SectionTitle,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
 import getCommunityMemberGrowth from 'shared/graphql/queries/community/getCommunityMemberGrowth';
 import type { GetCommunityMemberGrowthType } from 'shared/graphql/queries/community/getCommunityMemberGrowth';
 import { parseGrowth } from '../utils';
@@ -21,7 +21,10 @@ type Props = {
 
 class MemberGrowth extends React.Component<Props> {
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
 
     if (community) {
       const {
@@ -53,6 +56,7 @@ class MemberGrowth extends React.Component<Props> {
   }
 }
 
-export default compose(getCommunityMemberGrowth, viewNetworkHandler)(
-  MemberGrowth
-);
+export default compose(
+  getCommunityMemberGrowth,
+  viewNetworkHandler
+)(MemberGrowth);

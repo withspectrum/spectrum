@@ -1,0 +1,45 @@
+{
+  "subject": "New direct message from Someone on Spectrum",
+  "user": {
+    "betaSupporter": true,
+    "createdAt": "2017-06-02T20:57:24.362Z",
+    "description": "description",
+    "email": "email",
+    "githubProviderId": null,
+    "githubUsername": null,
+    "id": "1",
+    "isOnline": false,
+    "lastSeen": "2018-12-07T00:15:17.953Z",
+    "modifiedAt": "2018-11-01T17:38:10.236Z",
+    "name": "Someone",
+    "providerId": null,
+    "termsLastAcceptedAt": "2017-06-02T20:57:24.362Z",
+    "timezone": -420,
+    "username": "username",
+    "website": "website",
+    "profilePhoto": "",
+    "coverPhoto": ""
+  },
+  "thread": {
+    "content": {
+      "title": "Conversation with Someone and Someone Else"
+    },
+    "path": "messages/1",
+    "id": "1"
+  },
+  "username": "username",
+  "message": {
+    "content": {
+      "body": "a message"
+    },
+    "id": "1",
+    "messageType": "draftjs",
+    "parentId": null,
+    "senderId": "1",
+    "threadId": "1",
+    "threadType": "directMessageThread",
+    "timestamp": "2018-12-07T00:21:38.750Z"
+  },
+  "muteThreadToken": "foo",
+  "unsubscribeToken": "foo"
+}

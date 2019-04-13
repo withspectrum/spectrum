@@ -1,5 +1,6 @@
 // @flow
-type Toasts = 'success' | 'error' | 'neutral';
+import type { Dispatch } from 'redux';
+type Toasts = 'success' | 'error' | 'neutral' | 'notification';
 
 const addToast = (
   id: number,
@@ -24,13 +25,17 @@ const removeToast = (id: number) => {
 
 let nextToastId = 0;
 export const addToastWithTimeout = (kind: Toasts, message: string) => (
-  dispatch: Function
+  dispatch: Dispatch<Object>
 ) => {
-  const timeout = kind === 'success' ? 2000 : 4000;
-  const id = nextToastId++;
+  let timeout = 6000;
+  if (kind === 'success') timeout = 3000;
+  if (kind === 'notification') timeout = 5000;
+
+  let id = nextToastId++;
   dispatch(addToast(id, kind, message, timeout));
 
   setTimeout(() => {
     dispatch(removeToast(id));
+    id = nextToastId--;
   }, timeout);
 };

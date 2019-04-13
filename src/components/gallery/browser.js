@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { closeGallery } from '../../actions/gallery';
+import { closeGallery } from 'src/actions/gallery';
 import type { GetMediaMessagesForThreadType } from 'shared/graphql/queries/message/getMediaMessagesForThread';
+import type { Dispatch } from 'redux';
 import {
   Overlay,
   ActiveImage,
@@ -12,6 +13,7 @@ import {
   CloseButton,
   GalleryWrapper,
 } from './style';
+import { ESC, ARROW_LEFT, ARROW_RIGHT } from 'src/helpers/keycodes';
 
 type State = {
   images: Array<Object>,
@@ -20,7 +22,7 @@ type State = {
 };
 
 type Props = {
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   data: {
     messages?: GetMediaMessagesForThreadType,
   },
@@ -75,17 +77,15 @@ class Browser extends React.Component<Props, State> {
     // if no media, skip on outta here
     if (!images) return;
 
-    // if person taps esc, close the dialog
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.closeGallery();
     }
 
-    // left arrow key
-    if (e.keyCode === 37) {
+    if (e.keyCode === ARROW_LEFT) {
       this.previousImage();
     }
 
-    if (e.keyCode === 39) {
+    if (e.keyCode === ARROW_RIGHT) {
       this.nextImage();
     }
   };
@@ -134,37 +134,30 @@ class Browser extends React.Component<Props, State> {
 
   render() {
     const { images, index } = this.state;
-    const { data: { messages } } = this.props;
+    const {
+      data: { messages },
+    } = this.props;
 
     if (!messages || messages.length === 0) return null;
 
     // when a user uploads an image, sometimes the resulting image doesn't get updated in the Apollo cache
     // if it doesn't update in the cache, then the browser component will receive a bad `activeMessageId`
     // prop. If it's the case that this happens, we just select the *last* image, assuming it's the one that the user just uploaded.
-    let filteredIndex;
-    if (index === null) {
-      filteredIndex = messages.length - 1;
-    } else {
-      filteredIndex = index;
-    }
+    let filteredIndex = typeof index === 'number' ? index : messages.length - 1;
+
+    const src = `${images[filteredIndex].content.body}`;
 
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
-        <ActiveImage
-          onClick={this.nextImage}
-          // $FlowFixMe
-          src={`${images[filteredIndex].content.body}?max-w=${
-            window.innerWidth
-          }`}
-        />
+        <ActiveImage onClick={this.nextImage} src={src} />
         <Minigallery>
           <MiniContainer>
             {images.map((image, i) => {
               return (
                 <MiniImg
-                  src={`${image.content.body}?max-w=64`}
+                  src={`${image.content.body}`}
                   key={i}
                   onClick={() => this.setCount(i)}
                   active={i === filteredIndex}

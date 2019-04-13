@@ -1,29 +1,32 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { openModal } from '../../../actions/modals';
-import { Loading } from '../../../components/loading';
-import { ChannelListItem } from '../../../components/listItems';
-import { IconButton, Button } from '../../../components/buttons';
-import viewNetworkHandler from '../../../components/viewNetworkHandler';
-import ViewError from '../../../components/viewError';
+import { openModal } from 'src/actions/modals';
+import { Loading } from 'src/components/loading';
+import { OutlineButton } from 'src/components/button';
+import Icon from 'src/components/icon';
+import viewNetworkHandler from 'src/components/viewNetworkHandler';
+import ViewError from 'src/components/viewError';
+import Tooltip from 'src/components/tooltip';
 import getCommunityChannels from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
+import type { Dispatch } from 'redux';
 import { ListContainer } from '../style';
 import {
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
+} from 'src/components/settingsViews/style';
+import { ChannelListItem } from 'src/components/listItems';
 
 type Props = {
   data: {
     community: GetCommunityChannelConnectionType,
   },
   isLoading: boolean,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   communitySlug: string,
 };
 
@@ -33,7 +36,6 @@ class ChannelList extends React.Component<Props> {
       data: { community },
       isLoading,
       dispatch,
-      communitySlug,
     } = this.props;
 
     if (community) {
@@ -43,25 +45,28 @@ class ChannelList extends React.Component<Props> {
         <SectionCard data-cy="channel-list">
           <SectionTitle>Channels</SectionTitle>
 
-          <ListContainer>
+          <ListContainer style={{ padding: '0 16px' }}>
             {channels.length > 0 &&
-              channels.map(item => {
-                if (!item) return null;
+              channels.map(channel => {
+                if (!channel) return null;
                 return (
-                  <Link
-                    key={item.id}
-                    to={`/${communitySlug}/${item.slug}/settings`}
-                  >
-                    <ChannelListItem contents={item} withDescription={false}>
-                      <IconButton glyph="settings" />
-                    </ChannelListItem>
-                  </Link>
+                  <ChannelListItem key={channel.id} channel={channel}>
+                    <Link
+                      to={`/${channel.community.slug}/${channel.slug}/settings`}
+                    >
+                      <Tooltip content={'Manage channel'}>
+                        <span>
+                          <Icon glyph="settings" />
+                        </span>
+                      </Tooltip>
+                    </Link>
+                  </ChannelListItem>
                 );
               })}
           </ListContainer>
 
           <SectionCardFooter>
-            <Button
+            <OutlineButton
               style={{ alignSelf: 'flex-start' }}
               icon={'plus'}
               onClick={() =>
@@ -75,7 +80,7 @@ class ChannelList extends React.Component<Props> {
               data-cy="create-channel-button"
             >
               Create Channel
-            </Button>
+            </OutlineButton>
           </SectionCardFooter>
         </SectionCard>
       );
@@ -101,6 +106,8 @@ class ChannelList extends React.Component<Props> {
   }
 }
 
-export default compose(connect(), getCommunityChannels, viewNetworkHandler)(
-  ChannelList
-);
+export default compose(
+  connect(),
+  getCommunityChannels,
+  viewNetworkHandler
+)(ChannelList);

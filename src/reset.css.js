@@ -1,7 +1,12 @@
 // @flow
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
+// $FlowIssue
+import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
+import theme from 'shared/theme';
 
-injectGlobal`
+export default createGlobalStyle`
+  ${prismGlobalCSS}
+
   * {
     border: 0;
     box-sizing: inherit;
@@ -18,30 +23,32 @@ injectGlobal`
 
   html {
     display: flex;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
-    max-height: 100%;
-    max-width: 100%;
     box-sizing: border-box;
     font-size: 16px;
     line-height: 1.5;
-    background-color: #ffffff;
+    background-color: ${theme.bg.wash};
     color: #16171a;
     padding: 0;
     margin: 0;
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
       sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   }
 
   body {
-    display: flex;
     box-sizing: border-box;
-    flex: auto;
-    align-self: stretch;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
+  }
+
+  #root {
+    height: 100%
+    width: 100%;
   }
 
   a {
@@ -59,46 +66,32 @@ injectGlobal`
 
   ::-moz-selection {
     /* Code for Firefox */
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::selection {
-    background: #3818e5;
-    color: #ffffff;
+    background: ${theme.brand.alt};
+    color: ${theme.text.reverse};
   }
 
   ::-webkit-input-placeholder {
     /* WebKit, Blink, Edge */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
   }
   :-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   ::-moz-placeholder {
     /* Mozilla Firefox 19+ */
-    color: #a3afbf;
+    color: ${theme.text.placeholder};
     opacity: 1;
   }
   :-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: #a3afbf;
-  }
-
-  #root {
-    display: flex;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-flex;
-    display: -ms-flexbox;
-    flex-direction: column;
-    -ms-flex-direction: column;
-    -moz-flex-direction: column;
-    -webkit-flex-direction: column;
-    height: 100%;
-    width: 100%;
+    color: ${theme.text.placeholder};
   }
 
   .fade-enter {
@@ -113,14 +106,18 @@ injectGlobal`
 
   .markdown {
     font-size: 16px;
-    line-height: 24px;
-    color: #16171a;
+    line-height: 1.4;
+    color: ${theme.text.default};
+  }
+
+  .markdown pre {
+    font-size: 15px;
+    white-space: pre-wrap;
   }
 
   .markdown p {
     color: inherit;
     font-size: 16px;
-    line-height: 1.5;
     font-weight: 400;
     display: block;
   }
@@ -129,23 +126,19 @@ injectGlobal`
     margin-top: 16px;
   }
 
-  .markdown > *:first-of-type {
-    margin-top: 16px;
-  }
-
   .markdown img {
     margin-top: 16px;
     max-width: 100%;
     display: inline;
     border-radius: 4px;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s;
     display: block;
     margin: 12px 0;
   }
 
   .markdown img:hover {
     cursor: pointer;
-    transition: all 0.2s;
+    transition: box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
@@ -177,12 +170,12 @@ injectGlobal`
   }
 
   .markdown blockquote {
-    color: #828c99;
-    border-left: 4px solid #7b16ff;
+    color: ${theme.text.secondary};
+    border-left: 4px solid ${theme.text.secondary};
+    background: ${theme.bg.wash};
     padding: 4px 8px 4px 16px;
-    font-size: 24px;
-    font-weight: 300;
-    font-style: italic;
+    font-size: 16px;
+    font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;
   }
@@ -192,7 +185,7 @@ injectGlobal`
   }
 
   .markdown a {
-    color: #3818e5;
+    color: ${theme.brand.default};
     font-weight: 500;
     text-decoration: none;
     font-size: inherit;
@@ -206,19 +199,19 @@ injectGlobal`
 
   .markdown a:visited {
     opacity: 0.6;
-    transition: all 0.2s ease-in;
+    transition: opacity 0.2s ease-in;
   }
 
   .markdown code {
     font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
     font-weight: 500;
     font-size: 14px;
-    line-height: 20px;
-    background-color: #f5f8fc;
+    line-height: 1.4px;
+    background-color: ${theme.bg.wash};
     padding: 2px 4px;
     display: inline;
     width: 100%;
-    border: 1px solid #dfe7ef;
+    border: 1px solid ${theme.bg.border};
     border-radius: 4px;
     margin-bottom: 16px;
   }
@@ -226,6 +219,8 @@ injectGlobal`
   .markdown pre {
     margin: 16px 0;
     display: block;
+    border-radius: 4px;
+    background-color: ${theme.bg.wash};
   }
 
   .markdown pre code {
@@ -233,6 +228,9 @@ injectGlobal`
     display: block;
     white-space: pre-wrap;
     position: relative;
+    margin: 0;
+    border: none;
+    background: none;
   }
 
   .markdown div[data-block='true'] {
@@ -260,7 +258,7 @@ injectGlobal`
   .markdown hr {
     width: 100%;
     height: 1px;
-    background: #dfe7ef;
+    background: ${theme.bg.border};
     display: block;
     margin: 32px 0;
   }
@@ -268,7 +266,7 @@ injectGlobal`
   .markdown h1 {
     font-size: 24px;
     line-height: 40px;
-    border-bottom: 1px solid #dfe7ef;
+    border-bottom: 1px solid ${theme.bg.border};
     font-weight: 800;
     margin-top: 1rem;
     margin-bottom: 8px;
@@ -320,106 +318,12 @@ injectGlobal`
     font-variant: small-caps;
   }
 
-  .hljs {
-    display: block;
-    background: white;
-    padding: 0.5em;
-    color: #333333;
-    overflow-x: auto;
+  .threadComposer textarea {
+    line-height: 1.5;
+    height: calc(100% + 48px)!important;
   }
-
-  .hljs-comment,
-  .hljs-meta {
-    color: #969896;
-  }
-
-  .hljs-string,
-  .hljs-variable,
-  .hljs-template-variable,
-  .hljs-strong,
-  .hljs-emphasis,
-  .hljs-quote {
-    color: #df5000;
-  }
-
-  .hljs-keyword,
-  .hljs-selector-tag,
-  .hljs-type {
-    color: #a71d5d;
-  }
-
-  .hljs-literal,
-  .hljs-symbol,
-  .hljs-bullet,
-  .hljs-attribute {
-    color: #0086b3;
-  }
-
-  .hljs-section,
-  .hljs-name {
-    color: #63a35c;
-  }
-
-  .hljs-tag {
-    color: #333333;
-  }
-
-  .hljs-title,
-  .hljs-attr,
-  .hljs-selector-id,
-  .hljs-selector-class,
-  .hljs-selector-attr,
-  .hljs-selector-pseudo {
-    color: #795da3;
-  }
-
-  .hljs-addition {
-    color: #55a532;
-    background-color: #eaffea;
-  }
-
-  .hljs-deletion {
-    color: #bd2c00;
-    background-color: #ffecec;
-  }
-
-  .hljs-link {
-    text-decoration: underline;
-  }
-
-  .StripeElement {
-    background-color: white;
-    height: 40px;
-    padding: 10px 12px;
-    border-radius: 4px;
-    border: 1px solid #DFE7EF;
-    -webkit-transition: border 150ms ease;
-    transition: border 150ms ease;
-  }
-
-  .StripeElement--focus {
-    border: 1px solid #7B16FF;
-  }
-
-  .StripeElement--invalid {
-    border-color: #fa755a;
-  }
-
-  .StripeElement--webkit-autofill {
-    background-color: #fefde5 !important;
+  
+  .tippy-backdrop {
+    background-color: ${theme.text.default};
   }
 `;
-
-// NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
-// and stuff like that. We have to import the raw CSS file and inject it with
-// styled-components to make sure it works when we SSR.
-/* eslint-disable import/first */
-/* eslint-disable import/no-webpack-loader-syntax */
-// $FlowIssue
-import draftGlobalCSS from '!!raw-loader!draft-js/dist/Draft.css';
-// $FlowIssue
-injectGlobal`${draftGlobalCSS}`;
-// $FlowIssue
-import prismGlobalCSS from '!!raw-loader!./components/rich-text-editor/prism-theme.css';
-// $FlowIssue
-injectGlobal`${prismGlobalCSS}`;

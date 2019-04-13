@@ -2,87 +2,78 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
-import {
-  Span,
-  ProBadge,
-  BlockedBadge,
-  DefaultPaymentMethodBadge,
-} from './style';
+import type { Dispatch } from 'redux';
+import { Span, ProBadge, BlockedBadge, PendingBadge, TeamBadge } from './style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import Tooltip from 'src/components/tooltip';
 
 type Props = {
   type: string,
+  label?: string,
   onClick?: Function,
   tipText: string,
   currentUser: ?Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 class Badge extends React.Component<Props> {
-  triggerProModal = () => {
-    // if user isn't signed in, don't trigger the modal
-    // if the user is currently pro, don't trigger the modal (otherwise they'll see a downsell)
-    if (!this.props.currentUser || this.props.currentUser.isPro) return;
-    // otherwise trigger the upgrade modal
-    this.props.dispatch(
-      openModal('UPGRADE_MODAL', { user: this.props.currentUser })
-    );
-  };
-
   render() {
-    switch (this.props.type) {
-      case 'default-payment-method':
+    const { type, label, ...rest } = this.props;
+    switch (type) {
+      case 'beta-supporter':
         return (
-          <DefaultPaymentMethodBadge
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.triggerProModal}
-          >
-            Default
-          </DefaultPaymentMethodBadge>
-        );
-      case 'pro':
-        return (
-          <ProBadge
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.triggerProModal}
-          >
-            {this.props.type}
-          </ProBadge>
+          <Tooltip content={'Beta Supporter'}>
+            <ProBadge type={type} {...rest}>
+              {label || 'Supporter'}
+            </ProBadge>
+          </Tooltip>
         );
       case 'blocked':
         return (
-          <BlockedBadge
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
+          <Tooltip content={this.props.tipText}>
+            <BlockedBadge type={type} {...rest}>
+              {label || type}
+            </BlockedBadge>
+          </Tooltip>
+        );
+      case 'pending':
+        return (
+          <Tooltip content={this.props.tipText}>
+            <PendingBadge type={type} {...rest}>
+              {label || type}
+            </PendingBadge>
+          </Tooltip>
+        );
+      case 'moderator':
+      case 'admin':
+        return (
+          <Tooltip
+            content={`${
+              type === 'moderator' ? 'Moderator' : 'Owner'
+            } of this community`}
           >
-            {this.props.type}
-          </BlockedBadge>
+            <TeamBadge type={type} {...rest}>
+              Team
+            </TeamBadge>
+          </Tooltip>
         );
       default:
         return (
-          <Span
-            type={this.props.type}
-            tipText={this.props.tipText}
-            tipLocation={'top-left'}
-            onClick={this.props.onClick && this.props.onClick}
-          >
-            {this.props.type}
-          </Span>
+          <Tooltip content={this.props.tipText || label || ''}>
+            <Span
+              type={type}
+              onClick={this.props.onClick && this.props.onClick}
+              {...rest}
+            >
+              {label || type}
+            </Span>
+          </Tooltip>
         );
     }
   }
 }
 
-const map = state => ({
-  currentUser: state.users.currentUser,
-});
-
 export default compose(
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(Badge);

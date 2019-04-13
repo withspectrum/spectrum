@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
+import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { SERVER_URL, CLIENT_URL } from '../../api/constants';
@@ -9,6 +9,7 @@ import { TwitterSigninButton } from './twitter';
 import { FacebookSigninButton } from './facebook';
 import { GoogleSigninButton } from './google';
 import { GithubSigninButton } from './github';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   redirectPath: ?string,
@@ -24,6 +25,7 @@ export type ButtonProps = {
 
 class LoginButtonSet extends React.Component<Props> {
   saveLoginMethod = (type: string) => {
+    track(events.LOGIN_PAGE_AUTH_CLICKED, { provider: type });
     return storeItem('preferred_signin_method', type);
   };
 

@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import { IconButton } from '../../components/buttons';
+import Icon from 'src/components/icon';
 import { Wrapper, MenuContainer, MenuOverlay, Absolute } from './style';
 
 type Props = {
   hasNavBar?: boolean,
   darkContext?: boolean,
   hasTabBar?: boolean,
-  children: React.Node,
+  children: React$Node,
 };
 
 type State = {
@@ -27,17 +27,24 @@ class Menu extends React.Component<Props, State> {
     const { menuIsOpen } = this.state;
     return (
       <Wrapper darkContext={darkContext}>
-        <IconButton glyph={'menu'} onClick={() => this.toggleMenu()} />
+        <Icon
+          data-cy={'community-menu-open'}
+          glyph={'menu'}
+          onClick={() => this.toggleMenu()}
+        />
         <Absolute open={this.state.menuIsOpen} hasNavBar={hasNavBar}>
           <MenuContainer hasNavBar={hasNavBar} hasTabBar={hasTabBar}>
             {menuIsOpen && this.props.children}
           </MenuContainer>
-          <IconButton
+          <Icon
             glyph={'view-close'}
             onClick={() => this.toggleMenu()}
             hasNavBar={hasNavBar}
           />
-          <MenuOverlay onClick={() => this.toggleMenu()} />
+          <MenuOverlay
+            data-cy={'community-menu-close'}
+            onClick={() => this.toggleMenu()}
+          />
         </Absolute>
       </Wrapper>
     );

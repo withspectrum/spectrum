@@ -3,13 +3,14 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserListItemContainer } from '../style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/entities';
 import { Loading } from 'src/components/loading';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import ViewError from 'src/components/viewError';
 import { ListContainer } from 'src/components/listItems/style';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   SectionCard,
   SectionTitle,
@@ -25,7 +26,8 @@ import {
   DropdownSectionTitle,
   DropdownAction,
 } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -33,19 +35,12 @@ type Props = {
   },
   togglePending: Function,
   isLoading: boolean,
-  initMessage: Function,
   currentUser: ?Object,
 };
 
 class PendingUsers extends React.Component<Props> {
   render() {
-    const {
-      data,
-      isLoading,
-      currentUser,
-      togglePending,
-      initMessage,
-    } = this.props;
+    const { data, isLoading, currentUser, togglePending } = this.props;
 
     if (data && data.channel) {
       const { pendingUsers } = data.channel;
@@ -53,14 +48,13 @@ class PendingUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Pending Members</SectionTitle>
-          {pendingUsers &&
-            pendingUsers.length > 0 && (
-              <SectionSubtitle>
-                Approving requests will allow a person to view all threads and
-                messages in this channel, as well as allow them to post their
-                own threads.
-              </SectionSubtitle>
-            )}
+          {pendingUsers && pendingUsers.length > 0 && (
+            <SectionSubtitle>
+              Approving requests will allow a person to view all threads and
+              messages in this channel, as well as allow them to post their own
+              threads.
+            </SectionSubtitle>
+          )}
 
           <ListContainer>
             {pendingUsers &&
@@ -68,34 +62,39 @@ class PendingUsers extends React.Component<Props> {
                 if (!user) return null;
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={'32'}
+                      avatarSize={40}
                       description={user.description}
+                      showHoverProfile={false}
                     >
                       <EditDropdown
                         render={() => (
                           <Dropdown>
-                            <DropdownSection
-                              style={{ borderBottom: '0' }}
-                              onClick={() => initMessage(user)}
-                            >
-                              <DropdownAction>
-                                <Icon glyph={'message'} size={'32'} />
-                              </DropdownAction>
-                              <DropdownSectionText>
-                                <DropdownSectionTitle>
-                                  Send Direct Message
-                                </DropdownSectionTitle>
-                              </DropdownSectionText>
-                            </DropdownSection>
+                            <InitDirectMessageWrapper
+                              user={user}
+                              render={
+                                <DropdownSection style={{ borderBottom: '0' }}>
+                                  <DropdownAction>
+                                    <Icon
+                                      glyph={'message-simple-new'}
+                                      size={'32'}
+                                    />
+                                  </DropdownAction>
+                                  <DropdownSectionText>
+                                    <DropdownSectionTitle>
+                                      Send Direct Message
+                                    </DropdownSectionTitle>
+                                  </DropdownSectionText>
+                                </DropdownSection>
+                              }
+                            />
 
                             <DropdownSectionDivider />
 
@@ -138,17 +137,16 @@ class PendingUsers extends React.Component<Props> {
                           </Dropdown>
                         )}
                       />
-                    </GranularUserProfile>
+                    </UserListItem>
                   </UserListItemContainer>
                 );
               })}
 
-            {pendingUsers &&
-              pendingUsers.length <= 0 && (
-                <SectionSubtitle>
-                  There are no pending requests to join this channel.
-                </SectionSubtitle>
-              )}
+            {pendingUsers && pendingUsers.length <= 0 && (
+              <SectionSubtitle>
+                There are no pending requests to join this channel.
+              </SectionSubtitle>
+            )}
           </ListContainer>
         </SectionCard>
       );
@@ -170,11 +168,9 @@ class PendingUsers extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getPendingUsersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(PendingUsers);

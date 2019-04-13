@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingCard } from 'src/components/loading';
 import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import { PendingUserNotificationContainer, PendingUserCount } from './style';

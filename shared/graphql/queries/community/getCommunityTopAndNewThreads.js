@@ -3,8 +3,9 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import communityInfoFragment from 'shared/graphql/fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
-import threadInfoFragment from 'shared/graphql/fragments/thread/threadInfo';
-import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
+import threadInfoFragment, {
+  type ThreadInfoType,
+} from 'shared/graphql/fragments/thread/threadInfo';
 
 type Thread = {
   ...$Exact<ThreadInfoType>,

@@ -2,17 +2,20 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
-import { Loading } from '../../../components/loading';
+import { Loading } from 'src/components/loading';
 import GetMembers from './getMembers';
 import EditDropdown from './editDropdown';
 import Search from './search';
+import queryString from 'query-string';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   SectionCard,
   SectionTitle,
   SectionCardFooter,
-} from '../../../components/settingsViews/style';
-import Icon from '../../../components/icons';
+} from 'src/components/settingsViews/style';
+import Icon from 'src/components/icon';
 import {
   Filters,
   Filter,
@@ -20,19 +23,21 @@ import {
   SearchInput,
   SearchForm,
   FetchMore,
+  Row,
 } from '../style';
-import { ListContainer } from '../../../components/listItems/style';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import ViewError from '../../../components/viewError';
-import GranularUserProfile from '../../../components/granularUserProfile';
-import { Notice } from '../../../components/listItems/style';
+import { ListContainer } from 'src/components/listItems/style';
+import ViewError from 'src/components/viewError';
+import { UserListItem } from 'src/components/entities';
+import { Notice } from 'src/components/listItems/style';
+import type { Dispatch } from 'redux';
 
 type Props = {
   id: string,
   client: Object,
   currentUser: Object,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   history: Object,
+  location: Object,
   community: Object,
 };
 
@@ -41,6 +46,7 @@ type State = {
     isMember?: boolean,
     isModerator?: boolean,
     isBlocked?: boolean,
+    isOwner?: boolean,
   },
   searchIsFocused: boolean,
   // what the user types in
@@ -59,6 +65,23 @@ class CommunityMembers extends React.Component<Props, State> {
 
   state = this.initialState;
 
+  componentDidMount() {
+    const { filter } = queryString.parse(this.props.location.search);
+    if (!filter) return;
+
+    if (filter === 'pending') {
+      return this.viewPending();
+    }
+
+    if (filter === 'team') {
+      return this.viewTeam();
+    }
+
+    if (filter === 'blocked') {
+      return this.viewBlocked();
+    }
+  }
+
   viewMembers = () => {
     return this.setState({
       filter: { isMember: true, isBlocked: false },
@@ -66,9 +89,16 @@ class CommunityMembers extends React.Component<Props, State> {
     });
   };
 
-  viewModerators = () => {
+  viewPending = () => {
     return this.setState({
-      filter: { isModerator: true },
+      filter: { isPending: true },
+      searchIsFocused: false,
+    });
+  };
+
+  viewTeam = () => {
+    return this.setState({
+      filter: { isModerator: true, isOwner: true },
       searchIsFocused: false,
     });
   };
@@ -104,37 +134,34 @@ class CommunityMembers extends React.Component<Props, State> {
     return this.setState({ queryString: searchString });
   };
 
-  initMessage = user => {
-    this.props.dispatch(initNewThreadWithUser(user));
-    this.props.history.push('/messages/new');
-  };
-
   generateUserProfile = communityMember => {
-    const { user, roles, reputation, ...permissions } = communityMember;
+    const { user, ...permissions } = communityMember;
     return (
-      <GranularUserProfile
-        userObject={user}
-        key={user.id}
-        id={user.id}
-        name={user.name}
-        username={user.username}
-        description={user.description}
-        isCurrentUser={user.id === this.props.currentUser.id}
-        isOnline={user.isOnline}
-        onlineSize={'small'}
-        reputation={reputation}
-        profilePhoto={user.profilePhoto}
-        avatarSize={'40'}
-        badges={roles}
-      >
-        {user.id !== this.props.currentUser.id && (
-          <EditDropdown
-            user={user}
-            permissions={permissions}
-            community={this.props.community}
+      <React.Fragment>
+        <Row style={{ position: 'relative' }}>
+          <UserListItem
+            userObject={user}
+            key={user.id}
+            id={user.id}
+            name={user.name}
+            username={user.username}
+            description={user.description}
+            isCurrentUser={user.id === this.props.currentUser.id}
+            isOnline={user.isOnline}
+            profilePhoto={user.profilePhoto}
+            avatarSize={40}
+            showHoverProfile={false}
+            messageButton={user.id !== this.props.currentUser.id}
           />
-        )}
-      </GranularUserProfile>
+          {user.id !== this.props.currentUser.id && (
+            <EditDropdown
+              user={user}
+              permissions={permissions}
+              community={this.props.community}
+            />
+          )}
+        </Row>
+      </React.Fragment>
     );
   };
 
@@ -156,10 +183,12 @@ class CommunityMembers extends React.Component<Props, State> {
             Members
           </Filter>
           <Filter
-            onClick={this.viewModerators}
-            active={filter && filter.isModerator ? true : false}
+            onClick={this.viewTeam}
+            active={
+              filter && filter.isModerator && filter.isOwner ? true : false
+            }
           >
-            Moderators
+            Team
           </Filter>
           <Filter
             onClick={this.viewBlocked}
@@ -167,6 +196,15 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Blocked
           </Filter>
+
+          {community.isPrivate && (
+            <Filter
+              onClick={this.viewPending}
+              active={filter && filter.isPending ? true : false}
+            >
+              Pending
+            </Filter>
+          )}
 
           <SearchFilter onClick={this.initSearch}>
             <SearchForm onSubmit={this.search}>
@@ -176,68 +214,62 @@ class CommunityMembers extends React.Component<Props, State> {
                 type={'text'}
                 placeholder={'Search'}
               />
-              {searchString &&
-                searchIsFocused && (
-                  <Icon glyph={'send-fill'} size={28} onClick={this.search} />
-                )}
             </SearchForm>
           </SearchFilter>
         </Filters>
 
-        {searchIsFocused &&
-          queryString && (
-            <Search
-              queryString={queryString}
-              filter={{ communityId: this.props.id }}
-              render={({ searchResults, isLoading }) => {
-                if (isLoading) {
-                  return <Loading />;
-                }
+        {searchIsFocused && queryString && (
+          <Search
+            queryString={queryString}
+            filter={{ communityId: this.props.id }}
+            render={({ searchResults, isLoading }) => {
+              if (isLoading) {
+                return <Loading />;
+              }
 
-                if (!searchResults || searchResults.length === 0) {
-                  const emoji = ' ';
+              if (!searchResults || searchResults.length === 0) {
+                const emoji = ' ';
 
-                  const heading =
-                    searchString.length > 1
-                      ? `We couldn't find anyone matching "${searchString}"`
-                      : 'Search for people in your community';
+                const heading =
+                  searchString.length > 1
+                    ? `We couldn't find anyone matching "${searchString}"`
+                    : 'Search for people in your community';
 
-                  const subheading =
-                    searchString.length > 1
-                      ? 'Grow your community by inviting people via email, or by importing a Slack team'
-                      : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
-
-                  return (
-                    <ViewError
-                      emoji={emoji}
-                      heading={heading}
-                      subheading={subheading}
-                    />
-                  );
-                }
+                const subheading =
+                  searchString.length > 1
+                    ? 'Grow your community by inviting people via email, or by importing a Slack team'
+                    : 'Find people by name, username, and profile description - try searching for "designer" or "developer"';
 
                 return (
-                  <ListContainer>
-                    {searchResults.map(communityMember => {
-                      if (!communityMember) return null;
-                      return this.generateUserProfile(communityMember);
-                    })}
-                  </ListContainer>
+                  <ViewError
+                    emoji={emoji}
+                    heading={heading}
+                    subheading={subheading}
+                  />
                 );
-              }}
-            />
-          )}
-
-        {searchIsFocused &&
-          !queryString && (
-            <ViewError
-              emoji={' '}
-              heading={'Search for community members'}
-              subheading={
-                'Find people by name or description - try searching for "designer"!'
               }
-            />
-          )}
+
+              return (
+                <ListContainer>
+                  {searchResults.map(communityMember => {
+                    if (!communityMember) return null;
+                    return this.generateUserProfile(communityMember);
+                  })}
+                </ListContainer>
+              );
+            }}
+          />
+        )}
+
+        {searchIsFocused && !queryString && (
+          <ViewError
+            emoji={' '}
+            heading={'Search for community members'}
+            subheading={
+              'Find people by name or description - try searching for "designer"!'
+            }
+          />
+        )}
 
         {!searchIsFocused && (
           <GetMembers
@@ -252,36 +284,34 @@ class CommunityMembers extends React.Component<Props, State> {
               if (members && members.length > 0) {
                 return (
                   <ListContainer data-cy="community-settings-members-list">
-                    {filter &&
-                      filter.isBlocked && (
-                        <Notice>
-                          <strong>A note about blocked users:</strong> Your
-                          community is publicly viewable (except for private
-                          channels). This means that a blocked user may be able
-                          to see the content and conversations in your
-                          community. However, they will be prevented from
-                          creating new conversations, or leaving messages in
-                          existing conversations.
-                        </Notice>
-                      )}
+                    {filter && filter.isBlocked && !community.isPrivate && (
+                      <Notice>
+                        <strong>A note about blocked users:</strong> Your
+                        community is publicly viewable (except for private
+                        channels). This means that a blocked user may be able to
+                        see the content and conversations in your community.
+                        However, they will be prevented from creating new
+                        conversations, or leaving messages in existing
+                        conversations.
+                      </Notice>
+                    )}
 
                     {members.map(communityMember => {
                       if (!communityMember) return null;
                       return this.generateUserProfile(communityMember);
                     })}
 
-                    {community &&
-                      community.members.pageInfo.hasNextPage && (
-                        <SectionCardFooter>
-                          <FetchMore
-                            color={'brand.default'}
-                            loading={isFetchingMore}
-                            onClick={fetchMore}
-                          >
-                            Load more
-                          </FetchMore>
-                        </SectionCardFooter>
-                      )}
+                    {community && community.members.pageInfo.hasNextPage && (
+                      <SectionCardFooter>
+                        <FetchMore
+                          color={'brand.default'}
+                          loading={isFetchingMore}
+                          onClick={fetchMore}
+                        >
+                          {isFetchingMore ? 'Loading...' : 'Load more'}
+                        </FetchMore>
+                      </SectionCardFooter>
+                    )}
                   </ListContainer>
                 );
               }
@@ -315,13 +345,25 @@ class CommunityMembers extends React.Component<Props, State> {
                   );
                 }
 
-                if (filter && filter.isModerator) {
+                if (filter && filter.isModerator && filter.isOwner) {
                   return (
                     <ViewError
                       emoji={' '}
-                      heading={'No moderators found'}
+                      heading={'No team members found'}
                       subheading={
-                        "We couldn't find any moderators in your community."
+                        "You haven't added any team members to your community yet."
+                      }
+                    />
+                  );
+                }
+
+                if (filter && filter.isPending) {
+                  return (
+                    <ViewError
+                      emoji={' '}
+                      heading={'No pending members found'}
+                      subheading={
+                        'There are no pending members in your community.'
                       }
                     />
                   );
@@ -337,10 +379,9 @@ class CommunityMembers extends React.Component<Props, State> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
-  withApollo
+  withApollo,
+  withCurrentUser,
+  withRouter,
+  connect()
 )(CommunityMembers);

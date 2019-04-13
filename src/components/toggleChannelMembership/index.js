@@ -2,18 +2,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { track } from '../../helpers/events';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import toggleChannelSubscriptionMutation from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ToggleChannelSubscriptionType } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
+import type { Dispatch } from 'redux';
 
 type Props = {
   channel: {
     ...$Exact<GetChannelType>,
   },
   toggleSubscription: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   render: Function,
   onJoin?: Function,
   onLeave?: Function,
@@ -60,21 +60,18 @@ class ToggleChannelMembership extends React.Component<Props, State> {
           toggleChannelSubscription.channelPermissions.isPending;
         let str = '';
         if (isPending) {
-          track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }`;
         }
 
         if (!isPending && isMember) {
-          track('channel', 'joined', null);
           str = `Joined ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }!`;
         }
 
         if (!isPending && !isMember) {
-          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${
             toggleChannelSubscription.community.name
           }.`;
@@ -97,6 +94,7 @@ class ToggleChannelMembership extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), toggleChannelSubscriptionMutation)(
-  ToggleChannelMembership
-);
+export default compose(
+  connect(),
+  toggleChannelSubscriptionMutation
+)(ToggleChannelMembership);

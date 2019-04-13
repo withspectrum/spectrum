@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should add embeds 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [
+        Object {
+          "key": 0,
+          "length": 33,
+          "offset": 0,
+        },
+      ],
+      "inlineStyleRanges": Array [],
+      "key": "g0000",
+      "text": "https://simplecast.com/s/a1f11d11",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {
+    "0": Object {
+      "data": Object {
+        "height": 200,
+        "src": "https://embed.simplecast.com/a1f11d11",
+        "type": "simplecast",
+        "url": "https://embed.simplecast.com/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "embed",
+    },
+  },
+}
+`;
+
+exports[`should add multiple embeds to text 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [
+        Object {
+          "key": 0,
+          "length": 33,
+          "offset": 13,
+        },
+        Object {
+          "key": 0,
+          "length": 33,
+          "offset": 65,
+        },
+      ],
+      "inlineStyleRanges": Array [],
+      "key": "g0000",
+      "text": "New podcast! https://simplecast.com/s/a1f11d11 it is really cool https://simplecast.com/s/a1f11d11",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {
+    "0": Object {
+      "data": Object {
+        "height": 200,
+        "src": "https://embed.simplecast.com/a1f11d11",
+        "type": "simplecast",
+        "url": "https://embed.simplecast.com/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "embed",
+    },
+  },
+}
+`;
+
+exports[`should remove link entities 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "data": Object {},
+      "depth": 0,
+      "entityRanges": Array [
+        Object {
+          "key": 1,
+          "length": 33,
+          "offset": 0,
+        },
+      ],
+      "inlineStyleRanges": Array [],
+      "key": "g0000",
+      "text": "https://simplecast.com/s/a1f11d11",
+      "type": "unstyled",
+    },
+  ],
+  "entityMap": Object {
+    "0": Object {
+      "data": Object {
+        "href": "https://simplecast.com/s/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "link",
+    },
+    "1": Object {
+      "data": Object {
+        "height": 200,
+        "src": "https://embed.simplecast.com/a1f11d11",
+        "type": "simplecast",
+        "url": "https://embed.simplecast.com/a1f11d11",
+      },
+      "mutability": "MUTABLE",
+      "type": "embed",
+    },
+  },
+}
+`;

@@ -14,9 +14,9 @@ import {
   MESSAGE_DELETED_SCORE,
   MESSAGE_DELETED_POST_AUTHOR_SCORE,
 } from '../constants';
-import type { Data } from './types';
+import type { ReputationEventJobData } from 'shared/bull/types';
 
-export default async (data: Data) => {
+export default async (data: ReputationEventJobData) => {
   // entityId represents the messageId
   const { entityId } = data;
 

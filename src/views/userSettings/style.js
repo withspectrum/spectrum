@@ -1,10 +1,12 @@
 // @flow
+import theme from 'shared/theme';
 import styled from 'styled-components';
 import { FlexRow, FlexCol } from 'src/components/globals';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const EmailListItem = styled.div`
   padding: 8px 0 16px;
-  border-bottom: 2px solid ${props => props.theme.bg.wash};
+  border-bottom: 2px solid ${theme.bg.wash};
 
   &:last-of-type {
     border-bottom: none;
@@ -26,7 +28,7 @@ export const View = styled.div`
   flex: 1;
   align-self: stretch;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
   }
 `;
@@ -41,12 +43,12 @@ export const Form = styled.form`
 
 export const Description = styled.p`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   padding: 8px 0 16px;
   line-height: 1.4;
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 `;
 
@@ -59,7 +61,7 @@ export const Actions = styled(FlexRow)`
   margin-top: 24px;
   justify-content: flex-start;
   flex-direction: row-reverse;
-  border-top: 1px solid ${props => props.theme.bg.border};
+  border-top: 1px solid ${theme.bg.border};
   padding-top: 16px;
 
   button + button {
@@ -80,8 +82,8 @@ export const GeneralNotice = styled.span`
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
-  background: ${props => props.theme.bg.wash};
+  color: ${theme.text.alt};
+  background: ${theme.bg.wash};
   border-radius: 4px;
   margin-top: 24px;
   line-height: 1.4;
@@ -97,31 +99,31 @@ export const ImageInputWrapper = styled(FlexCol)`
   > label:nth-of-type(2) {
     position: absolute;
     bottom: -24px;
-    left: 24px;
+    left: 16px;
   }
 `;
 
 export const Location = styled(FlexRow)`
   font-weight: 500;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${theme.text.alt};
   font-size: 14px;
   margin-bottom: 8px;
 
   > div {
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   > span {
     padding: 0 4px;
-    color: ${({ theme }) => theme.text.placeholder};
+    color: ${theme.text.placeholder};
   }
 
   > a:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${theme.brand.alt};
     text-decoration: underline;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;
@@ -134,5 +136,13 @@ export const GithubSignin = styled.div`
 
   a {
     margin-top: 8px;
+  }
+`;
+
+export const LogoutWrapper = styled.div`
+  display: block;
+
+  button {
+    width: 100%;
   }
 `;

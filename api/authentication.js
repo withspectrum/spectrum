@@ -6,11 +6,11 @@ const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const {
-  getUser,
+  getUserById,
   createOrFindUser,
   saveUserProvider,
   getUserByIndex,
-} = require('./models/user');
+} = require('shared/db/queries/user');
 
 const IS_PROD = !process.env.FORCE_DEV && process.env.NODE_ENV === 'production';
 
@@ -46,21 +46,39 @@ const GITHUB_OAUTH_CLIENT_ID = IS_PROD
   ? '208a2e8684d88883eded'
   : 'ed3e924f4a599313c83b';
 
+const isSerializedJSON = (str: string) =>
+  str[0] === '{' && str[str.length - 1] === '}';
+
 const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, typeof user === 'string' ? user : JSON.stringify(user));
   });
 
-  passport.deserializeUser((id, done) => {
-    getUser({ id })
+  // NOTE(@mxstbr): `data` used to be just the userID, but is now the full user data
+  // to avoid having to go to the db on every single request. We have to handle both
+  // cases here, as more and more users use Spectrum again we go to the db less and less
+  passport.deserializeUser((data, done) => {
+    // Fast path: we got the full user data in the cookie
+    if (isSerializedJSON(data)) {
+      let user;
+      // Ignore errors if our isSerializedJSON heuristic is wrong and `data` isn't serialized JSON
+      try {
+        user = JSON.parse(data);
+      } catch (err) {}
+
+      if (user && user.id && user.createdAt) {
+        return done(null, user);
+      }
+    }
+
+    // Slow path: data is just the userID (legacy), so we have to go to the db to get the full data
+    return getUserById(data)
       .then(user => {
         done(null, user);
-        return null;
       })
       .catch(err => {
         done(err);
-        return null;
       });
   });
 
@@ -70,7 +88,9 @@ const init = () => {
       {
         consumerKey: TWITTER_OAUTH_CLIENT_ID,
         consumerSecret: TWITTER_OAUTH_CLIENT_SECRET,
-        callbackURL: '/auth/twitter/callback',
+        callbackURL: IS_PROD
+          ? 'https://spectrum.chat/auth/twitter/callback'
+          : 'http://localhost:3001/auth/twitter/callback',
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
@@ -111,8 +131,6 @@ const init = () => {
             profile._json.entities.url.urls.length > 0
               ? profile._json.entities.url.urls[0].expanded_url
               : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'providerId')
@@ -178,8 +196,6 @@ const init = () => {
               ? profile.photos[0].value
               : null,
           coverPhoto: profile._json.cover ? profile._json.cover.source : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'fbProviderId')
@@ -244,8 +260,6 @@ const init = () => {
             profile._json.urls && profile._json.urls.length > 0
               ? profile._json.urls[0].value
               : '',
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'googleProviderId')
@@ -280,6 +294,11 @@ const init = () => {
         const githubUsername =
           profile.username || profile._json.login || fallbackUsername;
 
+        const existingUserWithProviderId = await getUserByIndex(
+          'githubProviderId',
+          profile.id
+        );
+
         if (req.user) {
           // if a user exists in the request body, it means the user is already
           // authed and is trying to connect a github account. Before we do so
@@ -288,9 +307,17 @@ const init = () => {
           // 2. The providerId returned from GitHub isnt' being used by another user
 
           // 1
-          // if the user already has a githubProviderId, don't override it
           if (req.user.githubProviderId) {
-            if (!req.user.githubUsername) {
+            /*
+              Update the cached content of the github profile that we store
+              in redis for the graphql resolver. This allows us to put a button
+              on the client for a user to re-connect a github profile from
+              the web app which will update the cache with any changed usernames
+            */
+            if (
+              !req.user.githubUsername ||
+              req.user.githubUsername !== githubUsername
+            ) {
               return saveUserProvider(
                 req.user.id,
                 'githubProviderId',
@@ -309,11 +336,6 @@ const init = () => {
 
             return done(null, req.user);
           }
-
-          const existingUserWithProviderId = await getUserByIndex(
-            'githubProviderId',
-            profile.id
-          );
 
           // 2
           // if no user exists with this provider id, it's safe to save on the req.user's object
@@ -336,7 +358,10 @@ const init = () => {
 
           // if a user exists with this provider id, don't do anything and return
           if (existingUserWithProviderId) {
-            return done(null, req.user);
+            return done(null, req.user, {
+              message:
+                'Your GitHub account is already linked to another Spectrum profile.',
+            });
           }
         }
 
@@ -357,8 +382,6 @@ const init = () => {
             null,
           profilePhoto:
             (profile._json.avatar_url && profile._json.avatar_url) || null,
-          createdAt: new Date(),
-          lastSeen: new Date(),
         };
 
         return createOrFindUser(user, 'githubProviderId')

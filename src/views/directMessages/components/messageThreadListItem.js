@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-// $FlowFixMe
-import Link from 'src/components/link';
-import { timeDifference } from '../../../helpers/utils';
+// @flow
+import * as React from 'react';
+import { timeDifference } from 'shared/time-difference';
 import { renderAvatars } from './avatars';
+import type { GetDirectMessageThreadType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThread';
 import {
   Wrapper,
+  WrapperLink,
   Row,
   Meta,
   MessageGroupTextContainer,
@@ -13,7 +14,13 @@ import {
   Timestamp,
 } from './style';
 
-class ListCardItemDirectMessageThread extends Component {
+type Props = {
+  active: boolean,
+  currentUser: Object,
+  thread: GetDirectMessageThreadType,
+};
+
+class ListCardItemDirectMessageThread extends React.Component<Props> {
   render() {
     const { thread, currentUser, active } = this.props;
 
@@ -50,25 +57,25 @@ class ListCardItemDirectMessageThread extends Component {
     isUnread = active ? false : isUnread;
 
     return (
-      <Wrapper active={active} isUnread={isUnread}>
-        <Link to={`/messages/${thread.id}`}>
+      <Wrapper
+        active={active}
+        data-cy={isUnread ? 'unread-dm-list-item' : 'dm-list-item'}
+        isUnread={isUnread}
+      >
+        <WrapperLink to={`/messages/${thread.id}`}>
           <Row>
             {avatars}
             <MessageGroupTextContainer>
               <MessageGroupByline>
-                <Usernames isUnread={isUnread}>
+                <Usernames>
                   <p>{participantsArray}</p>
                 </Usernames>
-                <Timestamp isUnread={isUnread}>
-                  {threadTimeDifference}
-                </Timestamp>
+                <Timestamp>{threadTimeDifference}</Timestamp>
               </MessageGroupByline>
-              <Meta isUnread={isUnread} nowrap>
-                {thread.snippet}
-              </Meta>
+              <Meta nowrap>{thread.snippet}</Meta>
             </MessageGroupTextContainer>
           </Row>
-        </Link>
+        </WrapperLink>
       </Wrapper>
     );
   }

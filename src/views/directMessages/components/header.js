@@ -1,6 +1,6 @@
 import React from 'react';
 import generateMetaInfo from 'shared/generate-meta-info';
-import Head from '../../../components/head';
+import Head from 'src/components/head';
 import {
   StyledHeader,
   PhotosContainer,
@@ -15,17 +15,19 @@ const Header = ({ thread, currentUser }) => {
     user => user.userId !== currentUser.id
   );
 
+  // don't show the header in a 1:1 dm because we already have the titlebar
+  if (trimmedUsers.length === 1) {
+    return (
+      <Head
+        title={`Conversation with ${trimmedUsers[0].name}`}
+        description={`Conversation with ${trimmedUsers[0].name}`}
+      />
+    );
+  }
+
   const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>
-      <Photo
-        user={user}
-        size={60}
-        radius={60}
-        isOnline={user.isOnline}
-        onlineSize={'large'}
-        src={user.profilePhoto}
-        link={user.username ? `/users/${user.username}` : null}
-      />
+      <Photo user={user} size={56} showOnlineStatus={false} />
     </PhotoWrapper>
   ));
 
@@ -44,7 +46,7 @@ const Header = ({ thread, currentUser }) => {
   });
 
   return (
-    <StyledHeader>
+    <StyledHeader data-cy="dm-header">
       <Head title={title} description={description} />
       <PhotosContainer>{photos}</PhotosContainer>
       <Names>{names}</Names>

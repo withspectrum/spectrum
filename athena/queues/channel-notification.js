@@ -12,7 +12,7 @@ import {
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
-} from '../models/usersNotifications';
+} from 'shared/db/queries/usersNotifications';
 import type { Job, ChannelNotificationJobData } from 'shared/bull/types';
 
 export default async (job: Job<ChannelNotificationJobData>) => {
@@ -88,8 +88,8 @@ export default async (job: Job<ChannelNotificationJobData>) => {
 
   // for each person who should receie an updated notification, mark their notification as unseen and unread
   return Promise.all([notificationPromises]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

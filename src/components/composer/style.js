@@ -1,47 +1,134 @@
-import styled from 'styled-components';
-import { hexa, Shadow, FlexRow, FlexCol, zIndex } from '../globals';
+import React from 'react';
+import styled, { css } from 'styled-components';
+import theme from 'shared/theme';
+import Icon from 'src/components/icon';
+import { hexa, FlexRow, FlexCol, zIndex } from '../globals';
+import { MAX_WIDTH, MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
-export const Container = styled(FlexCol)`
-  background-color: ${props => props.theme.bg.default};
-  display: grid;
-  grid-template-rows: 60px 1fr 64px;
-  grid-template-columns: 100%;
-  grid-template-areas: 'header' 'body' 'footer';
-  align-self: stretch;
-  flex: auto;
-  overflow: hidden;
-  height: calc(100vh - 48px);
+export const DropzoneWrapper = styled.div`
+  position: sticky;
+  height: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom 0;
+`;
 
-  @media (max-width: 768px) {
-    grid-template-rows: 48px 64px 1fr 64px;
-    grid-template-areas: 'title' 'header' 'body' 'footer';
-    max-width: 100vw;
-    height: 100vh;
+export const DropImageOverlay = (props: {
+  visible: boolean,
+  className?: string,
+}) => {
+  return (
+    <DropImageOverlayWrapper
+      visible={props.visible}
+      className={props.className}
+    >
+      <Icon glyph="photo" />
+      <h3>Drop image to upload</h3>
+    </DropImageOverlayWrapper>
+  );
+};
+
+export const Wrapper = styled.div`
+  grid-area: main;
+  display: flex;
+  justify-content: center;
+  z-index: 9995;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
-export const Actions = styled(FlexCol)`
-  background: ${props => props.theme.bg.wash};
-  border-top: 2px solid ${props => props.theme.bg.border};
-  padding: 8px;
-  border-radius: 0;
-  align-self: stretch;
+export const DropImageOverlayWrapper = styled.div`
+  position: absolute;
+  top: -32px;
+  bottom: 0;
+  left: -32px;
+  right: -32px;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
-  position: relative;
-  grid-area: footer;
+  justify-content: center;
+  flex-direction: column;
+  background: ${theme.bg.wash};
+  border-radius: 4px;
+  border: 1px solid ${theme.bg.border};
+  color: ${theme.text.secondary};
+  transition: opacity 125ms ease-in-out;
 
-  @media (max-width: 768px) {
+  ${props =>
+    props.visible
+      ? css`
+          opacity: 0.9;
+        `
+      : css`
+          opacity: 0;
+          pointer-events: none;
+        `}
+`;
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.24);
+  z-index: 9994;
+`;
+
+export const Container = styled(FlexCol)`
+  display: flex;
+  height: 100%;
+  max-height: 100vh;
+  width: 100%;
+  max-width: ${MAX_WIDTH + 32}px;
+  background: ${theme.bg.wash};
+  height: calc(100vh);
+  z-index: 9995;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 4px 0 12px rgba(0, 0, 0, 0.08);
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 100vw;
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    padding: 0;
+    box-shadow: 0;
+  }
+`;
+
+export const DesktopLink = styled.a`
+  display: flex;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
+
+export const ButtonRow = styled(FlexRow)`
+  @media (max-width: ${MEDIA_BREAK}px) {
+    justify-content: flex-end;
+  }
+`;
+
+export const Actions = styled.div`
+  background: ${theme.bg.wash};
+  border-top: 1px solid ${theme.bg.border};
+  padding: 8px 16px;
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex: 1 0 auto;
+  height: 56px;
+  max-height: 56px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding: 8px;
     z-index: ${zIndex.chrome + 1};
-    border-radius: 0;
-    border: 0;
-    box-shadow: none;
-    background-color: transparent;
 
-    > div {
+    > ${ButtonRow} {
       width: 100%;
 
       > button:first-of-type {
@@ -49,46 +136,72 @@ export const Actions = styled(FlexCol)`
       }
 
       > button:last-of-type {
-        width: 100%;
+        width: calc(100% - 16px);
+        margin-right: 8px;
       }
     }
   }
 `;
 
+export const InputHints = styled(FlexRow)`
+  color: ${theme.text.alt};
+  font-size: 14px;
+`;
+
 export const Dropdowns = styled(FlexRow)`
   display: flex;
+  flex: 1;
+  height: 48px;
+  max-height: 48px;
   align-items: center;
-  grid-area: header;
-  background-color: ${props => props.theme.bg.wash};
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  z-index: ${zIndex.composer};
-  grid-area: header;
+  background-color: ${theme.bg.wash};
+  border-bottom: 1px solid ${theme.bg.border};
+  z-index: 9999;
+  border-bottom: 1px solid ${theme.bg.border};
+  padding: 8px;
+  padding-left: 12px;
+  font-size: 16px;
 
-  span {
-    font-size: 14px;
-    font-weight: 500;
-    color: ${props => props.theme.text.alt};
-    margin-left: 16px;
-    line-height: 1;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+  @media (max-width: ${MEDIA_BREAK}px) {
     justify-content: flex-start;
   }
 `;
 
+export const DropdownsLabel = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  line-height: 1;
+  vertical-align: middle;
+  position: relative;
+  top: 1px;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
+
+export const CommunityPreview = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.text.secondary};
+  margin-left: 16px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    margin-left: 0;
+  }
+`;
+
+export const ChannelPreview = styled(CommunityPreview)`
+  margin-left: 0;
+`;
+
 const Selector = styled.select`
-  max-width: 196px;
   display: inline-block;
-  flex: none;
   border: none;
   box-shadow: none;
   -webkit-appearance: none;
@@ -100,57 +213,62 @@ const Selector = styled.select`
   font-weight: 500;
   font-size: 14px;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: auto;
-    max-width: calc(50% - 12px);
+    font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   }
 `;
 
 export const RequiredSelector = styled(Selector)`
   padding: 8px 12px;
-  border: 2px solid ${props => props.theme.bg.border};
+  max-height: 38px;
+  max-width: 212px;
+  line-height: 1.2;
+  border: 1px solid
+    ${props => (props.emphasize ? theme.brand.alt : theme.bg.border)};
   border-radius: 8px;
-  color: ${props => props.theme.text.default};
-  background-color: ${props => props.theme.bg.default};
-`;
+  color: ${props => (props.emphasize ? theme.brand.alt : theme.text.default)};
+  background-color: ${props =>
+    props.disabled ? theme.bg.wash : theme.bg.default};
 
-export const OptionalSelector = styled(Selector)`
-  color: ${props => props.theme.text.alt};
-  margin-left: 16px;
-  background-color: transparent;
+  &:focus {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.24)};
+  }
+
+  &:active {
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0 0 2px ${theme.bg.default},
+      0 0 0 4px ${hexa(theme.brand.alt, 0.64)};
+  }
 `;
 
 export const ThreadInputs = styled(FlexCol)`
-  grid-area: body;
-  overflow-y: scroll;
-  padding: 64px;
-  padding-left: 80px;
-  background-color: ${props => props.theme.bg.default};
+  position: relative;
+  padding: 32px;
+  padding-bottom: 0;
+  background-color: ${theme.bg.default};
+  z-index: ${zIndex.composer};
+  height: 100%;
 
-  @media (max-width: 768px) {
-    max-width: 100vw;
-    padding: 32px;
-    padding-left: 48px;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 100vw;
-    padding: 16px;
-    padding-left: 48px;
+  @media (max-width: ${MEDIA_BREAK}px) {
+    padding: 24px;
   }
 `;
 
 export const ThreadTitle = {
-  fontSize: '24px',
+  fontSize: '28px',
   padding: '0',
   outline: 'none',
   border: '0',
   lineHeight: '1.4',
-  fontWeight: '800',
+  fontWeight: '600',
   boxShadow: 'none',
   width: '100%',
   color: '#16171A',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
   minHeight: '34px',
   flex: 'none',
   display: 'inline-block',
@@ -159,19 +277,22 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '16px',
-  fontWeight: '500',
+  fontSize: '16px', // has to be 16px to avoid zoom on iOS
+  fontWeight: '400',
   width: '100%',
   display: 'inline-block',
-  lineHeight: '1.5',
-  padding: '0 32px 32px',
+  lineHeight: '1.4',
   outline: 'none',
   border: '0',
   boxShadow: 'none',
   color: '#16171A',
   whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
   overflowY: 'scroll',
   position: 'relative',
+  // NOTE(@mxstbr): Magic value to make the margin between
+  // the thread title and body match the preview
+  marginTop: '9px',
 };
 
 export const DisabledWarning = styled.div`
@@ -184,5 +305,17 @@ export const DisabledWarning = styled.div`
   font-size: 16px;
   font-weight: 500;
   background: ${props => hexa(props.theme.warn.default, 0.1)};
-  color: ${props => props.theme.warn.default};
+  color: ${theme.warn.default};
+`;
+
+export const RenderWrapper = styled.div``;
+
+export const InputsGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+  overflow-y: auto;
+  background: ${theme.bg.default};
+  padding-bottom: 48px;
 `;

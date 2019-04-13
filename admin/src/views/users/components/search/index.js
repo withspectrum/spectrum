@@ -6,6 +6,13 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
+import {
+  ESC,
+  BACKSPACE,
+  ENTER,
+  ARROW_DOWN,
+  ARROW_UP,
+} from 'src/helpers/keycodes';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
@@ -104,8 +111,7 @@ class Search extends React.Component<Props, State> {
       focusedSearchResult
     );
 
-    // if person presses esc, clear all results, stop loading
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.setState({
         searchResults: [],
         searchIsLoading: false,
@@ -114,15 +120,13 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // backspace
-    if (e.keyCode === 8) {
+    if (e.keyCode === BACKSPACE) {
       if (searchString.length > 0) return;
       // $FlowFixMe
       return input && input.focus();
     }
 
-    //escape
-    if (e.keyCode === 27) {
+    if (e.keyCode === ESC) {
       this.setState({
         searchResults: [],
         searchIsLoading: false,
@@ -132,8 +136,7 @@ class Search extends React.Component<Props, State> {
       return input && input.focus();
     }
 
-    // down
-    if (e.keyCode === 40) {
+    if (e.keyCode === ARROW_DOWN) {
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
       if (searchResults.length === 1) return;
 
@@ -145,8 +148,7 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // up
-    if (e.keyCode === 38) {
+    if (e.keyCode === ARROW_UP) {
       // 1
       if (indexOfFocusedSearchResult === 0) return;
       if (searchResults.length === 1) return;
@@ -159,8 +161,7 @@ class Search extends React.Component<Props, State> {
       return;
     }
 
-    // enter
-    if (e.keyCode === 13) {
+    if (e.keyCode === ENTER) {
       if (!searchResults[indexOfFocusedSearchResult]) return;
       return this.goToUser(searchResults[indexOfFocusedSearchResult].username);
     }
@@ -269,4 +270,9 @@ class Search extends React.Component<Props, State> {
   }
 }
 
-export default compose(withApollo, withRouter, connect(), pure)(Search);
+export default compose(
+  withApollo,
+  withRouter,
+  connect(),
+  pure
+)(Search);

@@ -5,20 +5,17 @@ import { processReputationEventQueue } from 'shared/bull/queues';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { deleteThread, getThreads } from '../../models/thread';
+import { isAuthedResolver as requireAuth } from '../../utils/permissions';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
 
-export default async (
-  _: any,
-  { threadId }: { threadId: string },
-  { user }: GraphQLContext
-) => {
-  const currentUser = user;
+type Input = {
+  threadId: string,
+};
 
-  // user must be authed to edit a thread
-  if (!currentUser) {
-    return new UserError(
-      'You must be signed in to make changes to this thread.'
-    );
-  }
+export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
+  const { user } = ctx;
+  const { threadId } = args;
 
   // get the thread being locked
   const threads = await getThreads([threadId]);
@@ -27,6 +24,15 @@ export default async (
 
   // if the thread doesn't exist
   if (!threadToEvaluate || threadToEvaluate.deletedAt) {
+    trackQueue.add({
+      userId: user.id,
+      event: events.THREAD_DELETED_FAILED,
+      context: { threadId },
+      properties: {
+        reason: 'thread does not exist',
+      },
+    });
+
     return new UserError("This thread doesn't exist");
   }
 
@@ -35,8 +41,8 @@ export default async (
     currentUserChannelPermissions,
     currentUserCommunityPermissions,
   ] = await Promise.all([
-    getUserPermissionsInChannel(threadToEvaluate.channelId, currentUser.id),
-    getUserPermissionsInCommunity(threadToEvaluate.communityId, currentUser.id),
+    getUserPermissionsInChannel(threadToEvaluate.channelId, user.id),
+    getUserPermissionsInCommunity(threadToEvaluate.communityId, user.id),
   ]);
 
   // if the user owns the community or the channel, or they are the original creator, they can delete the thread
@@ -45,22 +51,31 @@ export default async (
     currentUserChannelPermissions.isModerator ||
     currentUserCommunityPermissions.isOwner ||
     currentUserCommunityPermissions.isModerator ||
-    threadToEvaluate.creatorId === currentUser.id
+    threadToEvaluate.creatorId === user.id
   ) {
     // if the current user doing the deleting does not match the thread creator, we can assume that this deletion is happening as a moderation event. In this case we grant reputation to the moderator
-    if (currentUser.id !== threadToEvaluate.creatorId) {
+    if (user.id !== threadToEvaluate.creatorId) {
       processReputationEventQueue.add({
-        userId: currentUser.id,
+        userId: user.id,
         type: 'thread deleted by moderation',
         entityId: threadToEvaluate.communityId,
       });
     }
 
-    return deleteThread(threadId);
+    return await deleteThread(threadId, user.id);
   }
 
   // if the user is not a channel or community owner, the thread can't be locked
+  trackQueue.add({
+    userId: user.id,
+    event: events.THREAD_DELETED_FAILED,
+    context: { threadId },
+    properties: {
+      reason: 'no permission',
+    },
+  });
+
   return new UserError(
     "You don't have permission to make changes to this thread."
   );
-};
+});

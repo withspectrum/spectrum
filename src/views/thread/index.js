@@ -1,12 +1,22 @@
 // @flow
 import React from 'react';
 import Loadable from 'react-loadable';
-import LoadingThread from './components/loading';
+import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 
 /* prettier-ignore */
-const Thread = Loadable({
-  loader: () => import('./container'/* webpackChunkName: "Thread" */),
-  loading: ({ isLoading }) => isLoading && <LoadingThread threadViewContext="inbox"  />,
-});
+const loader = () => import('./container'/* webpackChunkName: "Thread" */);
 
-export default Thread;
+const getLoading = () => ({ error, pastDelay }) => {
+  if (error) {
+    return <ErrorView />;
+  } else if (pastDelay) {
+    return <LoadingView />;
+  }
+
+  return null;
+};
+
+export const ThreadView = Loadable({
+  loader,
+  loading: getLoading(),
+});

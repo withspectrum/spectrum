@@ -1,4 +1,7 @@
+// @flow
 import styled from 'styled-components';
+import theme from 'shared/theme';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 export const EmailInviteForm = styled.div`
   display: flex;
@@ -31,50 +34,68 @@ export const EmailInviteInput = styled.input`
   }
 
   &:focus {
-    border: 2px solid ${props => props.theme.brand.default};
+    border: 2px solid ${theme.brand.default};
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.hideOnMobile ? 'none' : 'auto')};
   }
 `;
 
-export const AddRow = styled.div`
+export const HiddenInput = styled.input`
+  display: none;
+`;
+
+export const Action = styled.button`
   display: flex;
   width: 100%;
   justify-content: center;
   padding: 8px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
   margin-top: 8px;
-  margin-bottom: 16px;
+  margin-bottom: ${props => props.mb || '16px'};
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
   border-radius: 4px;
 
+  .icon {
+    margin-right: 4px;
+  }
+
   &:hover {
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.secondary};
     cursor: pointer;
   }
 `;
 
+export const ActionAsLabel = Action.withComponent('label');
+
+export const ActionHelpText = styled.div`
+  color: ${theme.text.alt};
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 24px;
+`;
+
 export const RemoveRow = styled.div`
   margin-left: 4px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.text.default};
+    color: ${theme.text.default};
   }
 `;
 
 export const CustomMessageToggle = styled.h4`
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   margin-top: 16px;
 
   &:hover {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     cursor: pointer;
   }
 
@@ -83,6 +104,10 @@ export const CustomMessageToggle = styled.h4`
     top: 5px;
     margin-right: 4px;
   }
+`;
+
+export const FileUploadWrapper = styled.div`
+  margin-right: 16px;
 `;
 
 export const CustomMessageTextAreaStyles = {

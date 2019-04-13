@@ -1,12 +1,10 @@
 // @flow
 const debug = require('debug')('api:models:webPushSubscription');
-const { db } = require('./db');
+const { db } = require('shared/db');
 import type { WebPushSubscription } from '../mutations/user';
 
-export const storeSubscription = (
-  subscription: WebPushSubscription,
-  userId: string
-) => {
+// prettier-ignore
+export const storeSubscription = (subscription: WebPushSubscription, userId: string) => {
   debug(
     `store subscription for user#${userId}, endpoint ${subscription.endpoint}`
   );

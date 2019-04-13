@@ -19,42 +19,54 @@ describe('channel notification preferences logged out', () => {
   it('should not render notifications settings', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy.get('[data-cy="notifications-checkbox"]').should('not.be.visible');
+    cy.get('[data-cy="channel-notifications-muted"]').should('not.be.visible');
+    cy.get('[data-cy="channel-notifications-enabled"]').should(
+      'not.be.visible'
+    );
   });
 });
 
 describe('channel notification preferences as member', () => {
   beforeEach(() => {
-    cy.auth(memberInChannelId);
-    cy.visit(`/${community.slug}/${channel.slug}`);
+    cy.auth(memberInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}`)
+    );
   });
 
   it('should render notification settings', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy
-      .get('[data-cy="notifications-checkbox-checked"]')
-      .should('be.visible')
+    cy.get('[data-cy="channel-notifications-enabled"]').should($p => {
+      expect($p).to.have.length(2);
+    });
+
+    cy.get('[data-cy="channel-notifications-enabled"]')
+      .first()
       .click();
 
-    cy
-      .get('[data-cy="notifications-checkbox-unchecked"]')
-      .should('be.visible')
-      .click();
+    cy.get('[data-cy="channel-notifications-enabled"]').should($p => {
+      expect($p).to.have.length(1);
+    });
+
+    cy.get('[data-cy="channel-notifications-muted"]').should($p => {
+      expect($p).to.have.length(1);
+    });
   });
 });
 
 describe('channel profile as non-member', () => {
   beforeEach(() => {
-    cy.auth(QUIET_USER_ID);
-    cy.visit(`/${community.slug}/${channel.slug}`);
+    cy.auth(QUIET_USER_ID).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}`)
+    );
   });
 
   it('should not render notifications settings', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
 
-    cy
-      .get('[data-cy="notifications-checkbox-checked"]')
-      .should('not.be.visible');
+    cy.get('[data-cy="channel-notifications-muted"]').should('not.be.visible');
+    cy.get('[data-cy="channel-notifications-enabled"]').should(
+      'not.be.visible'
+    );
   });
 });

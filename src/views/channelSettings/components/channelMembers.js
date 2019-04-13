@@ -8,11 +8,12 @@ import type { GetChannelMemberConnectionType } from 'shared/graphql/queries/chan
 import { FetchMoreButton } from 'src/components/threadFeed/style';
 import ViewError from 'src/components/viewError';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/entities';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { MessageIconContainer, UserListItemContainer } from '../style';
+import { UserListItemContainer } from '../style';
 import { ListContainer, ListFooter } from 'src/components/listItems/style';
-import Icon from 'src/components/icons';
+import type { Dispatch } from 'redux';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 
 type Props = {
   data: {
@@ -21,8 +22,7 @@ type Props = {
   },
   isLoading: boolean,
   isFetchingMore: boolean,
-  dispatch: Function,
-  initMessage: Function,
+  dispatch: Dispatch<Object>,
   currentUser: ?Object,
 };
 
@@ -34,23 +34,16 @@ class ChannelMembers extends Component<Props> {
       isLoading,
       isFetchingMore,
       currentUser,
-      initMessage,
     } = this.props;
 
     if (data && data.channel) {
       const members =
         channel.memberConnection &&
         channel.memberConnection.edges.map(member => member && member.node);
-      const totalCount =
-        channel.metaData && channel.metaData.members.toLocaleString();
 
       return (
-        <SectionCard>
-          <SectionTitle>
-            {totalCount === 1
-              ? `${totalCount} member`
-              : `${totalCount} members`}
-          </SectionTitle>
+        <SectionCard data-cy="channel-members">
+          <SectionTitle>Members</SectionTitle>
 
           <ListContainer>
             {members &&
@@ -58,28 +51,19 @@ class ChannelMembers extends Component<Props> {
                 if (!user) return null;
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={'32'}
+                      avatarSize={40}
                       description={user.description}
-                    >
-                      {currentUser &&
-                        user.id !== currentUser.id && (
-                          <MessageIconContainer>
-                            <Icon
-                              glyph={'message'}
-                              onClick={() => initMessage(user)}
-                            />
-                          </MessageIconContainer>
-                        )}
-                    </GranularUserProfile>
+                      showHoverProfile={false}
+                      messageButton={true}
+                    />
                   </UserListItemContainer>
                 );
               })}
@@ -93,7 +77,7 @@ class ChannelMembers extends Component<Props> {
                   loading={isFetchingMore}
                   onClick={() => fetchMore()}
                 >
-                  Load more
+                  {isFetchingMore ? 'Loading...' : 'Load more'}
                 </FetchMoreButton>
               </ListFooter>
             )}
@@ -117,11 +101,9 @@ class ChannelMembers extends Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getChannelMembersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(ChannelMembers);

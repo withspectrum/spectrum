@@ -18,7 +18,7 @@ describe('channel threads logged out', () => {
 
   it('should render list of threads', () => {
     data.threads
-      .filter(thread => thread.channelId === channel.id)
+      .filter(thread => !thread.deletedAt && thread.channelId === channel.id)
       .forEach(thread => {
         cy.contains(thread.content.title);
       });
@@ -27,13 +27,14 @@ describe('channel threads logged out', () => {
 
 describe('channel threads logged in', () => {
   beforeEach(() => {
-    cy.auth(memberInChannelId);
-    cy.visit(`/${community.slug}/${channel.slug}`);
+    cy.auth(memberInChannelId).then(() =>
+      cy.visit(`/${community.slug}/${channel.slug}`)
+    );
   });
 
   it('should render list of threads', () => {
     data.threads
-      .filter(thread => thread.channelId === channel.id)
+      .filter(thread => !thread.deletedAt && thread.channelId === channel.id)
       .forEach(thread => {
         cy.contains(thread.content.title);
       });

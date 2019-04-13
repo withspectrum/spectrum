@@ -1,15 +1,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- 
+  START_CONFIG
+  { 
+    "test": {
+      "version": "d0cd55a6-96e2-4e6e-9a0f-103ac2006497",
+      "template": "d-dc7b4f048f4c460f9dd368fd3796421b"
+    },
+    "production": {
+      "version": "313b640a-8591-4ba9-9241-4af25ed3a68f",
+      "template": "d-3a72aa9dec664ab4badd20e17586f477"
+    }
+  }
+  END_CONFIG
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Your community is live on Spectrum!</title>
-    <!--
-    The style block is collapsed on page load to save you some scrolling.
-    Postmark automatically inlines all CSS properties for maximum email client
-    compatibility. You can just update styles here, and Postmark does the rest.
-    -->
-    <style type="text/css" rel="stylesheet" media="all">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>{{{subject}}}</title>
+
+  <style type="text/css" rel="stylesheet" media="all">
     /* Base ------------------------------ */
 
     *:not(br):not(tr):not(html) {
@@ -18,13 +31,15 @@
     }
 
     body {
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
       width: 100% !important;
-      height: 100%;
-      margin: 0;
       line-height: 1.4;
       background-color: #FFF;
       color: #171a21;
       -webkit-text-size-adjust: none;
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif !important;
     }
 
     p,
@@ -37,12 +52,7 @@
 
     a {
       color: #7b16ff;
-      font-weight: bold;
       text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
     a img {
@@ -52,6 +62,7 @@
     td {
       word-break: break-word;
     }
+
     /* Layout ------------------------------ */
 
     .email-wrapper {
@@ -61,7 +72,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFF;
+      background-color: #F5F8FC;
     }
 
     .email-content {
@@ -71,48 +82,59 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
     }
 
     /* Body ------------------------------ */
 
     .email-body {
       width: 100%;
-      max-width: 560px;
       margin: 0;
-      padding: 0;
+      padding: 32px 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       background-color: #FFFFFF;
     }
 
     .email-footer {
-      width: 100%;
-      max-width: 560px;
+      width: 570px;
       margin: 0 auto;
-      padding: 0;
-      -premailer-width: 560px;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
-      background-color: #F2F5F9;
-      margin-top: 32px;
     }
 
     .email-footer p {
-      color: #AEAEAE;
-      margin-bottom: 0;
+      color: #828C99;
+      font-size: 14px;
+    }
+
+    .email-footer a {
+      color: #1D2129;
+    }
+
+    .email-footer ul {
+      list-style-type: none;
+      margin: 24px 0;
+      padding-left: 0;
+    }
+
+    .email-footer li {
+      margin: 8px 0;
+      font-size: 14px;
     }
 
     .body-action {
@@ -152,7 +174,7 @@
     }
 
     .content-cell {
-      padding: 8px 24px;
+      padding: 8px 0;
     }
 
     .footer-cell {
@@ -196,9 +218,11 @@
     .collapse {
       border-collapse: collapse;
     }
+
     /*Media Queries ------------------------------ */
 
     @media only screen and (max-width: 600px) {
+
       .email-body_inner,
       .email-footer {
         width: 100% !important;
@@ -207,29 +231,20 @@
 
     /* Buttons ------------------------------ */
 
-    .button-group {
-      margin: 32px 0;
-    }
-
     .button {
       background-color: #7B16FF;
-      display: inline-block;
-      color: #FFF;
-      padding: 12px 16px;
+      display: block;
+      color: #FFF !important;
+      padding: 12px 0px;
       text-decoration: none;
-      border-radius: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: 0.5px;
-
-      &:hover {
-        text-decoration: none;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      }
+      text-align: center;
     }
 
     .button.button-twitter {
@@ -237,8 +252,8 @@
     }
 
     .button.button-facebook {
+      margin-top: 8px;
       background-color: #3B5998;
-      margin-left: 8px;
     }
 
     /* Type ------------------------------ */
@@ -271,12 +286,10 @@
     }
 
     p {
-      margin: 0;
-      margin-bottom: 16px;
-      padding: 0;
+      margin-top: 12px;
       color: #171A21;
       font-size: 16px;
-      line-height: 1.5em;
+      line-height: 1.4;
       text-align: left;
     }
 
@@ -292,9 +305,11 @@
       margin-bottom: 2px;
       padding: 8px 12px;
       border-radius: 12px;
+      font-size: 16px;
     }
 
-    p.emoji, span.emoji {
+    p.emoji,
+    span.emoji {
       font-size: 32px;
       vertical-align: middle;
       line-height: 1.6;
@@ -338,14 +353,14 @@
 
     h1.title {
       font-size: 24px;
-      font-weight: 800;
+      font-weight: 600;
       color: #171A21;
       margin-bottom: 24px;
     }
 
     h2.section-title {
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 500;
       color: #171A21;
       margin-bottom: 8px;
     }
@@ -362,113 +377,143 @@
       font-size: 12px;
       font-weight: 500;
     }
-    </style>
-  </head>
-  <body>
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      Your {{community.name}} is live on Spectrum!
-    </div>
+  </style>
+</head>
 
-    <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
-    <div style="display: none; max-height: 0px; overflow: hidden;">
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-      &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-    </div>
+<body>
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    Your {{community.name}} is live on Spectrum!
+  </div>
 
-    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center">
-          <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
-            <!-- Email Body -->
-            <tr>
-              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
-                  <!-- Body content -->
-                  <tr>
-                    <td class="header-cell"></td>
-                  </tr>
-                  <tr>
-                    <td class="content-cell">
-                      <p class="emoji large">✨</p>
-                      <h1 class="title"><a href="https://spectrum.chat/{{community.slug}}"><b>{{community.name}}</a> is live on Spectrum!</b></h1>
-                      <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation started!</p>
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share on Twitter</a>
-                          </td>
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+          <!-- Email Body -->
+          <tr>
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+              <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
+                <!-- Body content -->
+                <tr>
+                  <td class="content-cell">
+                    <p class="emoji large">✨</p>
+                    <h1 class="title"><a href="https://spectrum.chat/{{community.slug}}"><b>{{community.name}}</a> is
+                      live on Spectrum!</b></h1>
+                    <p>But it's pretty quiet in there right now - share {{community.name}} to get the conversation
+                      started!</p>
 
-                          <td>
-                            <a class="button button-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/{{community.slug}}&amp;t=Come hang out with me in the {{community.name}} community on Spectrum!">Share on Facebook</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <table class="button-group" width="100%">
+                      <tr>
+                        <td>
+                          <a class="button button-twitter" href="https://twitter.com/share?text=Come hang out with me in the {{community.name}} community on @withspectrum!&amp;url=https://spectrum.chat/{{community.slug}}">Share
+                            on Twitter</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <a class="button button-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/{{community.slug}}&amp;t=Come hang out with me in the {{community.name}} community on Spectrum!">Share
+                            on Facebook</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Connect with our team and other community owners</h2>
-                      <p>We've created a channel on Spectrum just for community builders like you. Come join our Meta channel to talk about building communities, ask us questions, request features, or get faster replies on those pesky bug reports!</p>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Connect with our team and other community owners</h2>
+                    <p>We've created a channel on Spectrum just for community builders like you. Come join our Meta
+                      channel to talk about building communities, ask us questions, request features, or get faster
+                      replies on those pesky bug reports!</p>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/spectrum/meta">Join our community builders community</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <table class="button-group" width="100%">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/spectrum/meta">Join our community builders
+                            community</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Threads: The building blocks of communities</h2>
-                      <p>Threads are the building blocks of communities on Spectrum - they're rich posts that can contain text, photos, videos, embedded content, and more. Your community is new, so there aren't any threads yet.</p>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Threads: The building blocks of communities</h2>
+                    <p>Threads are the building blocks of communities on Spectrum - they're rich posts that can contain
+                      text, photos, videos, embedded content, and more. Your community is new, so there aren't any
+                      threads yet.</p>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/{{community.slug}}">Post your first thread</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <table class="button-group" width="100%">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/{{community.slug}}">Post your first thread</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">Moving an existing community?</h2>
-                      <p>We've also made it easy to <b>migrate an existing Slack team</b> and invite people to {{community.name}} directly by email.</p>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">Moving an existing community?</h2>
+                    <p>We've also made it easy to <b>migrate an existing Slack team</b> and invite people to
+                      {{community.name}} directly by email.</p>
 
-                      <table class="button-group">
-                        <tr>
-                          <td>
-                            <a class="button" href="https://spectrum.chat/{{community.slug}}/settings">Invite people to your community</a>
-                          </td>
-                        </tr>
-                      </table>
+                    <table class="button-group" width="100%">
+                      <tr>
+                        <td>
+                          <a class="button" href="https://spectrum.chat/{{community.slug}}/settings">Invite people to
+                            your community</a>
+                        </td>
+                      </tr>
+                    </table>
 
-                      <div class="section-divider"></div>
-                      <h2 class="section-title">More to come...</h2>
-                      <p>We're working on new features for community builders just like you - if you have ideas, feel free to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a>. And if you happen to come across any bugs, <a href="https://spectrum.chat/spectrum/hugs-n-bugs">we're listening to you.</a></p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-          <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td class="content-cell">
-                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-  </body>
+                    <div class="section-divider"></div>
+                    <h2 class="section-title">More to come...</h2>
+                    <p>We're working on new features for community builders just like you - if you have ideas, feel
+                      free to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a>. And
+                      if you happen to come across any bugs, <a href="https://spectrum.chat/spectrum/hugs-n-bugs">we're
+                        listening to you.</a></p>
+                    <p>&nbsp;</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>
+              <p>
+                You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>.
+              </p>
+              <ul>
+                <li>
+                  <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li>
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                    a feature</a>
+                </li>
+              </ul>
+              <p>Spectrum is made by GitHub, Inc.<br />88 Colin P Kelly Jr St, San Francisco, CA 94107<br />United
+                States
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
 </html>

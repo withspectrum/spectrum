@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from 'shared/theme';
 import { zIndex } from '../globals';
 
 export const MediaInput = styled.input`
@@ -15,13 +16,13 @@ export const MediaLabel = styled.label`
   outline: 0;
   display: inline-block;
   background: transparent;
-  transition: all 0.3s ease-out;
-  color: ${({ theme }) => theme.text.placeholder};
+  transition: color 0.3s ease-out;
+  color: ${theme.text.placeholder};
   height: 32px;
   width: 32px;
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${theme.brand.alt};
   }
 `;

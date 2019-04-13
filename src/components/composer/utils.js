@@ -1,51 +1,58 @@
 // @flow
-import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel.js';
+import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 
-const hasCommunityPermissions = ({ communityPermissions }) =>
-  communityPermissions.isMember || communityPermissions.isOwner;
+const hasCommunityPermissions = (community: ?CommunityInfoType) =>
+  community &&
+  (community.communityPermissions.isMember ||
+    community.communityPermissions.isOwner);
 
-const hasChannelPermissions = ({ channelPermissions }) =>
-  channelPermissions.isMember || channelPermissions.isOwner;
+const hasChannelPermissions = (channel: ?ChannelInfoType) =>
+  channel &&
+  (channel.channelPermissions.isMember || channel.channelPermissions.isOwner);
 
 const sortByRep = (a, b) => {
+  if (!a || !b) return 0;
   const bc = parseInt(b.communityPermissions.reputation, 10);
   const ac = parseInt(a.communityPermissions.reputation, 10);
   return bc <= ac ? -1 : 1;
 };
 
 export const sortCommunities = (
-  communities: Array<GetCommunityType>
-): GetCommunityType[] => {
+  communities: Array<?CommunityInfoType>
+): Array<?CommunityInfoType> => {
+  if (!communities || communities.length === 0) return [];
+
   return communities.filter(hasCommunityPermissions).sort(sortByRep);
 };
 
-export const sortChannels = (channels: GetChannelType[]): GetChannelType[] => {
-  return channels.filter(hasChannelPermissions).filter(channel => {
-    if (!channel.isPrivate && !channel.isArchived) return true;
-    return true;
-  });
+const organizeChannels = (
+  channels: Array<?ChannelInfoType>
+): Array<?ChannelInfoType> => {
+  if (!channels || channels.length === 0) return [];
+
+  const general = channels.find(
+    channel => channel && channel.slug === 'general'
+  );
+  const withoutGeneral = channels
+    .filter(channel => channel && channel.slug !== 'general')
+    // sort the remaining channels alphabetically
+    .sort((a, b) => {
+      if (!a || !b) return 0;
+      return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+    });
+  if (!general) return [...withoutGeneral];
+  return [general, ...withoutGeneral];
 };
 
-export const getDefaultActiveChannel = (
-  channels: Array<GetChannelType>,
-  activeChannelId: ?string
-): ?GetChannelType => {
-  // If there's an active channel, use that
-  const activeChannel = channels.find(
-    channel => channel.id === activeChannelId
-  );
-  if (activeChannel) return activeChannel;
+export const sortChannels = (
+  channels: Array<?ChannelInfoType>
+): Array<?ChannelInfoType> => {
+  if (!channels || channels.length === 0) return [];
 
-  // Otherwise, try to use the "General" channel
-  const generalChannel = channels.find(channel => channel.slug === 'general');
-  if (generalChannel) return generalChannel;
+  const filtered = channels.filter(hasChannelPermissions).filter(channel => {
+    return channel && !channel.isArchived;
+  });
 
-  // Otherwise, try to use any default channel
-  // $FlowIssue
-  const defaultChannel = channels.find(channel => channel.isDefault);
-  if (defaultChannel) return defaultChannel;
-
-  // Otherwise, just take the first one and get on with it
-  return channels[0];
+  return organizeChannels(filtered);
 };

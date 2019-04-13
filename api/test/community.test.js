@@ -12,8 +12,6 @@ it('should fetch a community', async () => {
         slug
         description
         website
-        profilePhoto
-        coverPhoto
       }
     }
   `;
@@ -56,8 +54,6 @@ it('should fetch a list of communities', async () => {
         slug
         description
         website
-        profilePhoto
-        coverPhoto
       }
     }
   `;

@@ -1,3 +1,4 @@
+// @flow
 const debug = require('debug')('mercury:queue:process-message-created');
 import { updateReputation } from '../models/usersCommunities';
 import { getThread } from '../models/thread';
@@ -7,8 +8,9 @@ import {
   MESSAGE_CREATED_POST_AUTHOR_SCORE,
   MESSAGE_CREATED_POST_AUTHOR_BONUS,
 } from '../constants';
+import type { ReputationEventJobData } from 'shared/bull/types';
 
-export default async data => {
+export default async (data: ReputationEventJobData) => {
   // entityId represents the threadId
   const { userId, entityId } = data;
 

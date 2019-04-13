@@ -1,12 +1,12 @@
 import React from 'react';
 import { MediaLabel, MediaInput } from './style';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 
 export default ({
   onChange,
   accept = '.png, .jpg, .jpeg, .gif, .mp4',
   multiple = false,
-  tipLocation,
+  glyph = 'photo',
 }) => (
   <MediaLabel>
     <MediaInput
@@ -15,10 +15,6 @@ export default ({
       multiple={multiple}
       onChange={onChange}
     />
-    <Icon
-      glyph="photo"
-      tipLocation={tipLocation ? tipLocation : 'top-right'}
-      tipText="Upload photo"
-    />
+    <Icon glyph={glyph} />
   </MediaLabel>
 );

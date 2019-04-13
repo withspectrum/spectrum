@@ -17,11 +17,11 @@ import {
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
 import BrandedLoginToggle from './brandedLoginToggle';
-import Link from 'src/components/link';
-import { Button, OutlineButton } from 'src/components/buttons';
+import { TextButton, OutlineButton } from 'src/components/button';
 import { TextArea, Error } from 'src/components/formElements';
 import saveBrandedLoginSettings from 'shared/graphql/mutations/community/saveBrandedLoginSettings';
-import { addToastWithTimeout } from '../../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import type { Dispatch } from 'redux';
 
 type Props = {
   data: {
@@ -29,7 +29,7 @@ type Props = {
   },
   ...$Exact<ViewNetworkHandlerType>,
   saveBrandedLoginSettings: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -91,7 +91,10 @@ class BrandedLogin extends React.Component<Props, State> {
   };
 
   render() {
-    const { data: { community }, isLoading } = this.props;
+    const {
+      data: { community },
+      isLoading,
+    } = this.props;
     const { messageLengthError } = this.state;
 
     if (community) {
@@ -129,7 +132,7 @@ class BrandedLogin extends React.Component<Props, State> {
                   justifyContent: 'flex-start',
                 }}
               >
-                <Button
+                <OutlineButton
                   style={{ alignSelf: 'flex-start', marginLeft: '8px' }}
                   onSubmit={this.saveCustomMessage}
                   onClick={this.saveCustomMessage}
@@ -137,21 +140,16 @@ class BrandedLogin extends React.Component<Props, State> {
                   loading={this.state.isLoading}
                   data-cy="community-settings-branded-login-save"
                 >
-                  Save
-                </Button>
+                  {this.state.isLoading ? 'Saving...' : 'Save'}
+                </OutlineButton>
 
-                <Link
+                <TextButton
                   to={`/${community.slug}/login`}
-                  style={{ marginRight: '8px' }}
+                  style={{ alignSelf: 'flex-start', marginRight: '8px' }}
+                  data-cy="community-settings-branded-login-preview"
                 >
-                  <OutlineButton
-                    color={'text.alt'}
-                    style={{ alignSelf: 'flex-start' }}
-                    data-cy="community-settings-branded-login-preview"
-                  >
-                    Preview
-                  </OutlineButton>
-                </Link>
+                  Preview
+                </TextButton>
               </SectionCardFooter>
             )}
           </form>

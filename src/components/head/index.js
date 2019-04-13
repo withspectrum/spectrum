@@ -6,15 +6,14 @@ type Props = {
   description?: string,
   image?: string,
   children?: any,
+  type?: 'article',
 };
 
-export default ({ title, description, image, children }: Props) => {
+export default ({ title, description, image, type, children }: Props) => {
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <meta name="og:title" content={title} />
-      <meta name="og:description" content={description} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta
@@ -25,8 +24,11 @@ export default ({ title, description, image, children }: Props) => {
             : 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png'
         }
       />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content={type || 'website'} />
       <meta
-        name="og:image"
+        property="og:image"
         content={
           image
             ? image

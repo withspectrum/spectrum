@@ -9,11 +9,12 @@ Array [
           "id": "robo",
         },
       },
-      "message": Object {
-        "content": 2016-12-31T23:00:00.000Z,
-        "type": "timestamp",
+      "content": Object {
+        "body": 2016-12-31T23:00:00.000Z,
       },
+      "id": 2016-12-31T23:00:00.000Z,
       "timestamp": 2016-12-31T23:00:00.000Z,
+      "type": "timestamp",
     },
   ],
   Array [

@@ -1,21 +1,19 @@
 // @flow
 import * as React from 'react';
-import { MediaLabel, MediaInput, Form } from './style';
-import Icon from 'src/components/icons';
+import Tooltip from 'src/components/tooltip';
+import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_BYTES,
-  FREE_USER_MAX_IMAGE_SIZE_STRING,
 } from 'src/helpers/images';
+import { MediaLabel, MediaInput, Form } from './style';
 
 type Props = {
   onValidated: Function,
   onError: Function,
   currentUser: ?Object,
   isSendingMediaMessage: boolean,
-  inputFocused: boolean,
 };
 
 class MediaUploader extends React.Component<Props> {
@@ -29,19 +27,7 @@ class MediaUploader extends React.Component<Props> {
     if (!validity.valid)
       return "We couldn't validate this upload, please try uploading another file";
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !currentUser.isPro
-    ) {
-      return `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`;
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      currentUser.isPro
-    ) {
+    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
       return `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`;
     }
 
@@ -62,7 +48,12 @@ class MediaUploader extends React.Component<Props> {
   };
 
   onChange = (e: any) => {
-    const { target: { validity, files: [file] } } = e;
+    const {
+      target: {
+        validity,
+        files: [file],
+      },
+    } = e;
 
     if (!file) return;
 
@@ -87,7 +78,7 @@ class MediaUploader extends React.Component<Props> {
 
   onPaste = (event: any) => {
     // Ensure that the image is only pasted if user focuses input
-    if (!this.props.inputFocused) {
+    if (!event || !this.props.inputFocused) {
       return;
     }
     const items = (event.clipboardData || event.originalEvent.clipboardData)
@@ -117,22 +108,20 @@ class MediaUploader extends React.Component<Props> {
     return (
       <Form
         onSubmit={e => e.preventDefault()}
-        innerRef={c => (this.form = c)}
+        ref={c => (this.form = c)}
         data-cy="chat-input-media-uploader"
       >
-        <MediaLabel>
-          <MediaInput
-            type="file"
-            accept={'.png, .jpg, .jpeg, .gif, .mp4'}
-            multiple={false}
-            onChange={this.onChange}
-          />
-          <Icon
-            glyph="photo"
-            tipLocation={'top-right'}
-            tipText="Upload photo"
-          />
-        </MediaLabel>
+        <Tooltip content={'Upload photo'}>
+          <MediaLabel>
+            <MediaInput
+              type="file"
+              accept={'.png, .jpg, .jpeg, .gif, .mp4'}
+              multiple={false}
+              onChange={this.onChange}
+            />
+            <Icon glyph="photo" />
+          </MediaLabel>
+        </Tooltip>
       </Form>
     );
   }

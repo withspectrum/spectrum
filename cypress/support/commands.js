@@ -8,15 +8,15 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 import { encode } from '../../api/utils/base64';
+import data from '../../shared/testing/data';
+const getUser = userId => data.users.find(user => user.id === userId);
 
 Cypress.Commands.add('auth', userId => {
-  localStorage.setItem(
-    'spectrum',
-    JSON.stringify({ currentUser: { id: userId } })
-  );
+  const user = getUser(userId);
+
   return cy.setCookie(
     'session',
-    encode(JSON.stringify({ passport: { user: userId } })),
+    encode(JSON.stringify({ passport: { user: user.id } })),
     {
       httpOnly: true,
       secure: false,

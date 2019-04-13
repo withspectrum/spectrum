@@ -10,12 +10,14 @@ const {
   defaultChannelSettings,
   defaultThreads,
   defaultNotifications,
+  defaultUsersNotifications,
   defaultDirectMessageThreads,
   defaultUsersDirectMessageThreads,
   defaultUsersCommunities,
   defaultUsersChannels,
   defaultMessages,
   defaultUsersThreads,
+  defaultReactions,
 } = seed;
 
 const data = {
@@ -33,6 +35,8 @@ const data = {
   usersCommunities: defaultUsersCommunities,
   usersChannels: defaultUsersChannels,
   messages: defaultMessages,
+  reactions: defaultReactions,
+  usersNotifications: defaultUsersNotifications,
 };
 
 module.exports = data;

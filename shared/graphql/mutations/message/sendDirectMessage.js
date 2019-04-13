@@ -1,10 +1,11 @@
 // @flow
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import messageInfoFragment from '../../fragments/message/messageInfo';
 import type { MessageInfoType } from '../../fragments/message/messageInfo';
 import { getDMThreadMessageConnectionQuery } from '../../queries/directMessageThread/getDirectMessageThreadMessageConnection';
+import { getCurrentUserQuery } from '../../queries/user/getUser';
 
 export type SendDirectMessageType = {
   ...$Exact<MessageInfoType>,
@@ -19,7 +20,7 @@ export const sendDirectMessageMutation = gql`
   ${messageInfoFragment}
 `;
 const sendDirectMessageOptions = {
-  props: ({ ownProps, mutate }) => ({
+  props: ({ ownProps, mutate, ...rest }) => ({
     sendDirectMessage: message => {
       const fakeId = Math.round(Math.random() * -1000000);
       return mutate({
@@ -37,6 +38,8 @@ const sendDirectMessageOptions = {
             id: fakeId,
             timestamp: JSON.parse(JSON.stringify(new Date())),
             messageType: message.messageType,
+            modifiedAt: '',
+            bot: false,
             author: {
               user: {
                 ...ownProps.currentUser,
@@ -50,6 +53,13 @@ const sendDirectMessageOptions = {
               roles: [],
               __typename: 'ThreadParticipant',
             },
+            parent: message.parentId
+              ? {
+                  __typename: 'Message',
+                  id: message.parentId,
+                  // TODO(@mxstbr): Get the rest of information
+                }
+              : null,
             content: {
               ...message.content,
               __typename: 'MessageContent',
@@ -63,11 +73,12 @@ const sendDirectMessageOptions = {
           },
         },
         update: (store, { data: { addMessage } }) => {
+          const threadId = ownProps.threadId || ownProps.id || ownProps.thread;
           // Read the data from our cache for this query.
           const data = store.readQuery({
             query: getDMThreadMessageConnectionQuery,
             variables: {
-              id: ownProps.thread,
+              id: threadId,
             },
           });
 
@@ -118,7 +129,7 @@ const sendDirectMessageOptions = {
             query: getDMThreadMessageConnectionQuery,
             data,
             variables: {
-              id: ownProps.thread,
+              id: threadId,
             },
           });
         },

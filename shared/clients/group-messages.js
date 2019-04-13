@@ -1,10 +1,13 @@
 // @flow
 import sortByDate from '../sort-by-date';
+import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 
-// TODO: FIXME
-type Message = Object;
+type Output = {
+  ...$Exact<MessageInfoType>,
+  timestamp: string,
+};
 
-export const sortAndGroupMessages = (messages: Array<Message>) => {
+export const sortAndGroupMessages = (messages: Array<Output>) => {
   if (messages.length === 0) return [];
   messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
@@ -15,16 +18,17 @@ export const sortAndGroupMessages = (messages: Array<Message>) => {
     // on the first message, get the user id and set it to be checked against
     const robo = [
       {
+        id: messages[i].timestamp,
         author: {
           user: {
             id: 'robo',
           },
         },
         timestamp: messages[i].timestamp,
-        message: {
-          content: messages[i].timestamp,
-          type: 'timestamp',
+        content: {
+          body: messages[i].timestamp,
         },
+        type: 'timestamp',
       },
     ];
 
@@ -35,7 +39,7 @@ export const sortAndGroupMessages = (messages: Array<Message>) => {
 
     const sameUser =
       messages[i].author.user.id !== 'robo' &&
-      messages[i].author.user.id === checkId; //=> boolean
+      messages[i].author.user.id === checkId;
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -55,7 +59,7 @@ export const sortAndGroupMessages = (messages: Array<Message>) => {
       */
       const c = new Date(current.timestamp).getTime();
       const p = new Date(previous.timestamp).getTime();
-      return c > p + 21600000;
+      return c > p + 3600000 * 6; // six hours;
     };
 
     // if we are evaulating a bubble from the same user

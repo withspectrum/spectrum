@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- 
+  START_CONFIG
+  { 
+    "test": {
+      "version": "cb3ca606-2437-42a9-972f-07b51592295f",
+      "template": "d-743d07e016ee4798a87c06b5dd0a27a1"
+    },
+    "production": {
+      "version": "03622f30-7d81-4b46-96b2-e5df86a7f451",
+      "template": "d-0e21a47bdce348a093c86b8779d84687"
+    }
+  }
+  END_CONFIG
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>{{ subject }}</title>
+  <style type="text/css" rel="stylesheet" media="all">
+    *:not(br):not(tr):not(html) {
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      line-height: 1.4;
+      background-color: #FFF;
+      color: #171a21;
+      -webkit-text-size-adjust: none;
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif !important;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      line-height: 1.4;
+      text-align: left;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      color: #7B16FF;
+      text-decoration: none;
+    }
+
+    a.black {
+      color: #16171A;
+    }
+
+    a.block {
+      display: block;
+      width: 100%;
+    }
+
+    a img {
+      border: none;
+    }
+
+    td {
+      word-break: break-word;
+    }
+
+    /* Layout ------------------------------ */
+
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F5F8FC;
+    }
+
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #DAE4F2;
+    }
+
+    /* Body ------------------------------ */
+
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 32px 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+
+    .email-body_inner {
+      width: 570px;
+      margin: 0 auto;
+      padding: 16px;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+    }
+
+    .email-footer {
+      width: 570px;
+      margin: 0 auto;
+      padding: 16px 16px 32px;
+      -premailer-width: 570px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+
+    .email-footer p {
+      color: #828C99;
+      font-size: 14px;
+    }
+
+    .email-footer a {
+      color: #1D2129;
+    }
+
+    .email-footer ul {
+      list-style-type: none;
+      margin: 24px 0;
+    }
+
+    .email-footer li {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .signoff {
+      padding-top: 32px;
+    }
+
+    /* Utilities ------------------------------ */
+
+    .align-right {
+      text-align: right;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+
+    .align-center {
+      text-align: center;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #DAE4F2;
+      display: block;
+      width: 100%;
+      margin: 16px 0;
+    }
+
+    /*Media Queries ------------------------------ */
+
+    @media only screen and (max-width: 600px) {
+
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+
+      .thread-actions.multi {
+        background: transparent;
+      }
+
+      .thread-actions.multi a {
+        width: auto;
+        display: inline-block;
+      }
+
+      .thread-actions.multi td {
+        padding-right: 0 !important;
+        display: block;
+        width: 100%;
+        margin: 0 !important;
+        padding: 8px 0 !important;
+        background: transparent;
+      }
+
+      .thread-actions.multi td:not(:first-of-type) {
+        margin-top: 12px !important;
+        clear: both;
+        z-index: 1000;
+      }
+    }
+
+    @media only screen and (max-width: 500px) {
+      .button {
+        width: 100% !important;
+      }
+    }
+
+    /* Buttons ------------------------------ */
+
+    .button-row {
+      display: block;
+      margin: 16px 0;
+    }
+
+    .button {
+      background-color: #7B16FF;
+      display: block;
+      color: #FFF !important;
+      padding: 12px 0px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      -webkit-text-size-adjust: none;
+      word-break: keep-all;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .button.outline {
+      background-color: #FFFFFF;
+      color: #828C99;
+      border: 1px solid #828C99;
+      box-shadow: none;
+    }
+
+    .button.textonly {
+      background-color: #FFFFFF;
+      color: #828C99;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .button:hover {
+      text-decoration: none;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .button.black {
+      background-color: #16171A;
+    }
+
+    .button.twitter {
+      background-color: #00ACED;
+    }
+
+    .button.facebook {
+      background-color: #3B5998;
+    }
+
+    .button.success {
+      background-color: #00B88B;
+    }
+
+    /* Type ------------------------------ */
+
+    h1 {
+      margin-top: 0;
+      color: #16171A;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #16171A;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h3 {
+      margin-top: 0;
+      color: #16171A;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    p {
+      margin-top: 12px;
+      color: #171A21;
+      font-size: 16px;
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    p.center {
+      text-align: center;
+    }
+
+    p.emoji,
+    span.emoji {
+      font-size: 32px;
+      vertical-align: middle;
+      line-height: 1.6;
+    }
+
+    /*Custom for this email ------------------------------ */
+    .thread-actions {
+      padding: 32px 0px;
+    }
+
+    .thread-actions.multi a {
+      display: block;
+      width: 100%;
+    }
+
+    .thread-actions.multi td {
+      padding-right: 16px;
+    }
+
+    .thread-actions.multi td:last-of-type {
+      padding-right: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="preheader">
+    {{preheader}}
+  </div>
+
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+          <!-- Email Body -->
+          <tr>
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+              <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
+                <!-- Body content -->
+                <tr>
+                  <td class="content-cell">
+                    <p><a href="https://spectrum.chat/users/{{data.user.username}}">{{data.user.name}}</a>
+                      has requested to join the <a href="https://spectrum.chat/{{data.community.slug}}">{{data.community.name}}
+                        community</a>. You can approve or block this request in your community settings.</p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <table width="100%" cellpadding="0" cellspacing="0" class="thread-actions multi">
+                      <tr width="100%" cellpadding="0" cellspacing="0">
+                        <td valign="middle">
+                          <a href="https://spectrum.chat/{{data.community.slug}}/settings/members?filter=pending" class="button">
+                            Go to community settings
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
+          <tr>
+            <td>
+              <p>
+                You are receiving this email because you joined <a href="https://spectrum.chat">Spectrum</a>.
+              </p>
+
+              <ul>
+                <li>
+                  <a href="https://spectrum.chat/{{data.community.slug}}/settings">View settings for the
+                    {{data.community.name}} community</a>
+                </li>
+              </ul>
+
+              <ul>
+                <li>
+                  <a href="https://twitter.com/withspectrum">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li>
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests">Request
+                    a feature</a>
+                </li>
+              </ul>
+
+              <p>Spectrum is made by GitHub, Inc.<br />88 Colin P Kelly Jr St, San Francisco, CA 94107<br />United
+                States</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

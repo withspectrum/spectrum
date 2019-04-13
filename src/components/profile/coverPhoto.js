@@ -1,30 +1,25 @@
+// @flow
 import React from 'react';
-// $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
-// $FlowFixMe
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import { ProfileHeaderAction } from './style';
-import { optimize } from '../../helpers/images';
+import { MEDIA_BREAK } from 'src/components/layout';
 
 const PhotoContainer = styled.div`
   grid-area: cover;
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${theme.bg.reverse};
   background-image: ${props =>
-    props.coverURL
-      ? `url("${optimize(props.coverURL, {
-          w: props.large ? 1024 : 320,
-          dpr: 2,
-        })}")`
-      : 'none'};
+    props.coverURL ? `url(${props.coverURL})` : 'none'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: ${props => (props.large ? '0' : '12px 12px 0 0')};
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex: 0 0 ${props => (props.large ? '160px' : '64px')};
     border-radius: 0;
   }
@@ -47,8 +42,6 @@ export const CoverPhoto = (props: Object) => {
               color="text.reverse"
               opacity="0.5"
               hoverColor="text.reverse"
-              tipText={`Edit profile`}
-              tipLocation={'left'}
             />
           </Link>
         ) : props.currentUser ? (
@@ -57,8 +50,6 @@ export const CoverPhoto = (props: Object) => {
             color="text.reverse"
             hoverColor="text.reverse"
             onClick={props.onClick}
-            tipText={`Message ${props.user.name}`}
-            tipLocation={'left'}
           />
         ) : null}
         {props.children}

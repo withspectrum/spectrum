@@ -1,0 +1,38 @@
+{
+  "subject": "Your new community is live on Spectrum!",
+  "user": {
+    "coverPhoto": "",
+    "createdAt": "2017-11-08T19:30:25.375Z",
+    "description": "Description",
+    "email": "email",
+    "fbProviderId": null,
+    "githubProviderId": null,
+    "githubUsername": null,
+    "googleProviderId": null,
+    "id": "1",
+    "isOnline": false,
+    "lastSeen": "2018-11-09T19:27:21.826Z",
+    "modifiedAt": "2018-09-10T02:11:09.783Z",
+    "name": "Name",
+    "profilePhoto": "",
+    "providerId": null,
+    "timezone": -300,
+    "username": "username",
+    "website": "website"
+  },
+  "community": {
+    "administratorEmail": "email",
+    "coverPhoto": null,
+    "createdAt": "2018-12-09T05:40:10.251Z",
+    "creatorId": "1",
+    "description": "Description",
+    "id": "1",
+    "isPrivate": false,
+    "memberCount": 1,
+    "modifiedAt": null,
+    "name": "Community Name",
+    "profilePhoto": null,
+    "slug": "slug",
+    "website": "website"
+  }
+}

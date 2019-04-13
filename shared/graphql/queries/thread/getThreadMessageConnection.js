@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
-import { btoa } from 'abab';
+import { btoa } from 'b2a';
 import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
@@ -12,6 +12,73 @@ import type { ThreadMessageConnectionType } from '../../fragments/thread/threadM
 export type GetThreadMessageConnectionType = {
   ...$Exact<ThreadInfoType>,
   ...$Exact<ThreadMessageConnectionType>,
+};
+
+type Variables = {
+  id: string,
+  last?: number,
+  first?: number,
+  after?: string,
+  before?: string,
+};
+
+const getVariables = ({ thread, ...props }): Variables => {
+  // if the thread has less than 25 messages, just load all of them
+  if (thread && thread.messageCount <= 25) {
+    return {
+      id: props.id,
+      last: 25,
+    };
+  }
+
+  // If the user is linked to either a specific message or has pagination URL params, load those messages
+  if (props.location && props.location.search) {
+    const params = queryString.parse(props.location.search);
+
+    if (params) {
+      if (params.msgsafter) {
+        return {
+          id: props.id,
+          after: params.msgsafter,
+          first: 25,
+        };
+      } else if (params.msgsbefore) {
+        return {
+          id: props.id,
+          before: params.msgsbefore,
+          last: 25,
+        };
+      } else if (params.m) {
+        return {
+          id: props.id,
+          after: params.m,
+          first: 25,
+        };
+      }
+    }
+  }
+
+  // if it's a watercooler thread load the 25 most recent messages
+  if (props.isWatercooler) {
+    return {
+      id: props.id,
+      last: 25,
+    };
+  }
+
+  // If a user has seen a thread, load the last 25
+  if (thread.currentUserLastSeen) {
+    return {
+      id: props.id,
+      last: 25,
+    };
+  }
+
+  // In all other cases, load the first 25
+  return {
+    id: props.id,
+    first: 25,
+  };
 };
 
 export const getThreadMessageConnectionQuery = gql`
@@ -33,44 +100,8 @@ export const getThreadMessageConnectionQuery = gql`
 export const getThreadMessageConnectionOptions = {
   // $FlowFixMe
   options: props => {
-    let msgsafter, msgsbefore;
-    if (props.location && props.location.search) {
-      try {
-        const params = queryString.parse(props.location.search);
-        msgsafter = params.msgsafter;
-        msgsbefore = params.msgsbefore;
-      } catch (err) {
-        // Ignore errors in query string parsing, who cares
-        console.log(err);
-      }
-    }
-    let variables = {
-      id: props.id,
-      after: msgsafter ? msgsafter : null,
-      before: msgsbefore && !msgsafter ? msgsbefore : null,
-      last: null,
-      first: null,
-    };
-
-    // Any thread with less than 50 messages just load all of 'em
-    if (props.threadMessageCount >= 50) {
-      // If the thread was active after the user last saw it, only load the new messages
-      if (props.lastSeen) {
-        if (
-          new Date(props.lastSeen).getTime() <
-          new Date(props.lastActive).getTime()
-        ) {
-          variables.after = btoa(new Date(props.lastSeen).getTime());
-          // Otherwise load the last 50 messages
-        } else {
-          // $FlowFixMe
-          variables.last = 50;
-        }
-      }
-    }
-
     return {
-      variables,
+      variables: getVariables(props),
       fetchPolicy: 'cache-and-network',
     };
   },
@@ -99,7 +130,7 @@ export const getThreadMessageConnectionOptions = {
       return props.data.fetchMore({
         variables: {
           after: cursor,
-          first: undefined,
+          first: 25,
           before: undefined,
           last: undefined,
         },
@@ -144,7 +175,7 @@ export const getThreadMessageConnectionOptions = {
           after: undefined,
           first: undefined,
           before: cursor,
-          last: undefined,
+          last: 25,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !fetchMoreResult.thread) return prev;

@@ -5,8 +5,8 @@ const debug = require('debug')(
 import Raven from 'shared/raven';
 import { getCommunityById } from '../models/community';
 import { storeNotification } from '../models/notification';
-import { storeUsersNotifications } from '../models/usersNotifications';
-import { getUsers } from '../models/user';
+import { storeUsersNotifications } from 'shared/db/queries/usersNotifications';
+import { getUsers } from 'shared/db/queries/user';
 import { fetchPayload } from '../utils/payloads';
 import isEmail from 'validator/lib/isEmail';
 import { sendPrivateChannelRequestApprovedEmailQueue } from 'shared/bull/queues';
@@ -45,7 +45,9 @@ export default async (job: Job<PrivateChannelRequestApprovedJobData>) => {
   const recipients = await getUsers([userId]);
 
   // only get owners with emails
-  const filteredRecipients = recipients.filter(user => isEmail(user.email));
+  const filteredRecipients = recipients.filter(
+    user => user && user.email && isEmail(user.email)
+  );
 
   // for each owner, create a notification for the app
   const usersNotificationPromises = filteredRecipients.map(recipient =>
@@ -68,8 +70,8 @@ export default async (job: Job<PrivateChannelRequestApprovedJobData>) => {
     ...usersEmailPromises, // handle emails separately
     ...usersNotificationPromises, // update or store usersNotifications in-app
   ]).catch(err => {
-    debug('❌ Error in job:\n');
-    debug(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
     Raven.captureException(err);
   });
 };

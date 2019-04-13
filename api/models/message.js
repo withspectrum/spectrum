@@ -1,19 +1,26 @@
 //@flow
-const { db } = require('./db');
+const { db } = require('shared/db');
 import {
   sendMessageNotificationQueue,
   sendDirectMessageNotificationQueue,
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
+  trackQueue,
+  searchQueue,
 } from 'shared/bull/queues';
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
-import { setThreadLastActive } from './thread';
+import {
+  setThreadLastActive,
+  incrementMessageCount,
+  decrementMessageCount,
+} from './thread';
+import { events } from 'shared/analytics';
+import type { DBMessage } from 'shared/types';
 
 export type MessageTypes = 'text' | 'media';
-export type Message = Object;
 
-export const getMessage = (messageId: string): Promise<Message> => {
+export const getMessage = (messageId: string): Promise<DBMessage> => {
   return db
     .table('messages')
     .get(messageId)
@@ -24,7 +31,7 @@ export const getMessage = (messageId: string): Promise<Message> => {
     });
 };
 
-export const getManyMessages = (messageIds: string[]): Promise<Message[]> => {
+export const getManyMessages = (messageIds: string[]): Promise<DBMessage[]> => {
   return db
     .table('messages')
     .getAll(...messageIds)
@@ -36,10 +43,8 @@ export const getManyMessages = (messageIds: string[]): Promise<Message[]> => {
 
 type BackwardsPaginationOptions = { last?: number, before?: number | Date };
 
-const getBackwardsMessages = (
-  threadId: string,
-  { last, before }: BackwardsPaginationOptions
-) => {
+// prettier-ignore
+const getBackwardsMessages = (threadId: string, { last, before }: BackwardsPaginationOptions) => {
   return db
     .table('messages')
     .between(
@@ -55,10 +60,8 @@ const getBackwardsMessages = (
 
 type ForwardsPaginationOptions = { first?: number, after?: number | Date };
 
-const getForwardMessages = (
-  threadId: string,
-  { first, after }: ForwardsPaginationOptions
-) => {
+// prettier-ignore
+const getForwardMessages = (threadId: string, { first, after }: ForwardsPaginationOptions) => {
   return db
     .table('messages')
     .between(
@@ -80,35 +83,36 @@ export const getMessages = (
     last,
     before,
   }: { ...BackwardsPaginationOptions, ...ForwardsPaginationOptions }
-): Promise<Array<Message>> => {
+): Promise<Array<DBMessage>> => {
   // $FlowIssue
   if (last || before) return getBackwardsMessages(threadId, { last, before });
   // $FlowIssue
   return getForwardMessages(threadId, { first, after });
 };
 
-export const getLastMessage = (threadId: string): Promise<Message> => {
+export const getLastMessage = (threadId: string): Promise<?DBMessage> => {
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
+    .between([threadId, db.minval], [threadId, db.maxval], {
+      index: 'threadIdAndTimestamp',
+      leftBound: 'open',
+      rightBound: 'closed',
+    })
+    .orderBy({ index: db.desc('threadIdAndTimestamp') })
     .filter(db.row.hasFields('deletedAt').not())
-    .max('timestamp')
-    .run();
+    .limit(1)
+    .run()
+    .then(res => (Array.isArray(res) && res.length > 0 ? res[0] : null));
 };
 
-export const getLastMessages = (threadIds: Array<string>): Promise<Object> => {
-  return db
-    .table('messages')
-    .getAll(...threadIds, { index: 'threadId' })
-    .filter(db.row.hasFields('deletedAt').not())
-    .group('threadId')
-    .max(row => row('timestamp'))
-    .run();
+export const getLastMessageOfThreads = (
+  threadIds: Array<string>
+): Promise<Array<?DBMessage>> => {
+  return Promise.all(threadIds.map(id => getLastMessage(id)));
 };
 
-export const getMediaMessagesForThread = (
-  threadId: string
-): Promise<Array<Message>> => {
+// prettier-ignore
+export const getMediaMessagesForThread = (threadId: string): Promise<Array<DBMessage>> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -117,10 +121,8 @@ export const getMediaMessagesForThread = (
     .run();
 };
 
-export const storeMessage = (
-  message: Message,
-  userId: string
-): Promise<Message> => {
+// prettier-ignore
+export const storeMessage = (message: Object, userId: string): Promise<DBMessage> => {
   // Insert a message
   return db
     .table('messages')
@@ -140,20 +142,41 @@ export const storeMessage = (
     )
     .run()
     .then(result => result.changes[0].new_val)
-    .then(message => {
+    .then(async message => {
       if (message.threadType === 'directMessageThread') {
-        sendDirectMessageNotificationQueue.add({ message, userId });
+        await Promise.all([
+          trackQueue.add({
+            userId,
+            event: events.DIRECT_MESSAGE_SENT,
+            context: { messageId: message.id },
+          }),
+          sendDirectMessageNotificationQueue.add({ message, userId }),
+        ])
       }
 
       if (message.threadType === 'story') {
-        sendMessageNotificationQueue.add({ message });
-        _adminProcessToxicMessageQueue.add({ message });
+        await Promise.all([
+        sendMessageNotificationQueue.add({ message }),
+        searchQueue.add({
+          id: message.id,
+          type: 'message',
+          event: 'created'
+        }),
         processReputationEventQueue.add({
           userId,
           type: 'message created',
           entityId: message.threadId,
-        });
-        setThreadLastActive(message.threadId, message.timestamp);
+        }),
+        trackQueue.add({
+          userId,
+          event: events.MESSAGE_SENT,
+          context: { messageId: message.id },
+        }),
+        _adminProcessToxicMessageQueue.add({ message }),
+
+          setThreadLastActive(message.threadId, message.timestamp),
+          incrementMessageCount(message.threadId)
+        ])
       }
 
       return message;
@@ -182,9 +205,8 @@ export const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
-export const getMessageCountInThreads = (
-  threadIds: Array<string>
-): Promise<Array<mixed>> => {
+// prettier-ignore
+export const getMessageCountInThreads = (threadIds: Array<string>): Promise<Array<mixed>> => {
   return db
     .table('messages')
     .getAll(...threadIds, { index: 'threadId' })
@@ -194,32 +216,97 @@ export const getMessageCountInThreads = (
     .run();
 };
 
-export const deleteMessage = (userId: string, id: string) => {
+export const deleteMessage = (userId: string, messageId: string) => {
   return db
     .table('messages')
-    .get(id)
-    .update({
-      deletedAt: new Date(),
-    })
+    .get(messageId)
+    .update(
+      {
+        deletedBy: userId,
+        deletedAt: new Date(),
+      },
+      { returnChanges: 'always' }
+    )
     .run()
-    .then(res => {
-      processReputationEventQueue.add({
-        userId,
-        type: 'message deleted',
-        entityId: id,
-      });
-      return res;
+    .then(result => result.changes[0].new_val || result.changes[0].old_val)
+    .then(async message => {
+      const event =
+        message.threadType === 'story'
+          ? events.MESSAGE_DELETED
+          : events.DIRECT_MESSAGE_DELETED;
+
+      await Promise.all([
+        trackQueue.add({
+          userId,
+          event,
+          context: { messageId },
+        }),
+        processReputationEventQueue.add({
+          userId,
+          type: 'message deleted',
+          entityId: messageId,
+        }),
+        message.threadType === 'story'
+          ? decrementMessageCount(message.threadId)
+          : Promise.resolve(),
+        message.threadType === 'story'
+          ? searchQueue.add({
+              id: message.id,
+              type: 'message',
+              event: 'deleted',
+            })
+          : Promise.resolve(),
+      ]);
+
+      return message;
     });
 };
 
-export const deleteMessagesInThread = (threadId: string) => {
-  return db
+// prettier-ignore
+export const deleteMessagesInThread = async (threadId: string, userId: string) => {
+  const messages = await db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .run();
+
+  if (!messages || messages.length === 0) return;
+
+  const trackingPromises = messages.map(message => {
+    const event = message.threadType === 'story'
+      ? events.MESSAGE_DELETED
+      : events.DIRECT_MESSAGE_DELETED
+    return trackQueue.add({
+      userId,
+      event,
+      context: { messageId: message.id },
+    });
+  });
+
+  const searchPromises = messages.map(message => {
+    if (message.threadType !== 'story') return null
+    return searchQueue.add({
+      id: message.id,
+      type: 'message',
+      event: 'deleted'
+    })
+  })
+
+  const deletePromise = db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
     .update({
+      deletedBy: userId,
       deletedAt: new Date(),
     })
     .run();
+
+  return await Promise.all([
+    ...trackingPromises, 
+    deletePromise,
+    ...searchPromises
+  ]).then(() => {
+    return Promise.all(Array.from({ length: messages.length }).map(() => decrementMessageCount(threadId)))
+  });
 };
 
 export const userHasMessagesInThread = (threadId: string, userId: string) => {
@@ -229,4 +316,63 @@ export const userHasMessagesInThread = (threadId: string, userId: string) => {
     .filter(db.row.hasFields('deletedAt').not())('senderId')
     .contains(userId)
     .run();
+};
+
+type EditInput = {
+  id: string,
+  content: {
+    body: string,
+  },
+};
+
+// prettier-ignore
+export const editMessage = (message: EditInput, userId: string): Promise<DBMessage> => {
+  // Insert a message
+  return db
+    .table('messages')
+    .get(message.id)
+    .update(
+      {
+        content: message.content,
+        modifiedAt: new Date(),
+        edits: db.branch(
+          db.row.hasFields('edits'), 
+          db.row('edits').append({
+            content: db.row('content'),
+            timestamp: db.row('modifiedAt'),
+          }),
+          [{ 
+            content: db.row('content'), 
+            timstamp: db.row('timestamp')
+          }]
+        ),
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val)
+    .then(message => {
+      if (message.threadType === 'directMessageThread') {
+        trackQueue.add({
+          userId,
+          event: events.DIRECT_MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+      }
+      if (message.threadType === 'story') {
+        trackQueue.add({
+          userId,
+          event: events.MESSAGE_EDITED,
+          context: { messageId: message.id },
+        });
+
+        searchQueue.add({
+          id: message.id,
+          type: 'message',
+          event: 'edited'
+        })
+      }
+
+      return message;
+    });
 };

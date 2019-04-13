@@ -2,11 +2,11 @@
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_TESTING = process.env.TEST_DB;
-import { PAYMENTS_COMMUNITY_ID } from '../../migrations/seed/default/constants';
+import { BRIAN_ID } from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
-import { updateUserEmail } from '../../models/user';
+import { updateUserEmail } from 'shared/db/queries/user';
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
@@ -14,15 +14,23 @@ import { toggleUserChannelNotifications } from '../../models/usersChannels';
 import {
   updateCommunityAdministratorEmail,
   resetCommunityAdministratorEmail,
+  getCommunityById,
 } from '../../models/community';
-import { getChannelsByCommunity } from '../../models/channel';
+import { getChannelsByCommunity, getChannelById } from '../../models/channel';
+
+const rootRedirect = IS_PROD
+  ? `https://spectrum.chat`
+  : `http://localhost:3000`;
 
 // $FlowIssue
-emailRouter.get('/unsubscribe', (req, res) => {
+emailRouter.get('/unsubscribe', async (req, res) => {
   const { token } = req.query;
 
   // if no token was provided
-  if (!token) return res.status(400).send('No token provided to unsubscribe.');
+  if (!token)
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=No token provided to unsubscribe.`
+    );
 
   // verify that the token signature matches our env signature
   let decoded;
@@ -38,7 +46,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
       errMessage =
         'This unsubscribe token is invalid. You can unsubscribe from this email type in your user settings.';
     }
-    return res.status(400).send(errMessage);
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=${errMessage}`
+    );
   }
 
   // once the token is verified, we can decode it to get the userId and type
@@ -46,11 +56,9 @@ emailRouter.get('/unsubscribe', (req, res) => {
 
   // if the token doesn't have the necessary info
   if (!userId || !type) {
-    return res
-      .status(400)
-      .send(
-        'We were not able to verify this request to unsubscribe. You can unsubscribe from this email type in your users settings.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We were not able to verify this request to unsubscribe. You can unsubscribe from this email type in your users settings.`
+    );
   }
 
   // and send a database request to unsubscribe from a particular email type
@@ -61,43 +69,48 @@ emailRouter.get('/unsubscribe', (req, res) => {
       case 'newThreadCreated':
       case 'newMessageInThreads':
       case 'newDirectMessage':
+      case 'newMention':
         return unsubscribeUserFromEmailNotification(userId, type).then(() =>
-          res
-            .status(200)
-            .send('You have been successfully unsubscribed from this email.')
+          res.redirect(
+            `${rootRedirect}/me/settings?toastType=success&toastMessage=You have been successfully unsubscribed from this email.`
+          )
         );
-      case 'muteChannel':
+      case 'muteChannel': {
+        const channel = await getChannelById(dataId);
+        const community = await getCommunityById(channel.communityId);
+
         return toggleUserChannelNotifications(userId, dataId, false).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer recieve new thread emails from this channel.'
-            )
+          res.redirect(
+            `${rootRedirect}/${community.slug}/${
+              channel.slug
+            }?toastType=success&toastMessage=You will no longer receive new thread emails from this channel.`
+          )
         );
-      case 'muteCommunity':
+      }
+      case 'muteCommunity': {
+        const community = await getCommunityById(dataId);
         return getChannelsByCommunity(dataId)
           .then(channels => channels.map(c => c.id))
           .then(channels =>
             channels.map(c => toggleUserChannelNotifications(userId, c, false))
           )
           .then(() =>
-            res
-              .status(200)
-              .send(
-                'You will no longer recieve new thread emails from this community.'
-              )
+            res.redirect(
+              `${rootRedirect}/${
+                community.slug
+              }?toastType=success&toastMessage=You will no longer receive new thread emails from this community.`
+            )
           );
+      }
       case 'muteThread':
         return updateThreadNotificationStatusForUser(
           dataId,
           userId,
           false
         ).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer recieve emails about new messages in this thread.'
-            )
+          res.redirect(
+            `${rootRedirect}/thread/${dataId}?toastType=success&toastMessage=You will no longer receive emails about new messages in this thread.`
+          )
         );
       case 'muteDirectMessageThread':
         return updateDirectMessageThreadNotificationStatusForUser(
@@ -105,25 +118,21 @@ emailRouter.get('/unsubscribe', (req, res) => {
           userId,
           false
         ).then(() =>
-          res
-            .status(200)
-            .send(
-              'You will no longer recieve emails about new messages in this direct message conversation.'
-            )
+          res.redirect(
+            `${rootRedirect}/messages/${dataId}?toastType=success&toastMessage=You will no longer receive emails about new messages in this direct message conversation.`
+          )
         );
       default: {
-        return res
-          .status(400)
-          .send("We couldn't identify this type of email to unsubscribe.");
+        return res.redirect(
+          `${rootRedirect}/me/settings?toastType=error&toastMessage=We couldn't identify this type of email to unsubscribe.`
+        );
       }
     }
   } catch (err) {
     console.error(err);
-    return res
-      .status(400)
-      .send(
-        'We ran into an issue unsubscribing you from this email. You can always unsubscribe from this email type in your user settings, or get in touch with us at hi@spectrum.chat.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue unsubscribing you from this email. You can always unsubscribe from this email type in your user settings, or get in touch with us at hi@spectrum.chat.`
+    );
   }
 });
 
@@ -133,7 +142,9 @@ emailRouter.get('/validate', (req, res) => {
 
   // if no token was provided
   if (!token)
-    return res.status(400).send('No token provided to validate this email.');
+    return res.redirect(
+      `${rootRedirect}?toastType=error&toastMessage=No token provided to validate this email.`
+    );
 
   // verify that the token signature matches our env signature
   let decoded;
@@ -149,7 +160,9 @@ emailRouter.get('/validate', (req, res) => {
       errMessage =
         'This unsubscribe token is invalid. You can re-enter your email address in your user settings to resend a confirmation email.';
     }
-    return res.status(400).send(errMessage);
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=${errMessage}`
+    );
   }
 
   // once the token is verified, we can decode it to get the userId and email
@@ -157,76 +170,59 @@ emailRouter.get('/validate', (req, res) => {
 
   // if the token doesn't have the necessary info
   if (!userId || !email) {
-    return res
-      .status(400)
-      .send(
-        'We were not able to verify this email validation. You can re-enter your email address in your user settings to resend a confirmation email.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We were not able to verify this email validation. You can re-enter your email address in your user settings to resend a confirmation email.`
+    );
   }
 
   // if there is a community id present in the token, the user is trying to
   // validate a new administrator email address
   if (communityId) {
     try {
-      return updateCommunityAdministratorEmail(communityId, email).then(
+      return updateCommunityAdministratorEmail(communityId, email, userId).then(
         community =>
           IS_PROD
             ? res.redirect(
-                `https://spectrum.chat/${community.slug}/settings/billing`
+                `https://spectrum.chat/${
+                  community.slug
+                }/settings?toastType=success&toastMessage=Your email address has been validated!`
               )
             : res.redirect(
-                `http://localhost:3000/${community.slug}/settings/billing`
+                `http://localhost:3000/${
+                  community.slug
+                }/settings?toastType=success&toastMessage=Your email address has been validated!`
               )
       );
     } catch (err) {
       console.error(err);
-      return res
-        .status(400)
-        .send(
-          'We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
-        );
+      return res.redirect(
+        `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+      );
     }
   }
 
   // and send a database request to update the user record with this email
   try {
-    return updateUserEmail(userId, email).then(
-      user =>
-        IS_PROD
-          ? res.redirect(
-              `https://spectrum.chat/users/${user.username}/settings`
-            )
-          : res.redirect(
-              `http://localhost:3000/users/${user.username}/settings`
-            )
-    );
+    return updateUserEmail(userId, email).then(user => {
+      req.login(user, err => {
+        if (err) {
+          return res.redirect(
+            `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your community settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+          );
+        }
+
+        if (!user.username) return res.redirect(rootRedirect);
+        return res.redirect(
+          `${rootRedirect}/me/settings?toastType=success&toastMessage=Email updated!`
+        );
+      });
+    });
   } catch (err) {
     console.error(err);
-    return res
-      .status(400)
-      .send(
-        'We ran into an issue validating this email address. You can re-enter your email address in your user settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.'
-      );
+    return res.redirect(
+      `${rootRedirect}/me/settings?toastType=error&toastMessage=We ran into an issue validating this email address. You can re-enter your email address in your user settings to resend a confirmation email, or get in touch with us at hi@spectrum.chat.`
+    );
   }
 });
-
-if (IS_TESTING) {
-  // $FlowIssue
-  emailRouter.get('/validate/test-payments/verify', (req, res) => {
-    return updateCommunityAdministratorEmail(
-      PAYMENTS_COMMUNITY_ID,
-      'briandlovin@gmail.com'
-    ).then(() =>
-      res.redirect('http://localhost:3000/payments/settings/billing')
-    );
-  });
-
-  // $FlowIssue
-  emailRouter.get('/validate/test-payments/reset', (req, res) => {
-    return resetCommunityAdministratorEmail(PAYMENTS_COMMUNITY_ID).then(() =>
-      res.redirect('http://localhost:3000/payments/settings/billing')
-    );
-  });
-}
 
 export default emailRouter;

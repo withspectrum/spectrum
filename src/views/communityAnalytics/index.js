@@ -2,25 +2,25 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import Link from 'src/components/link';
+import { Link } from 'react-router-dom';
 import type { GetCommunitySettingsType } from 'shared/graphql/queries/community/getCommunitySettings';
-import ViewError from '../../components/viewError';
-import { Button, OutlineButton, ButtonRow } from '../../components/buttons';
+import ViewError from 'src/components/viewError';
+import { Button, OutlineButton } from 'src/components/button';
 import MemberGrowth from './components/memberGrowth';
 import ConversationGrowth from './components/conversationGrowth';
 import TopMembers from './components/topMembers';
 import TopAndNewThreads from './components/topAndNewThreads';
-import AnalyticsUpsell from './components/analyticsUpsell';
-import {
-  SectionsContainer,
-  Column,
-} from '../../components/settingsViews/style';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import { SectionsContainer, Column } from 'src/components/settingsViews/style';
+import { track, events, transformations } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
+import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
   currentUser: Object,
   community: GetCommunitySettingsType,
   communitySlug: string,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   match: Object,
 };
 
@@ -29,23 +29,38 @@ type State = {
 };
 
 class CommunityAnalytics extends React.Component<Props, State> {
+  componentDidMount() {
+    const { community } = this.props;
+    if (community) {
+      track(events.COMMUNITY_ANALYTICS_VIEWED, {
+        community: transformations.analyticsCommunity(community),
+      });
+    }
+  }
+
   render() {
     const { community } = this.props;
 
     if (community && community.id) {
-      if (!community.hasFeatures || !community.hasFeatures.analytics) {
-        return <AnalyticsUpsell community={community} />;
-      }
-
       return (
         <SectionsContainer>
           <Column>
-            <MemberGrowth id={community.id} />
-            <TopMembers id={community.id} />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <MemberGrowth id={community.id} />
+            </ErrorBoundary>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopMembers id={community.id} />
+            </ErrorBoundary>
           </Column>
           <Column>
-            <ConversationGrowth id={community.id} />
-            <TopAndNewThreads id={community.id} />
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <ConversationGrowth id={community.id} />
+            </ErrorBoundary>
+
+            <ErrorBoundary fallbackComponent={SettingsFallback}>
+              <TopAndNewThreads id={community.id} />
+            </ErrorBoundary>
           </Column>
         </SectionsContainer>
       );
@@ -58,7 +73,7 @@ class CommunityAnalytics extends React.Component<Props, State> {
           'If you want to create your own community, you can get started below.'
         }
       >
-        <ButtonRow>
+        <div style={{ display: 'flex' }}>
           <Link to={'/'}>
             <OutlineButton large>Take me back</OutlineButton>
           </Link>
@@ -66,14 +81,13 @@ class CommunityAnalytics extends React.Component<Props, State> {
           <Link to={'/new/community'}>
             <Button large>Create a community</Button>
           </Link>
-        </ButtonRow>
+        </div>
       </ViewError>
     );
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
 export default compose(
-  // $FlowIssue
-  connect(map)
+  withCurrentUser,
+  connect()
 )(CommunityAnalytics);

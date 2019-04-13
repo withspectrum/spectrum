@@ -5,14 +5,19 @@ const {
   SPECTRUM_COMMUNITY_ID,
   PAYMENTS_COMMUNITY_ID,
   DELETED_COMMUNITY_ID,
+  PRIVATE_COMMUNITY_ID,
+  SINGLE_CHANNEL_COMMUNITY_ID,
   SPECTRUM_GENERAL_CHANNEL_ID,
   SPECTRUM_PRIVATE_CHANNEL_ID,
   PAYMENTS_GENERAL_CHANNEL_ID,
   PAYMENTS_PRIVATE_CHANNEL_ID,
+  PAYMENTS_FEATURES_CHANNEL_ID,
   SPECTRUM_ARCHIVED_CHANNEL_ID,
   SPECTRUM_DELETED_CHANNEL_ID,
   DELETED_COMMUNITY_DELETED_CHANNEL_ID,
   MODERATOR_CREATED_CHANNEL_ID,
+  PRIVATE_GENERAL_CHANNEL_ID,
+  SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
 } = constants;
 
 module.exports = [
@@ -25,6 +30,7 @@ module.exports = [
     slug: 'general',
     isPrivate: false,
     isDefault: true,
+    memberCount: 5,
   },
 
   {
@@ -36,6 +42,7 @@ module.exports = [
     slug: 'private',
     isPrivate: true,
     isDefault: false,
+    memberCount: 5,
   },
 
   {
@@ -47,6 +54,7 @@ module.exports = [
     slug: 'general',
     isPrivate: false,
     isDefault: true,
+    memberCount: 5,
   },
 
   {
@@ -58,6 +66,19 @@ module.exports = [
     slug: 'private',
     isPrivate: true,
     isDefault: false,
+    memberCount: 5,
+  },
+
+  {
+    id: PAYMENTS_FEATURES_CHANNEL_ID,
+    communityId: PAYMENTS_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    name: 'Payments Features',
+    description: 'Payments Features',
+    slug: 'features',
+    isPrivate: false,
+    isDefault: false,
+    memberCount: 5,
   },
 
   {
@@ -70,6 +91,7 @@ module.exports = [
     isPrivate: false,
     isDefault: true,
     archivedAt: new Date(DATE),
+    memberCount: 3,
   },
 
   {
@@ -82,6 +104,7 @@ module.exports = [
     isPrivate: false,
     isDefault: false,
     deletedAt: new Date(DATE),
+    memberCount: 0,
   },
 
   {
@@ -94,6 +117,7 @@ module.exports = [
     isPrivate: false,
     isDefault: false,
     deletedAt: new Date(DATE),
+    memberCount: 1,
   },
 
   {
@@ -105,5 +129,30 @@ module.exports = [
     slug: 'moderator-created',
     isPrivate: false,
     isDefault: false,
+    memberCount: 1,
+  },
+
+  {
+    id: PRIVATE_GENERAL_CHANNEL_ID,
+    communityId: PRIVATE_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    name: 'General',
+    description: 'General',
+    slug: 'private-general',
+    isPrivate: false,
+    isDefault: false,
+    memberCount: 1,
+  },
+
+  {
+    id: SINGLE_CHANNEL_COMMUNITY_GENERAL_CHANNEL_ID,
+    communityId: SINGLE_CHANNEL_COMMUNITY_ID,
+    createdAt: new Date(DATE),
+    name: 'General',
+    description: 'General',
+    slug: 'general',
+    isPrivate: false,
+    isDefault: false,
+    memberCount: 1,
   },
 ];

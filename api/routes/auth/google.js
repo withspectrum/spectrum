@@ -4,10 +4,7 @@ import { createSigninRoutes } from './create-signin-routes';
 
 const googleAuthRouter = Router();
 const { main, callbacks } = createSigninRoutes('google', {
-  scope: [
-    'https://www.googleapis.com/auth/plus.login',
-    'https://www.googleapis.com/auth/plus.profile.emails.read',
-  ],
+  scope: 'profile email',
 });
 
 googleAuthRouter.get('/', main);

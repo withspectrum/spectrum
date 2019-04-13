@@ -437,7 +437,7 @@ export const Tooltip = props => css`
   &:hover:after,
   &:hover:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 
@@ -487,7 +487,7 @@ export const Onboarding = props => css`
   &:after,
   &:before {
     opacity: 1;
-    transition: all 0.1s ease-in 0.1s;
+    transition: opacity 0.1s ease-in 0.1s;
   }
 `;
 

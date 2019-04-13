@@ -18,6 +18,7 @@ export const sortThreadsByLatestActivity = (
       return aTimestamp - bTimestamp;
     });
 
+    /*eslint array-callback-return: "off"*/
     return;
   });
 

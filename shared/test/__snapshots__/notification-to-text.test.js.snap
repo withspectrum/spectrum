@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should format a channel creation notification 1`] = `
+Object {
+  "body": "\\"New channel3\\" and \\"Test test 1,2,3\\"",
+  "title": "2 new channels were created in Whaddup",
+}
+`;
+
+exports[`should format a community invite notification 1`] = `
+Object {
+  "data": Object {
+    "href": "/whaddup",
+  },
+  "title": "Max Stoiber invited you to join their community, Whaddup",
+}
+`;
+
+exports[`should format a direct message creation notification 1`] = `
+Object {
+  "body": "Max Stoiber: Hey man what's up
+Max Stoiber: Testin",
+  "data": Object {
+    "href": "/messages/7e37e582-3a06-47c9-b799-9a9f7f330ae4",
+  },
+  "title": "Max Stoiber replied in your direct message thread",
+}
+`;
+
+exports[`should format a media message mention notification 1`] = `
+Object {
+  "body": "Max Stoiber: 📷 Photo",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "New thread by @mxstbr (1 new reply)",
+}
+`;
+
+exports[`should format a message creation notification 1`] = `
+Object {
+  "body": "Max Stoiber: Testing",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "New thread by @mxstbr (1 new reply)",
+}
+`;
+
+exports[`should format a message mention notification 1`] = `
+Object {
+  "body": "\\"Test @mxstbr\\"",
+  "data": Object {
+    "href": "/thread/2182d960-5970-46e0-801f-ab0b8e02cfbc",
+  },
+  "title": "Max Stoiber mentioned you in  Show us your Dangerfile",
+}
+`;
+
+exports[`should format a reaction creation notification 1`] = `
+Object {
+  "body": "Test 1",
+  "data": Object {
+    "href": "/thread/2f8087cf-b74d-4587-8ef6-c1b73a751953",
+  },
+  "title": "Max Stoiber liked your reply",
+}
+`;
+
+exports[`should format a thread creation notification 1`] = `
+Object {
+  "body": "\\"Bla\\"",
+  "data": Object {
+    "href": "/thread/4fbdc540-2ad9-4d6b-8404-736e658be9f9",
+  },
+  "title": "A new thread was published in General",
+}
+`;
+
+exports[`should format a thread mention notification 1`] = `
+Object {
+  "body": "\\"Testing\\"",
+  "data": Object {
+    "href": "/thread/f40e1d78-10e4-484a-b07d-7e7c88afd167",
+  },
+  "title": "Max Stoiber mentioned you in your thread Testing",
+}
+`;
+
+exports[`should format a thread reaction notification 1`] = `
+Object {
+  "body": "{\\"nodes\\":[{\\"kind\\":\\"block\\",\\"type\\":\\"line\\",\\"nodes\\":[{\\"kind\\":\\"text\\",\\"text\\":\\"\\"}]}]}",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "Max Stoiber liked your thread New thread by @mxstbr",
+}
+`;
+
+exports[`should format a user joined community notification 1`] = `
+Object {
+  "data": Object {
+    "href": "/test",
+  },
+  "title": "Max Stoiber joined Test",
+}
+`;

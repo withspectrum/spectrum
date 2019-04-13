@@ -1,0 +1,92 @@
+// @flow
+import formatNotification from '../notification-to-text';
+import CHANNEL_CREATED_FIXTURE from './fixtures/CHANNEL_CREATED.json';
+import COMMUNITY_INVITE_FIXTURE from './fixtures/COMMUNITY_INVITE.json';
+import MESSAGE_CREATED_FIXTURE from './fixtures/MESSAGE_CREATED.json';
+import MEDIA_MESSAGE_CREATED_FIXTURE from './fixtures/MEDIA_MESSAGE_CREATED.json';
+import DIRECT_MESSAGE_CREATED_FIXTURE from './fixtures/DIRECT_MESSAGE_CREATED.json';
+import REACTION_CREATED_FIXTURE from './fixtures/REACTION_CREATED.json';
+import THREAD_CREATED_FIXTURE from './fixtures/THREAD_CREATED.json';
+import USER_JOINED_COMMUNITY_FIXTURE from './fixtures/USER_JOINED_COMMUNITY.json';
+import MENTION_MESSAGE_FIXTURE from './fixtures/MENTION_MESSAGE';
+import MENTION_THREAD_FIXTURE from './fixtures/MENTION_THREAD';
+import THREAD_REACTION_FIXTURE from './fixtures/THREAD_REACTION_CREATED.json';
+
+const USER_ID = 'gVk5mYwccUOEKiN5vtOouqroGKo1';
+
+it('should format a channel creation notification', () => {
+  let result = formatNotification(CHANNEL_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a community invite notification', () => {
+  let result = formatNotification(COMMUNITY_INVITE_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a message creation notification', () => {
+  let result = formatNotification(MESSAGE_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a direct message creation notification', () => {
+  let result = formatNotification(DIRECT_MESSAGE_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a reaction creation notification', () => {
+  let result = formatNotification(REACTION_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a thread creation notification', () => {
+  let result = formatNotification(THREAD_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a user joined community notification', () => {
+  let result = formatNotification(USER_JOINED_COMMUNITY_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a message mention notification', () => {
+  let result = formatNotification(MENTION_MESSAGE_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a media message mention notification', () => {
+  let result = formatNotification(MEDIA_MESSAGE_CREATED_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a thread mention notification', () => {
+  let result = formatNotification(MENTION_THREAD_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});
+
+it('should format a thread reaction notification', () => {
+  let result = formatNotification(THREAD_REACTION_FIXTURE, USER_ID);
+  expect(result.raw).toBeDefined();
+  delete result.raw; // Don't need raw data
+  expect(result).toMatchSnapshot();
+});

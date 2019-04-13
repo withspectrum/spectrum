@@ -1,26 +1,25 @@
 // @flow
-// $FlowFixMe
+import theme from 'shared/theme';
 import styled from 'styled-components';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexRow,
   FlexCol,
-  Gradient,
   Transition,
   Shadow,
   hexa,
   zIndex,
-} from '../globals';
-import { Button } from '../buttons';
+} from 'src/components/globals';
+import { Button } from 'src/components/button';
 
-export const Title = styled.h1`
-  color: ${props => props.theme.text.alt};
+export const Title = styled.p`
+  color: ${theme.text.default};
   width: 100%;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 1.25;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
   margin-bottom: 8px;
   padding: 0;
-  font-size: 24px;
   text-align: center;
   letter-spacing: 0.2px;
 `;
@@ -46,10 +45,10 @@ export const Actions = styled.div`
   }
 `;
 
-export const Subtitle = styled.h2`
+export const Subtitle = styled.p`
   width: 100%;
-  color: ${props => props.theme.text.alt};
-  font-weight: 500;
+  color: ${theme.text.secondary};
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.4;
   margin-bottom: 16px;
@@ -61,7 +60,7 @@ export const Subtitle = styled.h2`
   }
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
   }
 
   li {
@@ -74,7 +73,7 @@ export const CommunityUpsellSubtitle = styled(Subtitle)`
   text-align: left;
   padding: 0;
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
 
   li {
     margin-top: 16px;
@@ -83,7 +82,7 @@ export const CommunityUpsellSubtitle = styled(Subtitle)`
 
 export const MiniSubtitle = styled(Subtitle)`
   font-weight: 600;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-size: 0.875rem;
   line-height: 1.4;
 `;
@@ -126,16 +125,16 @@ export const NullCol = styled(FlexCol)`
     props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
-  min-height: 160px;
+  min-height: ${props => (props.noPadding ? '0' : '160px')};
   flex: 0 0 auto;
   padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
-  align-items: center;
+  align-items: ${props => props.alignItems || 'center'};
   position: relative;
   align-self: center;
 
   > div {
-    color: ${props => props.theme.text.alt};
+    color: ${theme.text.alt};
     margin-bottom: 8px;
   }
 `;
@@ -152,38 +151,14 @@ export const NullRow = styled(FlexRow)`
   padding: 1rem 15%;
 `;
 
-export const UpgradeError = styled.p`
-  color: ${props => props.theme.warn.default};
-  font-size: 14px;
-  text-align: center;
-  margin: 16px 0 0;
-`;
-
 export const Profile = styled.div`
   position: relative;
   padding: 16px 0;
 
-  img {
-    border-radius: 48px;
-    width: 48px;
-    height: 48px;
-  }
-
-  span {
-    background-color: ${({ theme }) => theme.special.default};
-    background-image: ${({ theme }) =>
-      Gradient(theme.special.alt, theme.special.default)};
+  .badge {
     position: absolute;
-    left: 75%;
-    top: 48px;
-    color: ${({ theme }) => theme.text.reverse};
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 4px;
-    border-radius: 8px;
-    line-height: 1.5;
-    border: 2px solid #fff;
-    z-index: ${zIndex.avatar + 1};
+    top: 54px;
+    left: 40px;
   }
 `;
 
@@ -201,13 +176,13 @@ export const UpsellIconContainer = styled.div`
   justify-content: center;
   margin-bottom: 16px;
   margin-top: 32px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
 `;
 
 export const SignupButton = styled(Button)`
   font-size: 18px;
   font-weight: 700;
-  color: ${props => props.theme.text.reverse};
+  color: ${theme.text.reverse};
   padding: 16px 88px;
   max-width: 100%;
   box-shadow: ${props =>
@@ -220,22 +195,22 @@ export const SignupFooter = styled.div`
   justify-content: center;
   padding: 16px;
   font-size: 14px;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   font-weight: 500;
-  border-top: 2px solid ${props => props.theme.bg.wash};
+  border-top: 2px solid ${theme.bg.wash};
   margin-top: 40px;
   width: 100%;
 `;
 
 export const SigninLink = styled.span`
-  color: ${props => props.theme.brand.default};
+  color: ${theme.brand.default};
   margin-left: 6px;
   cursor: pointer;
 `;
 
 export const FullscreenContent = styled.div`
   width: 100%;
-  max-width: 768px;
+  max-width: ${MEDIA_BREAK}px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -247,7 +222,7 @@ export const CodeOfConduct = styled.p`
   display: inline-block;
   font-size: 14px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   border-radius: 8px;
   margin-top: 64px;
   margin-left: 32px;
@@ -257,7 +232,7 @@ export const CodeOfConduct = styled.p`
   z-index: ${zIndex.card + 1};
 
   a {
-    color: ${props => props.theme.brand.default};
+    color: ${theme.brand.default};
     font-weight: 600;
   }
 `;
@@ -267,7 +242,7 @@ export const SigninButtonsContainer = styled.div`
   padding-top: 48px;
   max-width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     padding-top: 24px;
   }
 `;
@@ -278,7 +253,7 @@ export const Col = styled.div`
   flex-wrap: wrap;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     flex-direction: column;
     align-items: center;
   }
@@ -291,7 +266,7 @@ export const SigninButton = styled.a`
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
-  color: ${({ theme }) => theme.text.reverse};
+  color: ${theme.text.reverse};
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
@@ -331,7 +306,7 @@ export const SigninButton = styled.a`
     fill: currentColor !important;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${MEDIA_BREAK}px) {
     margin: 16px 0;
 
     ${props =>
@@ -352,10 +327,12 @@ export const ButtonTwitter = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.twitter.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.twitter.default};
+    color: ${theme.social.twitter.default};
   }
 
   &:hover {
@@ -370,10 +347,12 @@ export const ButtonFacebook = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.facebook.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.facebook.default};
+    color: ${theme.social.facebook.default};
   }
 
   &:hover {
@@ -388,10 +367,12 @@ export const ButtonGoogle = styled(SigninButton)`
   color: ${props =>
     props.whitebg
       ? props.theme.social.google.default
-      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+      : props.preferred
+      ? '#fff'
+      : 'rgba(255,255,255,0.8)'};
 
   &:after {
-    color: ${props => props.theme.social.google.default};
+    color: ${theme.social.google.default};
   }
 
   &:hover {
@@ -408,22 +389,19 @@ export const ShareInputContainer = styled.div`
 
 export const JoinChannelContainer = styled.div`
   display: flex;
-  border: 1px solid ${props => props.theme.bg.border};
+  border: 1px solid ${theme.bg.border};
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 8px;
   align-items: center;
-  flex: 1 0 auto;
-  width: calc(100% - 24px);
+  flex: 0 0 auto;
+  width: calc(100% - 16px);
   margin-bottom: 12px;
-  background: ${props => props.theme.bg.wash};
+  background: ${theme.bg.wash};
+  position: relative;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 16px;
-
+  @media (max-width: ${MEDIA_BREAK}px) {
     button {
       width: 100%;
-      margin-top: 16px;
     }
   }
 `;
@@ -432,18 +410,14 @@ export const JoinChannelContent = styled.div`
   display: flex;
   flex-direction: column;
   flex: auto;
+  align-self: flex-start;
+  width: 100%;
+`;
+
+export const HeadingIconWrapper = styled.div`
+  display: flex;
+  padding: 32px;
+  align-items: center;
   justify-content: center;
-  padding-right: 32px;
-`;
-
-export const JoinChannelTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
-  color: ${props => props.theme.text.default};
-`;
-
-export const JoinChannelSubtitle = styled.h4`
-  font-size: 16px;
-  font-weight: 400;
-  color: ${props => props.theme.text.secondary};
+  color: ${theme.text.alt};
 `;

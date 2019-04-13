@@ -1,11 +1,12 @@
 // @flow
+import theme from 'shared/theme';
 // $FlowFixMe
 import styled from 'styled-components';
 
 export const FillSpaceError = styled.div`
   display: flex;
   flex: auto;
-  background: ${props => props.theme.bg.default};
+  background: ${theme.bg.default};
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -26,7 +27,7 @@ export const LargeEmoji = styled.span`
 export const Heading = styled.h3`
   font-size: ${props => (props.small ? '18px' : '24px')};
   font-weight: ${props => (props.small ? '500' : '600')};
-  color: ${props => props.theme.text.default};
+  color: ${theme.text.default};
   max-width: 600px;
   margin-bottom: 8px;
 `;
@@ -35,7 +36,7 @@ export const Subheading = styled.h4`
   font-size: ${props => (props.small ? '14px' : '18px')};
   font-weight: ${props => (props.small ? '400' : '500')};
   line-height: 1.4;
-  color: ${props => props.theme.text.alt};
+  color: ${theme.text.alt};
   max-width: 540px;
   margin-bottom: ${props => (props.small ? '16px' : '32px')};
 `;

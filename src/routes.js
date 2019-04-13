@@ -1,98 +1,119 @@
 // @flow
 import * as React from 'react';
-import { Route, Switch, Redirect } from 'react-router';
-import styled, { ThemeProvider } from 'styled-components';
+import compose from 'recompose/compose';
+import {
+  Route,
+  Switch,
+  Redirect,
+  withRouter,
+  type Location,
+  type History,
+} from 'react-router';
+import { ThemeProvider } from 'styled-components';
 import Loadable from 'react-loadable';
-import ErrorBoundary from 'react-error-boundary';
+import { ErrorBoundary } from 'src/components/error';
 import { CLIENT_URL } from './api/constants';
 import generateMetaInfo from 'shared/generate-meta-info';
-import './reset.css.js';
-import { theme } from './components/theme';
-import { FlexCol } from './components/globals';
-import ScrollManager from './components/scrollManager';
-import Head from './components/head';
-import ModalRoot from './components/modals/modalRoot';
-import Gallery from './components/gallery';
-import Toasts from './components/toasts';
-import Maintenance from './components/maintenance';
-import { Loading, LoadingScreen } from './components/loading';
-import LoadingDashboard from './views/dashboard/components/dashboardLoading';
-import Composer from './components/composer';
-import signedOutFallback from './helpers/signed-out-fallback';
-import AuthViewHandler from './views/authViewHandler';
-import PrivateChannelJoin from './views/privateChannelJoin';
-import ThreadSlider from './views/threadSlider';
-import Navbar from './views/navbar';
-import Status from './views/status';
-import Login from './views/login';
+import GlobalStyles from './reset.css.js';
+import { GlobalThreadAttachmentStyles } from 'src/components/message/threadAttachment/style';
+import { theme } from 'shared/theme';
+import AppViewWrapper from 'src/components/appViewWrapper';
+import ScrollManager from 'src/components/scrollManager';
+import Head from 'src/components/head';
+import ModalRoot from 'src/components/modals/modalRoot';
+import Gallery from 'src/components/gallery';
+import Toasts from 'src/components/toasts';
+import Composer from 'src/components/composer';
+import signedOutFallback from 'src/helpers/signed-out-fallback';
+import PrivateChannelJoin from 'src/views/privateChannelJoin';
+import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
+import ThreadSlider from 'src/views/threadSlider';
+import Navigation from 'src/views/navigation';
+import Status from 'src/views/status';
+import Login from 'src/views/login';
+import DirectMessages from 'src/views/directMessages';
+import { ThreadView } from 'src/views/thread';
+import AnalyticsTracking from 'src/components/analyticsTracking';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import Maintenance from 'src/components/maintenance';
+import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import RedirectOldThreadRoute from './views/thread/redirect-old-route';
+import NewUserOnboarding from './views/newUserOnboarding';
+import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
+import { LoadingView } from 'src/views/viewHelpers';
+import GlobalTitlebar from 'src/views/globalTitlebar';
+import NoUsernameHandler from 'src/views/authViewHandler/noUsernameHandler';
+import { NavigationContext } from 'src/helpers/navigation-context';
 
-import DirectMessages from './views/directMessages';
-import Thread from './views/thread';
-
-/* prettier-ignore */
 const Explore = Loadable({
-  loader: () => import('./views/explore'/* webpackChunkName: "Explore" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loader: () => import('./views/explore' /* webpackChunkName: "Explore" */),
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const UserView = Loadable({
   loader: () => import('./views/user'/* webpackChunkName: "UserView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunityView = Loadable({
   loader: () => import('./views/community'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunityLoginView = Loadable({
   loader: () => import('./views/communityLogin'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ChannelView = Loadable({
   loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
-const Dashboard = Loadable({
-  loader: () => import('./views/dashboard'/* webpackChunkName: "Dashboard" */),
-  loading: ({ isLoading }) => isLoading && <LoadingDashboard />,
+const HomeViewRedirect = Loadable({
+  loader: () => import('./views/homeViewRedirect'/* webpackChunkName: "HomeViewRedirect" */),
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const Notifications = Loadable({
   loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const UserSettings = Loadable({
   loader: () => import('./views/userSettings'/* webpackChunkName: "UserSettings" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const CommunitySettings = Loadable({
   loader: () => import('./views/communitySettings'/* webpackChunkName: "communitySettings" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ChannelSettings = Loadable({
   loader: () => import('./views/channelSettings'/* webpackChunkName: "channelSettings" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const NewCommunity = Loadable({
   loader: () => import('./views/newCommunity'/* webpackChunkName: "NewCommunity" */),
-  loading: ({ isLoading }) => isLoading && <Loading />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
+});
+
+/* prettier-ignore */
+const NewDirectMessage = Loadable({
+  loader: () => import('./views/newDirectMessage'/* webpackChunkName: "NewDirectMessage" */),
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
@@ -104,179 +125,386 @@ const Pages = Loadable({
 /* prettier-ignore */
 const Search = Loadable({
   loader: () => import('./views/search'/* webpackChunkName: "Search" */),
-  loading: ({ isLoading }) => isLoading && <LoadingScreen />,
+  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
 const ErrorFallback = Loadable({
   loader: () => import('./components/error'/* webpackChunkName: "Error" */),
-  loading: ({ isLoading }) => isLoading && <Loading />
+  loading: ({ isLoading }) => isLoading && <LoadingView />
 });
 
-const Body = styled(FlexCol)`
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  max-height: 100vh;
-  background: ${props => props.theme.bg.wash};
-`;
-
-const DashboardFallback = signedOutFallback(Dashboard, Pages);
-const HomeFallback = signedOutFallback(Dashboard, () => <Redirect to="/" />);
+const HomeViewRedirectFallback = signedOutFallback(HomeViewRedirect, Pages);
+const HomeFallback = signedOutFallback(HomeViewRedirect, () => (
+  <Redirect to="/" />
+));
+const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
+const CommunityLoginFallback = signedOutFallback(
+  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
+  CommunityLoginView
+);
 const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Redirect to={`/login?r=${CLIENT_URL}/new/community`} />
+  <Login redirectPath={`${CLIENT_URL}/new/community`} />
+));
+const NewDirectMessageFallback = signedOutFallback(NewDirectMessage, () => (
+  <Login redirectPath={`${CLIENT_URL}/new/message`} />
 ));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
 const UserSettingsFallback = signedOutFallback(UserSettings, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/me/settings`} />
 ));
 const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
-  <Redirect to="/login" />
+  <Login />
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/notifications`} />
 ));
 const ComposerFallback = signedOutFallback(Composer, () => (
-  <Redirect to="/login" />
+  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
-class Routes extends React.Component<{}> {
+export const RouteModalContext = React.createContext({
+  isModal: false,
+});
+
+type Props = {
+  currentUser: ?GetUserType,
+  isLoadingCurrentUser: boolean,
+  maintenanceMode?: boolean,
+  location: Location,
+  history: History,
+};
+
+type State = {
+  navigationIsOpen: boolean,
+};
+
+class Routes extends React.Component<Props, State> {
+  previousLocation = this.props.location;
+  state = { navigationIsOpen: false };
+
+  componentWillUpdate(nextProps) {
+    const { location } = this.props;
+    // set previousLocation if props.location is not modal
+    if (
+      nextProps.history.action !== 'POP' &&
+      (!location.state || !location.state.modal)
+    ) {
+      this.previousLocation = this.props.location;
+    }
+  }
+
+  setNavigationIsOpen = (val: boolean) =>
+    this.setState({ navigationIsOpen: val });
+
   render() {
+    const { currentUser, isLoadingCurrentUser } = this.props;
+    const { navigationIsOpen } = this.state;
     const { title, description } = generateMetaInfo();
 
     if (this.props.maintenanceMode) {
       return (
         <ThemeProvider theme={theme}>
           <ScrollManager>
-            <Body>
-              <Head
-                title="Ongoing Maintenance - Spectrum"
-                description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
-              />
-              <Maintenance />
-            </Body>
+            <GlobalStyles />
+            <Head
+              title="Ongoing Maintenance - Spectrum"
+              description="Spectrum is currently undergoing scheduled maintenance downtime. Please check https://twitter.com/withspectrum for ongoing updates."
+            />
+            <Maintenance />
           </ScrollManager>
         </ThemeProvider>
       );
     }
 
+    const { location } = this.props;
+    const isModal = !!(
+      location.state &&
+      location.state.modal &&
+      this.previousLocation !== location
+    ); // not initial render
+
+    // allows any UI in the tree to open or close the side navigation on mobile
+    const navigationContext = {
+      navigationIsOpen,
+      setNavigationIsOpen: this.setNavigationIsOpen,
+    };
+
+    // allows any UI in the tree to know if it is existing within a modal or not
+    // commonly used for background views to know that they are backgrounded
+    const routeModalContext = { isModal };
+
     return (
-      <ThemeProvider theme={theme}>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <ScrollManager>
-            <Body>
-              {/* Default meta tags, get overriden by anything further down the tree */}
-              <Head title={title} description={description} />
-              {/* Global navigation, notifications, message notifications, etc */}
-              {/*
-                AuthViewHandler often returns null, but is responsible for triggering
-                things like the 'set username' prompt when a user auths and doesn't
-                have a username set.
-              */}
-              <Route component={AuthViewHandler} />
+      <ErrorBoundary fallbackComponent={ErrorFallback}>
+        <ThemeProvider theme={theme}>
+          <NavigationContext.Provider value={navigationContext}>
+            {/* default meta tags, get overriden by anything further down the tree */}
+            <Head title={title} description={description} />
+            <GlobalStyles />
+            <GlobalThreadAttachmentStyles />
+
+            {/* dont let non-critical pieces of UI crash the whole app */}
+            <ErrorBoundary>
               <Status />
-              <Route component={Navbar} />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Toasts />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Gallery />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <ModalRoot />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <QueryParamToastDispatcher />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <AnalyticsTracking />
+            </ErrorBoundary>
 
-              <Route component={ModalRoot} />
-              <Route component={Toasts} />
-              <Route component={Gallery} />
-              <Route component={ThreadSlider} />
+            {/* 
+              while users should be able to browse communities/threads
+              if they are signed out (eg signedOutFallback), they should not
+              be allowed to use the app after signing up if they dont set a username.
 
+              otherwise we can get into a state where people are sending DMs,
+              sending messages, and posting threads without having a user profile
+              that people can report or link to.
+
+              this global component simply listens for users without a username
+              to be authenticated, and if so forces a redirect to /new/user 
+              prompting them to set a username
+            */}
+            <ErrorBoundary>
+              <NoUsernameHandler currentUser={currentUser} />
+            </ErrorBoundary>
+
+            {isModal && (
+              <Route
+                // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                // - /id-123-id => id-123-id, easy start that works
+                // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                component={props => (
+                  <ThreadSlider
+                    previousLocation={this.previousLocation}
+                    {...props}
+                  />
+                )}
+              />
+            )}
+
+            {/*
+              this context provider allows children views to determine
+              how they should behave if a modal is open. For example,
+              you could tell a community view to not paginate the thread
+              feed if a thread modal is open.
+            */}
+            <RouteModalContext.Provider value={routeModalContext}>
               {/*
-                  Switch only renders the first match. Subrouting happens downstream
-                  https://reacttraining.com/react-router/web/api/Switch
-                */}
-              <Switch>
-                <Route exact path="/" component={DashboardFallback} />
-                <Route exact path="/home" component={HomeFallback} />
+                we tell the app view wrapper any time the modal state
+                changes so that we can restore the scroll position to where
+                it was before the modal was opened
+              */}
+              <AppViewWrapper {...routeModalContext}>
+                <Route component={Navigation} />
+                <Route component={GlobalTitlebar} />
 
-                {/* Public Business Pages */}
-                <Route path="/about" component={Pages} />
-                <Route path="/contact" component={Pages} />
-                <Route path="/terms" component={Pages} />
-                <Route path="/privacy" component={Pages} />
-                <Route path="/terms.html" component={Pages} />
-                <Route path="/privacy.html" component={Pages} />
-                <Route path="/code-of-conduct" component={Pages} />
-                <Route path="/pricing" component={Pages} />
-                <Route path="/support" component={Pages} />
-                <Route path="/features" component={Pages} />
-                <Route path="/faq" component={Pages} />
-
-                {/* App Pages */}
-                <Route path="/new/community" component={NewCommunityFallback} />
-                <Route path="/new/thread" component={ComposerFallback} />
-                <Route path="/new/search" component={Search} />
-
-                <Route
-                  path="/new"
-                  render={() => <Redirect to="/new/community" />}
-                />
-
-                <Route path="/login" component={Login} />
-                <Route path="/explore" component={Explore} />
-                <Route path="/messages/new" component={MessagesFallback} />
-                <Route
-                  path="/messages/:threadId"
-                  component={MessagesFallback}
-                />
-                <Route path="/messages" component={MessagesFallback} />
-                <Route path="/thread/:threadId" component={Thread} />
-                <Route path="/thread" render={() => <Redirect to="/" />} />
-                <Route exact path="/users" render={() => <Redirect to="/" />} />
-                <Route exact path="/users/:username" component={UserView} />
-                <Route
-                  exact
-                  path="/users/:username/settings"
-                  component={UserSettingsFallback}
-                />
-                <Route
-                  path="/notifications"
-                  component={NotificationsFallback}
-                />
-
-                {/*
-                    We check communitySlug last to ensure none of the above routes
-                    pass. We handle null communitySlug values downstream by either
-                    redirecting to home or showing a 404
+                <div css={isModal ? { overflow: 'hidden' } : {}}>
+                  {/*
+                    switch only renders the first match. Subrouting happens downstream
+                    https://reacttraining.com/react-router/web/api/Switch
                   */}
-                <Route
-                  path="/:communitySlug/:channelSlug/settings"
-                  component={ChannelSettingsFallback}
-                />
-                <Route
-                  path="/:communitySlug/:channelSlug/join/:token"
-                  component={PrivateChannelJoin}
-                />
-                <Route
-                  path="/:communitySlug/:channelSlug/join"
-                  component={PrivateChannelJoin}
-                />
-                <Route
-                  path="/:communitySlug/settings"
-                  component={CommunitySettingsFallback}
-                />
-                <Route
-                  path="/:communitySlug/login"
-                  component={CommunityLoginView}
-                />
-                <Route
-                  path="/:communitySlug/:channelSlug"
-                  component={ChannelView}
-                />
-                <Route path="/:communitySlug" component={CommunityView} />
-              </Switch>
-            </Body>
-          </ScrollManager>
-        </ErrorBoundary>
-      </ThemeProvider>
+                  <Switch location={isModal ? this.previousLocation : location}>
+                    <Route
+                      exact
+                      path="/"
+                      component={HomeViewRedirectFallback}
+                    />
+                    <Route exact path="/home" component={HomeFallback} />
+
+                    {/* Public Business Pages */}
+                    <Route path="/about" component={Pages} />
+                    <Route path="/contact" component={Pages} />
+                    <Route path="/terms" component={Pages} />
+                    <Route path="/privacy" component={Pages} />
+                    <Route path="/terms.html" component={Pages} />
+                    <Route path="/privacy.html" component={Pages} />
+                    <Route path="/code-of-conduct" component={Pages} />
+                    <Route path="/support" component={Pages} />
+                    <Route path="/features" component={Pages} />
+                    <Route path="/faq" component={Pages} />
+                    <Route path="/apps" component={Pages} />
+
+                    {/* App Pages */}
+                    <Route
+                      path="/new/community"
+                      component={NewCommunityFallback}
+                    />
+                    <Route path="/new/thread" component={ComposerFallback} />
+                    <Route path="/new/search" component={Search} />
+                    <Route path="/new/user" component={NewUserOnboarding} />
+                    <Route
+                      path="/new/message"
+                      component={NewDirectMessageFallback}
+                    />
+
+                    <Route
+                      path="/new"
+                      render={() => <Redirect to="/new/community" />}
+                    />
+
+                    <Route path="/login" component={LoginFallback} />
+                    <Route path="/explore" component={Explore} />
+                    <Route
+                      path="/messages/:threadId"
+                      component={MessagesFallback}
+                    />
+                    <Route path="/messages" component={MessagesFallback} />
+                    <Route
+                      path="/thread/:threadId"
+                      component={RedirectOldThreadRoute}
+                    />
+                    <Route path="/thread" render={() => <Redirect to="/" />} />
+                    <Route
+                      exact
+                      path="/users"
+                      render={() => <Redirect to="/" />}
+                    />
+                    <Route exact path="/users/:username" component={UserView} />
+                    <Route
+                      exact
+                      path="/users/:username/settings"
+                      component={UserSettingsFallback}
+                    />
+                    <Route
+                      path="/notifications"
+                      component={NotificationsFallback}
+                    />
+
+                    <Route
+                      path="/me/settings"
+                      render={() =>
+                        currentUser && currentUser.username ? (
+                          <Redirect
+                            to={`/users/${currentUser.username}/settings`}
+                          />
+                        ) : currentUser && !currentUser.username ? (
+                          <NewUserOnboarding />
+                        ) : isLoadingCurrentUser ? null : (
+                          <Login redirectPath={`${CLIENT_URL}/me/settings`} />
+                        )
+                      }
+                    />
+                    <Route
+                      path="/me"
+                      render={() =>
+                        currentUser && currentUser.username ? (
+                          <Redirect to={`/users/${currentUser.username}`} />
+                        ) : isLoadingCurrentUser ? null : (
+                          <Login redirectPath={`${CLIENT_URL}/me`} />
+                        )
+                      }
+                    />
+
+                    {/*
+                        We check communitySlug last to ensure none of the above routes
+                        pass. We handle null communitySlug values downstream by either
+                        redirecting to home or showing a 404
+                      */}
+                    <Route
+                      path="/:communitySlug/:channelSlug/settings"
+                      component={ChannelSettingsFallback}
+                    />
+                    <Route
+                      path="/:communitySlug/:channelSlug/join/:token"
+                      component={PrivateChannelJoin}
+                    />
+                    <Route
+                      path="/:communitySlug/:channelSlug/join"
+                      component={PrivateChannelJoin}
+                    />
+                    <Route
+                      path="/:communitySlug/settings"
+                      component={CommunitySettingsFallback}
+                    />
+                    <Route
+                      path="/:communitySlug/join/:token"
+                      component={PrivateCommunityJoin}
+                    />
+                    <Route
+                      path="/:communitySlug/login"
+                      component={CommunityLoginFallback}
+                    />
+                    <Route
+                      // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
+                      // Imagine our threadId is "id-123-id" (similar in shape to an actual UUID)
+                      // - /id-123-id => id-123-id, easy start that works
+                      // - /some-custom-slug~id-123-id => id-123-id, custom slug also works
+                      // - /~id-123-id => id-123-id => id-123-id, empty custom slug also works
+                      // - /some~custom~slug~id-123-id => id-123-id, custom slug with delimiter char in it (~) also works! :tada:
+                      path="/:communitySlug/:channelSlug/(.*~)?:threadId"
+                      component={ThreadView}
+                    />
+                    <Route
+                      path="/:communitySlug/:channelSlug"
+                      component={ChannelView}
+                    />
+                    <Route path="/:communitySlug" component={CommunityView} />
+                  </Switch>
+                </div>
+
+                {isModal && (
+                  <Route
+                    path="/thread/:threadId"
+                    component={RedirectOldThreadRoute}
+                  />
+                )}
+
+                {isModal && (
+                  <Route
+                    path="/new/thread"
+                    render={props => (
+                      <ComposerFallback
+                        {...props}
+                        previousLocation={this.previousLocation}
+                        isModal
+                      />
+                    )}
+                  />
+                )}
+
+                {isModal && (
+                  <Route
+                    path="/new/message"
+                    render={props => (
+                      <NewDirectMessageFallback
+                        {...props}
+                        previousLocation={this.previousLocation}
+                        isModal
+                      />
+                    )}
+                  />
+                )}
+              </AppViewWrapper>
+            </RouteModalContext.Provider>
+          </NavigationContext.Provider>
+        </ThemeProvider>
+      </ErrorBoundary>
     );
   }
 }
 
-export default Routes;
+export default compose(
+  withCurrentUser,
+  withRouter
+)(Routes);

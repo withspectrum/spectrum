@@ -1,67 +1,84 @@
 // @flow
-import postmark from 'postmark';
+import isEmail from 'validator/lib/isEmail';
+import sg from '@sendgrid/mail';
+import fs from 'fs';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { deactiveUserEmailNotifications } from './models/usersSettings';
+import { events } from 'shared/analytics';
+import { trackQueue } from 'shared/bull/queues';
+import { userCanReceiveEmail } from './user-can-receive-email';
+const { SENDGRID_API_KEY } = process.env;
 
-let client;
-if (process.env.POSTMARK_SERVER_KEY) {
-  client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
-} else {
-  debug(
-    '\nℹ️ POSTMARK_SERVER_KEY not provided, debug mode enabled. Will log emails instead of actually sending them.'
-  );
-  // If no postmark API key is provided don't crash the server but log instead
-  client = {
-    sendEmailWithTemplate: ({ To, TemplateModel, Tag }, cb) => {
-      debug('debug mode enabled, mocking email sending');
-      cb();
-    },
-  };
-}
-
-type Options = {
-  TemplateId: number,
-  To: string,
-  TemplateModel: Object,
-  Tag: string,
+export type ToType = {
+  email: string,
+  name?: string,
 };
 
-const sendEmail = (options: Options) => {
-  const { TemplateId, To, TemplateModel, Tag } = options;
-  debug(
-    `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${
-      TemplateModel.subject
-    }\nTemplateModel: ${stringify(TemplateModel)}`
-  );
-  // $FlowFixMe
-  return new Promise((res, rej) => {
-    client.sendEmailWithTemplate(
-      {
-        From: 'hi@spectrum.chat',
-        TemplateId: TemplateId,
-        To: To,
-        TemplateModel: TemplateModel,
-        Tag: Tag,
-      },
-      async err => {
-        if (err) {
-          // 406 means the user became inactive, either by having an email
-          // hard bounce or they marked as spam
-          if (err.code === 406) {
-            return await deactiveUserEmailNotifications(To)
-              .then(() => rej(err))
-              .catch(e => rej(e));
-          }
+type Options = {
+  templateId: string,
+  to: Array<ToType>,
+  dynamic_template_data: Object,
+  userId?: string,
+};
 
-          console.error('Error sending email:');
-          console.error(err);
-          return rej(err);
-        }
-        res();
-        debug(`email to ${To} sent successfully`);
-      }
+const defaultOptions = {
+  from: {
+    email: 'hi@spectrum.chat',
+    name: 'Spectrum',
+  },
+  tracking_settings: {
+    click_tracking: {
+      enable: false,
+    },
+  },
+};
+
+const sendEmail = async (options: Options): Promise<void> => {
+  let { templateId, to, dynamic_template_data, userId } = options;
+
+  if (SENDGRID_API_KEY !== 'undefined') {
+    debug(
+      `--Send LIVE email with templateId ${templateId}--\nto: ${to
+        .map(t => t.email)
+        .join(', ')}\ndynamic_template_data: ${stringify(
+        dynamic_template_data
+      )}`
     );
+    sg.setApiKey(SENDGRID_API_KEY);
+  } else {
+    debug(
+      `--Send TEST email with templateId ${templateId}--\n--to: ${to
+        .map(t => t.email)
+        .join(', ')}--`
+    );
+
+    // eslint-disable-next-line
+    debug(
+      stringify({
+        templateId,
+        to,
+        dynamic_template_data,
+        userId,
+      })
+    );
+
+    return Promise.resolve();
+  }
+
+  if (userId) {
+    trackQueue.add({
+      userId: userId,
+      event: events.EMAIL_RECEIVED,
+    });
+  }
+
+  if (await !userCanReceiveEmail({ to, userId })) return Promise.resolve();
+
+  return sg.send({
+    ...defaultOptions,
+    templateId,
+    to,
+    dynamic_template_data,
   });
 };
 

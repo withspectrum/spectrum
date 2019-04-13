@@ -14,8 +14,10 @@ type SendCommunityInviteJobData = {
     firstName: string,
     lastName: string,
     email: string,
+    userId?: string,
   },
   community: Object,
+  communitySettings: Object,
   customMessage: string,
 };
 
@@ -24,29 +26,50 @@ type SendCommunityInviteEmailJob = {
   id: string,
 };
 
-export default (job: SendCommunityInviteEmailJob) => {
+export default (job: SendCommunityInviteEmailJob): Promise<void> => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending community invite to: ${job.data.to}`);
+
+  const {
+    sender,
+    recipient,
+    community,
+    communitySettings,
+    customMessage,
+    to,
+  } = job.data;
+
   const subject = `${job.data.sender.name} has invited you to join the ${
     job.data.community.name
   } community on Spectrum`;
 
+  const preheader = `Come join the conversation with ${sender.name}!`;
+  const joinPath = communitySettings
+    ? community.isPrivate &&
+      communitySettings.joinSettings &&
+      communitySettings.joinSettings.token
+      ? `${community.slug}/join/${communitySettings.joinSettings.token}`
+      : `${community.slug}`
+    : `${community.slug}`;
+
   try {
     return sendEmail({
-      TemplateId: COMMUNITY_INVITE_TEMPLATE,
-      To: job.data.to,
-      Tag: SEND_COMMUNITY_INVITE_EMAIL,
-      TemplateModel: {
+      templateId: COMMUNITY_INVITE_TEMPLATE,
+      to: [{ email: to }],
+      dynamic_template_data: {
         subject,
-        sender: job.data.sender,
-        recipient: job.data.recipient,
-        community: job.data.community,
-        customMessage: job.data.customMessage,
+        preheader,
+        sender,
+        recipient,
+        community,
+        customMessage,
+        joinPath,
       },
+      userId: recipient.userId,
     });
   } catch (err) {
-    debug('❌ Error in job:\n');
-    debug(err);
-    Raven.captureException(err);
+    console.error('❌ Error in job:\n');
+    console.error(err);
+    return Raven.captureException(err);
   }
 };

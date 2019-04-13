@@ -4,18 +4,20 @@ import slugg from 'slugg';
 import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
-import { Error, Success } from '../../../../components/formElements';
-import UsernameSearch from '../../../../components/usernameSearch';
-import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Form, Row, InputLabel, InputSubLabel } from './style';
+import { Error, Success } from 'src/components/formElements';
+import UsernameSearch from 'src/components/usernameSearch';
+import { addToastWithTimeout } from 'src/actions/toasts';
+import { Form, Row } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
+import type { Dispatch } from 'redux';
+import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   client: Object,
   editUser: Function,
   save: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
   user: ?Object,
 };
 
@@ -27,17 +29,21 @@ type State = {
 };
 
 class SetUsername extends React.Component<Props, State> {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     const { user } = props;
 
     // try to intelligently suggest a starting username based on the
     // person's name, or firstname/lastname
-    let username = user.name
-      ? slugg(user.name)
-      : user.firstName && user.lastName
+    let username = user
+      ? user.name
+        ? slugg(user.name)
+        : user.firstName && user.lastName
         ? `${user.firstName}-${user.lastName}`
-        : '';
+        : ''
+      : '';
 
     this.state = {
       username: username,
@@ -45,6 +51,15 @@ class SetUsername extends React.Component<Props, State> {
       success: '',
       isLoading: false,
     };
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    track(events.USER_ONBOARDING_SET_USERNAME_STEP_VIEWED);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleUsernameValidation = ({ error, success, username }) => {
@@ -70,6 +85,7 @@ class SetUsername extends React.Component<Props, State> {
     this.props
       .editUser(input)
       .then(() => {
+        if (!this._isMounted) return;
         this.setState({
           isLoading: false,
           success: '',
@@ -81,6 +97,7 @@ class SetUsername extends React.Component<Props, State> {
         return this.props.save();
       })
       .catch(err => {
+        if (!this._isMounted) return;
         this.setState({
           isLoading: false,
           success: '',
@@ -94,21 +111,21 @@ class SetUsername extends React.Component<Props, State> {
 
     return (
       <Form onSubmit={this.saveUsername}>
-        <InputLabel>Create your username</InputLabel>
-        <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
-
         <Row>
           <UsernameSearch
-            placeholder={'Set a username...'}
+            placeholder={'Your username...'}
             autoFocus={true}
             username={username}
             onValidationResult={this.handleUsernameValidation}
+            dataCy={'username-search'}
           />
         </Row>
-        <Row>
-          <Error>{error ? error : <span>&nbsp;</span>}</Error>
 
-          <Success>{success ? success : <span>&nbsp;</span>}</Success>
+        <Row style={{ minHeight: '43px' }}>
+          {error && <Error data-cy="username-search-error">{error}</Error>}
+          {success && (
+            <Success data-cy="username-search-success">{success}</Success>
+          )}
         </Row>
 
         <Row>
@@ -116,8 +133,9 @@ class SetUsername extends React.Component<Props, State> {
             onClick={this.saveUsername}
             disabled={!username || error}
             loading={isLoading}
+            data-cy="save-username-button"
           >
-            Save and Continue
+            {isLoading ? 'Saving...' : 'Save and Continue'}
           </ContinueButton>
         </Row>
       </Form>
@@ -125,4 +143,8 @@ class SetUsername extends React.Component<Props, State> {
   }
 }
 
-export default compose(editUserMutation, withApollo, connect())(SetUsername);
+export default compose(
+  editUserMutation,
+  withApollo,
+  connect()
+)(SetUsername);

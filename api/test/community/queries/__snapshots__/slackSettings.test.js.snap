@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should fetch slack settings if moderates community 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "slackSettings": Object {
+        "hasSentInvites": false,
+        "invitesSentAt": null,
+        "isConnected": false,
+        "memberCount": null,
+        "teamName": null,
+      },
+    },
+  },
+}
+`;
+
+exports[`should fetch slack settings if owns community 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "slackSettings": Object {
+        "hasSentInvites": false,
+        "invitesSentAt": null,
+        "isConnected": false,
+        "memberCount": null,
+        "teamName": null,
+      },
+    },
+  },
+}
+`;
+
+exports[`should not fetch slack settings if moderates channel 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "slackSettings": null,
+    },
+  },
+  "errors": Array [
+    [GraphQLError: You don’t have permission to manage this channel],
+  ],
+}
+`;
+
+exports[`should not fetch slack settings if no permissions 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "slackSettings": null,
+    },
+  },
+  "errors": Array [
+    [GraphQLError: You don’t have permission to manage this channel],
+  ],
+}
+`;
+
+exports[`should not fetch slack settings if not authed 1`] = `
+Object {
+  "data": Object {
+    "community": Object {
+      "id": "1",
+      "slackSettings": null,
+    },
+  },
+  "errors": Array [
+    [GraphQLError: You must be signed in to do this],
+  ],
+}
+`;

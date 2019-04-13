@@ -2,20 +2,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
+import { addToastWithTimeout } from 'src/actions/toasts';
 import updateUserEmailMutation from 'shared/graphql/mutations/user/updateUserEmail';
-import { Button } from '../buttons';
+import { Button } from 'src/components/button';
 import { Input, Error } from '../formElements';
 import isEmail from 'validator/lib/isEmail';
 import { EmailForm } from './style';
 import { Notice } from '../listItems/style';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
+import { track, events } from 'src/helpers/analytics';
+import type { Dispatch } from 'redux';
 
 type Props = {
   render: Function,
   user: GetUserType,
   updateUserEmail: Function,
-  dispatch: Function,
+  dispatch: Dispatch<Object>,
 };
 
 type State = {
@@ -49,6 +51,8 @@ class UserEmailConfirmation extends React.Component<Props, State> {
         emailError: 'Please enter a working email address',
       });
     }
+
+    track(events.USER_ADDED_EMAIL);
 
     return this.props
       .updateUserEmail(email)
@@ -97,7 +101,7 @@ class UserEmailConfirmation extends React.Component<Props, State> {
           </Input>
 
           <Button onClick={this.init} loading={isLoading}>
-            Send
+            {isLoading ? 'Sending...' : 'Send'}
           </Button>
         </EmailForm>
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { UserListItemContainer } from '../style';
-import GranularUserProfile from 'src/components/granularUserProfile';
+import { UserListItem } from 'src/components/entities';
 import { Loading } from 'src/components/loading';
 import getBlockedUsersQuery from 'shared/graphql/queries/channel/getChannelBlockedUsers';
 import type { GetChannelBlockedUsersType } from 'shared/graphql/queries/channel/getChannelBlockedUsers';
@@ -12,10 +12,12 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
+import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
 import EditDropdown from './editDropdown';
+import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Dropdown,
   DropdownSectionDivider,
@@ -25,7 +27,7 @@ import {
   DropdownSectionTitle,
   DropdownAction,
 } from 'src/components/settingsViews/style';
-import Icon from 'src/components/icons';
+import Icon from 'src/components/icon';
 
 type Props = {
   data: {
@@ -33,13 +35,12 @@ type Props = {
   },
   unblock: Function,
   isLoading: boolean,
-  initMessage: Function,
   currentUser: ?Object,
 };
 
 class BlockedUsers extends React.Component<Props> {
   render() {
-    const { data, isLoading, currentUser, unblock, initMessage } = this.props;
+    const { data, isLoading, currentUser, unblock } = this.props;
 
     if (data && data.channel) {
       const { blockedUsers } = data.channel;
@@ -47,24 +48,22 @@ class BlockedUsers extends React.Component<Props> {
       return (
         <SectionCard>
           <SectionTitle>Blocked Users</SectionTitle>
-          {blockedUsers &&
-            blockedUsers.length > 0 && (
-              <SectionSubtitle>
-                Blocked users can not see threads or messages posted in this
-                channel. They will still be able to join any other public
-                channels in the Spectrum community and request access to other
-                private channels.
-              </SectionSubtitle>
-            )}
+          {blockedUsers && blockedUsers.length > 0 && (
+            <SectionSubtitle>
+              Blocked users can not see threads or messages posted in this
+              channel. They will still be able to join any other public channels
+              in the Spectrum community and request access to other private
+              channels.
+            </SectionSubtitle>
+          )}
 
-          {blockedUsers &&
-            blockedUsers.length > 0 && (
-              <Notice>
-                Unblocking a user will <b>not</b> add them to this channel. It
-                will only allow them to re-request access in the future as long
-                as this channel remains private.
-              </Notice>
-            )}
+          {blockedUsers && blockedUsers.length > 0 && (
+            <Notice>
+              Unblocking a user will <b>not</b> add them to this channel. It
+              will only allow them to re-request access in the future as long as
+              this channel remains private.
+            </Notice>
+          )}
 
           <ListContainer>
             {blockedUsers &&
@@ -73,34 +72,39 @@ class BlockedUsers extends React.Component<Props> {
 
                 return (
                   <UserListItemContainer key={user.id}>
-                    <GranularUserProfile
+                    <UserListItem
                       userObject={user}
                       id={user.id}
                       name={user.name}
                       username={user.username}
                       isCurrentUser={currentUser && user.id === currentUser.id}
                       isOnline={user.isOnline}
-                      onlineSize={'small'}
                       profilePhoto={user.profilePhoto}
-                      avatarSize={'32'}
+                      avatarSize={40}
                       description={user.description}
+                      showHoverProfile={false}
                     >
                       <EditDropdown
                         render={() => (
                           <Dropdown>
-                            <DropdownSection
-                              style={{ borderBottom: '0' }}
-                              onClick={() => initMessage(user)}
-                            >
-                              <DropdownAction>
-                                <Icon glyph={'message'} size={'32'} />
-                              </DropdownAction>
-                              <DropdownSectionText>
-                                <DropdownSectionTitle>
-                                  Send Direct Message
-                                </DropdownSectionTitle>
-                              </DropdownSectionText>
-                            </DropdownSection>
+                            <InitDirectMessageWrapper
+                              user={user}
+                              render={
+                                <DropdownSection style={{ borderBottom: '0' }}>
+                                  <DropdownAction>
+                                    <Icon
+                                      glyph={'message-simple-new'}
+                                      size={'32'}
+                                    />
+                                  </DropdownAction>
+                                  <DropdownSectionText>
+                                    <DropdownSectionTitle>
+                                      Send Direct Message
+                                    </DropdownSectionTitle>
+                                  </DropdownSectionText>
+                                </DropdownSection>
+                              }
+                            />
 
                             <DropdownSectionDivider />
 
@@ -123,17 +127,16 @@ class BlockedUsers extends React.Component<Props> {
                           </Dropdown>
                         )}
                       />
-                    </GranularUserProfile>
+                    </UserListItem>
                   </UserListItemContainer>
                 );
               })}
 
-            {blockedUsers &&
-              blockedUsers.length <= 0 && (
-                <SectionSubtitle>
-                  There are no blocked users in this channel.
-                </SectionSubtitle>
-              )}
+            {blockedUsers && blockedUsers.length <= 0 && (
+              <SectionSubtitle>
+                There are no blocked users in this channel.
+              </SectionSubtitle>
+            )}
           </ListContainer>
         </SectionCard>
       );
@@ -155,11 +158,9 @@ class BlockedUsers extends React.Component<Props> {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-
 export default compose(
-  // $FlowIssue
-  connect(map),
   getBlockedUsersQuery,
-  viewNetworkHandler
+  withCurrentUser,
+  viewNetworkHandler,
+  connect()
 )(BlockedUsers);

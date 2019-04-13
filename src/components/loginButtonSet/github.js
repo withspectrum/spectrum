@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { ButtonProps } from './';
 import { GithubButton, Label, A } from './style';
-import Icon from '../icons';
+import Icon from 'src/components/icon';
 
 export const GithubSigninButton = (props: ButtonProps) => {
   const { href, preferred, showAfter, onClickHandler } = props;

@@ -1,0 +1,225 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- 
+  START_CONFIG
+  { 
+    "test": {
+      "version": "b389bbce-183a-45cc-8ca8-7cd321bc690f",
+      "template": "d-5e52250c25be4654af82172970551919"
+    },
+    "production": {
+      "version": "91a9475c-96ac-47bb-aa92-7f8350ed5d7d",
+      "template": "d-54e8d4905da64158a98ddb92c9330583"
+    }
+  }
+  END_CONFIG
+-->
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{ subject }}</title>
+
+  <style type="text/css" rel="stylesheet" media="all">*:not(br):not(tr):not(html) {font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;box-sizing:border-box}
+@media only screen and (max-width: 600px) {
+    .email-body_inner, .email-footer {
+        width: 100%
+        }
+    }
+@media only screen and (max-width: 500px) {
+    .button {
+        width: 100%
+        }
+    }
+.button:hover {text-decoration:none;box-shadow:0 8px 16px rgba(0, 0, 0, 0.15)}</style>
+</head>
+
+<body style='-webkit-text-size-adjust:none; background-color:#FFF; color:#171a21; line-height:1.4; font-family:-apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif; height:100%; margin:0; padding:0; width:100%' bgcolor="#FFFFFF" height="100%" width="100%">
+  <div class="preheader" style="font-size:1px; line-height:1px; max-height:0; max-width:0; mso-hide:all; opacity:0; overflow:hidden; visibility:hidden; display:none">
+    {{preheader}}
+  </div>
+
+  <!-- Insert &zwnj;&nbsp; hack after hidden preview text -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+     ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ 
+  </div>
+
+  <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#F5F8FC; margin:0; padding:0; width:100%" bgcolor="#F5F8FC">
+    <tr>
+      <td align="center" style="word-break:break-word">
+        <table class="email-content" width="100%" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; background-color:#FFF; border-bottom:1px solid #DAE4F2; margin:0; padding:0; width:100%" bgcolor="#FFFFFF">
+          <!-- Email Body -->
+          <tr>
+            <td class="email-body" width="100%" cellpadding="0" cellspacing="0" style="word-break:break-word; -premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:100%; margin:0; padding:32px 0; width:100%">
+              <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:570px; background-color:#FFF; margin:0 auto; padding:16px; width:570px" bgcolor="#FFFFFF" width="570">
+                <tr>
+                  <td style="word-break:break-word">
+                    <p class="reputation-string" style="line-height:1.4; margin:0; padding:0; text-align:left; color:#16171A; font-size:16px; margin-top:12px; margin-bottom:24px" align="left">{{data.reputationString}}</p>
+                  </td>
+                </tr>
+
+                {{#each data.threads}}
+                <tr>
+                  <td class="thread" style="word-break:break-word; background:#FFF; margin:8px 12px; width:100%; padding-top:16px" width="100%">
+                    <table width="100%" cellpadding="0" cellspacing="0" class="thread-title" style="padding:0">
+                      <tr width="100%" cellpadding="0" cellspacing="0">
+                        <td valign="middle" style="word-break:break-word">
+                          <a href="https://spectrum.chat/thread/{{ id }}" class="block" style="color:#7B16FF; text-decoration:none; display:block; width:100%" width="100%">
+                            <h3 style="color:#16171A; font-size:16px; font-weight:500; margin-top:0; text-align:left; line-height:1.4; margin-bottom:0" align="left">{{content.title}}</h3>
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header" style="padding:4px 0">
+                      <tr width="100%" cellpadding="0" cellspacing="0">
+                        <td valign="middle" width="32" style="word-break:break-word">
+                          <a href="https://spectrum.chat/{{ community.slug }}" class="block" style="color:#828C99; text-decoration:none; display:block; width:100%; height:32px" width="100%" height="32">
+                            <img src="{{ community.profilePhoto }}" width="32" height="32" style="border:none; border-radius:4px; display:inline-block; margin-right:16px">
+                          </a>
+                        </td>
+
+                        <td valign="middle" style="word-break:break-word">
+                          <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#828C99; font-size:14px; margin-top:0; display:block; font-weight:400" align="left">
+                            Posted in <a href="https://spectrum.chat/{{ community.slug }}" style="color:#828C99; text-decoration:none">{{community.name}}</a> · <a href="https://spectrum.chat/{{ community.slug }}/{{ channel.slug }}" style="color:#828C99; text-decoration:none">{{channel.name}}</a>
+                          </p>
+                          <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#828C99; font-size:14px; margin-top:0; display:block; font-weight:400" align="left">
+                            <a href="https://spectrum.chat/{{ community.slug }}" class="block a-p" style="color:#828C99; text-decoration:none; display:block; width:100%" width="100%">
+                              {{{messageCountString}}}
+                            </a>
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+
+                {{#data.hasOverflowThreads}}
+                <tr>
+                  <td style="word-break:break-word">
+                    <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#171A21; font-size:16px; margin-top:12px" align="left"> </p>
+                    <p class="reputation-string" style="line-height:1.4; margin:0; padding:0; text-align:left; color:#16171A; font-size:16px; margin-top:12px; margin-bottom:24px" align="left">Today’s digest highlights the top 20 conversations in your
+                      communities - but there are more active conversations waiting for you!</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="word-break:break-word">
+                    <a class="button" href="https://spectrum.chat" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:8px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; font-weight:600; padding:12px 0; text-align:center; white-space:nowrap; word-break:keep-all" bgcolor="#7B16FF" align="center">See more conversations</a>
+                  </td>
+                </tr>
+                {{/data.hasOverflowThreads}}
+
+                {{#if data.communities}}
+                <tr>
+                  <td style="word-break:break-word">
+                    <div class="section-divider" style="border-bottom:1px solid #DAE4F2; display:block; height:1px; margin:32px 0" height="1"></div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="word-break:break-word">
+                    <h2 class="discover-divider" style="color:#16171A; font-size:20px; font-weight:bold; margin-top:0; text-align:left; margin-bottom:0" align="left">Discover more communities:</h2>
+                  </td>
+                </tr>
+                {{/if}}
+
+                {{#each data.communities}}
+                <tr>
+                  <td style="word-break:break-word">
+                    <table width="100%" cellpadding="0" cellspacing="0" class="thread-community-header suggested-community" style="padding:4px 0; margin-top:16px; padding-top:16px">
+                      <tr width="100%" cellpadding="0" cellspacing="0">
+                        <td valign="middle" width="32" style="word-break:break-word">
+                          <a href="https://spectrum.chat/{{ slug }}" class="block" style="color:#828C99; text-decoration:none; display:block; width:100%" width="100%">
+                            <img src="{{ profilePhoto }}" width="44" height="44" style="border:none; border-radius:4px; display:inline-block; margin-right:16px">
+                          </a>
+                        </td>
+
+                        <td valign="middle" style="word-break:break-word">
+                          <a href="https://spectrum.chat/{{ slug }}" class="block" style="color:#828C99; text-decoration:none; display:block; width:100%" width="100%">
+                            <h2 class="suggested-community-title" style="color:#16171A; font-size:15px; font-weight:500; margin-top:0; text-align:left; line-height:1.4; margin-bottom:0" align="left">{{name}}</h2>
+                          </a>
+                          <a href="https://spectrum.chat/{{ slug }}" class="block" style="color:#828C99; text-decoration:none; display:block; width:100%" width="100%">
+                            <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#828C99; font-size:14px; margin-top:0; display:block; font-weight:400" align="left">
+                              {{description}}
+                            </p>
+                          </a>
+                        </td>
+
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+
+
+                <tr>
+                  <td style="word-break:break-word">
+                    <div class="section-divider" style="border-bottom:1px solid #DAE4F2; display:block; height:1px; margin:32px 0" height="1"></div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="word-break:break-word">
+                    <a class="button" href="https://spectrum.chat/" style="color:#FFF; text-decoration:none; -webkit-text-size-adjust:none; background-color:#7B16FF; border-radius:8px; box-shadow:0 4px 8px rgba(0, 0, 0, 0.15); display:block; font-size:16px; font-weight:600; padding:12px 0; text-align:center; white-space:nowrap; word-break:keep-all" bgcolor="#7B16FF" align="center">Go to my feed</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" style="-premailer-cellpadding:0; -premailer-cellspacing:0; -premailer-width:570px; margin:0 auto; padding:16px 16px 32px; text-align:center; width:570px">
+          <tr>
+            <td style="word-break:break-word">
+              <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#828C99; font-size:14px; margin-top:12px" align="left">
+                You are receiving this email because you joined <a href="https://spectrum.chat" style="color:#1D2129; text-decoration:none">Spectrum</a>. If you no
+                longer want to receive emails like this, you can:
+              </p>
+
+              <ul style="line-height:1.4; margin:24px 0; padding:0; text-align:left; list-style-type:none" align="left">
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/api/email/unsubscribe?token={{ unsubscribeToken }}" style="color:#1D2129; text-decoration:none">Unsubscribe from
+                    {{data.timeframe.subject}} digests</a>
+                </li>
+
+                {{#data.username}}
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/users/{{ . }}/settings" style="color:#1D2129; text-decoration:none">Manage your email preferences on Spectrum</a>
+                </li>
+                {{/data.username}}
+              </ul>
+
+              <ul style="line-height:1.4; margin:24px 0; padding:0; text-align:left; list-style-type:none" align="left">
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://twitter.com/withspectrum" style="color:#1D2129; text-decoration:none">Follow @withspectrum on Twitter</a>
+                </li>
+
+                <li style="font-size:14px; margin:8px 0">
+                  <a href="https://spectrum.chat/spectrum/hugs-n-bugs" style="color:#1D2129; text-decoration:none">Report bugs</a> · <a href="https://spectrum.chat/spectrum/feature-requests" style="color:#1D2129; text-decoration:none">Request
+                    a feature</a>
+                </li>
+              </ul>
+
+              <p style="line-height:1.4; margin:0; padding:0; text-align:left; color:#828C99; font-size:14px; margin-top:12px" align="left">Spectrum is made by GitHub, Inc.<br>88 Colin P Kelly Jr St, San Francisco, CA 94107<br>United
+                States</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>
