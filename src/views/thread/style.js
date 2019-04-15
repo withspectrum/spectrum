@@ -468,36 +468,11 @@ export const ShareButton = styled.span`
   }
 `;
 
-export const CommunityHeaderName = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  margin-right: 8px;
-  color: ${theme.text.default};
-  line-height: 1.2;
-  max-width: 580px;
-  ${Truncate};
-`;
-
-export const CommunityHeaderSubtitle = styled.span`
+export const ThreadSubtitle = styled.span`
   display: flex;
   align-items: center;
-  font-size: 12px;
-  margin-top: 4px;
-  line-height: 12px;
   color: ${theme.text.alt};
   ${Truncate};
-
-  > a {
-    display: flex;
-    flex: 0 0 auto;
-  }
-
-  > a:hover {
-    color: ${theme.brand.default};
-  }
-`;
-
-export const ThreadSubtitle = styled(CommunityHeaderSubtitle)`
   font-size: 16px;
   margin-top: 8px;
   margin-bottom: 16px;
