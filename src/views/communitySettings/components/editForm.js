@@ -81,7 +81,7 @@ class EditForm extends React.Component<Props, State> {
   changeName = e => {
     const name = e.target.value;
 
-    if (name.length >= 20) {
+    if (name.length > 20) {
       this.setState({
         name,
         nameError: true,
@@ -307,13 +307,14 @@ class EditForm extends React.Component<Props, State> {
         <SectionTitle>Community Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
-            {coverPhoto && !/default_images/.test(coverPhoto) && (
-              <DeleteCoverWrapper>
-                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
-                  <Icon glyph="view-close-small" size={'16'} />
-                </DeleteCoverButton>
-              </DeleteCoverWrapper>
-            )}
+            {coverPhoto &&
+              !/default_images/.test(coverPhoto) && (
+                <DeleteCoverWrapper>
+                  <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                    <Icon glyph="view-close-small" size={'16'} />
+                  </DeleteCoverButton>
+                </DeleteCoverWrapper>
+              )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
@@ -398,8 +399,4 @@ class EditForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  connect(),
-  editCommunityMutation,
-  withRouter
-)(EditForm);
+export default compose(connect(), editCommunityMutation, withRouter)(EditForm);

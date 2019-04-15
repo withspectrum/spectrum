@@ -69,7 +69,7 @@ class CommunityWithData extends React.Component<Props, State> {
   changeName = e => {
     const name = e.target.value;
 
-    if (name.length >= 20) {
+    if (name.length > 20) {
       this.setState({
         name,
         nameError: true,
