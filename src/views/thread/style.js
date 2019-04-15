@@ -143,9 +143,6 @@ export const ThreadWrapper = styled(FlexCol)`
   background: ${theme.bg.default};
   width: 100%;
   max-width: 100%;
-  /* manually nudge up 60px to cover the sliding header in the thread view */
-  top: -68px;
-  margin-bottom: -68px;
 
   ${props =>
     props.isEditing &&
@@ -471,32 +468,13 @@ export const ShareButton = styled.span`
   }
 `;
 
-export const StickyHeaderContent = styled.div`
-  display: flex;
-  padding: 12px 16px;
-  cursor: pointer;
-  max-width: 70%;
-
-  @media (max-width: 728px) {
-    padding: 16px;
-    display: flex;
-  }
-`;
-
-export const StickyHeaderActionsContainer = styled.div`
-  padding: 12px 0;
-  display: flex;
-  align-items: center;
-  flex: 0 1 auto;
-`;
-
 export const CommunityHeaderName = styled.h3`
   font-size: 16px;
   font-weight: 600;
   margin-right: 8px;
   color: ${theme.text.default};
   line-height: 1.2;
-  max-width: 100%;
+  max-width: 580px;
   ${Truncate};
 `;
 
@@ -550,23 +528,6 @@ export const CommunityHeaderChannelTag = styled.div`
   @media (max-width: 728px) {
     display: none;
   }
-`;
-
-export const CommunityHeaderMeta = styled.div`
-  display: flex;
-  align-items: center;
-  max-width: 100%;
-`;
-
-export const CommunityHeaderMetaCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  align-self: flex-start;
-  margin-left: 12px;
-  max-width: 100%;
-  padding-right: 64px;
 `;
 
 export const PillLink = styled(Link)`
@@ -800,25 +761,6 @@ export const Label = styled.p`
   font-size: 14px;
 `;
 
-export const StickyHeaderContainer = styled.div`
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: ${zIndex.card};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid ${theme.bg.border};
-  flex: 0 0 64px;
-  align-self: stretch;
-  background: ${theme.bg.wash};
-  padding-right: 16px;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
 export const Stretch = styled.div`
   flex: 1;
   display: flex;
@@ -853,50 +795,6 @@ export const LockedText = styled.div`
   font-size: 15px;
   font-weight: 500;
   margin-left: 16px;
-`;
-
-export const TopBottomButtonContainer = styled.div`
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  opacity: ${props => (props.isVisible ? '1' : '0')};
-  transform: translateY(${props => (props.isVisible ? '0' : '8px')});
-  transition: transform opacity 0.2s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  background: ${theme.bg.default};
-  border: 1px solid ${theme.bg.border};
-  color: ${theme.text.alt};
-  border-radius: 24px;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  z-index: 3000;
-
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  }
-
-  @media (max-width: ${MEDIA_BREAK + 72}px) {
-    bottom: 84px;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-export const TopButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-
-  &:hover {
-    color: ${theme.text.secondary};
-  }
-`;
-export const BottomButton = styled(TopButton)`
-  border-top: 1px solid ${theme.bg.border};
 `;
 
 export const BylineContainer = styled.div`

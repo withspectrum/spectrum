@@ -17,7 +17,6 @@ import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icon';
 import { PrimaryOutlineButton } from 'src/components/button';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -28,7 +27,6 @@ import {
 import ChatInput from 'src/components/chatInput';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import MessagesSubscriber from '../components/messagesSubscriber';
-import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
@@ -190,10 +188,6 @@ const ThreadContainer = (props: Props) => {
         isModal={isModal}
         data-cy={isModal ? 'thread-is-modal' : undefined}
       >
-        <ErrorBoundary>
-          <StickyHeader thread={thread} />
-        </ErrorBoundary>
-
         <ThreadDetail
           thread={thread}
           toggleEdit={() => setEditing(!isEditing)}
