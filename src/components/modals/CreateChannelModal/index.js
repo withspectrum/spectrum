@@ -87,7 +87,7 @@ class CreateChannelModal extends React.Component<Props, State> {
     let lowercaseName = name.toLowerCase().trim();
     let slug = slugg(lowercaseName);
 
-    if (name.length >= 20) {
+    if (name.length > 20) {
       this.setState({
         nameError: true,
       });
