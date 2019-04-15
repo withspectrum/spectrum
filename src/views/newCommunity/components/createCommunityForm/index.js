@@ -124,7 +124,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
-    if (name.length >= 20) {
+    if (name.length > 20) {
       this.setState({
         nameError: true,
       });
@@ -474,13 +474,14 @@ class CreateCommunityForm extends React.Component<Props, State> {
       <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
-            {coverPhoto && !/default_images/.test(coverPhoto) && (
-              <DeleteCoverWrapper>
-                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
-                  <Icon glyph="view-close-small" size={'16'} />
-                </DeleteCoverButton>
-              </DeleteCoverWrapper>
-            )}
+            {coverPhoto &&
+              !/default_images/.test(coverPhoto) && (
+                <DeleteCoverWrapper>
+                  <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                    <Icon glyph="view-close-small" size={'16'} />
+                  </DeleteCoverButton>
+                </DeleteCoverWrapper>
+              )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
