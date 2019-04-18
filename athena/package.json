@@ -26,6 +26,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "redis-tag-cache": "^1.2.1",
+    "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdb-inspector": "^0.3.3",
     "rethinkdbdash": "^2.3.31",
     "rethinkhaberdashery": "^2.3.32",
