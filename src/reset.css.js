@@ -64,6 +64,13 @@ export default createGlobalStyle`
     resize: none;
   }
 
+  input,
+  button,
+  textarea {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+
   ::-moz-selection {
     /* Code for Firefox */
     background: ${theme.brand.alt};
