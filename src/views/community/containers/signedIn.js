@@ -9,15 +9,10 @@ import type { CommunityInfoType } from 'shared/graphql/fragments/community/commu
 import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
-import { CommunityProfileCard } from 'src/components/entities';
 import { CommunityAvatar } from 'src/components/avatar';
-import { ErrorBoundary } from 'src/components/error';
 import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import { TeamMembersList } from '../components/teamMembersList';
 import { CommunityFeeds } from '../components/communityFeeds';
-import { ChannelsList } from '../components/channelsList';
-import { SidebarSection } from '../style';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
