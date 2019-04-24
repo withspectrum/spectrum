@@ -121,7 +121,6 @@ class Component extends React.Component<Props> {
                         !!match && location.search.indexOf('tab=chat') > -1
                       }
                     >
-                      <Icon glyph="message" size={24} />
                       <Content>
                         <Label>Chat</Label>
                       </Content>
