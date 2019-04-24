@@ -181,6 +181,20 @@ const Feeds = (props: Props) => {
 
   return (
     <FeedsContainer data-cy="community-view-content">
+      <SegmentedControl>
+        {segments.map(segment => {
+          return (
+            <Segment
+              key={segment}
+              hideOnDesktop
+              isActive={segment === tab}
+              onClick={() => changeTab(segment)}
+            >
+              {segment[0].toUpperCase() + segment.substr(1)}
+            </Segment>
+          );
+        })}
+      </SegmentedControl>
       {renderFeed()}
     </FeedsContainer>
   );
