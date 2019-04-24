@@ -31,16 +31,32 @@ if (!ca && IS_PROD)
   );
 
 const PRODUCTION_CONFIG = {
-  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
-  host: process.env.COMPOSE_RETHINKDB_URL,
-  port: process.env.COMPOSE_RETHINKDB_PORT,
-  ...(ca
-    ? {
-        ssl: {
-          ca,
-        },
-      }
-    : {}),
+  servers: [
+    {
+      password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+      host: process.env.COMPOSE_RETHINKDB_URL,
+      port: process.env.COMPOSE_RETHINKDB_PORT,
+      ...(ca
+        ? {
+            ssl: {
+              ca,
+            },
+          }
+        : {}),
+    },
+    {
+      password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+      host: process.env.BACKUP_RETHINKDB_URL,
+      port: process.env.BACKUP_RETHINKDB_PORT,
+      ...(ca
+        ? {
+            ssl: {
+              ca,
+            },
+          }
+        : {}),
+    },
+  ],
 };
 
 const config = IS_PROD
