@@ -225,7 +225,7 @@ export const SearchInput = styled.input`
   padding: 8px 16px;
   color: ${theme.text.default};
   font-weight: 600;
-  width: 120px;
+  width: 240px;
   transition: all 0.2s ease-in-out;
 
   &:focus {
