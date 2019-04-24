@@ -98,17 +98,15 @@ class Component extends React.Component<Props> {
             <Route exact path={`/${community.slug}`}>
               {({ match }) => (
                 <Link to={`/${community.slug}?tab=posts`}>
-                  <Tooltip content="See the posts of all channels you are a member of">
-                    <Row
-                      isActive={
-                        !!match && location.search.indexOf('tab=posts') > -1
-                      }
-                    >
-                      <Content>
-                        <Label># All channels</Label>
-                      </Content>
-                    </Row>
-                  </Tooltip>
+                  <Row
+                    isActive={
+                      !!match && location.search.indexOf('tab=posts') > -1
+                    }
+                  >
+                    <Content>
+                      <Label># All channels</Label>
+                    </Content>
+                  </Row>
                 </Link>
               )}
             </Route>
