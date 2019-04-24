@@ -15,12 +15,7 @@ import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
 import { WhiteIconButton } from 'src/components/button';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
-import {
-  Row,
-  Content,
-  Label,
-  Description,
-} from 'src/components/entities/listItems/style';
+import { Row, Content, Label } from 'src/components/entities/listItems/style';
 
 type Props = {
   data: {
@@ -50,6 +45,7 @@ class Component extends React.Component<Props> {
       return sortedWithoutGeneral;
     }
   };
+
   render() {
     const {
       isLoading,
@@ -102,35 +98,38 @@ class Component extends React.Component<Props> {
             <Route exact path={`/${community.slug}`}>
               {({ match }) => (
                 <Link to={`/${community.slug}?tab=posts`}>
-                  <Row
-                    isActive={
-                      !!match && location.search.indexOf('tab=posts') > -1
-                    }
-                  >
-                    <Content>
-                      <Tooltip content="See the posts of all channels you are a member of">
-                        <Label>All</Label>
-                      </Tooltip>
-                    </Content>
-                  </Row>
+                  <Tooltip content="See the posts of all channels you are a member of">
+                    <Row
+                      isActive={
+                        !!match && location.search.indexOf('tab=posts') > -1
+                      }
+                    >
+                      <Content>
+                        <Label># All channels</Label>
+                      </Content>
+                    </Row>
+                  </Tooltip>
                 </Link>
               )}
             </Route>
-            <Route exact path={`/${community.slug}`}>
-              {({ match }) => (
-                <Link to={`/${community.slug}?tab=chat`}>
-                  <Row
-                    isActive={
-                      !!match && location.search.indexOf('tab=chat') > -1
-                    }
-                  >
-                    <Content>
-                      <Label>Chat</Label>
-                    </Content>
-                  </Row>
-                </Link>
-              )}
-            </Route>
+            {community.watercoolerId && (
+              <Route exact path={`/${community.slug}`}>
+                {({ match }) => (
+                  <Link to={`/${community.slug}?tab=chat`}>
+                    <Row
+                      isActive={
+                        !!match && location.search.indexOf('tab=chat') > -1
+                      }
+                    >
+                      <Icon glyph="message" size={24} />
+                      <Content>
+                        <Label>Chat</Label>
+                      </Content>
+                    </Row>
+                  </Link>
+                )}
+              </Route>
+            )}
             {sortedChannels.map(channel => {
               if (!channel) return null;
               return (
