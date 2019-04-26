@@ -23,10 +23,10 @@ asn1.js@^5.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
-aws-sdk@^2.426.0:
-  version "2.426.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.426.0.tgz#cf17361c987daf518f945218f06135fbc1a3690d"
-  integrity sha512-S4nmIhF/6iYeVEmKUWVG03zo1sw3zELoAPGqBKIZ3isrXbxkFXdP2cgIQxqi37zwWXSqaxt0xjeXVOMLzN6vSg==
+aws-sdk@^2.439.0:
+  version "2.439.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.439.0.tgz#4a1d177507ef80b0b515c043938d814777645c40"
+  integrity sha512-u7hCAMzpWbD6BqAwVHxr3cbm4YSbs0yv4crr7+bR/peM+UB6AbQLJFjFXx73dnIZq3R0Hr1bA7nh2Z9jkQLUdQ==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -45,6 +45,14 @@ axios@^0.16.2:
   dependencies:
     follow-redirects "^1.2.3"
     is-buffer "^1.1.5"
+
+babel-runtime@^6.18.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
 
 base64-js@^1.0.2:
   version "1.3.0"
@@ -120,6 +128,11 @@ core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
   integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
+
+core-js@^2.4.0:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
+  integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
 
 crc@^3.5.0:
   version "3.8.0"
@@ -766,6 +779,18 @@ redis-tag-cache@^1.2.1:
   integrity sha512-0F+rLtoIkz4NOWGt9k3qaPcbpvr6+wcEC9aWV78newMKTRN/nIYHgvfyO1Q0ySEepiEYbqj9DhjvQ4CUAtT9/g==
   dependencies:
     ioredis "^4.0.0"
+
+regenerator-runtime@^0.11.0:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+  integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
+
+rethinkdb-changefeed-reconnect@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/rethinkdb-changefeed-reconnect/-/rethinkdb-changefeed-reconnect-0.3.2.tgz#2999f5313205ab35d9ac2d1b0533765ee3376923"
+  integrity sha1-KZn1MTIFqzXZrC0bBTN2XuM3aSM=
+  dependencies:
+    babel-runtime "^6.18.0"
 
 rethinkdb-inspector@^0.3.3:
   version "0.3.3"
