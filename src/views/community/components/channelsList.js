@@ -202,7 +202,13 @@ class Component extends React.Component<Props> {
                     }
                   >
                     <Content>
-                      <Label># All {currentUser ? 'your ' : ' '}channels</Label>
+                      <Label>
+                        # All{' '}
+                        {currentUser && community.communityPermissions.isMember
+                          ? 'your '
+                          : ' '}
+                        channels
+                      </Label>
                     </Content>
                     <Actions>
                       <Icon glyph="view-forward" size={24} />
