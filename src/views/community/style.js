@@ -272,3 +272,12 @@ export const InfoContainer = styled.div`
   background: ${theme.bg.wash};
   padding-bottom: 64px;
 `;
+
+export const NewActivityDot = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: ${theme.warn.default};
+  align-self: center;
+  margin-right: 16px;
+`;

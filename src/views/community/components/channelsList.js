@@ -16,7 +16,12 @@ import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
 import { WhiteIconButton, OutlineButton } from 'src/components/button';
 import { Spinner } from 'src/components/globals';
-import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
+import {
+  SidebarSectionHeader,
+  SidebarSectionHeading,
+  List,
+  NewActivityDot,
+} from '../style';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import { toggleThreadNotificationsMutation } from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import {
@@ -39,90 +44,96 @@ type Props = {
 const ChatTab = ({ community, currentUser }) =>
   !community.watercoolerId ? null : (
     <Route exact path={`/${community.slug}`}>
-      {({ match }) => (
-        <Link to={`/${community.slug}?tab=chat`}>
-          <Row isActive={!!match && location.search.indexOf('tab=chat') > -1}>
-            <Content>
-              <Label>Chat</Label>
-            </Content>
-            <Actions>
-              {!currentUser ? (
-                <Icon glyph="view-forward" size={24} />
-              ) : (
-                <Query
-                  query={getThreadByIdQuery}
-                  variables={{ id: community.watercoolerId }}
-                >
-                  {({ loading, error, data }) => {
-                    if (data && data.thread) {
-                      const newActivity =
-                        data.thread.currentUserLastSeen &&
-                        data.thread.lastActive &&
-                        new Date(data.thread.currentUserLastSeen) <
-                          new Date(data.thread.lastActive);
+      {({ match }) => {
+        const isActive = !!match && location.search.indexOf('tab=chat') > -1;
+        return (
+          <Link to={`/${community.slug}?tab=chat`}>
+            <Row isActive={isActive}>
+              <Content>
+                <Label>Chat</Label>
+              </Content>
+              <Actions>
+                {!currentUser ? (
+                  <Icon glyph="view-forward" size={24} />
+                ) : (
+                  <Query
+                    query={getThreadByIdQuery}
+                    variables={{ id: community.watercoolerId }}
+                  >
+                    {({ loading, error, data }) => {
+                      if (data && data.thread) {
+                        const newActivity =
+                          data.thread.currentUserLastSeen &&
+                          data.thread.lastActive &&
+                          new Date(data.thread.currentUserLastSeen) <
+                            new Date(data.thread.lastActive);
 
-                      const showNotificationAction = !!data.thread.community
-                        .communityPermissions.isMember;
+                        const showNotificationAction = !!data.thread.community
+                          .communityPermissions.isMember;
 
-                      if (!showNotificationAction)
-                        return <Icon glyph="view-forward" size={24} />;
+                        if (!showNotificationAction)
+                          return <Icon glyph="view-forward" size={24} />;
 
-                      const tipText = data.thread.receiveNotifications
-                        ? 'Mute chat notifications'
-                        : 'Enable chat notifications';
-                      const glyph = data.thread.receiveNotifications
-                        ? 'notification'
-                        : 'mute';
+                        const tipText = data.thread.receiveNotifications
+                          ? 'Mute chat notifications'
+                          : 'Enable chat notifications';
+                        const glyph = data.thread.receiveNotifications
+                          ? 'notification'
+                          : 'mute';
 
-                      return (
-                        <Mutation mutation={toggleThreadNotificationsMutation}>
-                          {(toggleThreadNotifications, { loading }) => (
-                            <Tooltip content={tipText}>
-                              <span
-                                style={{ marginLeft: '8px', display: 'flex' }}
-                              >
-                                <OutlineButton
-                                  disabled={loading}
-                                  onClick={(e: any) => {
-                                    e &&
-                                      e.preventDefault() &&
-                                      e.stopPropogation();
-                                    toggleThreadNotifications({
-                                      variables: {
-                                        threadId: data.thread.id,
-                                      },
-                                    });
-                                  }}
-                                  style={{ padding: '4px' }}
-                                  size={'small'}
+                        return (
+                          <Mutation
+                            mutation={toggleThreadNotificationsMutation}
+                          >
+                            {(toggleThreadNotifications, { loading }) => (
+                              <Tooltip content={tipText}>
+                                <span
+                                  style={{ marginLeft: '8px', display: 'flex' }}
                                 >
-                                  <Icon
-                                    style={{
-                                      marginTop: '-1px',
+                                  {/* {!newActivity && !isActive && <NewActivityDot />} */}
+                                  <OutlineButton
+                                    disabled={loading}
+                                    onClick={(e: any) => {
+                                      e &&
+                                        e.preventDefault() &&
+                                        e.stopPropogation();
+                                      toggleThreadNotifications({
+                                        variables: {
+                                          threadId: data.thread.id,
+                                        },
+                                      });
                                     }}
-                                    glyph={glyph}
-                                    size={24}
-                                  />
-                                </OutlineButton>
-                              </span>
-                            </Tooltip>
-                          )}
-                        </Mutation>
-                      );
-                    }
+                                    style={{ padding: '4px' }}
+                                    size={'small'}
+                                  >
+                                    <Icon
+                                      style={{
+                                        marginTop: '-1px',
+                                      }}
+                                      glyph={glyph}
+                                      size={24}
+                                    />
+                                  </OutlineButton>
+                                </span>
+                              </Tooltip>
+                            )}
+                          </Mutation>
+                        );
+                      }
 
-                    if (loading) return <Spinner color="text.alt" />;
+                      if (loading) return <Spinner color="text.alt" />;
 
-                    if (error) return <Icon glyph="view-forward" size={24} />;
+                      if (error) return <Icon glyph="view-forward" size={24} />;
 
-                    return null;
-                  }}
-                </Query>
-              )}
-            </Actions>
-          </Row>
-        </Link>
-      )}
+                      return null;
+                    }}
+                  </Query>
+                )}
+              </Actions>
+            </Row>
+          </Link>
+        );
+      }}
     </Route>
   );
 
