@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
-    "aws-sdk": "^2.426.0",
+    "aws-sdk": "^2.439.0",
     "bull": "3.3.10",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
@@ -19,6 +19,7 @@
     "performance-now": "^2.1.0",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",
+    "rethinkdb-changefeed-reconnect": "^0.3.2",
     "rethinkdb-inspector": "^0.3.3",
     "rethinkdbdash": "^2.3.31",
     "rethinkhaberdashery": "^2.3.32",
