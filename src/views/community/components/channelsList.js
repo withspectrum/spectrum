@@ -15,7 +15,12 @@ import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
 import { WhiteIconButton } from 'src/components/button';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
-import { Row, Content, Label } from 'src/components/entities/listItems/style';
+import {
+  Row,
+  Content,
+  Label,
+  Actions,
+} from 'src/components/entities/listItems/style';
 
 type Props = {
   data: {
@@ -49,6 +54,7 @@ class Component extends React.Component<Props> {
   render() {
     const {
       isLoading,
+      currentUser,
       data: { community },
     } = this.props;
 
@@ -95,21 +101,6 @@ class Component extends React.Component<Props> {
           </SidebarSectionHeader>
 
           <List data-cy="channel-list">
-            <Route exact path={`/${community.slug}`}>
-              {({ match }) => (
-                <Link to={`/${community.slug}?tab=posts`}>
-                  <Row
-                    isActive={
-                      !!match && location.search.indexOf('tab=posts') > -1
-                    }
-                  >
-                    <Content>
-                      <Label># All channels</Label>
-                    </Content>
-                  </Row>
-                </Link>
-              )}
-            </Route>
             {community.watercoolerId && (
               <Route exact path={`/${community.slug}`}>
                 {({ match }) => (
@@ -122,11 +113,32 @@ class Component extends React.Component<Props> {
                       <Content>
                         <Label>Chat</Label>
                       </Content>
+                      <Actions>
+                        <Icon glyph="view-forward" size={24} />
+                      </Actions>
                     </Row>
                   </Link>
                 )}
               </Route>
             )}
+            <Route exact path={`/${community.slug}`}>
+              {({ match }) => (
+                <Link to={`/${community.slug}?tab=posts`}>
+                  <Row
+                    isActive={
+                      !!match && location.search.indexOf('tab=posts') > -1
+                    }
+                  >
+                    <Content>
+                      <Label># All {currentUser ? 'your ' : ' '}channels</Label>
+                    </Content>
+                    <Actions>
+                      <Icon glyph="view-forward" size={24} />
+                    </Actions>
+                  </Row>
+                </Link>
+              )}
+            </Route>
             {sortedChannels.map(channel => {
               if (!channel) return null;
               return (
