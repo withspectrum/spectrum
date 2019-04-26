@@ -225,17 +225,16 @@ export const SearchInput = styled.input`
   padding: 8px 16px;
   color: ${theme.text.default};
   font-weight: 600;
-  width: 240px;
+  width: 100%;
+  max-width: 240px;
   transition: all 0.2s ease-in-out;
 
   &:focus {
-    width: 180px;
     box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
     transition: all 0.2s ease-in-out;
   }
 
   &:active {
-    width: 180px;
     box-shadow: 0 0 0 2px ${theme.bg.default},
       0 0 0 4px ${tint(theme.bg.border, -24)};
     transition: box-shadow 0.2s ease-in-out;
