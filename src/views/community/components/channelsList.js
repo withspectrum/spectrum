@@ -83,13 +83,16 @@ const ChatTab = ({ community, currentUser }) =>
                               >
                                 <OutlineButton
                                   disabled={loading}
-                                  onClick={() =>
+                                  onClick={(e: any) => {
+                                    e &&
+                                      e.preventDefault() &&
+                                      e.stopPropogation();
                                     toggleThreadNotifications({
                                       variables: {
                                         threadId: data.thread.id,
                                       },
-                                    })
-                                  }
+                                    });
+                                  }}
                                   style={{ padding: '4px' }}
                                   size={'small'}
                                 >
