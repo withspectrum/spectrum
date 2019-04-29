@@ -45,7 +45,29 @@ const Channel = (props: Props) => {
     const isCommunityMember = communityPermissions.isMember;
     if (!isCommunityMember) return chevron;
 
+    if (
+      communityPermissions.isModerator ||
+      communityPermissions.isOwner ||
+      channelPermissions.isModerator ||
+      channelPermissions.isOwner
+    ) {
+      return (
+        <Tooltip content="Go to settings">
+          <span style={{ marginLeft: '8px', display: 'flex' }}>
+            <OutlineButton
+              to={`/${community.slug}/${channel.slug}/settings`}
+              size={'small'}
+              style={{ padding: '4px' }}
+            >
+              <Icon style={{ marginTop: '-1px' }} glyph="settings" size={24} />
+            </OutlineButton>
+          </span>
+        </Tooltip>
+      );
+    }
+
     const { isMember } = channelPermissions;
+
     if (isMember)
       return (
         <LeaveChannelWrapper
