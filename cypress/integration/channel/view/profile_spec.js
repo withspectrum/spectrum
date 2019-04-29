@@ -39,6 +39,10 @@ describe('public channel', () => {
   it('should render profile', () => {
     cy.get('[data-cy="channel-view"]').should('be.visible');
   });
+
+  it('should render search input', () => {
+    cy.get('[data-cy="channel-search-input"]').should('be.visible');
+  });
 });
 
 describe('public channel in private community signed out', () => {

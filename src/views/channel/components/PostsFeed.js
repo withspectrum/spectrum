@@ -68,6 +68,7 @@ export default withCurrentUser((props: Props) => {
           type="search"
           placeholder="Search"
           value={clientSearchQuery}
+          data-cy="channel-search-input"
         />
       </PostsFeedsSelectorContainer>
       {currentUser && isMember && (
