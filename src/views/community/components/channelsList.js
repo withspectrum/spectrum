@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, withRouter, type Location } from 'react-router-dom';
 import compose from 'recompose/compose';
 import type { Dispatch } from 'redux';
 import { Query, Mutation } from 'react-apollo';
@@ -39,9 +39,10 @@ type Props = {
   dispatch: Dispatch<Object>,
   currentUser: Object,
   communitySlug: string,
+  location: Location,
 };
 
-const ChatTab = ({ community, currentUser }) =>
+const ChatTab = ({ location, community, currentUser }) =>
   !community.watercoolerId ? null : (
     <Route exact path={`/${community.slug}`}>
       {({ match }) => {
@@ -161,6 +162,7 @@ class Component extends React.Component<Props> {
       isLoading,
       currentUser,
       data: { community },
+      location,
     } = this.props;
 
     if (isLoading) {
@@ -206,7 +208,11 @@ class Component extends React.Component<Props> {
           </SidebarSectionHeader>
 
           <List data-cy="channel-list">
-            <ChatTab community={community} currentUser={currentUser} />
+            <ChatTab
+              location={location}
+              community={community}
+              currentUser={currentUser}
+            />
             <Route exact path={`/${community.slug}`}>
               {({ match }) => (
                 <Link to={`/${community.slug}?tab=posts`}>
@@ -260,5 +266,6 @@ export const ChannelsList = compose(
   getCommunityChannels,
   viewNetworkHandler,
   withCurrentUser,
+  withRouter,
   connect()
 )(Component);
