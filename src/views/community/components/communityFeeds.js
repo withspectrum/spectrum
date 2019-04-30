@@ -186,7 +186,7 @@ const Feeds = (props: Props) => {
           return (
             <Segment
               key={segment}
-              hideOnDesktop={segment === 'info'}
+              hideOnDesktop
               isActive={segment === tab}
               onClick={() => changeTab(segment)}
             >

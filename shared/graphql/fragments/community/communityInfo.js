@@ -27,7 +27,6 @@ export type CommunityInfoType = {
     isEnabled: boolean,
     message: ?string,
   },
-  watercoolerId: ?string,
 };
 
 export default gql`
@@ -41,7 +40,6 @@ export default gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
-    watercoolerId
     isPrivate
     watercoolerId
     lastActive

@@ -10,7 +10,7 @@ export default createGlobalStyle`
   * {
     border: 0;
     box-sizing: inherit;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: auto;
     font-weight: inherit;
     margin: 0;
     outline: 0;
@@ -32,7 +32,7 @@ export default createGlobalStyle`
     color: #16171a;
     padding: 0;
     margin: 0;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: auto;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
       sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';

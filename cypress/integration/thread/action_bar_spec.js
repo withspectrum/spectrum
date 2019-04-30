@@ -211,9 +211,10 @@ describe('action bar renders', () => {
 
       // undo the edit
       openSettingsDropdown();
-      cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
-        'be.visible'
-      );
+      cy.get('[data-cy="thread-actions-dropdown-trigger"]')
+        .should('be.visible')
+        .last()
+        .click();
       cy.get('[data-cy="thread-dropdown-edit"]').click();
       cy.get('[data-cy="save-thread-edit-button"]').should('be.visible');
       const originalTitle = 'The first thread! 🎉';
