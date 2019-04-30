@@ -39,7 +39,12 @@ class NewUserOnboarding extends React.Component<Props> {
   };
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, history } = this.props;
+
+    if (!currentUser) {
+      history.replace('/');
+      return null;
+    }
 
     if (currentUser && currentUser.username) {
       this.saveUsername();
