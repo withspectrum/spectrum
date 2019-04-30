@@ -225,17 +225,16 @@ export const SearchInput = styled.input`
   padding: 8px 16px;
   color: ${theme.text.default};
   font-weight: 600;
-  width: 120px;
+  width: 100%;
+  max-width: 240px;
   transition: all 0.2s ease-in-out;
 
   &:focus {
-    width: 180px;
     box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
     transition: all 0.2s ease-in-out;
   }
 
   &:active {
-    width: 180px;
     box-shadow: 0 0 0 2px ${theme.bg.default},
       0 0 0 4px ${tint(theme.bg.border, -24)};
     transition: box-shadow 0.2s ease-in-out;
@@ -272,4 +271,13 @@ export const InfoContainer = styled.div`
   flex: 1;
   background: ${theme.bg.wash};
   padding-bottom: 64px;
+`;
+
+export const NewActivityDot = styled.div`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: ${theme.warn.default};
+  align-self: center;
+  margin-right: 16px;
 `;

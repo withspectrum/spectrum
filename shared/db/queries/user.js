@@ -9,6 +9,8 @@ import {
   searchQueue,
 } from 'shared/bull/queues';
 import { events } from 'shared/analytics';
+import { deleteThread } from 'api/models/thread';
+import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
 import { removeUsersChannelMemberships } from 'api/models/usersChannels';
 import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
@@ -744,6 +746,35 @@ export const banUser = createWriteQuery((args: BanUserType) => {
             .run();
         }
 
+        const publishedThreadIds = await db
+          .table('threads')
+          .getAll(userId, { index: 'creatorId' })
+          .map(row => row('id'))
+          .run();
+
+        const deletePublishedThreadsPromises =
+          publishedThreadIds && publishedThreadIds.length > 0
+            ? publishedThreadIds.map(id => deleteThread(id, currentUserId))
+            : [];
+
+        const usersThreadsIds = await db
+          .table('usersThreads')
+          .getAll(userId, { index: 'userId' })
+          .map(row => row('threadId'))
+          .run();
+
+        const usersMessagesIds = await db
+          .table('messages')
+          .getAll(...usersThreadsIds, { index: 'threadId' })
+          .filter({ senderId: userId })
+          .map(row => row('id'))
+          .run();
+
+        const deleteSentMessagesPromises =
+          usersMessagesIds && usersMessagesIds.length > 0
+            ? usersMessagesIds.map(id => deleteMessage(currentUserId, id))
+            : [];
+
         return await Promise.all([
           removeUsersCommunityMemberships(userId),
           removeUsersChannelMemberships(userId),
@@ -751,6 +782,8 @@ export const banUser = createWriteQuery((args: BanUserType) => {
           disableAllUsersEmailSettings(userId),
           removeOtherParticipantsDmThreadIds,
           removeDMThreads,
+          ...deletePublishedThreadsPromises,
+          ...deleteSentMessagesPromises,
         ]);
       }),
   };

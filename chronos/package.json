@@ -3,8 +3,8 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.426.0",
-    "bull": "^3.7.0",
+    "aws-sdk": "^2.439.0",
+    "bull": "^3.8.1",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
     "decode-uri-component": "^0.2.0",
