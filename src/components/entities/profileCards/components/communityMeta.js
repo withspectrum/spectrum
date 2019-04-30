@@ -49,12 +49,12 @@ export const CommunityMeta = (props: Props) => {
 
         {community.metaData && (
           <React.Fragment>
-            <MetaRow>
+            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <Icon glyph={'person'} size={20} />{' '}
               {community.metaData.members.toLocaleString()} members
             </MetaRow>
 
-            <MetaRow>
+            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
               members online
             </MetaRow>

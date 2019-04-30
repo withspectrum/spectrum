@@ -25,6 +25,7 @@ import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import MiniComposer from 'src/components/composerMini';
 import MembersList from './components/MembersList';
+import PostFeed from './components/PostsFeed';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -216,6 +217,7 @@ class ChannelView extends React.Component<Props> {
                       onClick={() => this.handleSegmentClick('posts')}
                       isActive={selectedView === 'posts'}
                       data-cy="channel-posts-tab"
+                      hideOnDesktop
                     >
                       Posts
                     </Segment>
@@ -223,6 +225,7 @@ class ChannelView extends React.Component<Props> {
                     <Segment
                       onClick={() => this.handleSegmentClick('members')}
                       isActive={selectedView === 'members'}
+                      hideOnDesktop
                       data-cy="channel-members-tab"
                     >
                       Members
@@ -236,33 +239,9 @@ class ChannelView extends React.Component<Props> {
                     >
                       Info
                     </Segment>
-
-                    <Segment
-                      onClick={() => this.handleSegmentClick('search')}
-                      isActive={selectedView === 'search'}
-                      data-cy="channel-search-tab"
-                    >
-                      Search
-                    </Segment>
                   </SegmentedControl>
 
-                  {selectedView === 'posts' && (
-                    <React.Fragment>
-                      {currentUser && isMember && !channel.isArchived && (
-                        <MiniComposer
-                          community={community}
-                          fixedChannelId={channel.id}
-                          currentUser={currentUser}
-                        />
-                      )}
-                      <ThreadFeedWithData
-                        viewContext="channelProfile"
-                        id={channel.id}
-                        currentUser={isLoggedIn}
-                        channelId={channel.id}
-                      />
-                    </React.Fragment>
-                  )}
+                  {selectedView === 'posts' && <PostFeed channel={channel} />}
 
                   {selectedView === 'search' && (
                     <ErrorBoundary>
