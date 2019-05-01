@@ -30,13 +30,6 @@ Object {
           Object {
             "node": Object {
               "content": Object {
-                "title": "Yet another thread",
-              },
-            },
-          },
-          Object {
-            "node": Object {
-              "content": Object {
                 "title": "Another thread",
               },
             },
