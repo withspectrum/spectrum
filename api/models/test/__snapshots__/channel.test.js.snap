@@ -177,7 +177,6 @@ exports[`models/channel getChannelsByUserAndCommunity returns correct set of cha
 Array [
   "2",
   "1",
-  "5",
 ]
 `;
 
@@ -227,7 +226,6 @@ Array [
 
 exports[`models/channel getPublicChannelsByCommunity returns correct set of channels 1`] = `
 Array [
-  "5",
   "1",
   "8",
 ]
