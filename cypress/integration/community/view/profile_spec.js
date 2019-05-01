@@ -78,6 +78,7 @@ describe('public community signed out', () => {
       .filter(channel => channel.communityId === publicCommunity.id)
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
+      .filter(channel => !channel.archivedAt)
       .forEach(channel => {
         cy.contains(channel.name)
           .scrollIntoView()
@@ -140,6 +141,7 @@ describe('public community signed in without permission', () => {
       .filter(channel => channel.communityId === publicCommunity.id)
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
+      .filter(channel => !channel.archivedAt)
       .forEach(channel => {
         cy.contains(channel.name)
           .scrollIntoView()
@@ -271,6 +273,7 @@ describe('private community signed in with permissions', () => {
       .filter(channel => channel.communityId === privateCommunity.id)
       .filter(channel => !channel.isPrivate)
       .filter(channel => !channel.deletedAt)
+      .filter(channel => !channel.archivedAt)
       .forEach(channel => {
         cy.get('[data-cy="channel-list"]')
           .contains(channel.name)
