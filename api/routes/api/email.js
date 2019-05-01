@@ -1,8 +1,6 @@
 // @flow
 require('now-env');
 const IS_PROD = process.env.NODE_ENV === 'production';
-const IS_TESTING = process.env.TEST_DB;
-import { BRIAN_ID } from '../../migrations/seed/default/constants';
 import { Router } from 'express';
 const jwt = require('jsonwebtoken');
 const emailRouter = Router();
@@ -10,10 +8,12 @@ import { updateUserEmail } from 'shared/db/queries/user';
 import { unsubscribeUserFromEmailNotification } from '../../models/usersSettings';
 import { updateThreadNotificationStatusForUser } from '../../models/usersThreads';
 import { updateDirectMessageThreadNotificationStatusForUser } from '../../models/usersDirectMessageThreads';
-import { toggleUserChannelNotifications } from '../../models/usersChannels';
+import {
+  toggleUserChannelNotifications,
+  getUsersPermissionsInChannels,
+} from '../../models/usersChannels';
 import {
   updateCommunityAdministratorEmail,
-  resetCommunityAdministratorEmail,
   getCommunityById,
 } from '../../models/community';
 import { getChannelsByCommunity, getChannelById } from '../../models/channel';
@@ -89,18 +89,27 @@ emailRouter.get('/unsubscribe', async (req, res) => {
       }
       case 'muteCommunity': {
         const community = await getCommunityById(dataId);
-        return getChannelsByCommunity(dataId)
-          .then(channels => channels.map(c => c.id))
-          .then(channels =>
-            channels.map(c => toggleUserChannelNotifications(userId, c, false))
-          )
-          .then(() =>
-            res.redirect(
-              `${rootRedirect}/${
-                community.slug
-              }?toastType=success&toastMessage=You will no longer receive new thread emails from this community.`
-            )
+        const channels = await getChannelsByCommunity(dataId);
+        const channelIds = channels.map(channel => channel.id);
+        const usersChannels = await getUsersPermissionsInChannels(
+          channelIds.map(id => [userId, id])
+        );
+        const usersChannelsWithNotifications = usersChannels.filter(
+          usersChannel => usersChannel && usersChannel.receiveNotifications
+        );
+
+        await usersChannelsWithNotifications
+          .map(usersChannel => usersChannel.channelId)
+          .map(
+            async channelId =>
+              await toggleUserChannelNotifications(userId, channelId, false)
           );
+
+        return res.redirect(
+          `${rootRedirect}/${
+            community.slug
+          }?toastType=success&toastMessage=You will no longer receive new thread emails from this community.`
+        );
       }
       case 'muteThread':
         return updateThreadNotificationStatusForUser(
