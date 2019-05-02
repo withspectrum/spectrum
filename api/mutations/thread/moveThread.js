@@ -4,7 +4,10 @@ import UserError from '../../utils/UserError';
 import { getThread, moveThread } from '../../models/thread';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getChannelById } from '../../models/channel';
-import { getCommunityById } from '../../models/community';
+import {
+  getCommunityById,
+  setPinnedThreadInCommunity,
+} from '../../models/community';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
@@ -19,7 +22,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { threadId, channelId } = args;
 
   const thread = await getThread(threadId);
-  const { communityId } = thread;
 
   if (!thread) {
     trackQueue.add({
@@ -70,7 +72,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   const [newChannel, community] = await Promise.all([
     getChannelById(channelId),
-    getCommunityById(thread.communityid),
+    getCommunityById(thread.communityId),
   ]);
 
   if (newChannel.communityId !== thread.communityId) {
@@ -95,7 +97,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     community.pinnedThreadId &&
     thread.id === community.pinnedThreadId
   ) {
-    await setPinnedThreadInCommunity(communityId, null, user.id);
+    await setPinnedThreadInCommunity(thread.communityId, null, user.id);
   }
 
   return moveThread(threadId, channelId, user.id).then(res => {
