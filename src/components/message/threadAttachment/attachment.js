@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import type { Props } from './';
 import compose from 'recompose/compose';
 import { Loading } from 'src/components/loading';
@@ -24,7 +25,10 @@ class Attachment extends React.Component<Props> {
         </div>
       );
 
-    if (error || !thread) return `https://spectrum.chat/thread/${id}`;
+    if (error || !thread)
+      return (
+        <Link to={`/thread/${id}`}>https://spectrum.chat/thread/{id}</Link>
+      );
 
     return (
       <div className="attachment-container">
