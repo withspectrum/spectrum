@@ -475,7 +475,7 @@ export const StickyHeaderContent = styled.div`
   display: flex;
   padding: 12px 16px;
   cursor: pointer;
-  max-width: 70%;
+  max-width: 560px;
 
   @media (max-width: 728px) {
     padding: 16px;
