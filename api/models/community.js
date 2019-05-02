@@ -543,7 +543,7 @@ export const deleteCommunity = (communityId: string, userId: string): Promise<DB
 };
 
 // prettier-ignore
-export const setPinnedThreadInCommunity = (communityId: string, value: string, userId: string): Promise<DBCommunity> => {
+export const setPinnedThreadInCommunity = (communityId: string, value: ?string, userId: string): Promise<DBCommunity> => {
   return db
     .table('communities')
     .get(communityId)
