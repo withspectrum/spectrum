@@ -12,7 +12,7 @@ import getThreadLink from 'src/helpers/get-thread-link';
 
 class Attachment extends React.Component<Props> {
   render() {
-    const { data, currentUser } = this.props;
+    const { data, currentUser, id } = this.props;
     const { thread, loading, error } = data;
 
     if (loading)
@@ -23,9 +23,8 @@ class Attachment extends React.Component<Props> {
           </Container>
         </div>
       );
-    if (error) return null;
 
-    if (!thread) return null;
+    if (error || !thread) return `https://spectrum.chat/thread/${id}`;
 
     return (
       <div className="attachment-container">

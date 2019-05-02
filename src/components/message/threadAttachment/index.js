@@ -12,6 +12,7 @@ import Attachment from './attachment';
 export type Props = {
   currentUser: UserInfoType,
   message: MessageInfoType,
+  id: string,
   data: {
     thread: GetThreadType,
     loading: boolean,
@@ -19,8 +20,8 @@ export type Props = {
   },
 };
 
-const Query = ({ data, message, ...rest }: Props) => (
-  <Attachment message={message} data={data} />
+const Query = ({ data, message, id, ...rest }: Props) => (
+  <Attachment message={message} id={id} data={data} />
 );
 
 const ThreadAttachment = compose(getThreadById)(Query);
