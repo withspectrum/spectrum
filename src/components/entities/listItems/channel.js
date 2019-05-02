@@ -145,7 +145,7 @@ const Channel = (props: Props) => {
 
   return (
     <ErrorBoundary>
-      <Link to={`/${channel.community.slug}/${channel.slug}`}>
+      <Link to={`/${channel.community.slug}/${channel.slug}?tab=posts`}>
         <Row isActive={isActive}>
           <Content>
             {name && (

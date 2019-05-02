@@ -3,7 +3,15 @@ import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import Icon from 'src/components/icon';
 import { hexa, FlexRow, FlexCol, zIndex } from '../globals';
-import { MAX_WIDTH, MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
+import {
+  COL_GAP,
+  MAX_WIDTH,
+  MEDIA_BREAK,
+  TITLEBAR_HEIGHT,
+  NAVBAR_EXPANDED_WIDTH,
+  NAVBAR_WIDTH,
+  MIN_WIDTH_TO_EXPAND_NAVIGATION,
+} from 'src/components/layout';
 
 export const DropzoneWrapper = styled.div`
   position: sticky;
@@ -30,13 +38,26 @@ export const DropImageOverlay = (props: {
 };
 
 export const Wrapper = styled.div`
-  grid-area: main;
   display: flex;
   justify-content: center;
   z-index: 9995;
+  position: fixed;
+  max-width: ${MAX_WIDTH}px;
+  left: ${NAVBAR_WIDTH + COL_GAP}px;
+  width: 100%;
+  max-width: calc(100% - ${NAVBAR_WIDTH * 2}px);
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+  }
+
+  @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
+    left: ${NAVBAR_EXPANDED_WIDTH + COL_GAP}px;
+    max-width: calc(100% - ${NAVBAR_EXPANDED_WIDTH * 2}px);
   }
 `;
 
