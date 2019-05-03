@@ -873,10 +873,10 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-now-env@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
-  integrity sha512-f+jXC+UkoxD/g9Nlig99Bxswoh7UUuQxw0EsPfuueHnVpVE0LfgQ4el5dxY4TSXwrL9mEF9GGm0gb7r3K8r/ug==
+now-env@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.2.0.tgz#33223dd000d7966e66c0d00779c28c7aa0f111c6"
+  integrity sha512-zCWAwdX1KTa2ZoEg6Rc8efym5V4I36sC52OXo9F3O4IaNrvd/o1z7ZjuwnevoQqLloIdQWHo3JYAcL12m+KsUQ==
 
 oauth-sign@~0.9.0:
   version "0.9.0"
