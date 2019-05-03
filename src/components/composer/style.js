@@ -49,6 +49,7 @@ export const Wrapper = styled.div`
 
   @media (max-width: ${MEDIA_BREAK}px) {
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    top: ${TITLEBAR_HEIGHT}px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -143,6 +144,7 @@ export const Actions = styled.div`
   display: flex;
   flex: 1 0 auto;
   height: 56px;
+  min-height: 56px;
   max-height: 56px;
 
   @media (max-width: ${MEDIA_BREAK}px) {
@@ -173,6 +175,7 @@ export const Dropdowns = styled(FlexRow)`
   display: flex;
   flex: 1;
   height: 48px;
+  min-height: 48px;
   max-height: 48px;
   align-items: center;
   background-color: ${theme.bg.wash};
