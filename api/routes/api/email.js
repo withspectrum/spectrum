@@ -97,13 +97,14 @@ emailRouter.get('/unsubscribe', async (req, res) => {
         const usersChannelsWithNotifications = usersChannels.filter(
           usersChannel => usersChannel && usersChannel.receiveNotifications
         );
+        const channelIdsWithNotifications = usersChannelsWithNotifications.map(
+          usersChannel => usersChannel.channelId
+        );
 
-        await usersChannelsWithNotifications
-          .map(usersChannel => usersChannel.channelId)
-          .map(
-            async channelId =>
-              await toggleUserChannelNotifications(userId, channelId, false)
-          );
+        await channelIdsWithNotifications.map(
+          async channelId =>
+            await toggleUserChannelNotifications(userId, channelId, false)
+        );
 
         return res.redirect(
           `${rootRedirect}/${
