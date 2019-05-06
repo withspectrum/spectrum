@@ -5,7 +5,8 @@ exports.up = async function(r, conn) {
     .table('channels')
     .filter({ isPrivate: true })
     .filter(row => row.hasFields('deletedAt').not())
-    .run(conn);
+    .run(conn)
+    .then(cursor => cursor.toArray());
 
   // for each channel, remove all members except the community owner
   const channelPromises = privateChannels.map(async channel => {
@@ -23,7 +24,8 @@ exports.up = async function(r, conn) {
       .getAll([community.creatorId, channel.id], {
         index: 'userIdAndChannelId',
       })
-      .run(conn);
+      .run(conn)
+      .then(cursor => cursor.toArray());
 
     if (
       !communityOwnerChannelRecord ||
