@@ -11,7 +11,6 @@ exports.up = async function(r, conn) {
   // for each channel, remove all members except the community owner
   return Promise.all(
     privateChannels.map(async channel => {
-      console.log('handling channel');
       const community = await r
         .db('spectrum')
         .table('communities')
@@ -33,7 +32,6 @@ exports.up = async function(r, conn) {
         !communityOwnerChannelRecord ||
         communityOwnerChannelRecord.length === 0
       ) {
-        console.log('creating a owner record');
         await r
           .db('spectrum')
           .table('usersChannels')
@@ -50,7 +48,6 @@ exports.up = async function(r, conn) {
           })
           .run(conn);
       } else {
-        console.log('updating an owner record');
         await r
           .db('spectrum')
           .table('usersChannels')
@@ -61,7 +58,6 @@ exports.up = async function(r, conn) {
           .run(conn);
       }
 
-      console.log('removing members');
       return await r
         .db('spectrum')
         .table('usersChannels')
