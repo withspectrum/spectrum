@@ -9,65 +9,69 @@ exports.up = async function(r, conn) {
     .then(cursor => cursor.toArray());
 
   // for each channel, remove all members except the community owner
-  const channelPromises = privateChannels.map(async channel => {
-    const community = await r
-      .db('spectrum')
-      .table('communities')
-      .get(channel.communityId)
-      .run(conn);
-
-    // ensure that the community owner also owns the channel
-    // to account for situations where a moderator created the channel
-    const communityOwnerChannelRecord = await r
-      .db('spectrum')
-      .table('usersChannels')
-      .getAll([community.creatorId, channel.id], {
-        index: 'userIdAndChannelId',
-      })
-      .run(conn)
-      .then(cursor => cursor.toArray());
-
-    if (
-      !communityOwnerChannelRecord ||
-      communityOwnerChannelRecord.length === 0
-    ) {
-      await r
+  return Promise.all(
+    privateChannels.map(async channel => {
+      console.log('handling channel');
+      const community = await r
         .db('spectrum')
-        .table('usersChannels')
-        .insert({
-          channelId: channel.id,
-          userId: community.creatorId,
-          createdAt: new Date(),
-          isOwner: true,
-          isMember: true,
-          isModerator: false,
-          isBlocked: false,
-          isPending: false,
-          receiveNotifications: false,
-        })
+        .table('communities')
+        .get(channel.communityId)
         .run(conn);
-    } else {
-      await r
+
+      // ensure that the community owner also owns the channel
+      // to account for situations where a moderator created the channel
+      const communityOwnerChannelRecord = await r
         .db('spectrum')
         .table('usersChannels')
         .getAll([community.creatorId, channel.id], {
           index: 'userIdAndChannelId',
         })
-        .update({ isOwner: true })
+        .run(conn)
+        .then(cursor => cursor.toArray());
+
+      if (
+        !communityOwnerChannelRecord ||
+        communityOwnerChannelRecord.length === 0
+      ) {
+        console.log('creating a owner record');
+        await r
+          .db('spectrum')
+          .table('usersChannels')
+          .insert({
+            channelId: channel.id,
+            userId: community.creatorId,
+            createdAt: new Date(),
+            isOwner: true,
+            isMember: true,
+            isModerator: false,
+            isBlocked: false,
+            isPending: false,
+            receiveNotifications: false,
+          })
+          .run(conn);
+      } else {
+        console.log('updating an owner record');
+        await r
+          .db('spectrum')
+          .table('usersChannels')
+          .getAll([community.creatorId, channel.id], {
+            index: 'userIdAndChannelId',
+          })
+          .update({ isOwner: true })
+          .run(conn);
+      }
+
+      console.log('removing members');
+      return await r
+        .db('spectrum')
+        .table('usersChannels')
+        .getAll(channel.id, { index: 'channelId' })
+        .filter({ isMember: true })
+        .filter(row => row('userId').ne(community.creatorId))
+        .update({ isMember: false })
         .run(conn);
-    }
-
-    return await r
-      .db('spectrum')
-      .table('usersChannels')
-      .getAll(channel.id)
-      .filter({ isMember: true })
-      .filter(row => row('userId').ne(community.creatorId))
-      .update({ isMember: false })
-      .run(conn);
-  });
-
-  return Promise.all(channelPromises);
+    })
+  );
 };
 
 exports.down = function(r, conn) {
