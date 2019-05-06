@@ -17,12 +17,43 @@ exports.up = async function(r, conn) {
 
     // ensure that the community owner also owns the channel
     // to account for situations where a moderator created the channel
-    await r
+    const communityOwnerChannelRecord = await r
       .db('spectrum')
       .table('usersChannels')
-      .getAll([channel.creatorId, channel.id], { index: 'userIdAndChannelId' })
-      .update({ isOwner: true })
+      .getAll([community.creatorId, channel.id], {
+        index: 'userIdAndChannelId',
+      })
       .run(conn);
+
+    if (
+      !communityOwnerChannelRecord ||
+      communityOwnerChannelRecord.length === 0
+    ) {
+      await r
+        .db('spectrum')
+        .table('usersChannels')
+        .insert({
+          channelId: channel.id,
+          userId: community.creatorId,
+          createdAt: new Date(),
+          isOwner: true,
+          isMember: true,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+          receiveNotifications: false,
+        })
+        .run(conn);
+    } else {
+      await r
+        .db('spectrum')
+        .table('usersChannels')
+        .getAll([community.creatorId, channel.id], {
+          index: 'userIdAndChannelId',
+        })
+        .update({ isOwner: true })
+        .run(conn);
+    }
 
     return await r
       .db('spectrum')
