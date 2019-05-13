@@ -452,7 +452,7 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
 };
 
 // prettier-ignore
-const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<DBChannel> => {
+const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<?DBChannel> => {
   const event = value ? events.CHANNEL_NOTIFICATIONS_ENABLED : events.CHANNEL_NOTIFICATIONS_DISABLED
 
   trackQueue.add({
@@ -490,7 +490,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
     return createMemberInChannel(channelId, userId, false)
   }
 
-  return
+  return null
 };
 
 const removeUsersChannelMemberships = async (userId: string) => {
