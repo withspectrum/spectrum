@@ -7,6 +7,7 @@ import {
   dailyCoreMetricsQueue,
   activeCommunityReportQueue,
   removeSeenUsersNotificationsQueue,
+  databaseBackupQueue,
 } from 'shared/bull/queues';
 
 /*
@@ -37,6 +38,11 @@ export const activeCommunityReport = () => {
   );
 };
 
+export const hourlyBackups = () => {
+  // every hour at 30 past
+  return databaseBackupQueue.add(undefined, defaultJobOptions('30 * * * *'));
+};
+
 export const removeSeenUsersNotifications = () => {
   // 2am daily
   return removeSeenUsersNotificationsQueue.add(
@@ -51,4 +57,5 @@ export const startJobs = () => {
   dailyCoreMetrics();
   activeCommunityReport();
   removeSeenUsersNotifications();
+  hourlyBackups();
 };
