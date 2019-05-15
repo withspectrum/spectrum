@@ -38,9 +38,9 @@ export const activeCommunityReport = () => {
   );
 };
 
-export const hourlyBackups = () => {
-  // every hour at 30 past
-  return databaseBackupQueue.add(undefined, defaultJobOptions('30 * * * *'));
+export const dailyBackups = () => {
+  // at 9am every day (~12 hours away from the automatic daily backup)
+  return databaseBackupQueue.add(undefined, defaultJobOptions('0 9 * * *'));
 };
 
 export const removeSeenUsersNotifications = () => {
@@ -57,5 +57,5 @@ export const startJobs = () => {
   dailyCoreMetrics();
   activeCommunityReport();
   removeSeenUsersNotifications();
-  hourlyBackups();
+  dailyBackups();
 };
