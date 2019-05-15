@@ -2,8 +2,9 @@
 const debug = require('debug')('chronos:queue:database-backup');
 const fetch = require('node-fetch');
 
+const COMPOSE_API_TOKEN = process.env.COMPOSE_API_TOKEN;
 const processJob = async () => {
-  if (!process.env.COMPOSE_API_TOKEN) {
+  if (!COMPOSE_API_TOKEN) {
     console.warn(
       'Cannot start hourly backup, COMPOSE_API_TOKEN env variable is missing.'
     );
@@ -16,7 +17,7 @@ const processJob = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.COMPOSE_API_TOKEN}`,
+        Authorization: `Bearer ${COMPOSE_API_TOKEN}`,
       },
     }
   );
