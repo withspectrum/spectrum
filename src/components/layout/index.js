@@ -59,6 +59,7 @@ export const SingleColumnGrid = styled.div`
   grid-template-columns: ${MIN_MAX_WIDTH}px;
   grid-template-areas: 'primary';
   background: ${theme.bg.default};
+  overflow-y: auto;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     width: 100%;
@@ -81,10 +82,9 @@ export const SingleColumnGrid = styled.div`
 export const PrimarySecondaryColumnGrid = styled.div`
   display: grid;
   justify-self: center;
-  grid-template-columns: minmax(
-      ${MIN_PRIMARY_COLUMN_WIDTH}px,
-      ${MAX_PRIMARY_COLUMN_WIDTH}px
-    ) minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH}px);
+  grid-template-columns:
+    minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px)
+    minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH}px);
   grid-template-rows: 100%;
   grid-template-areas: 'primary secondary';
   grid-gap: ${COL_GAP}px;
@@ -110,10 +110,9 @@ export const PrimarySecondaryColumnGrid = styled.div`
 export const SecondaryPrimaryColumnGrid = styled.div`
   display: grid;
   justify-self: center;
-  grid-template-columns: minmax(
-      ${MIN_SECONDARY_COLUMN_WIDTH}px,
-      ${MAX_SECONDARY_COLUMN_WIDTH}px
-    ) minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px);
+  grid-template-columns:
+    minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH}px)
+    minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px);
   grid-template-rows: 100%;
   grid-template-areas: 'secondary primary';
   grid-gap: ${COL_GAP}px;
