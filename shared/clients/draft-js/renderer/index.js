@@ -2,7 +2,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
+import {
+  Line,
+  Paragraph,
+  BlockQuote,
+  GithubAttachment,
+} from 'src/components/message/style';
 import {
   AspectRatio,
   EmbedContainer,
@@ -23,7 +28,8 @@ import type {
 } from '../../../draft-utils/add-embeds-to-draft-js';
 
 const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
-  let { aspectRatio, url, src, width = '100%', height = 200 } = props;
+  let { aspectRatio, url, src, type, width = '100%', height = 200 } = props;
+  const gitAttachmentProps = type === 'github' ? props : null;
 
   if (!src && url) src = url;
   if (typeof src !== 'string') return null;
@@ -41,6 +47,17 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
           src={src}
         />
       </AspectRatio>
+    );
+  } else if (type === 'github') {
+    return (
+      <GithubAttachment>
+        <a href={url}>
+          #
+          {`${gitAttachmentProps.repo}/${gitAttachmentProps.branch}/${
+            gitAttachmentProps.filepath
+          }`}
+        </a>
+      </GithubAttachment>
     );
   } else {
     return (

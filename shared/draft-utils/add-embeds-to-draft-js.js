@@ -1,6 +1,7 @@
 // @flow
 import genKey from 'draft-js/lib/generateRandomKey';
 import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState.js';
+import gh from 'parse-github-url';
 
 const FIGMA_URLS = /\b((?:https?:\/\/)?(?:www\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?)/gi;
 const YOUTUBE_URLS = /\b(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/gi;
@@ -11,6 +12,7 @@ const CODEPEN_URLS = /\b(?:https?:\/\/)?(?:www\.)?codepen\.io(\/[A-Za-z0-9\-\._~
 const CODESANDBOX_URLS = /\b(?:https?:\/\/)?(?:www\.)?codesandbox\.io(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const SIMPLECAST_URLS = /\b(?:https?:\/\/)?(?:www\.)?simplecast\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?/gi;
 const THREAD_URLS = /(?:(?:https?:\/\/)?|\B)(?:spectrum\.chat|localhost:3000)\/.*?(?:~|(?:\?|&)t=|(?:\?|&)thread=|thread\/)([^&\s]*)/gi;
+const GITHUB_URLS = /(https?:\/\/(?:www\.|(?!www))github\.[^\s]{2,}|www\.github\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))github\.[^\s]{2,}|www\.github\.[^\s]{2,})+/gi;
 
 const REGEXPS = {
   figma: FIGMA_URLS,
@@ -22,6 +24,7 @@ const REGEXPS = {
   codesandbox: CODESANDBOX_URLS,
   simplecast: SIMPLECAST_URLS,
   internal: THREAD_URLS,
+  github: GITHUB_URLS,
 };
 
 export type InternalEmbedData = {
@@ -40,7 +43,8 @@ export type ExternalEmbedData = {
     | 'framer'
     | 'codepen'
     | 'codesandbox'
-    | 'simplecast',
+    | 'simplecast'
+    | 'github',
   aspectRatio?: string,
   width?: number,
   height?: number,
@@ -111,7 +115,9 @@ const match = (regex: RegExp, text: string) => {
   const matches = text.match(regex);
   if (!matches) return [];
   return [...new Set(matches)].map(match => {
-    return regex.exec(match)[1];
+    const capture = regex.exec(match);
+    regex.lastIndex = 0;
+    return capture[1];
   });
 };
 
@@ -186,6 +192,15 @@ export const getEmbedsFromText = (text: string): Array<EmbedData> => {
       type: 'internal',
       id,
       entity: 'thread',
+    });
+  });
+
+  match(GITHUB_URLS, text).forEach(url => {
+    const parsedUrlData = gh(url);
+    embeds.push({
+      url,
+      type: 'github',
+      ...parsedUrlData,
     });
   });
 
