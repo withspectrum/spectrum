@@ -453,7 +453,7 @@ describe('sites', () => {
       const text = `https://github.com/withspectrum/spectrum/issues/5115 and 
       https://github.com/withspectrum/spectrum/issues/5116  as well as 
       https://github.com/withspectrum/spectrum/issues/5117 `;
-      console.log(getEmbedsFromText(text));
+      expect(getEmbedsFromText(text).length).toEqual(3);
     });
   });
 });
