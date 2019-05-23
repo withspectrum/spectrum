@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.8.1",
+    "bull": "^3.9.1",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
     "ioredis": "3.2.2",

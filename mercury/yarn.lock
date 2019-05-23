@@ -12,10 +12,10 @@ bignumber.js@~1.1.1:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
 
-bull@^3.8.1:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.8.1.tgz#b31b53a2c829fee59135523e48523d873b3e5825"
-  integrity sha512-mpcrssn9+sWLRgPHBGfAHmIux1QuXKY3TypuoXG9L492Op234UWuwPXP2DZ+V223Nfv36FubxLdxyNC76BiEoQ==
+bull@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.9.1.tgz#5b8fe1001e4c45176a56a7ef66f81f8bd2d6b2c6"
+  integrity sha512-ViMoGL/3/GQD4O9Ks/xAT1N162pX2jhNuKzLiwYxz1KZKvOP8F4DOC4XRnAQvBDSSYWV2764QzIPj6pbblAXXA==
   dependencies:
     cron-parser "^2.7.3"
     debuglog "^1.0.0"
