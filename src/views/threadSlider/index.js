@@ -1,3 +1,4 @@
+// @flow
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import type { Location, History, Match } from 'react-router';
@@ -6,18 +7,15 @@ import { ThreadView } from 'src/views/thread';
 import { ErrorBoundary } from 'src/components/error';
 import { ESC } from 'src/helpers/keycodes';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import {
-  Container,
-  Overlay,
-  ThreadContainer,
-  CloseButton,
-  ThreadBackground,
-} from './style';
+import type { TitlebarPayloadProps } from 'src/views/globalTitlebar';
+import { Container, Overlay, ThreadContainer, CloseButton } from './style';
 
 type Props = {
   previousLocation: Location,
   history: History,
   match: Match,
+  titlebar: TitlebarPayloadProps,
+  dispatch: Dispatch<Object>,
 };
 
 const ThreadSlider = (props: Props) => {
@@ -53,12 +51,14 @@ const ThreadSlider = (props: Props) => {
         <ThreadContainer>
           <ThreadView
             isModal
-            css={{ width: '100%', position: 'relative' }}
+            css={{
+              width: '100%',
+              position: 'relative',
+              zIndex: '1',
+            }}
             threadId={threadId}
           >
             <Overlay onClick={closeSlider} data-cy="overlay" />
-
-            <ThreadBackground />
           </ThreadView>
         </ThreadContainer>
 
@@ -71,4 +71,6 @@ const ThreadSlider = (props: Props) => {
 };
 
 const map = state => ({ titlebar: state.titlebar });
+
+// $FlowIssue
 export default connect(map)(ThreadSlider);
