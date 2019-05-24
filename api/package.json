@@ -134,7 +134,7 @@
     "toobusy-js": "^0.5.1",
     "uuid": "^3.3.2",
     "validator": "^9.4.1",
-    "web-push": "^3.3.3"
+    "web-push": "^3.3.5"
   },
   "scripts": {
     "start": "NODE_ENV=production node main.js"
