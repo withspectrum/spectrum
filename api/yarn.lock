@@ -8366,10 +8366,10 @@ react-transition-group@^2.9.0:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react-trend@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/react-trend/-/react-trend-1.2.4.tgz#498987286abd43ee3dff881115cd64d1c8e72d95"
-  integrity sha1-SYmHKGq9Q+49/4gRFc1k0cjnLZU=
+react-trend@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-trend/-/react-trend-1.2.5.tgz#c65798063b3b2aa8662ae43748f358ac40c02630"
+  integrity sha512-8//dg52xjPKkWPcd7Iml5WfwellgBpeILbN2tKhTP5gacJbg8jDTsNoEJboN9ATf9OllODpo4/gXhguNAIo7gg==
   dependencies:
     prop-types "^15.5.8"
 
