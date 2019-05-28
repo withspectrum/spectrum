@@ -14,7 +14,7 @@
     "ioredis": "3.2.2",
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
-    "node-fetch": "^2.5.0",
+    "node-fetch": "^2.6.0",
     "now-env": "^3.2.0",
     "performance-now": "^2.1.0",
     "raven": "^2.6.4",
