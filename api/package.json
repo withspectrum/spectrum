@@ -71,7 +71,7 @@
     "jest": "^21.2.1",
     "json-stringify-pretty-compact": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "keygrip": "^1.0.3",
+    "keygrip": "^1.1.0",
     "linkify-it": "^2.1.0",
     "localstorage-memory": "^1.0.3",
     "lodash": "^4.17.11",
