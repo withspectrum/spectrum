@@ -139,7 +139,6 @@ export const ThreadWrapper = styled(FlexCol)`
   flex: none;
   min-width: 320px;
   position: relative;
-  z-index: 4;
   background: ${theme.bg.default};
   width: 100%;
   max-width: 100%;
@@ -250,6 +249,9 @@ export const FlyoutRow = styled(FlexRow)`
     border-top: 1px solid ${theme.bg.divider};
     border-radius: 0;
     transition: none;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
   }
 
   button:hover {
@@ -797,7 +799,7 @@ export const RelatedCount = styled.p`
 `;
 
 export const Label = styled.p`
-  font-size: 14px;
+  margin-left: 8px;
 `;
 
 export const StickyHeaderContainer = styled.div`
