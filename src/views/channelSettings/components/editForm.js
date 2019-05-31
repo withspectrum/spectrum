@@ -217,16 +217,20 @@ class ChannelWithData extends React.Component<Props, State> {
               </Checkbox>} */}
             {isPrivate ? (
               <Description>
-                Only approved people on Spectrum can see the threads, messages,
-                and members in this channel. You can manually approve users who
-                request to join this channel.
+                Only channel members can see the threads, messages, and members
+                in this channel. You can manually approve users who request to
+                join this channel.
+              </Description>
+            ) : channel.community.isPrivate ? (
+              <Description>
+                Members in your private community will be able to join this
+                channel, post threads and messages, and will be able to see
+                other members.
               </Description>
             ) : (
               <Description>
                 Anyone on Spectrum can join this channel, post threads and
-                messages, and will be able to see other members. If you want to
-                create private channels,{' '}
-                <a href="mailto:hi@spectrum.chat">get in touch</a>.
+                messages, and will be able to see other members.
               </Description>
             )}
 
