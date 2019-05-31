@@ -160,7 +160,7 @@
     "react": "^16.8.4",
     "react-apollo": "^2.5.1",
     "react-app-rewire-styled-components": "^3.0.0",
-    "react-app-rewired": "^1.6.2",
+    "react-app-rewired": "^2.1.3",
     "react-async-hook": "^1.0.0",
     "react-clipboard.js": "^2.0.1",
     "react-dom": "npm:@hot-loader/react-dom",
