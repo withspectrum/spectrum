@@ -261,9 +261,6 @@ const ActionsDropdown = (props: Props) => {
                           <TextButton
                             onClick={toggleEdit}
                             data-cy={'thread-dropdown-edit'}
-                            style={{
-                              borderTop: '1px solid transparent',
-                            }}
                           >
                             <Icon size={24} glyph={'edit'} />
                             <Label>Edit post</Label>

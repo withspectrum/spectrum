@@ -386,7 +386,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
       photoSizeError ||
       !name ||
       !slug ||
-      !description ||
       !agreeCoC
     ) {
       this.setState({
@@ -474,14 +473,13 @@ class CreateCommunityForm extends React.Component<Props, State> {
       <FormContainer data-cy="create-community-form">
         <Form>
           <ImageInputWrapper>
-            {coverPhoto &&
-              !/default_images/.test(coverPhoto) && (
-                <DeleteCoverWrapper>
-                  <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
-                    <Icon glyph="view-close-small" size={'16'} />
-                  </DeleteCoverButton>
-                </DeleteCoverWrapper>
-              )}
+            {coverPhoto && !/default_images/.test(coverPhoto) && (
+              <DeleteCoverWrapper>
+                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                  <Icon glyph="view-close-small" size={'16'} />
+                </DeleteCoverButton>
+              </DeleteCoverWrapper>
+            )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
@@ -678,7 +676,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
               createError ||
               descriptionError ||
               !name ||
-              !description ||
               !agreeCoC
             }
             loading={isLoading}

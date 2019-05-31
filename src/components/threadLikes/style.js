@@ -17,6 +17,7 @@ export const LikeButtonWrapper = styled(Button)`
   overflow: hidden;
   padding: 0;
   padding-left: 16px;
+  pointer-events: none;
 
   div + span {
     margin: 0;

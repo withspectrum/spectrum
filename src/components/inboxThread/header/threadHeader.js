@@ -97,17 +97,14 @@ class Header extends React.Component<HeaderProps> {
                 </CommunityHoverProfile>
               )}
 
-            {viewContext !== 'channelProfile' &&
-              viewContext !== 'channelInbox' && (
-                <ChannelHoverProfile id={channel.id}>
-                  <MetaSubtitle
-                    active={active ? 'true' : undefined}
-                    to={`/${community.slug}/${channel.slug}`}
-                  >
-                    # {channel.name}
-                  </MetaSubtitle>
-                </ChannelHoverProfile>
-              )}
+            <ChannelHoverProfile id={channel.id}>
+              <MetaSubtitle
+                active={active ? 'true' : undefined}
+                to={`/${community.slug}/${channel.slug}`}
+              >
+                # {channel.name}
+              </MetaSubtitle>
+            </ChannelHoverProfile>
           </TextRow>
         </MetaContainer>
       </Container>

@@ -19,7 +19,11 @@ class MessageCount extends React.Component<Props> {
 
     return (
       <CountWrapper active={active}>
-        <Icon glyph="message-simple" size={24} />
+        <Icon
+          style={{ pointerEvents: 'none' }}
+          glyph="message-simple"
+          size={24}
+        />
         <span>{messageCount}</span>
       </CountWrapper>
     );

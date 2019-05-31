@@ -348,7 +348,7 @@ class CreateChannelModal extends React.Component<Props, State> {
             <Actions>
               <TextButton onClick={this.close}>Cancel</TextButton>
               <PrimaryOutlineButton
-                disabled={!name || !slug || slugTaken || !description}
+                disabled={!name || !slug || slugTaken}
                 loading={loading}
                 onClick={this.create}
               >

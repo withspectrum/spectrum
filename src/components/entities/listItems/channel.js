@@ -51,18 +51,41 @@ const Channel = (props: Props) => {
       channelPermissions.isModerator ||
       channelPermissions.isOwner
     ) {
+      const { isMember } = channelPermissions;
       return (
-        <Tooltip content="Go to settings">
-          <span style={{ marginLeft: '8px', display: 'flex' }}>
-            <OutlineButton
-              to={`/${community.slug}/${channel.slug}/settings`}
-              size={'small'}
-              style={{ padding: '4px' }}
-            >
-              <Icon style={{ marginTop: '-1px' }} glyph="settings" size={24} />
-            </OutlineButton>
-          </span>
-        </Tooltip>
+        <React.Fragment>
+          <Tooltip content="Go to settings">
+            <span style={{ marginLeft: '8px', display: 'flex' }}>
+              <OutlineButton
+                to={`/${community.slug}/${channel.slug}/settings`}
+                size={'small'}
+                style={{ padding: '4px' }}
+              >
+                <Icon
+                  style={{ marginTop: '-1px' }}
+                  glyph="settings"
+                  size={24}
+                />
+              </OutlineButton>
+            </span>
+          </Tooltip>
+          {!isMember && (
+            <React.Fragment>
+              <span style={{ padding: '4px' }} />
+              <JoinChannelWrapper
+                channel={channel}
+                render={({ isLoading }) => (
+                  <PrimaryOutlineButton
+                    size={'small'}
+                    style={{ width: '100px' }}
+                  >
+                    {isLoading ? 'Joining...' : 'Join'}
+                  </PrimaryOutlineButton>
+                )}
+              />
+            </React.Fragment>
+          )}
+        </React.Fragment>
       );
     }
 
