@@ -29,8 +29,6 @@ export const Page = styled.main`
 export const Wrapper = styled(FlexCol)`
   grid-area: content;
   height: 100%;
-  min-height: 100vh;
-  min-width: 100vw;
   width: 100%;
   max-width: 100vw;
   background-color: ${theme.bg.default};

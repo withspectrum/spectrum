@@ -26,3 +26,4 @@ export const PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT =
   'process active community admin report';
 export const PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS =
   'process remove seen usersNotifications';
+export const PROCESS_DATABASE_BACKUP = 'process database backup';

@@ -1,6 +1,6 @@
 {
   "name": "Spectrum",
-  "version": "3.1.12",
+  "version": "3.1.13",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",
@@ -46,7 +46,7 @@
     "sw-precache-webpack-plugin": "^0.11.4",
     "uuid": "^3.0.1",
     "wait-on": "^2.1.0",
-    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-bundle-analyzer": "^3.3.2",
     "write-file-webpack-plugin": "^4.4.1"
   },
   "dependencies": {
@@ -70,7 +70,7 @@
     "apollo-upload-server": "^7.1.0",
     "apollo-utilities": "^1.0.26",
     "aws-sdk": "2.336.0",
-    "axios": "^0.17.1",
+    "axios": "^0.19.0",
     "b2a": "^1.0.10",
     "bad-words": "^1.6.4",
     "body-parser": "^1.18.3",
@@ -82,7 +82,7 @@
     "cors": "^2.8.3",
     "cryptr": "^3.0.0",
     "css.escape": "^1.5.1",
-    "cypress": "^3.2.0",
+    "cypress": "^3.3.1",
     "datadog-metrics": "^0.8.1",
     "dataloader": "^1.4.0",
     "debounce": "^1.2.0",

@@ -67,7 +67,7 @@ describe('/new/thread community and channel selection', () => {
     cy.visit('/new/thread?composerCommunityId=5');
     communityIsLocked();
     channelDropdownIsEnabled();
-    channelDropdown().contains('General');
+    channelDropdown().contains('# General');
   });
 
   it('selects an a single community and single channel by default if no query params are passed', () => {
@@ -76,7 +76,7 @@ describe('/new/thread community and channel selection', () => {
     communityDropdownIsEnabled();
     communityDropdown().contains('Single channel community');
     channelDropdownIsEnabled();
-    channelDropdown().contains('General');
+    channelDropdown().contains('# General');
   });
 
   it('does not select a community or channel if no query params are passed', () => {
@@ -93,13 +93,13 @@ describe('/new/thread community and channel selection', () => {
 
     communityDropdown().select('Spectrum');
     channelDropdownIsEnabled();
-    channelDropdown().contains('General');
-    channelDropdown().contains('Private');
+    channelDropdown().contains('# General');
+    channelDropdown().contains('# Private');
 
     communityDropdown().select('Payments');
-    channelDropdown().contains('General');
-    channelDropdown().contains('Private');
-    channelDropdown().contains('Payments Features');
+    channelDropdown().contains('# General');
+    channelDropdown().contains('# Private');
+    channelDropdown().contains('# Payments Features');
   });
 
   it('keeps the publish button disabled if either community or channel selector is blank', () => {
@@ -112,7 +112,7 @@ describe('/new/thread community and channel selection', () => {
     publishButtonIsDisabled();
 
     channelDropdownIsEnabled();
-    channelDropdown().select('General');
+    channelDropdown().select('# General');
     publishButtonIsEnabled();
 
     communityDropdown().select('');
@@ -127,7 +127,7 @@ describe('/new/thread community and channel selection', () => {
     cy.wait(50);
     publishButtonIsDisabled();
 
-    channelDropdown().select('General');
+    channelDropdown().select('# General');
     publishButtonIsEnabled();
   });
 
@@ -153,7 +153,7 @@ describe('/new/thread community and channel selection', () => {
     channelDropdownIsHidden();
   });
 
-  it('selects a community and channel if both params are passed and the user is a member of both', () => {
+  it.only('selects a community and channel if both params are passed and the user is a member of both', () => {
     cy.visit('/new/thread?composerCommunityId=1&composerChannelId=1');
     communityIsLocked();
     communitySelected().contains('Spectrum');

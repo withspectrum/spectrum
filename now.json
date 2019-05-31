@@ -20,6 +20,7 @@
     "COMPOSE_REDIS_PASSWORD": "@compose-redis-password",
     "COMPOSE_REDIS_URL": "@compose-redis-url",
     "COMPOSE_REDIS_PORT": "@compose-redis-port",
+    "COMPOSE_API_TOKEN": "@compose-api-token",
     "REDIS_LABS_JOB_QUEUE_PASSWORD": "@redis-labs-job-queue-password",
     "REDIS_LABS_JOB_QUEUE_URL": "@redis-labs-job-queue-url",
     "REDIS_LABS_JOB_QUEUE_PORT": "@redis-labs-job-queue-port",
