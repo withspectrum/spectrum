@@ -3,7 +3,7 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
+    "@sendgrid/mail": "^6.4.0",
     "aws-sdk": "^2.454.0",
     "bull": "3.3.10",
     "datadog-metrics": "^0.8.1",
