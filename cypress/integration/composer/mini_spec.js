@@ -176,7 +176,7 @@ describe('mini composer functionality', () => {
       .type(body);
     miniComposerPost().should('be.disabled');
     channelDropdown().contains('Choose a channel');
-    channelDropdown().select('General');
+    channelDropdown().select('# General');
     miniComposerPost().should('not.be.disabled');
   });
 
@@ -189,7 +189,8 @@ describe('mini composer functionality', () => {
     miniComposerPost().should('be.disabled');
     miniComposerTitle().type(title);
     miniComposerPost().should('not.be.disabled');
-    channelDropdown().should('not.be.visible');
+    channelDropdown().should('be.visible');
+    channelDropdown().should('be.disabled');
     miniComposerTitle().clear();
     miniComposerBody().type(body);
     miniComposerPost().should('be.disabled');
@@ -209,7 +210,7 @@ describe('mini composer functionality', () => {
       .type(body);
     miniComposerPost().should('be.disabled');
     channelDropdown().contains('Choose a channel');
-    channelDropdown().select('General');
+    channelDropdown().select('# General');
     miniComposerPost().should('not.be.disabled');
     miniComposerPost().click();
     cy.get('[data-cy="thread-is-modal"]').should('be.visible');
