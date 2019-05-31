@@ -421,7 +421,7 @@ describe('/new/thread', () => {
       .select('Spectrum');
     cy.get('[data-cy="composer-channel-selector"]')
       .should('be.visible')
-      .select('General');
+      .select('# General');
 
     // Type title and body
     cy.get('[data-cy="composer-title-input"]').type(title);

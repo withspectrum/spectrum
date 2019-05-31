@@ -352,6 +352,16 @@ const MiniComposer = ({
                   tabIndex={3}
                 />
               )}
+              {fixedChannelId && (
+                <ChannelSelector
+                  id={community.id}
+                  selectedCommunityId={community.id}
+                  selectedChannelId={fixedChannelId}
+                  disabled
+                  css={{ marginLeft: 0 }}
+                  tabIndex={3}
+                />
+              )}
               <Tooltip content="Open in fullscreen">
                 <span style={{ marginLeft: '8px' }}>
                   <Link
