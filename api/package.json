@@ -56,7 +56,7 @@
     "graphql-rate-limit": "^1.2.4",
     "graphql-tools": "^4.0.4",
     "helmet": "^3.18.0",
-    "highlight.js": "^9.15.6",
+    "highlight.js": "^9.15.8",
     "history": "^4.9.0",
     "hoist-non-react-statics": "^2.5.5",
     "host-validation": "^1.2.0",
