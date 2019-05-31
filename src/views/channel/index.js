@@ -23,7 +23,6 @@ import { CommunityAvatar } from 'src/components/avatar';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
-import MiniComposer from 'src/components/composerMini';
 import MembersList from './components/MembersList';
 import PostFeed from './components/PostsFeed';
 import {
@@ -121,6 +120,8 @@ class ChannelView extends React.Component<Props> {
       prevProps.data.channel &&
       this.props.data.channel.id !== prevProps.data.channel.id
     ) {
+      const elem = document.getElementById('main');
+      if (elem) elem.scrollTop = 0;
       const { channel } = this.props.data;
       dispatch(
         setTitlebarProps({
