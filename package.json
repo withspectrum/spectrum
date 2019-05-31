@@ -176,6 +176,8 @@
     "react-modal": "^3.7.1",
     "react-popper": "^1.3.3",
     "react-redux": "^5.0.2",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-textarea-autosize": "^6.1.0",
     "react-transition-group": "^2.5.0",
     "react-trend": "^1.2.4",
