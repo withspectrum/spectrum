@@ -151,7 +151,7 @@ const ChannelSelector = (props: Props) => {
           if (!channel) return null;
           return (
             <option key={channel.id} value={channel.id}>
-              {channel.name}
+              # {channel.name}
             </option>
           );
         })}
