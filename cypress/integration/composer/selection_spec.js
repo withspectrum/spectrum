@@ -153,12 +153,12 @@ describe('/new/thread community and channel selection', () => {
     channelDropdownIsHidden();
   });
 
-  it('selects a community and channel if both params are passed and the user is a member of both', () => {
+  it.only('selects a community and channel if both params are passed and the user is a member of both', () => {
     cy.visit('/new/thread?composerCommunityId=1&composerChannelId=1');
     communityIsLocked();
     communitySelected().contains('Spectrum');
     channelIsLocked();
-    channelSelected().contains('# General');
+    channelSelected().contains('General');
   });
 
   it('does not select a channel if a channel param is passed and the channel id is invalid', () => {
