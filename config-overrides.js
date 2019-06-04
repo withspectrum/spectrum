@@ -166,6 +166,12 @@ module.exports = function override(config, env) {
     );
   }
 
+  // NOTE(@mxstbr): This works around an issue where webpack was resolving the "module" path of b2a
+  // which breaks when imported on the fronted. We need to import the built version.
+  config.resolve.alias.b2a = path.resolve(
+    __dirname,
+    'node_modules/b2a/lib/index.js'
+  );
   config.plugins.push(
     new CircularDependencyPlugin({
       cwd: process.cwd(),
