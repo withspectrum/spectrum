@@ -523,4 +523,5 @@ export type Queues = {
   activeCommunityReportQueue: BullQueue<void>,
   removeSeenUsersNotificationsQueue: BullQueue<void>,
   databaseBackupQueue: BullQueue<void>,
+  offsiteBackupQueue: BullQueue<void>,
 };

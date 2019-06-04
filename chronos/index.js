@@ -9,6 +9,7 @@ import processDailyCoreMetrics from 'chronos/queues/coreMetrics';
 import processActiveCommunityAdminReport from 'chronos/queues/coreMetrics/activeCommunityAdminReport';
 import processRemoveSeenUsersNotifications from 'chronos/queues/remove-seen-usersNotifications';
 import processDatabaseBackup from 'chronos/queues/database-backup';
+import processOffsiteBackup from 'chronos/queues/offsite-backup';
 import {
   PROCESS_WEEKLY_DIGEST_EMAIL,
   PROCESS_DAILY_DIGEST_EMAIL,
@@ -17,6 +18,7 @@ import {
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
   PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
   PROCESS_DATABASE_BACKUP,
+  PROCESS_OFFSITE_BACKUP,
 } from 'chronos/queues/constants';
 import { startJobs } from 'chronos/jobs';
 
@@ -34,6 +36,7 @@ const server = createWorker(
     [PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT]: processActiveCommunityAdminReport,
     [PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS]: processRemoveSeenUsersNotifications,
     [PROCESS_DATABASE_BACKUP]: processDatabaseBackup,
+    [PROCESS_OFFSITE_BACKUP]: processOffsiteBackup,
   },
   {
     settings: {
