@@ -145,6 +145,7 @@ export const ThreadWrapper = styled(FlexCol)`
   /* manually nudge up 60px to cover the sliding header in the thread view */
   top: -68px;
   margin-bottom: -68px;
+  z-index: 3;
 
   ${props =>
     props.isEditing &&
@@ -906,4 +907,6 @@ export const BylineContainer = styled.div`
   margin-left: -16px;
   margin-right: -16px;
   margin-top: -16px;
+  position: relative;
+  z-index: 1000;
 `;
