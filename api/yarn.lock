@@ -5222,10 +5222,10 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
-imgix-core-js@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.3.0.tgz#fdec28803a51ede0f301bf01bca7374ba79e30e5"
-  integrity sha512-ffRklXsc910QbH3hHTW657WIgw+UujlrpWKDorwV8S5bUW7BIzG33So48pOpucd2I+5sf9QEwiDkQM576uZZWA==
+imgix-core-js@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.4.0.tgz#3f96348ef53d80a6feb82c5b4e512f62d74f983b"
+  integrity sha512-kb727B5O/52/Sj3g/MRZeEhiz4esTk84QJK8OZ1iCVSK3rxqrTNT2pbVsKmrNnbf3nGZ5MbzRY8BsxDwRKY7nA==
   dependencies:
     crc "^3.5.0"
     js-base64 "^2.1.9"
