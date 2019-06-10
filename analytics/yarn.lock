@@ -14,10 +14,10 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-aws-sdk@^2.426.0:
-  version "2.426.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.426.0.tgz#cf17361c987daf518f945218f06135fbc1a3690d"
-  integrity sha512-S4nmIhF/6iYeVEmKUWVG03zo1sw3zELoAPGqBKIZ3isrXbxkFXdP2cgIQxqi37zwWXSqaxt0xjeXVOMLzN6vSg==
+aws-sdk@^2.454.0:
+  version "2.454.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.454.0.tgz#d7c1ceec21b6245949c1934d9aedfad3aaf9694a"
+  integrity sha512-1vB9DNIwh+mqKD2IZspYTQapCD6f5VnMT5V2VPlXJ1CNcUdFSU8FFyxKmYApNs+S3re1h3fhWDjpwTreS+XLRQ==
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -28,6 +28,14 @@ aws-sdk@^2.426.0:
     url "0.10.3"
     uuid "3.3.2"
     xml2js "0.4.19"
+
+babel-runtime@^6.18.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
+  integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
+  dependencies:
+    core-js "^2.4.0"
+    regenerator-runtime "^0.11.0"
 
 base64-js@^1.0.2:
   version "1.3.0"
@@ -102,6 +110,11 @@ cookiejar@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.1.2.tgz#dd8a235530752f988f9a0844f3fc589e3111125c"
   integrity sha512-Mw+adcfzPxcPeI+0WlvRrr/3lGVO0bD75SxX6811cxSh1Wbxx7xZBGK1eVtDf6si8rg2lhnUjsVLMFMfbRIuwA==
+
+core-js@^2.4.0:
+  version "2.6.5"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.5.tgz#44bc8d249e7fb2ff5d00e0341a7ffb94fbf67895"
+  integrity sha512-klh/kDpwX8hryYL14M9w/xei6vrv6sE8gTHDG7/T/+SEovB/G4ejwcfE/CBzO6Edsu+OETZMZ3wcX/EjUkrl5A==
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -475,10 +488,10 @@ node-env-file@^0.1.8:
   resolved "https://registry.yarnpkg.com/node-env-file/-/node-env-file-0.1.8.tgz#fccb7b050f735b5a33da9eb937cf6f1ab457fb69"
   integrity sha1-/Mt7BQ9zW1oz2p65N89vGrRX+2k=
 
-now-env@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
-  integrity sha512-f+jXC+UkoxD/g9Nlig99Bxswoh7UUuQxw0EsPfuueHnVpVE0LfgQ4el5dxY4TSXwrL9mEF9GGm0gb7r3K8r/ug==
+now-env@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.2.0.tgz#33223dd000d7966e66c0d00779c28c7aa0f111c6"
+  integrity sha512-zCWAwdX1KTa2ZoEg6Rc8efym5V4I36sC52OXo9F3O4IaNrvd/o1z7ZjuwnevoQqLloIdQWHo3JYAcL12m+KsUQ==
 
 object-keys@^1.0.12:
   version "1.0.12"
@@ -573,6 +586,18 @@ redis-tag-cache@^1.2.1:
   dependencies:
     ioredis "^4.0.0"
 
+regenerator-runtime@^0.11.0:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+  integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
+
+rethinkdb-changefeed-reconnect@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/rethinkdb-changefeed-reconnect/-/rethinkdb-changefeed-reconnect-0.3.2.tgz#2999f5313205ab35d9ac2d1b0533765ee3376923"
+  integrity sha1-KZn1MTIFqzXZrC0bBTN2XuM3aSM=
+  dependencies:
+    babel-runtime "^6.18.0"
+
 rethinkdb-inspector@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/rethinkdb-inspector/-/rethinkdb-inspector-0.3.3.tgz#f0d88c66d17e0234b5518ca51cd8c272cb787003"
@@ -627,10 +652,10 @@ sha1@^1.1.1:
     charenc ">= 0.0.1"
     crypt ">= 0.0.1"
 
-source-map-support@^0.5.11:
-  version "0.5.11"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.11.tgz#efac2ce0800355d026326a0ca23e162aeac9a4e2"
-  integrity sha512-//sajEx/fGL3iw6fltKMdPvy8kL3kJ2O3iuYlRoT3k9Kb4BjOoZ+BZzaNHeuaruSt+Kf3Zk9tnfAQg9/AJqUVQ==
+source-map-support@^0.5.12:
+  version "0.5.12"
+  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.12.tgz#b4f3b10d51857a5af0138d3ce8003b201613d599"
+  integrity sha512-4h2Pbvyy15EE02G+JOZpUCmqWJuqrs+sEkzewTm++BPi7Hvn/HwcqLAcNxYAyI0x13CpPPn+kMjl+hplXMHITQ==
   dependencies:
     buffer-from "^1.0.0"
     source-map "^0.6.0"

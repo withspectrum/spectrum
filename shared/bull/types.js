@@ -522,4 +522,6 @@ export type Queues = {
   dailyCoreMetricsQueue: BullQueue<void>,
   activeCommunityReportQueue: BullQueue<void>,
   removeSeenUsersNotificationsQueue: BullQueue<void>,
+  databaseBackupQueue: BullQueue<void>,
+  offsiteBackupQueue: BullQueue<void>,
 };

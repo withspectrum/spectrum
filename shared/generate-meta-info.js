@@ -90,7 +90,7 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
   switch (type) {
     case 'explore': {
       return {
-        title: 'Explore · Spectrum',
+        title: 'Explore',
         description: 'Explore some of the communities on Spectrum',
       };
     }
@@ -107,13 +107,13 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
           ? toPlainText(JSON.parse(data.body))
           : data.body);
       return setDefault({
-        title: data && data.title + ' · ' + data.communityName + ' community',
+        title: data && data.title + ' · ' + data.communityName,
         description: body,
       });
     }
     case 'user': {
       return setDefault({
-        title: data && data.name + ' (@' + data.username + ')',
+        title: data && data.name + ' · @' + data.username,
         description: data && data.description,
       });
     }
@@ -137,6 +137,12 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
       return setDefault({
         title: data && data.title,
         description: data && data.description,
+      });
+    }
+    case 'notifications': {
+      return setDefault({
+        title: 'Notifications',
+        description: 'Notifications on Spectrum',
       });
     }
     default: {

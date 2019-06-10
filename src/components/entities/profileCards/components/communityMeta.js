@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import type { CommunityMetaDataType } from 'shared/graphql/fragments/community/communityMetaData';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import addProtocolToString from 'shared/normalize-url';
 import Icon from 'src/components/icon';
@@ -51,12 +49,12 @@ export const CommunityMeta = (props: Props) => {
 
         {community.metaData && (
           <React.Fragment>
-            <MetaRow>
+            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <Icon glyph={'person'} size={20} />{' '}
               {community.metaData.members.toLocaleString()} members
             </MetaRow>
 
-            <MetaRow>
+            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
               members online
             </MetaRow>

@@ -7,6 +7,8 @@ import {
   dailyCoreMetricsQueue,
   activeCommunityReportQueue,
   removeSeenUsersNotificationsQueue,
+  databaseBackupQueue,
+  offsiteBackupQueue,
 } from 'shared/bull/queues';
 
 /*
@@ -37,6 +39,16 @@ export const activeCommunityReport = () => {
   );
 };
 
+export const hourlyBackups = () => {
+  // Every hour
+  return databaseBackupQueue.add(undefined, defaultJobOptions('30 * * * *'));
+};
+
+export const hourlyOffsiteBackup = () => {
+  // Every hour offset by 30m from hourly backups, which should be enough time for the backups to finish
+  return offsiteBackupQueue.add(undefined, defaultJobOptions('0 * * * *'));
+};
+
 export const removeSeenUsersNotifications = () => {
   // 2am daily
   return removeSeenUsersNotificationsQueue.add(
@@ -51,4 +63,6 @@ export const startJobs = () => {
   dailyCoreMetrics();
   activeCommunityReport();
   removeSeenUsersNotifications();
+  hourlyBackups();
+  hourlyOffsiteBackup();
 };

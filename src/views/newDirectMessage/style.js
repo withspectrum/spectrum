@@ -5,11 +5,12 @@ import { hexa } from 'src/components/globals';
 import { MEDIA_BREAK, TITLEBAR_HEIGHT } from 'src/components/layout';
 
 export const Container = styled.div`
-  grid-area: main;
+  position: fixed;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   z-index: 9995;
-  position: sticky;
   top: 0;
   align-items: center;
   justify-content: center;

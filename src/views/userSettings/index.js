@@ -69,7 +69,7 @@ class UserSettings extends React.Component<Props> {
 
       return (
         <React.Fragment>
-          <Head title={`Settings for ${user.name}`} />
+          <Head title={'My settings'} />
           <ViewGrid>
             <View data-cy="user-settings">
               <Header

@@ -8,7 +8,7 @@ const BlueScreen = () => {
     <ViewError
       heading={'Something went wrong'}
       subheading={
-        'Sorry about the technical issues. Brian, Bryn and Max have been notified of the problem and should resolve it soon.'
+        'Sorry about the technical issues. Brian and Max have been notified of the problem and should resolve it soon.'
       }
       refresh
     />

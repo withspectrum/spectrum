@@ -46,6 +46,7 @@ const getChannelsByCommunity = (communityId: string): Promise<Array<DBChannel>> 
 const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string>> => {
   return channelsByCommunitiesQuery(communityId)
     .filter({ isPrivate: false })
+    .filter(row => row.hasFields('archivedAt').not())
     .map(c => c('id'))
     .run();
 };
@@ -59,8 +60,10 @@ const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string
 */
 // prettier-ignore
 const getChannelsByUserAndCommunity = async (communityId: string, userId: string): Promise<Array<string>> => {
-  const channelIds = await channelsByCommunitiesQuery(communityId)('id').run();
-
+  const channels = await channelsByCommunitiesQuery(communityId).run();
+  const unarchived = channels.filter(channel => !channel.archivedAt)
+  const channelIds = unarchived.map(channel => channel.id)
+  
   return db
     .table('usersChannels')
     .getAll(...channelIds.map(id => ([userId, id])), {

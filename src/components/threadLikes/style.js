@@ -48,6 +48,7 @@ export const LikeCountWrapper = styled.div`
   margin-right: 12px;
   color: ${props =>
     props.active ? props.theme.text.reverse : props.theme.text.alt};
+  pointer-events: none;
 
   ${CurrentCount} {
     margin-left: 4px;

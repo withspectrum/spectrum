@@ -238,7 +238,7 @@ const Community = /* GraphQL */ `
   input CreateCommunityInput {
     name: String!
     slug: LowercaseString!
-    description: String!
+    description: String
     website: String
     file: Upload
     coverFile: Upload

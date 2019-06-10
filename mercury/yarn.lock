@@ -12,14 +12,14 @@ bignumber.js@~1.1.1:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
 
-bull@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.7.0.tgz#ec9a8721a2cfb0421c501d28553ac1f9f025414d"
-  integrity sha512-DHCALp+OOahK+q2hB3sZQew0CJn4W3zYIQsdMlnBCy7JYCnJ/bdj0MFHjo5k0ZhNZxzwhLErXt1yd3llV494UQ==
+bull@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.9.1.tgz#5b8fe1001e4c45176a56a7ef66f81f8bd2d6b2c6"
+  integrity sha512-ViMoGL/3/GQD4O9Ks/xAT1N162pX2jhNuKzLiwYxz1KZKvOP8F4DOC4XRnAQvBDSSYWV2764QzIPj6pbblAXXA==
   dependencies:
     cron-parser "^2.7.3"
     debuglog "^1.0.0"
-    get-port latest
+    get-port "^4.2.0"
     ioredis "^4.5.1"
     lodash "^4.17.11"
     p-timeout "^2.0.1"
@@ -160,10 +160,10 @@ function-bind@^1.1.1:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
   integrity sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==
 
-get-port@latest:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/get-port/-/get-port-4.1.0.tgz#93eb3d5552c197497d76e9c389a6ac9920e20192"
-  integrity sha512-4/fqAYrzrzOiqDrdeZRKXGdTGgbkfTEumGlNQPeP6Jy8w0PzN9mzeNQ3XgHaTNie8pQ3hOUkrwlZt2Fzk5H9mA==
+get-port@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/get-port/-/get-port-4.2.0.tgz#e37368b1e863b7629c43c5a323625f95cf24b119"
+  integrity sha512-/b3jarXkH8KJoOMQc3uVGHASwGLPq3gSFJ7tgJm2diza+bydJPTGOibin2steecKeOylE8oY2JERlVWkAJO6yw==
 
 has-symbols@^1.0.0:
   version "1.0.0"
@@ -412,10 +412,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-now-env@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.1.0.tgz#e0198b67279d387229cfd4b25de4c2fc7156943f"
-  integrity sha512-f+jXC+UkoxD/g9Nlig99Bxswoh7UUuQxw0EsPfuueHnVpVE0LfgQ4el5dxY4TSXwrL9mEF9GGm0gb7r3K8r/ug==
+now-env@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/now-env/-/now-env-3.2.0.tgz#33223dd000d7966e66c0d00779c28c7aa0f111c6"
+  integrity sha512-zCWAwdX1KTa2ZoEg6Rc8efym5V4I36sC52OXo9F3O4IaNrvd/o1z7ZjuwnevoQqLloIdQWHo3JYAcL12m+KsUQ==
 
 object-keys@^1.0.12:
   version "1.0.12"

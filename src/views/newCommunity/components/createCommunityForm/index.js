@@ -124,7 +124,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
-    if (name.length >= 20) {
+    if (name.length > 20) {
       this.setState({
         nameError: true,
       });
@@ -386,7 +386,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
       photoSizeError ||
       !name ||
       !slug ||
-      !description ||
       !agreeCoC
     ) {
       this.setState({
@@ -677,7 +676,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
               createError ||
               descriptionError ||
               !name ||
-              !description ||
               !agreeCoC
             }
             loading={isLoading}

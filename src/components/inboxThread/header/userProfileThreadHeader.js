@@ -71,7 +71,7 @@ class Header extends React.Component<HeaderProps> {
                 active={active}
                 to={`/${community.slug}/${channel.slug}`}
               >
-                {channel.name}
+                # {channel.name}
               </MetaSubtitle>
             </ChannelHoverProfile>
 

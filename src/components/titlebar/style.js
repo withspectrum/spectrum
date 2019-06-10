@@ -45,6 +45,10 @@ export const Content = styled.div`
   align-items: center;
   width: 100%;
   max-width: 100%;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    max-width: 70%;
+  }
 `;
 
 export const Title = styled.h1`

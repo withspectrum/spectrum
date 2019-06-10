@@ -45,7 +45,52 @@ const Channel = (props: Props) => {
     const isCommunityMember = communityPermissions.isMember;
     if (!isCommunityMember) return chevron;
 
+    if (
+      communityPermissions.isModerator ||
+      communityPermissions.isOwner ||
+      channelPermissions.isModerator ||
+      channelPermissions.isOwner
+    ) {
+      const { isMember } = channelPermissions;
+      return (
+        <React.Fragment>
+          <Tooltip content="Go to settings">
+            <span style={{ marginLeft: '8px', display: 'flex' }}>
+              <OutlineButton
+                to={`/${community.slug}/${channel.slug}/settings`}
+                size={'small'}
+                style={{ padding: '4px' }}
+              >
+                <Icon
+                  style={{ marginTop: '-1px' }}
+                  glyph="settings"
+                  size={24}
+                />
+              </OutlineButton>
+            </span>
+          </Tooltip>
+          {!isMember && (
+            <React.Fragment>
+              <span style={{ padding: '4px' }} />
+              <JoinChannelWrapper
+                channel={channel}
+                render={({ isLoading }) => (
+                  <PrimaryOutlineButton
+                    size={'small'}
+                    style={{ width: '100px' }}
+                  >
+                    {isLoading ? 'Joining...' : 'Join'}
+                  </PrimaryOutlineButton>
+                )}
+              />
+            </React.Fragment>
+          )}
+        </React.Fragment>
+      );
+    }
+
     const { isMember } = channelPermissions;
+
     if (isMember)
       return (
         <LeaveChannelWrapper
@@ -123,7 +168,7 @@ const Channel = (props: Props) => {
 
   return (
     <ErrorBoundary>
-      <Link to={`/${channel.community.slug}/${channel.slug}`}>
+      <Link to={`/${channel.community.slug}/${channel.slug}?tab=posts`}>
         <Row isActive={isActive}>
           <Content>
             {name && (

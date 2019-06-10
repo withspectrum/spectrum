@@ -3,11 +3,11 @@
     "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
-    "bull": "^3.7.0",
+    "bull": "^3.9.1",
     "datadog-metrics": "^0.8.1",
     "debug": "^4.1.1",
     "ioredis": "3.2.2",
-    "now-env": "^3.1.0",
+    "now-env": "^3.2.0",
     "performance-now": "^2.1.0",
     "raven": "^2.6.4",
     "redis-tag-cache": "^1.2.1",

@@ -70,6 +70,8 @@ import {
   PROCESS_DAILY_CORE_METRICS,
   PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
   PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
+  PROCESS_DATABASE_BACKUP,
+  PROCESS_OFFSITE_BACKUP,
 } from 'chronos/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
@@ -141,6 +143,8 @@ exports.QUEUE_NAMES = {
   dailyCoreMetricsQueue: PROCESS_DAILY_CORE_METRICS,
   activeCommunityReportQueue: PROCESS_ACTIVE_COMMUNITY_ADMIN_REPORT,
   removeSeenUsersNotificationsQueue: PROCESS_REMOVE_SEEN_USERS_NOTIFICATIONS,
+  databaseBackupQueue: PROCESS_DATABASE_BACKUP,
+  offsiteBackupQueue: PROCESS_OFFSITE_BACKUP,
 };
 
 // We add one error listener per queue, so we have to set the max listeners

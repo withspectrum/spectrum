@@ -11,6 +11,7 @@ import CreateCommunityForm from './components/createCommunityForm';
 import EditCommunityForm from './components/editCommunityForm';
 import Stepper from './components/stepper';
 import Share from './components/share';
+import Head from 'src/components/head';
 import Login from 'src/views/login';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { getCommunityByIdQuery } from 'shared/graphql/queries/community/getCommunity';
@@ -182,6 +183,10 @@ class NewCommunity extends React.Component<Props, State> {
     if (user && user.email) {
       return (
         <ViewGrid>
+          <Head
+            title={'New community'}
+            description={'Create a new community'}
+          />
           <SingleColumnGrid>
             <Container bg={activeStep === 3 ? 'onboarding' : null} repeat>
               <Stepper activeStep={activeStep} />

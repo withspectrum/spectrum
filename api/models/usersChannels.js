@@ -452,7 +452,7 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
 };
 
 // prettier-ignore
-const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<DBChannel> => {
+const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<?DBChannel> => {
   const event = value ? events.CHANNEL_NOTIFICATIONS_ENABLED : events.CHANNEL_NOTIFICATIONS_DISABLED
 
   trackQueue.add({
@@ -466,6 +466,11 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
     .run();
 
+  const channel = await db
+    .table('channels')
+    .get(channelId)
+    .run()
+
   // permissions exist, this user is trying to toggle notifications for a channel where they
   // are already a member
   if (permissions && permissions.length > 0) {
@@ -476,8 +481,16 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
       .run();
   }
 
-  // if permissions don't exist, create a usersChannel relationship with notifications on
-  return createMemberInChannel(channelId, userId, false)
+  // if the channel isn't private, it means the user is enabling notifications
+  // in a public channel that they have not yet joined - for example, if a user
+  // joins a community, then some time later the community creates a new channel,
+  // then again some time later the user wants notifications about that channel
+  if (!channel.isPrivate) {
+    // if permissions don't exist, create a usersChannel relationship with notifications on
+    return createMemberInChannel(channelId, userId, false)
+  }
+
+  return null
 };
 
 const removeUsersChannelMemberships = async (userId: string) => {

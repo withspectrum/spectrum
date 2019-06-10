@@ -102,10 +102,9 @@ export const ThreadActivityWrapper = styled.div`
   display: flex;
   margin-top: 8px;
   align-items: center;
+  pointer-events: none;
 
   .icon {
-    pointer-events: auto;
-
     &:hover {
       cursor: pointer;
     }
@@ -131,6 +130,7 @@ export const CountWrapper = styled.div`
   display: flex;
   flex: none;
   font-size: 13px;
+  pointer-events: none;
   color: ${props =>
     props.new
       ? props.active

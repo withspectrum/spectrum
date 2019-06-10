@@ -23,8 +23,8 @@ import { CommunityAvatar } from 'src/components/avatar';
 import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
-import MiniComposer from 'src/components/composerMini';
 import MembersList from './components/MembersList';
+import PostFeed from './components/PostsFeed';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -98,12 +98,30 @@ class ChannelView extends React.Component<Props> {
 
   componentDidUpdate(prevProps) {
     const { dispatch } = this.props;
+    if (!prevProps.data.channel && this.props.data.channel) {
+      const { channel } = this.props.data;
+      dispatch(
+        setTitlebarProps({
+          title: `# ${channel.name}`,
+          titleIcon: (
+            <CommunityAvatar
+              isClickable={false}
+              community={channel.community}
+              size={24}
+            />
+          ),
+          rightAction: <MobileChannelAction channel={channel} />,
+        })
+      );
+    }
 
     if (
       this.props.data.channel &&
       prevProps.data.channel &&
       this.props.data.channel.id !== prevProps.data.channel.id
     ) {
+      const elem = document.getElementById('main');
+      if (elem) elem.scrollTop = 0;
       const { channel } = this.props.data;
       dispatch(
         setTitlebarProps({
@@ -200,6 +218,7 @@ class ChannelView extends React.Component<Props> {
                       onClick={() => this.handleSegmentClick('posts')}
                       isActive={selectedView === 'posts'}
                       data-cy="channel-posts-tab"
+                      hideOnDesktop
                     >
                       Posts
                     </Segment>
@@ -207,6 +226,7 @@ class ChannelView extends React.Component<Props> {
                     <Segment
                       onClick={() => this.handleSegmentClick('members')}
                       isActive={selectedView === 'members'}
+                      hideOnDesktop
                       data-cy="channel-members-tab"
                     >
                       Members
@@ -220,33 +240,9 @@ class ChannelView extends React.Component<Props> {
                     >
                       Info
                     </Segment>
-
-                    <Segment
-                      onClick={() => this.handleSegmentClick('search')}
-                      isActive={selectedView === 'search'}
-                      data-cy="channel-search-tab"
-                    >
-                      Search
-                    </Segment>
                   </SegmentedControl>
 
-                  {selectedView === 'posts' && (
-                    <React.Fragment>
-                      {currentUser && isMember && !channel.isArchived && (
-                        <MiniComposer
-                          community={community}
-                          fixedChannelId={channel.id}
-                          currentUser={currentUser}
-                        />
-                      )}
-                      <ThreadFeedWithData
-                        viewContext="channelProfile"
-                        id={channel.id}
-                        currentUser={isLoggedIn}
-                        channelId={channel.id}
-                      />
-                    </React.Fragment>
-                  )}
+                  {selectedView === 'posts' && <PostFeed channel={channel} />}
 
                   {selectedView === 'search' && (
                     <ErrorBoundary>

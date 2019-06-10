@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { OutlineButton } from 'src/components/button';
 import Column from 'src/components/column';
-import { MEDIA_BREAK, PRIMARY_COLUMN_WIDTH } from 'src/components/layout';
+import { MEDIA_BREAK } from 'src/components/layout';
 import {
   FlexCol,
   FlexRow,
@@ -139,13 +139,13 @@ export const ThreadWrapper = styled(FlexCol)`
   flex: none;
   min-width: 320px;
   position: relative;
-  z-index: 4;
   background: ${theme.bg.default};
   width: 100%;
   max-width: 100%;
   /* manually nudge up 60px to cover the sliding header in the thread view */
   top: -68px;
   margin-bottom: -68px;
+  z-index: 3;
 
   ${props =>
     props.isEditing &&
@@ -250,6 +250,9 @@ export const FlyoutRow = styled(FlexRow)`
     border-top: 1px solid ${theme.bg.divider};
     border-radius: 0;
     transition: none;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
   }
 
   button:hover {
@@ -391,7 +394,6 @@ export const NullMessagesWrapper = styled.div`
   flex: 1;
   color: ${theme.text.alt};
   flex-direction: column;
-  opacity: 0.8;
   width: 100%;
   background: ${theme.bg.default};
 
@@ -476,7 +478,7 @@ export const StickyHeaderContent = styled.div`
   display: flex;
   padding: 12px 16px;
   cursor: pointer;
-  max-width: 70%;
+  max-width: 560px;
 
   @media (max-width: 728px) {
     padding: 16px;
@@ -798,7 +800,7 @@ export const RelatedCount = styled.p`
 `;
 
 export const Label = styled.p`
-  font-size: 14px;
+  margin-left: 8px;
 `;
 
 export const StickyHeaderContainer = styled.div`
@@ -905,4 +907,6 @@ export const BylineContainer = styled.div`
   margin-left: -16px;
   margin-right: -16px;
   margin-top: -16px;
+  position: relative;
+  z-index: 1000;
 `;
