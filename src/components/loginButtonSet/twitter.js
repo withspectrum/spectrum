@@ -11,7 +11,7 @@ export const TwitterSigninButton = (props: ButtonProps) => {
     <A onClick={() => onClickHandler && onClickHandler('twitter')} href={href}>
       <TwitterButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'twitter'} />
-        <Label>Sign in with Twitter</Label>
+        <Label>Log in with Twitter</Label>
       </TwitterButton>
     </A>
   );

@@ -486,10 +486,10 @@ export const NavContainer = styled.div`
 export const Tabs = styled.div`
   display: grid;
   padding: 0 16px;
-  grid-template-columns: auto 1fr repeat(3, auto);
+  grid-template-columns: auto 1fr repeat(4, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features apps support auth';
+  grid-template-areas: 'logo . features apps support login auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -629,12 +629,16 @@ export const AuthLink = styled(DropdownLink)`
   }
 `;
 
+export const LoginLink = styled(DropdownLink)`
+  grid-area: login;
+`;
+
 export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto 16px repeat(5, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'features' 'apps' 'support' 'explore' '.' 'auth';
+  grid-template-areas: 'logo' '.' 'features' 'apps' 'support' 'explore' 'login' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
@@ -707,6 +711,14 @@ export const AppsTab = styled(Tab)`
 
 export const SupportTab = styled(Tab)`
   grid-area: support;
+
+  @media (max-width: ${MEDIA_BREAK}px) {
+    display: none;
+  }
+`;
+
+export const LoginTab = styled(Tab)`
+  grid-area: login;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;

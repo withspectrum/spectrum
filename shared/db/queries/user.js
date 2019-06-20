@@ -224,7 +224,9 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
       if (storedUser && storedUser.id) {
         return Promise.resolve(storedUser);
       }
-
+      
+      // restrict new signups to github auth only
+      if (providerMethod !== 'githubProviderId') return Promise.resolve(null)
       // if no user exists, create a new one with the oauth profile data
       return storeUser(user);
     })
@@ -233,6 +235,8 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
         console.error(err);
         return null;
       }
+
+      if (providerMethod !== 'githubProviderId') return null
       return storeUser(user);
     });
 };

@@ -16,10 +16,12 @@ import {
   MenuTab,
   SupportTab,
   FeaturesTab,
+  LoginTab,
   AppsTab,
   AuthTab,
   LogoLink,
   AuthLink,
+  LoginLink,
   SupportLink,
   FeaturesLink,
   AppsLink,
@@ -93,8 +95,8 @@ class Nav extends React.Component<Props, State> {
           >
             Support
           </SupportTab>
-          <AuthTab dark={this.props.dark}>
-            {this.props.currentUser ? (
+          {this.props.currentUser ? (
+            <AuthTab dark={this.props.dark}>
               <Link to={'/'}>
                 <UserAvatar
                   user={this.props.currentUser}
@@ -104,24 +106,36 @@ class Nav extends React.Component<Props, State> {
                   showHoverProfile={false}
                 />
               </Link>
-            ) : (
-              <Link
+            </AuthTab>
+          ) : (
+            <React.Fragment>
+              <LoginTab
+                dark={this.props.dark}
+                selected={this.props.location === 'login'}
                 to="/login"
-                onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+                data-cy="navigation-splash-login"
               >
-                <PrimaryButton
-                  data-cy="navigation-splash-signin"
-                  style={{
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    letterSpacing: '0.5px',
-                  }}
+                Log in
+              </LoginTab>
+              <AuthTab dark={this.props.dark}>
+                <Link
+                  to="/new/user"
+                  onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
                 >
-                  Log in or sign up
-                </PrimaryButton>
-              </Link>
-            )}
-          </AuthTab>
+                  <PrimaryButton
+                    data-cy="navigation-splash-signin"
+                    style={{
+                      fontWeight: '700',
+                      fontSize: '16px',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    Sign up
+                  </PrimaryButton>
+                </Link>
+              </AuthTab>
+            </React.Fragment>
+          )}
           <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
             <Icon
               glyph={this.state.menuIsOpen ? 'view-close' : 'menu'}
@@ -157,12 +171,20 @@ class Nav extends React.Component<Props, State> {
                   <span>Return home</span>
                 </AuthLink>
               ) : (
-                <AuthLink
-                  to={'/login'}
-                  onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
-                >
-                  <span>Log in or sign up</span>
-                </AuthLink>
+                <React.Fragment>
+                  <LoginLink
+                    to={'/login'}
+                    onClick={() => track(events.HOME_PAGE_LOG_IN_CLICKED)}
+                  >
+                    <span>Log in</span>
+                  </LoginLink>
+                  <AuthLink
+                    to={'/new/user'}
+                    onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
+                  >
+                    <span>Sign up</span>
+                  </AuthLink>
+                </React.Fragment>
               )}
             </MenuContainer>
             <MenuOverlay

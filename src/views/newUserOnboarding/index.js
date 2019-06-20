@@ -11,6 +11,7 @@ import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { SERVER_URL } from 'src/api/constants';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
+import Login from 'src/views/login';
 import { LogOutButton, Emoji, Heading, Description, Card } from './style';
 
 type Props = {
@@ -42,8 +43,7 @@ class NewUserOnboarding extends React.Component<Props> {
     const { currentUser, history } = this.props;
 
     if (!currentUser) {
-      history.replace('/');
-      return null;
+      return <Login githubOnly />;
     }
 
     if (currentUser && currentUser.username) {
