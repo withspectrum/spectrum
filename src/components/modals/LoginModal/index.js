@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
+import { OutlineButton } from 'src/components/button';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Container, CodeOfConduct } from './style';
 import { track, events } from 'src/helpers/analytics';
@@ -40,7 +41,7 @@ class LoginModal extends React.Component<Props> {
         /* TODO(@mxstbr): Fix this */
         ariaHideApp={false}
         isOpen={isOpen}
-        contentLabel={'Sign in'}
+        contentLabel={'Sign up'}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}
@@ -50,12 +51,23 @@ class LoginModal extends React.Component<Props> {
           We pass the closeModal dispatch into the container to attach
           the action to the 'close' icon in the top right corner of all modals
         */}
-        <ModalContainer title={'Sign in'} closeModal={this.close}>
+        <ModalContainer title={'Sign up'} closeModal={this.close}>
           <Container data-cy="login-modal">
             <LoginButtonSet
               redirectPath={redirectPath}
               signinType={signinType}
+              githubOnly
             />
+
+            <OutlineButton
+              css={{ width: '100%' }}
+              onClick={this.close}
+              to={'/login'}
+            >
+              Existing user? Click here to log in
+            </OutlineButton>
+
+            <div style={{ padding: '16px' }} />
 
             <CodeOfConduct>
               By using Spectrum, you agree to our{' '}

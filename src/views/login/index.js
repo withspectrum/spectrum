@@ -4,14 +4,12 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
-import Icon from 'src/components/icon';
-import { TextButton } from 'src/components/button';
+import { OutlineButton } from 'src/components/button';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import {
   LargeTitle,
   LargeSubtitle,
-  UpsellIconContainer,
   FullscreenContent,
   CodeOfConduct,
 } from './style';
@@ -67,9 +65,9 @@ class Login extends React.Component<Props> {
           />
 
           {githubOnly && (
-            <TextButton to={'/login'}>
+            <OutlineButton css={{ width: '100%' }} to={'/login'}>
               Existing user? Click here to log in
-            </TextButton>
+            </OutlineButton>
           )}
 
           <CodeOfConduct>
