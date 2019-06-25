@@ -15,6 +15,7 @@ import { track, events } from 'src/helpers/analytics';
 type Props = {
   redirectPath: ?string,
   location: Object,
+  githubOnly?: boolean,
 };
 
 export type ButtonProps = {
