@@ -67,7 +67,7 @@ class Login extends React.Component<Props> {
           {githubOnly && (
             <OutlineButton
               css={{ width: '100%' }}
-              to={`/login?r=${redirectPath}`}
+              to={`/login?r=${redirectPath || `${CLIENT_URL}/home`}`}
             >
               Existing user? Click here to log in
             </OutlineButton>

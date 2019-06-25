@@ -50,9 +50,9 @@ class NewUserOnboarding extends React.Component<Props> {
     }
 
     const redirectPath =
-      redirectPath !== undefined || r !== undefined
+      r !== undefined
         ? // $FlowFixMe
-          `${redirectPath || r}`
+          `${r}`
         : `${CLIENT_URL}/home`;
 
     if (!currentUser) {
