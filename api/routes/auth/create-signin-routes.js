@@ -41,7 +41,9 @@ export const createSigninRoutes = (
     // redirecting to the right place and handling tokens
     callbacks: [
       passport.authenticate(strategy, {
-        failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
+        failureRedirect: IS_PROD
+          ? '/new/user'
+          : 'http://localhost:3000/new/user',
       }),
       (req: express$Request, res: express$Response) => {
         // $FlowIssue

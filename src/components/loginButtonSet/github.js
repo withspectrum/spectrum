@@ -5,13 +5,17 @@ import { GithubButton, Label, A } from './style';
 import Icon from 'src/components/icon';
 
 export const GithubSigninButton = (props: ButtonProps) => {
-  const { href, preferred, showAfter, onClickHandler } = props;
+  const { href, preferred, showAfter, onClickHandler, githubOnly } = props;
 
   return (
-    <A onClick={() => onClickHandler && onClickHandler('github')} href={href}>
+    <A
+      githubOnly={githubOnly}
+      onClick={() => onClickHandler && onClickHandler('github')}
+      href={href}
+    >
       <GithubButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'github'} />
-        <Label>Sign in with GitHub</Label>
+        <Label>{githubOnly ? 'Sign up' : 'Log in'} with GitHub</Label>
       </GithubButton>
     </A>
   );

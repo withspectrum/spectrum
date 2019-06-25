@@ -22,6 +22,7 @@ import {
 import queryString from 'query-string';
 import { track, events } from 'src/helpers/analytics';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
+import { OutlineButton } from 'src/components/button';
 
 type Props = {
   data: {
@@ -90,7 +91,7 @@ export class Login extends React.Component<Props, State> {
                 size={88}
               />
             </LoginImageContainer>
-            <Title>Sign in to the {community.name} community</Title>
+            <Title>Sign up to join the {community.name} community</Title>
             <Subtitle>
               {brandedLogin.message && brandedLogin.message.length > 0
                 ? brandedLogin.message
@@ -102,7 +103,16 @@ export class Login extends React.Component<Props, State> {
                 redirectPath || `${CLIENT_URL}/${match.params.communitySlug}`
               }
               signinType={'signin'}
+              githubOnly
             />
+
+            <OutlineButton
+              css={{ width: '100%' }}
+              to={`/login?r=${redirectPath ||
+                `${CLIENT_URL}/${match.params.communitySlug}`}`}
+            >
+              Existing user? Click here to log in
+            </OutlineButton>
 
             <CodeOfConduct>
               By using Spectrum, you agree to our{' '}

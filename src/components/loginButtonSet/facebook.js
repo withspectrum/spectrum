@@ -11,7 +11,7 @@ export const FacebookSigninButton = (props: ButtonProps) => {
     <A onClick={() => onClickHandler && onClickHandler('facebook')} href={href}>
       <FacebookButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'facebook'} />
-        <Label>Sign in with Facebook</Label>
+        <Label>Log in with Facebook</Label>
       </FacebookButton>
     </A>
   );

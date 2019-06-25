@@ -14,7 +14,7 @@ const coreSplashPageNavbarLinksVisible = () => {
 
 const checkSignedOutSplashNavbarLinksRender = () => {
   coreSplashPageNavbarLinksVisible();
-
+  cy.get('[data-cy="navigation-splash-login"]').should('be.visible');
   cy.get('[data-cy="navigation-splash-signin"]').should('be.visible');
 };
 
