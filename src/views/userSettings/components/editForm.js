@@ -324,7 +324,7 @@ class UserWithData extends React.Component<Props, State> {
       didChangeEmail,
     } = this.state;
 
-    const postAuthRedirectPath = `?r=${CLIENT_URL}/users/${username}/settings`;
+    const postAuthRedirectPath = `${CLIENT_URL}/users/${username}/settings`;
 
     return (
       <SectionCard data-cy="user-edit-form">
@@ -422,7 +422,7 @@ class UserWithData extends React.Component<Props, State> {
                   <GithubSignin>
                     <StyledLabel>Connect your GitHub Profile</StyledLabel>
                     <GithubSigninButton
-                      href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                      href={`${SERVER_URL}/auth/github?r=${postAuthRedirectPath}`}
                       preferred={true}
                       showAfter={false}
                       onClickHandler={null}
@@ -440,7 +440,7 @@ class UserWithData extends React.Component<Props, State> {
                       Your GitHub Profile ·{' '}
                       <span>
                         <a
-                          href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+                          href={`${SERVER_URL}/auth/github?r=${postAuthRedirectPath}`}
                         >
                           Refresh username
                         </a>

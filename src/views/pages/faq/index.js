@@ -28,6 +28,21 @@ class FAQ extends React.Component<{}> {
 
           <Section>
             <SectionTitle>
+              Why can new accounts only be created with GitHub?
+            </SectionTitle>
+
+            <SectionDescription>
+              Spectrum joined GitHub in November, 2018 to build the world’s best
+              communities for developers. In staying with this mission, we are
+              investing in deeper integrations with the GitHub ecosystem. For
+              this reason, new Spectrum accounts must be connected to a GitHub
+              profile. In the future this will help us associate community posts
+              with your code, projects, and collaborators on GitHub.
+            </SectionDescription>
+          </Section>
+
+          <Section>
+            <SectionTitle>
               What happens when I delete my account on Spectrum?
             </SectionTitle>
 

@@ -18,7 +18,7 @@ export const FullscreenViewContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   z-index: ${zIndex.fullscreen};
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-transform: translate3d(0, 0, 0);
 `;
 

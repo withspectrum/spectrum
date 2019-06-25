@@ -2,15 +2,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
+import queryString from 'query-string';
 import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import SetUsername from './components/setUsername';
 import { track, events } from 'src/helpers/analytics';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
-import { SERVER_URL } from 'src/api/constants';
+import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
+import Login from 'src/views/login';
 import { LogOutButton, Emoji, Heading, Description, Card } from './style';
 
 type Props = {
@@ -39,11 +41,22 @@ class NewUserOnboarding extends React.Component<Props> {
   };
 
   render() {
-    const { currentUser, history } = this.props;
+    const { currentUser } = this.props;
+
+    let r;
+    if (location) {
+      const searchObj = queryString.parse(this.props.location.search);
+      r = searchObj.r;
+    }
+
+    const redirectPath =
+      r !== undefined
+        ? // $FlowFixMe
+          `${r}`
+        : `${CLIENT_URL}/home`;
 
     if (!currentUser) {
-      history.replace('/');
-      return null;
+      return <Login githubOnly redirectPath={redirectPath} />;
     }
 
     if (currentUser && currentUser.username) {
