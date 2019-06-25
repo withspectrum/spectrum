@@ -4,7 +4,7 @@ import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
 import { OutlineButton } from 'src/components/button';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
-import { SERVER_URL, CLIENT_URL } from '../../api/constants';
+import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import { Container } from './style';
 import { TwitterSigninButton } from './twitter';
 import { FacebookSigninButton } from './facebook';
@@ -44,8 +44,8 @@ class LoginButtonSet extends React.Component<Props> {
     const postAuthRedirectPath =
       redirectPath !== undefined || r !== undefined
         ? // $FlowFixMe
-          `?r=${redirectPath || r}`
-        : `?r=${CLIENT_URL}/home`;
+          `${redirectPath || r}`
+        : `${CLIENT_URL}/home`;
 
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
@@ -61,7 +61,7 @@ class LoginButtonSet extends React.Component<Props> {
             <React.Fragment>
               <TwitterSigninButton
                 onClickHandler={this.saveLoginMethod}
-                href={`${SERVER_URL}/auth/twitter${postAuthRedirectPath}`}
+                href={`${SERVER_URL}/auth/twitter?r=${postAuthRedirectPath}`}
                 preferred={
                   nonePreferred ? true : preferredSigninMethod === 'twitter'
                 }
@@ -70,7 +70,7 @@ class LoginButtonSet extends React.Component<Props> {
 
               <FacebookSigninButton
                 onClickHandler={this.saveLoginMethod}
-                href={`${SERVER_URL}/auth/facebook${postAuthRedirectPath}`}
+                href={`${SERVER_URL}/auth/facebook?r=${postAuthRedirectPath}`}
                 preferred={
                   nonePreferred ? true : preferredSigninMethod === 'facebook'
                 }
@@ -79,7 +79,7 @@ class LoginButtonSet extends React.Component<Props> {
 
               <GoogleSigninButton
                 onClickHandler={this.saveLoginMethod}
-                href={`${SERVER_URL}/auth/google${postAuthRedirectPath}`}
+                href={`${SERVER_URL}/auth/google?r=${postAuthRedirectPath}`}
                 preferred={
                   nonePreferred ? true : preferredSigninMethod === 'google'
                 }
@@ -91,7 +91,7 @@ class LoginButtonSet extends React.Component<Props> {
           <GithubSigninButton
             githubOnly={githubOnly}
             onClickHandler={this.saveLoginMethod}
-            href={`${SERVER_URL}/auth/github${postAuthRedirectPath}`}
+            href={`${SERVER_URL}/auth/github?r=${postAuthRedirectPath}`}
             preferred={
               githubOnly
                 ? true
@@ -105,7 +105,10 @@ class LoginButtonSet extends React.Component<Props> {
           {!githubOnly && (
             <div style={{ gridColumn: 'span 2' }}>
               <div style={{ padding: '16px' }} />
-              <OutlineButton css={{ width: '100%' }} to={'/new/user'}>
+              <OutlineButton
+                css={{ width: '100%' }}
+                to={`/new/user?r=${postAuthRedirectPath}`}
+              >
                 New to Spectrum? Click here to sign up.
               </OutlineButton>
             </div>

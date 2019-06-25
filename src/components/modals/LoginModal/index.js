@@ -62,7 +62,7 @@ class LoginModal extends React.Component<Props> {
             <OutlineButton
               css={{ width: '100%' }}
               onClick={this.close}
-              to={'/login'}
+              to={`/login?r=${redirectPath}`}
             >
               Existing user? Click here to log in
             </OutlineButton>

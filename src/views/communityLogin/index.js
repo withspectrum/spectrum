@@ -106,7 +106,11 @@ export class Login extends React.Component<Props, State> {
               githubOnly
             />
 
-            <OutlineButton css={{ width: '100%' }} to={'/login'}>
+            <OutlineButton
+              css={{ width: '100%' }}
+              to={`/login?r=${redirectPath ||
+                `${CLIENT_URL}/${match.params.communitySlug}`}`}
+            >
               Existing user? Click here to log in
             </OutlineButton>
 
