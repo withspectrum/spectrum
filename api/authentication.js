@@ -139,8 +139,9 @@ const init = () => {
             return user;
           })
           .catch(err => {
-            done(err);
-            return null;
+            return done(null, err, {
+              message: 'Please sign in with GitHub to create a new account.',
+            });
           });
       }
     )
@@ -204,8 +205,9 @@ const init = () => {
             return user;
           })
           .catch(err => {
-            done(err);
-            return null;
+            return done(null, err, {
+              message: 'Please sign in with GitHub to create a new account.',
+            });
           });
       }
     )
@@ -268,8 +270,9 @@ const init = () => {
             return user;
           })
           .catch(err => {
-            done(err);
-            return null;
+            return done(null, err, {
+              message: 'Please sign in with GitHub to create a new account.',
+            });
           });
       }
     )

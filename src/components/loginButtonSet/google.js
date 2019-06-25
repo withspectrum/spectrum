@@ -11,7 +11,7 @@ export const GoogleSigninButton = (props: ButtonProps) => {
     <A onClick={() => onClickHandler && onClickHandler('google')} href={href}>
       <GoogleButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'google'} />
-        <Label>Sign in with Google</Label>
+        <Label>Log in with Google</Label>
       </GoogleButton>
     </A>
   );

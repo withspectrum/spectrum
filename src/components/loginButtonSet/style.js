@@ -16,6 +16,7 @@ export const Container = styled.div`
 
 export const A = styled.a`
   display: flex;
+  grid-column: ${props => (props.githubOnly ? '1 / 3' : 'auto')};
 `;
 
 export const SigninButton = styled.div`
