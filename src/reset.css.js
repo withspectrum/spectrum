@@ -178,6 +178,7 @@ export default createGlobalStyle`
     font-weight: 400;
     line-height: 1.4;
     margin: 16px 0;
+    word-break: break-all;
   }
 
   .markdown blockquote p {
