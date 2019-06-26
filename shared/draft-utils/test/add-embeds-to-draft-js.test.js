@@ -421,38 +421,33 @@ describe('sites', () => {
     });
   });
 
-  describe('github', () => {
+  describe('github urls', () => {
     it('should handle url', () => {
       const text = `https://github.com/withspectrum/spectrum/issues/5115`;
       expect(getEmbedsFromText(text)).toEqual([
         {
-          protocol: 'https:',
-          slashes: true,
-          auth: null,
-          host: 'github.com',
-          port: null,
-          hostname: 'github.com',
-          hash: null,
-          search: null,
-          query: null,
-          pathname: 'withspectrum/spectrum/issues/5115',
-          path: 'withspectrum/spectrum/issues/5115',
-          href: 'https://github.com/withspectrum/spectrum/issues/5115',
-          filepath: '5115',
-          owner: 'withspectrum',
-          name: 'spectrum',
-          repo: 'withspectrum/spectrum',
-          branch: 'issues',
-          repository: 'withspectrum/spectrum',
           type: 'github',
           url: 'https://github.com/withspectrum/spectrum/issues/5115',
         },
       ]);
     });
+
     it('should handle multiple instances urls', () => {
       const text = `https://github.com/withspectrum/spectrum/issues/5115 and 
       https://github.com/withspectrum/spectrum/issues/5116  as well as 
       https://github.com/withspectrum/spectrum/issues/5117 `;
+      expect(getEmbedsFromText(text).length).toEqual(3);
+    });
+
+    it('should only handle issue/pull urls', () => {
+      const text = `https://github.com/strapi/strapi
+      https://github.com/kubernetes/kubernetes
+      www.github.com/kubernetes/
+      https://github.com/fastify/fastify-websocket/issues/23
+      www.github.com/fastify/fastify-websocket/issues/23
+      https://github.com/fastify/fastify-websocket/issues/67
+      `;
+
       expect(getEmbedsFromText(text).length).toEqual(3);
     });
   });
@@ -592,33 +587,7 @@ it('should remove link entities', () => {
         type: 'unstyled',
         key: 'g0000',
         data: {},
-        depth: 0, // it('should handle url', () => {
-        //   const text = `https://github.com/withspectrum/spectrum/issues/5115`;
-        //   expect(getEmbedsFromText(text)).toEqual([
-        //     {
-        //       protocol: 'https:',
-        //       slashes: true,
-        //       auth: null,
-        //       host: 'github.com',
-        //       port: null,
-        //       hostname: 'github.com',
-        //       hash: null,
-        //       search: null,
-        //       query: null,
-        //       pathname: 'withspectrum/spectrum/issues/5115',
-        //       path: 'withspectrum/spectrum/issues/5115',
-        //       href: 'https://github.com/withspectrum/spectrum/issues/5115',
-        //       filepath: '5115',
-        //       owner: 'withspectrum',
-        //       name: 'spectrum',
-        //       repo: 'withspectrum/spectrum',
-        //       branch: 'issues',
-        //       repository: 'withspectrum/spectrum',
-        //       type: 'github',
-        //       url: 'https://github.com/withspectrum/spectrum/issues/5115',
-        //     },
-        //   ]);
-        // });
+        depth: 0,
         inlineStyleRanges: [],
         entityRanges: [
           {

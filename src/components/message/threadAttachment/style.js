@@ -103,3 +103,15 @@ export const GlobalThreadAttachmentStyles = createGlobalStyle`
     }
   }
 `;
+
+export const GitHubBadge = styled.span`
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 20px;
+  background: ${({ color }) => color};
+  border-radius: 2px;
+  box-shadow: inset 0 -1px 0 rgba(27, 31, 35, 0.12);
+  height: 20px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+`;

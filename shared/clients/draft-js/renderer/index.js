@@ -2,18 +2,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-import {
-  Line,
-  Paragraph,
-  BlockQuote,
-  GithubAttachment,
-} from 'src/components/message/style';
+import { Line, Paragraph, BlockQuote } from 'src/components/message/style';
 import {
   AspectRatio,
   EmbedContainer,
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
 import ThreadAttachment from 'src/components/message/threadAttachment';
+import GitHubAttachment from 'src/components/message/threadAttachment/gitHubAttachment';
 import { getStringElements } from '../utils/getStringElements';
 import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
@@ -29,7 +25,6 @@ import type {
 
 const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
   let { aspectRatio, url, src, type, width = '100%', height = 200 } = props;
-  const gitAttachmentProps = type === 'github' ? props : null;
 
   if (!src && url) src = url;
   if (typeof src !== 'string') return null;
@@ -49,16 +44,7 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
       </AspectRatio>
     );
   } else if (type === 'github') {
-    return (
-      <GithubAttachment>
-        <a href={url}>
-          #
-          {`${gitAttachmentProps.repo}/${gitAttachmentProps.branch}/${
-            gitAttachmentProps.filepath
-          }`}
-        </a>
-      </GithubAttachment>
-    );
+    return <GitHubAttachment url={props.url} />;
   } else {
     return (
       <EmbedContainer style={{ height }}>
