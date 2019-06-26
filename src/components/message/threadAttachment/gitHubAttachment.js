@@ -1,14 +1,14 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import path from 'path';
+import parseGithubUrl from 'parse-github-url';
 import { Loading } from 'src/components/loading';
 import { Container, Column, GitHubBadge } from './style';
 import { ThreadTitle } from 'src/components/inboxThread/style';
 import { InnerMessageContainer } from '../style';
-import parseGithubUrl from 'parse-github-url';
 
-const GitHubAttachment = ({ url }) => {
+const GitHubAttachment = (props: { url: string }) => {
+  const { url } = props;
   const [loading, setLoading] = useState(true);
   const [apiData, setApiData] = useState(null);
   const [urlData] = useState(parseGithubUrl(url));
@@ -58,10 +58,6 @@ const GitHubAttachment = ({ url }) => {
   }
 
   return attachment;
-};
-
-GitHubAttachment.propTypes = {
-  url: PropTypes.string.isRequired,
 };
 
 export default GitHubAttachment;

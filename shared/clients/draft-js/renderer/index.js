@@ -43,8 +43,8 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
         />
       </AspectRatio>
     );
-  } else if (type === 'github') {
-    return <GitHubAttachment url={props.url} />;
+  } else if (type === 'github' && url) {
+    return <GitHubAttachment url={url} />;
   } else {
     return (
       <EmbedContainer style={{ height }}>
