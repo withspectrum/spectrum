@@ -114,7 +114,9 @@ const match = (regex: RegExp, text: string) => {
   const matches = text.match(regex);
   if (!matches) return [];
   return [...new Set(matches)].map(match => {
-    return regex.exec(match)[1];
+    const capture = regex.exec(match);
+    regex.lastIndex = 0; //reset the index to beginning of next match
+    return capture[1];
   });
 };
 
