@@ -10,7 +10,7 @@ import parseGithubUrl from 'parse-github-url';
 
 const GitHubAttachment = ({ url }) => {
   const [loading, setLoading] = useState(true);
-  const [apiData, setApiData] = useState({ title: '' });
+  const [apiData, setApiData] = useState(null);
   const [urlData] = useState(parseGithubUrl(url));
 
   useEffect(() => {
@@ -25,34 +25,39 @@ const GitHubAttachment = ({ url }) => {
     fetchData();
   }, []);
 
-  if (loading)
-    return (
+  let attachment;
+
+  if (loading || !apiData) {
+    attachment = (
       <Container style={{ padding: '16px 12px' }}>
         <Loading />
       </Container>
     );
+  } else {
+    attachment = (
+      <div className="attachment-container">
+        <Container data-cy="thread-attachment">
+          <Column>
+            <a href={apiData.html_url}>
+              <ThreadTitle>
+                {`${apiData.title} · #${apiData.number} `}
+                <GitHubBadge
+                  color={apiData.state === 'open' ? '#2cbe4e' : '#cb2431'}
+                >
+                  {apiData.state}
+                </GitHubBadge>
+              </ThreadTitle>
+            </a>
+            <InnerMessageContainer style={{ fontSize: '12px' }}>
+              {`${urlData.repo} · ${apiData.user.login}`}
+            </InnerMessageContainer>
+          </Column>
+        </Container>
+      </div>
+    );
+  }
 
-  return (
-    <div className="attachment-container">
-      <Container data-cy="thread-attachment">
-        <Column>
-          <a href={apiData.html_url}>
-            <ThreadTitle>
-              {`${apiData.title} · #${apiData.number} `}
-              <GitHubBadge
-                color={apiData.state === 'open' ? '#2cbe4e' : '#cb2431'}
-              >
-                {apiData.state}
-              </GitHubBadge>
-            </ThreadTitle>
-          </a>
-          <InnerMessageContainer style={{ fontSize: '12px' }}>
-            {`${urlData.repo} · ${apiData.user.login}`}
-          </InnerMessageContainer>
-        </Column>
-      </Container>
-    </div>
-  );
+  return attachment;
 };
 
 GitHubAttachment.propTypes = {
