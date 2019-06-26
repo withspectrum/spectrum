@@ -1,6 +1,7 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import path from 'path';
+// $FlowFixMe
 import parseGithubUrl from 'parse-github-url';
 import { Loading } from 'src/components/loading';
 import { Container, Column, GitHubBadge } from './style';
