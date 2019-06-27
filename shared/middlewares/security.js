@@ -11,7 +11,8 @@ function securityMiddleware(
   { enableNonce, enableCSP }: { enableNonce: boolean, enableCSP: boolean }
 ) {
   // Don't expose any software information to hackers.
-  server.disable('x-powered-by');
+  // @see https://helmetjs.github.io/docs/hide-powered-by/
+  server.use(helmet.hidePoweredBy())
 
   // Prevent HTTP Parameter pollution.
   server.use(hpp());
