@@ -10,17 +10,49 @@ import { InnerMessageContainer } from '../style';
 
 const GitHubAttachment = (props: { url: string }) => {
   const { url } = props;
-  const [loading, setLoading] = useState(true);
   const [apiData, setApiData] = useState(null);
   const [urlData] = useState(parseGithubUrl(url));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [validUrl, setValidUrl] = useState(true);
 
   useEffect(() => {
+    // if the request takes longer than timeout, fallback case is triggered.
+    // When request completes it either fails or succeeds and updates attachment
     const fetchData = async () => {
-      const apiUrl = path.join('https://api.github.com/repos/', urlData.path);
-      const result = await fetch(apiUrl);
-      const json = await result.json();
-      setApiData(json);
-      setLoading(false);
+      let fetchTimeOut = setTimeout(() => {
+        setError(true);
+        setLoading(false);
+      }, 4000);
+
+      try {
+        const apiUrl = path.join('https://api.github.com/repos/', urlData.path);
+        const response = await fetch(apiUrl);
+
+        switch (response.status) {
+          case 200: {
+            const json = await response.json();
+            clearTimeout(fetchTimeOut);
+            setApiData(json);
+            setError(false);
+            setLoading(false);
+            break;
+          }
+          case 404: {
+            clearTimeout(fetchTimeOut);
+            setValidUrl(false);
+            setLoading(false);
+            break;
+          }
+          default: {
+            throw new Error('Failed Response');
+          }
+        }
+      } catch (err) {
+        clearTimeout(fetchTimeOut);
+        setError(true);
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -28,7 +60,28 @@ const GitHubAttachment = (props: { url: string }) => {
 
   let attachment;
 
-  if (loading || !apiData) {
+  if (!validUrl) {
+    attachment = <a href={url}>{url}</a>; // spit out broken link
+  } else if (error) {
+    const title = urlData.branch === 'issues' ? 'Issue' : 'Pull Request';
+    attachment = (
+      <div className="attachment-container">
+        <Container data-cy="thread-attachment">
+          <Column>
+            <a href={urlData.href}>
+              <ThreadTitle>
+                {`${title} · #${urlData.filepath} `}
+                <GitHubBadge color="#ebedf0">status unknown</GitHubBadge>
+              </ThreadTitle>
+            </a>
+            <InnerMessageContainer style={{ fontSize: '12px' }}>
+              {`${urlData.repo} `}
+            </InnerMessageContainer>
+          </Column>
+        </Container>
+      </div>
+    );
+  } else if (loading || !apiData) {
     attachment = (
       <Container style={{ padding: '16px 12px' }}>
         <Loading />
