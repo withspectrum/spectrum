@@ -32,7 +32,7 @@ class Attachment extends React.Component<Props> {
 
     return (
       <div className="attachment-container">
-        <Container data-cy="thread-attachment">
+        <Container data-cy="github-attachment">
           <LinkWrapper
             onClick={e => e.stopPropagation()}
             to={{ pathname: getThreadLink(thread), state: { modal: true } }}
