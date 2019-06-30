@@ -62,7 +62,7 @@ const GitHubAttachment = (props: { url: string }) => {
   } else {
     attachment = (
       <div className="attachment-container">
-        <Container data-cy="thread-attachment">
+        <Container data-cy="github-attachment">
           <Column>
             <a href={apiData.html_url}>
               <ThreadTitle>
