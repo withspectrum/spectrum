@@ -13,23 +13,26 @@ const GitHubAttachment = (props: { url: string }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setUrlData(parseGithubUrl(url));
-        if (
-          !urlData.href ||
-          !urlData.branch ||
-          !urlData.filepath ||
-          !urlData.filepath
-        ) {
-          throw new Error('Url Error');
-        }
-      } catch (err) {
-        setError(true);
-      }
-    };
-    fetchData();
-  }, [url]);
+    let data;
+    try {
+      data = parseGithubUrl(url);
+    } catch (err) {
+      setError(true);
+    }
+    setUrlData(data);
+    setError(false);
+  });
+
+  useEffect(() => {
+    if (
+      !urlData.href ||
+      !urlData.branch ||
+      !urlData.filepath ||
+      !urlData.repo
+    ) {
+      setError(true);
+    }
+  }, [urlData]);
 
   let attachment;
 

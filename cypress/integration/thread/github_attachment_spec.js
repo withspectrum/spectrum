@@ -31,7 +31,7 @@ describe('github attachment', () => {
     });
 
     it('should not render invalid link ', () => {
-      let message = 'https://github.com/withspectrum/spectrum/issues/511967';
+      let message = 'https://github.com/withspectrum/issues/5119';
       cy.get('[data-cy="chat-input"]').type(message);
       cy.get('[data-cy="chat-input-send-button"]').click();
       cy.get('[data-cy="github-attachment"]').should('not.be.visible');
