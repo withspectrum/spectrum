@@ -104,7 +104,7 @@ export const GlobalThreadAttachmentStyles = createGlobalStyle`
   }
 `;
 
-export const GitHubBadge = styled.span`
+export const GithubBadge = styled.span`
   color: #ffffff;
   font-weight: 600;
   line-height: 20px;

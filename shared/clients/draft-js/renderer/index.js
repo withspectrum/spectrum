@@ -9,7 +9,7 @@ import {
   EmbedComponent,
 } from 'src/components/rich-text-editor/style';
 import ThreadAttachment from 'src/components/message/threadAttachment';
-import GitHubAttachment from 'src/components/message/threadAttachment/gitHubAttachment';
+import GithubAttachment from 'src/components/message/threadAttachment/githubAttachment';
 import { getStringElements } from '../utils/getStringElements';
 import { hasStringElements } from '../utils/hasStringElements';
 import mentionsDecorator from '../mentions-decorator';
@@ -44,7 +44,7 @@ const ExternalEmbed = (props: { ...ExternalEmbedData, src?: string }) => {
       </AspectRatio>
     );
   } else if (type === 'github' && url) {
-    return <GitHubAttachment url={url} />;
+    return <GithubAttachment url={url} />;
   } else {
     return (
       <EmbedContainer style={{ height }}>
