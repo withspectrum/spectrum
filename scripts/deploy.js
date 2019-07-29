@@ -10,8 +10,8 @@ const exec = process.env.DEBUG
       return 'fake-url-asdf123.now.sh';
     }
   : execSync;
-// Append --team space-program to all now commands
-const now = (cmd = '') => `now ${cmd} --team space-program`;
+// Append --scope space-program to all now commands
+const now = (cmd = '') => `now ${cmd} --scope space-program`;
 
 const VALID_SERVERS = [
   'all',
@@ -81,7 +81,7 @@ if (servers.length > 0) {
     exec(`yarn run build:${server}`);
 
     console.log(`Deploying ${server}...`);
-    const stdout = exec(now(`build-${server}`), {
+    const stdout = exec(now(`build-${server} --debug`), {
       stdio: 'pipe',
     });
 
