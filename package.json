@@ -141,7 +141,7 @@
     "lodash": "^4.17.11",
     "lodash.intersection": "^4.4.0",
     "moment": "^2.22.2",
-    "ms": "^2.1.1",
+    "ms": "^2.1.2",
     "node-env-file": "^0.1.8",
     "now-env": "^3.1.0",
     "offline-plugin": "^5.0.5",
