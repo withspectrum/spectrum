@@ -44,7 +44,7 @@ class NewUserOnboarding extends React.Component<Props> {
     const { currentUser } = this.props;
 
     let r;
-    if (location) {
+    if (this.props.location) {
       const searchObj = queryString.parse(this.props.location.search);
       r = searchObj.r;
     }
