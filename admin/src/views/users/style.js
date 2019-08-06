@@ -10,7 +10,7 @@ export const UserCommunitySettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  align-itemse: center;
+  align-items: center;
 `;
 
 export const SectionHeader = styled.h1`
