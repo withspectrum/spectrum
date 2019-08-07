@@ -1632,10 +1632,10 @@ axios@^0.19.0:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
 
-b2a@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/b2a/-/b2a-1.0.11.tgz#3e1e27bab975606348ff24e8ea84a4fd6d3bec62"
-  integrity sha512-x+zEGHuG+mSvN+OxrKH8baFssxPjkXvgAjSuLbKrNstX6RpYIykp0BAvbuB1y8tfFwZ4EuXF5OC6m5/D3d12wQ==
+b2a@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/b2a/-/b2a-1.1.2.tgz#3bb0a7dbc0931c84ac97722fa4f5f51ba0a7d831"
+  integrity sha512-Ee7SUAyWeIx4ICRygOi7dVlGpHRxynsaLIZwOtHtGKls3LhLchTRk5KrI0O8ioWqy94ikkE8Z2Li3LWNd027/A==
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
