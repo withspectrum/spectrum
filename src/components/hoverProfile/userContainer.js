@@ -43,8 +43,11 @@ type State = {
 class UserHoverProfileWrapper extends React.Component<Props, State> {
   ref: ?any;
   ref = null;
-  state = { visible: false };
+  popperNode = null;
+  popperTransformStyle = null;
+  span = React.createRef();
   _isMounted = false;
+  state = { visible: false };
 
   componentDidMount() {
     this._isMounted = true;
@@ -52,6 +55,31 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
 
   componentWillUnmount() {
     this._isMounted = false;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    if (!prevState.visible) {
+      let { top, left, bottom } = this.span.current.getBoundingClientRect();
+      bottom = window.innerHeight - bottom;
+
+      return { top, left, bottom };
+    }
+
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot === null) return;
+    if (!this.popperNode || !this.popperNode.firstElementChild) return;
+
+    const { top, left, bottom } = snapshot;
+    const popover = this.popperNode.firstElementChild;
+
+    if (bottom < popover.clientHeight) {
+      this.popperTransformStyle = {
+        transform: `translate3d(${left}px, ${top - popover.clientHeight}px, 0)`,
+      };
+    }
   }
 
   handleMouseEnter = () => {
@@ -81,6 +109,14 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
       clearTimeout(this.ref);
     }
 
+    if (this.popperNode) {
+      this.popperNode = null;
+    }
+
+    if (this.popperTransformStyle) {
+      this.popperTransformStyle = null;
+    }
+
     if (this._isMounted && this.state.visible) {
       this.setState({ visible: false });
     }
@@ -89,30 +125,39 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
   render() {
     const { children, currentUser, username, style = {} } = this.props;
     const me = currentUser && currentUser.username === username;
+
     return (
       <Span
+        ref={this.span}
+        style={style}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
-        style={style}
       >
         <Manager tag={false}>
           <Reference>
             {({ ref }) => (
-              <Span ref={ref} style={style}>
+              <div ref={ref} style={style}>
                 {children}
-              </Span>
+              </div>
             )}
           </Reference>
           {this.state.visible &&
             document.body &&
             createPortal(
-              <Popper placement="bottom-start">
+              <Popper
+                placement="bottom-start"
+                innerRef={node => (this.popperNode = node)}
+              >
                 {({ style, ref, placement }) => (
                   <span ref={ref} data-placement={placement}>
                     <MentionHoverProfile
                       username={username}
                       me={me}
-                      style={style}
+                      style={
+                        this.popperTransformStyle
+                          ? { ...style, ...this.popperTransformStyle }
+                          : style
+                      }
                     />
                   </span>
                 )}
