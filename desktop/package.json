@@ -21,7 +21,7 @@
     "electron": "^3.0.13",
     "electron-builder": "^20.41.0",
     "nodemon": "^1.19.1",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.7.1"
   },
   "scripts": {
     "dev": "nodemon --exec \"electron ./src/main.js\" -w ./src",
