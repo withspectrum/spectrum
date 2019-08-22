@@ -76,10 +76,14 @@ type LikeCountProps = {
 
 export const LikeCount = (props: LikeCountProps) => {
   const { active, thread } = props;
-  const { count } = thread.reactions;
+  const { count, hasReacted } = thread.reactions;
   return (
     <LikeCountWrapper active={active}>
-      <Icon glyph={'thumbsup'} size={24} />
+      {hasReacted ? (
+        <Icon glyph={'thumbsup-fill'} size={24} />
+      ) : (
+        <Icon glyph={'thumbsup'} size={24} />
+      )}
       <CurrentCount>{count || '0'}</CurrentCount>
     </LikeCountWrapper>
   );
