@@ -219,6 +219,10 @@ export const SectionDescription = styled.p`
     color: ${theme.brand.alt};
     font-weight: 500;
   }
+
+  strong {
+    font-weight: 600;
+  }
 `;
 
 export const Highlight = styled.span`
