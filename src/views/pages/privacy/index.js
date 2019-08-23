@@ -23,7 +23,7 @@ class Privacy extends React.Component<{}> {
 
         <ContentContainer>
           <Heading>Privacy Policy</Heading>
-          <Copy>Effective date: December 12, 2018</Copy>
+          <Copy>Effective date: August 22, 2019</Copy>
 
           <Section>
             <SectionDescription>
@@ -56,8 +56,10 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               “Personal Data” means data about a living individual who can be
-              identified from those data (or from those and other information
+              identified from that data (or from those and other information
               either in our possession or likely to come into our possession).
+              Personal Data may include, but is not limited to email addresses,
+              first and last names, cookies, and usage data.
             </SectionDescription>
 
             <SectionDescription>
@@ -96,53 +98,79 @@ class Privacy extends React.Component<{}> {
             <SectionTitle>Information Collection and Use</SectionTitle>
 
             <SectionDescription>
-              While using our Service, we may ask you to provide us with certain
-              personally identifiable information that can be used to contact or
-              identify you ("Personal Data"). Personally identifiable
-              information may include, but is not limited to email addresses,
-              first and last names, cookies, and usage data.
+              We will collect Personal Data about you from a variety of sources,
+              including information We collect from you directly, information we
+              automatically collect from your use of the Service, and
+              information we collect about you from other sources, described
+              below.
             </SectionDescription>
 
             <SectionDescription>
-              We may use your Personal Data to contact you with newsletters,
-              marketing or promotional materials and other information that may
-              be of interest to you. You may opt out of receiving any, or all,
-              of these communications from us by following the unsubscribe link
-              or instructions provided in any email we send.
+              <strong>Information We collect directly from you</strong>
             </SectionDescription>
 
             <SectionDescription>
-              We may also collect information how the Service is accessed and
-              used ("Usage Data"). This Usage Data may include information such
-              as your computer’s Internet Protocol address (e.g. IP address),
-              browser type, browser version, the pages of our Service that you
-              visit, the time and date of your visit, the time spent on those
-              pages, unique device identifiers and other diagnostic data.
+              <strong>a. Registration through your GitHub account</strong>
+              You can register to our Service using an account you already have
+              with GitHub. This information is controlled by GitHub and the
+              GitHub privacy policy;
             </SectionDescription>
 
             <SectionDescription>
-              We use cookies and similar tracking technologies to track the
-              activity on our Service and hold certain information.
+              <strong>b. Profile information</strong>
+              You may also complete a profile, which may include your name,
+              username, profile photo, cover photo, website, email and any
+              additional profile information you chose to provide. Please note
+              that your profile information will be visible to other users of
+              our Service; and
             </SectionDescription>
 
             <SectionDescription>
-              Cookies are files with small amount of data which may include an
-              anonymous unique identifier. Cookies are sent to your browser from
-              a website and stored on your device. Tracking technologies also
-              used are beacons, tags, and scripts to collect and track
-              information and to improve and analyze our Service.
+              <strong>c. Other information</strong>
+              You may choose to provide us with certain information when you
+              post or upload content to the Service, fill out a form, and/or
+              post to forums.
             </SectionDescription>
 
             <SectionDescription>
-              You can instruct your browser to refuse all cookies or to indicate
-              when a cookie is being sent. However, if you do not accept
-              cookies, you may not be able to use some portions of our Service.
+              <strong>
+                Information We automatically collect from your use of the
+                Service
+              </strong>
             </SectionDescription>
 
             <SectionDescription>
-              We use Session Cookies to operate our Service. We use Preference
-              Cookies to remember your preferences and various settings. We use
-              Security Cookies for security purposes.
+              <strong>a. Usage information</strong>
+              We automatically collect information about how you use the
+              Service, such as your computer’s Internet Protocol address (e.g.
+              IP address), browser type, browser version, the pages of our
+              Service that you visit, the time and date of your visit, the time
+              spent on those pages, unique device identifiers and other
+              diagnostic data;
+            </SectionDescription>
+
+            <SectionDescription>
+              <strong>b. Device information</strong>
+              We may collect certain technical information about your device,
+              such as your IP Address, geolocation information (city and
+              country), your browser type, language, your operating system and
+              application version, device types, device model and manufacturer,
+              device identifier and your device operating system type and
+              version; and
+            </SectionDescription>
+
+            <SectionDescription>
+              <strong>c. Cookies and similar technologies</strong>
+              We and our partners automatically collect information from cookies
+              and similar technologies (such as cookies IDs and settings) to
+              recognize you, track your behavior on the Service and your device,
+              and to improve and analyze Our Service. You can instruct your
+              browser to refuse all cookies or to indicate when a cookie is
+              being sent. However, if you do not accept cookies, you may not be
+              able to use some portions of our Service. We use Session Cookies
+              to operate our Service. We use Preference Cookies to remember your
+              preferences and various settings. We use Security Cookies for
+              security purposes.
             </SectionDescription>
           </Section>
 
@@ -150,8 +178,7 @@ class Privacy extends React.Component<{}> {
             <SectionTitle>Use of Data</SectionTitle>
 
             <SectionDescription>
-              Space Program, Inc. uses the collected data to provide and
-              maintain our Service:
+              We use the collected data to provide and maintain our Service:
             </SectionDescription>
 
             <PrivacyTermsList>
@@ -167,7 +194,19 @@ class Privacy extends React.Component<{}> {
                 improve our Service
               </li>
               <li>To monitor the usage of our Service</li>
-              <li>To detect, prevent and address technical issues</li>
+              <li>To detect, prevent and address security issues and abuse</li>
+              <li>
+                To conduct research for further development of the Service
+              </li>
+              <li>
+                To analyze your content to help us detect abuse such as spam,
+                malware and illegal content
+              </li>
+              <li>
+                To comply with legal obligations to which we are subject,
+                protect our Trademarks, enforce our Terms of Use and cooperate
+                with regulators and law enforcement bodies.
+              </li>
             </PrivacyTermsList>
           </Section>
 
@@ -178,14 +217,14 @@ class Privacy extends React.Component<{}> {
             </SectionTitle>
 
             <SectionDescription>
-              If you are from the European Economic Area (EEA), Space Program,
-              Inc. legal basis for collecting and using the personal information
-              described in this Privacy Policy depends on the Personal Data we
-              collect and the specific context in which we collect it.
+              If you are from the European Economic Area (EEA), the legal basis
+              for collecting and using the personal information described in
+              this Privacy Policy depends on the Personal Data we collect and
+              the specific context in which we collect it.
             </SectionDescription>
 
             <SectionDescription>
-              Space Program, Inc. may process your Personal Data because:
+              We may process your Personal Data because:
             </SectionDescription>
 
             <PrivacyTermsList>
@@ -229,19 +268,20 @@ class Privacy extends React.Component<{}> {
               States in accordance with this Privacy Policy (our subprocessors
               may store and process data outside the United States). For
               cross-border data transfers from the European Union (EU) and the
-              European Economic Area (EEA), GitHub adheres to the Privacy Shield
-              Framework. You may view our entry in the Privacy Shield List.
+              European Economic Area (EEA), GitHub complies with the EU-U.S.
+              Privacy Shield Framework and Swiss-U.S. Privacy Shield Framework
+              as set forth by the U.S. Department of Commerce regarding the
+              collection, use, and retention of Personal Data transferred from
+              the European Union, the UK, and Switzerland to the United States.
+              GitHub has certified to the Department of Commerce that it adheres
+              to the Privacy Shield Principles.
             </SectionDescription>
 
             <SectionDescription>
-              If you are located outside United States and choose to provide
-              information to us, please note that we transfer the data,
-              including Personal Data, to United States and process it there.
-            </SectionDescription>
-
-            <SectionDescription>
-              Your consent to this Privacy Policy followed by your submission of
-              such information represents your agreement to that transfer.
+              If there is any conflict between the terms in this Privacy Policy
+              and the Privacy Shield Principles, the Privacy Shield Principles
+              shall govern. To learn more about the Privacy Shield program, and
+              to view our certification, visit the Privacy Shield website.
             </SectionDescription>
 
             <SectionDescription>
@@ -249,11 +289,7 @@ class Privacy extends React.Component<{}> {
               security, and access, and we limit the purpose for processing. We
               also provide our users a method of recourse and enforcement. These
               are the Privacy Shield Principles, but they are also just good
-              practices. In addition, we participate in and comply with the
-              Privacy Shield framework, and we are committed to subject any
-              Personal Data we receive from the EU and EEA to the Privacy Shield
-              Principles. Please read more about GitHub’s international privacy
-              commitments.
+              practices.
             </SectionDescription>
 
             <SectionDescription>
@@ -277,9 +313,9 @@ class Privacy extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              Under certain circumstances, we may be required to disclose your
+              Under certain circumstances, we may be required to disclose your
               Personal Data if required to do so by law or in response to valid
-              requests by public authorities (e.g. a court or a government
+              requests by public authorities (e.g. a court or a government
               agency).
             </SectionDescription>
 
@@ -323,9 +359,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               If you are a resident of the European Economic Area (EEA), you
-              have certain data protection rights. Space Program, Inc. aims to
-              take reasonable steps to allow you to correct, amend, delete, or
-              limit the use of your Personal Data.
+              have certain data protection rights. GitHub aims to take
+              reasonable steps to allow you to correct, amend, delete, or limit
+              the use of your Personal Data.
             </SectionDescription>
 
             <SectionDescription>
@@ -367,7 +403,7 @@ class Privacy extends React.Component<{}> {
               </li>
               <li>
                 The right to withdraw consent. You also have the right to
-                withdraw your consent at any time where we relied on your
+                withdraw your consent at any time where we relied on your
                 consent to process your personal information. Please note that
                 we may ask you to verify your identity before responding to such
                 requests.
@@ -387,8 +423,22 @@ class Privacy extends React.Component<{}> {
               You may contact us by filling out the Privacy contact form. You
               may also email us directly at privacy@github.com with the subject
               line “Privacy Concerns.” We will respond promptly — within 45 days
-              at the latest. You may also contact our Data Protection Officer
-              directly.
+              at the latest.
+            </SectionDescription>
+
+            <SectionDescription>
+              You may also contact our Data Protection Officer directly:
+            </SectionDescription>
+
+            <SectionDescription>
+              Our Data Protection Officer GitHub Data Protection Officer 88
+              Colin P. Kelly Jr. St. San Francisco, CA 94107 United States
+              privacy@github.com
+            </SectionDescription>
+
+            <SectionDescription>
+              Our EU Office GitHub BV Vijzelstraat 68-72 1017 HL Amsterdam The
+              Netherlands privacy@github.com
             </SectionDescription>
           </Section>
 
@@ -397,24 +447,25 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               In the unlikely event that a dispute arises between you and GitHub
               regarding our handling of your Personal Data, we will do our best
-              to resolve it. If we cannot, we have selected JAMS, an independent
-              dispute resolution provider, to handle unresolved Privacy Shield
-              complaints. If we are unable to resolve your concerns after a good
-              faith effort to address them, you may contact JAMS and submit a
-              Privacy Shield claim. JAMS is a US-based private alternate dispute
-              resolution provider, and we have contracted with JAMS to provide
-              an independent recourse mechanism for any of our users for privacy
-              concerns at no cost to you. You do not need to appear in court;
-              you may conduct this dispute resolution process via telephone or
-              video conference. If you are not based in the EU or EEA, but you
-              would still like to use the JAMS arbitration process to resolve
-              your dispute, please let us know and we will provide access to
-              you.
+              to resolve it. If we cannot, we have selected to cooperate with
+              the relevant EU Data Protection Authority, or a panel established
+              by the European data protection authorities, for resolving
+              disputes with EU individuals, and with the Swiss Federal Data
+              Protection and Information Commissioner (FDPIC) for resolving
+              disputes with Swiss individuals. Please contact us if you’d like
+              us to direct you to your data protection authority contacts.
+            </SectionDescription>
+
+            <SectionDescription>
+              Additionally, if you are a resident of an EU member state, you
+              have the right to file a complaint with your local supervisory
+              authority.
             </SectionDescription>
           </Section>
 
           <Section>
             <SectionTitle>Independent arbitration</SectionTitle>
+
             <SectionDescription>
               Under certain limited circumstances, European Union individuals
               may invoke binding Privacy Shield arbitration as a last resort if
@@ -423,6 +474,7 @@ class Privacy extends React.Component<{}> {
               you, please read more about Privacy Shield. Arbitration is not
               mandatory; it is a tool you can use if you choose to.
             </SectionDescription>
+
             <SectionDescription>
               We are subject to the jurisdiction of the Federal Trade
               Commission.
@@ -458,7 +510,7 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               You can opt-out of having made your activity on the Service
               available to Google Analytics by installing the Google Analytics
-              opt-out browser add- on. The add-on prevents the Google Analytics
+              opt-out browser add-on. The add-on prevents the Google Analytics
               JavaScript (ga.js, analytics.js, and dc.js) from sharing
               information with Google Analytics about visits activity.
             </SectionDescription>
@@ -488,37 +540,8 @@ class Privacy extends React.Component<{}> {
               </a>
               .
             </SectionDescription>
-
-            <SectionDescription>
-              We may provide paid products and/or services within the Service.
-              In that case, we use third-party services for payment processing
-              (e.g. payment processors).
-            </SectionDescription>
-
-            <SectionDescription>
-              We will not store or collect your payment card details. That
-              information is provided directly to our third-party payment
-              processors whose use of your personal information is governed by
-              their Privacy Policy. These payment processors adhere to the
-              standards set by PCI-DSS as managed by the PCI Security Standards
-              Council, which is a joint effort of brands like Visa, Mastercard,
-              American Express and Discover. PCI-DSS requirements help ensure
-              the secure handling of payment information.
-            </SectionDescription>
-
-            <SectionDescription>
-              We use Stripe as a payment provider. You can find more information
-              on their privacy practices on their{' '}
-              <a
-                href="https://stripe.com/us/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Privacy Policy web page
-              </a>
-              .
-            </SectionDescription>
           </Section>
+
           <Section>
             <SectionTitle>Links to Other Sites</SectionTitle>
 
@@ -542,7 +565,11 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               Our Service does not address anyone under the age of 13
               (“Children”). If you’re a child under the age of 13, you may not
-              have an account on Spectrum.
+              have an account on Spectrum. Other countries may have different
+              minimum age limits, and if you are below the minimum age for
+              providing consent for data collection in your country, you may not
+              use GitHub without obtaining your parents' or legal guardians'
+              consent.
             </SectionDescription>
 
             <SectionDescription>
@@ -582,7 +609,8 @@ class Privacy extends React.Component<{}> {
             <SectionDescription>
               If you have any questions about this Privacy Policy, please
               contact us by email:{' '}
-              <a href="mailto:help@spectrum.chat">help@spectrum.chat</a>
+              <a href="mailto:help@spectrum.chat">help@spectrum.chat</a> or{' '}
+              <a href="mailto:privacy@github.com">privacy@github.com</a>
             </SectionDescription>
           </Section>
         </ContentContainer>
