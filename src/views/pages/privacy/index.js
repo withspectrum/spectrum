@@ -111,6 +111,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>a. Registration through your GitHub account</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               You can register to our Service using an account you already have
               with GitHub. This information is controlled by GitHub and the
               GitHub privacy policy;
@@ -118,6 +121,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>b. Profile information</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               You may also complete a profile, which may include your name,
               username, profile photo, cover photo, website, email and any
               additional profile information you chose to provide. Please note
@@ -127,6 +133,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>c. Other information</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               You may choose to provide us with certain information when you
               post or upload content to the Service, fill out a form, and/or
               post to forums.
@@ -141,6 +150,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>a. Usage information</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               We automatically collect information about how you use the
               Service, such as your computer’s Internet Protocol address (e.g.
               IP address), browser type, browser version, the pages of our
@@ -151,6 +163,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>b. Device information</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               We may collect certain technical information about your device,
               such as your IP Address, geolocation information (city and
               country), your browser type, language, your operating system and
@@ -161,6 +176,9 @@ class Privacy extends React.Component<{}> {
 
             <SectionDescription>
               <strong>c. Cookies and similar technologies</strong>
+            </SectionDescription>
+
+            <SectionDescription>
               We and our partners automatically collect information from cookies
               and similar technologies (such as cookies IDs and settings) to
               recognize you, track your behavior on the Service and your device,
@@ -431,14 +449,24 @@ class Privacy extends React.Component<{}> {
             </SectionDescription>
 
             <SectionDescription>
-              Our Data Protection Officer GitHub Data Protection Officer 88
-              Colin P. Kelly Jr. St. San Francisco, CA 94107 United States
+              Our Data Protection Officer GitHub Data Protection Officer
+              <br />
+              88 Colin P. Kelly Jr. St. <br />
+              San Francisco, CA 94107
+              <br />
+              United States <br />
               privacy@github.com
             </SectionDescription>
 
             <SectionDescription>
-              Our EU Office GitHub BV Vijzelstraat 68-72 1017 HL Amsterdam The
-              Netherlands privacy@github.com
+              Our EU Office
+              <br />
+              GitHub BV
+              <br />
+              Vijzelstraat 68-72 <br />
+              1017 HL Amsterdam <br />
+              The Netherlands <br />
+              privacy@github.com
             </SectionDescription>
           </Section>
 
