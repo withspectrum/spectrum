@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
+import { openModal } from 'src/actions/modals';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -45,9 +46,9 @@ type State = {
   name: string,
   username: string,
   description: ?string,
-  image: string,
+  profilePhoto: string,
+  profileFile: ?Object,
   coverPhoto: string,
-  file: ?Object,
   coverFile: ?Object,
   descriptionError: boolean,
   nameError: boolean,
@@ -78,9 +79,9 @@ class UserWithData extends React.Component<Props, State> {
       name: user.name ? user.name : '',
       username: user.username ? user.username : '',
       description: user.description ? user.description : '',
-      image: user.profilePhoto,
+      profilePhoto: user.profilePhoto,
+      profileFile: null,
       coverPhoto: user.coverPhoto,
-      file: null,
       coverFile: null,
       descriptionError: false,
       nameError: false,
@@ -150,7 +151,7 @@ class UserWithData extends React.Component<Props, State> {
     });
   };
 
-  setProfilePhoto = e => {
+  changePhoto = (e, targetName) => {
     let reader = new FileReader();
     let file = e.target.files[0];
 
@@ -168,50 +169,17 @@ class UserWithData extends React.Component<Props, State> {
     }
 
     reader.onloadend = () => {
+      // $FlowFixMe
+      this.openCropModal(reader.result, targetName);
       this.setState({
-        file: file,
-        // $FlowFixMe
-        image: reader.result,
+        [targetName + 'File']: file,
+        [targetName + 'Photo']: reader.result,
         photoSizeError: '',
         isLoading: false,
       });
     };
 
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
-  setCoverPhoto = e => {
-    let reader = new FileReader();
-    let file = e.target.files[0];
-
-    if (!file) return;
-
-    this.setState({
-      isLoading: true,
-    });
-
-    if (file && file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES) {
-      return this.setState({
-        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    reader.onloadend = () => {
-      this.setState({
-        coverFile: file,
-        // $FlowFixMe
-        coverPhoto: reader.result,
-        photoSizeError: '',
-        isLoading: false,
-      });
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    if (file) reader.readAsDataURL(file);
   };
 
   save = e => {
@@ -221,7 +189,7 @@ class UserWithData extends React.Component<Props, State> {
       name,
       description,
       website,
-      file,
+      profileFile,
       coverFile,
       photoSizeError,
       username,
@@ -236,7 +204,7 @@ class UserWithData extends React.Component<Props, State> {
       name,
       description,
       website,
-      file,
+      file: profileFile,
       coverFile,
       username,
       email,
@@ -290,6 +258,31 @@ class UserWithData extends React.Component<Props, State> {
       });
   };
 
+  handleCrop = (croppedImageURL, targetName) => {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', croppedImageURL);
+    xhr.responseType = 'blob';
+    xhr.onload = () => {
+      if (xhr.status == 200) {
+        var myBlob = xhr.response;
+        this.setState({
+          [targetName + 'Photo']: croppedImageURL,
+          [targetName + 'File']: myBlob,
+        });
+      }
+    };
+    xhr.send();
+  };
+
+  openCropModal = (image, targetName) => {
+    this.props.dispatch(
+      openModal('CROP_IMAGE_MODAL', {
+        crop: this.handleCrop,
+        targetName,
+        image,
+      })
+    );
+  };
   handleUsernameValidation = ({ error, username }) => {
     const { user } = this.props;
     // we want to reset error if was typed same username which was set before
@@ -311,7 +304,7 @@ class UserWithData extends React.Component<Props, State> {
       username,
       description,
       website,
-      image,
+      profilePhoto,
       coverPhoto,
       descriptionError,
       createError,
@@ -336,14 +329,14 @@ class UserWithData extends React.Component<Props, State> {
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
-              onChange={this.setCoverPhoto}
+              onChange={e => this.changePhoto(e, 'cover')}
               defaultValue={coverPhoto}
               preview={true}
             />
             <PhotoInput
               type={'user'}
-              onChange={this.setProfilePhoto}
-              defaultValue={image}
+              onChange={e => this.changePhoto(e, 'profile')}
+              defaultValue={profilePhoto}
             />
           </ImageInputWrapper>
 

@@ -168,6 +168,7 @@
     "react-flip-move": "^3.0.2",
     "react-helmet-async": "^0.2.0",
     "react-image": "^1.5.1",
+    "react-image-crop": "^8.2.2",
     "react-infinite-scroller": "^1.2.4",
     "react-infinite-scroller-fork-mxstbr": "^1.2.7",
     "react-infinite-scroller-with-scroll-element": "2.0.2",

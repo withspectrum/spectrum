@@ -10,6 +10,7 @@ import LoginModal from './LoginModal';
 import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
 import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
+import CropImageModal from './CropImageModal';
 
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
@@ -21,6 +22,7 @@ const MODAL_COMPONENTS = {
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
   CLOSE_COMPOSER_CONFIRMATION_MODAL: CloseComposerConfirmationModal,
+  CROP_IMAGE_MODAL: CropImageModal,
 };
 
 export type ModalTypes = $Keys<typeof MODAL_COMPONENTS>;
