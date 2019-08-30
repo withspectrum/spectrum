@@ -2,11 +2,10 @@
 import * as React from 'react';
 import Section from 'src/components/themedSection';
 import PageFooter from '../components/footer';
-import { Wrapper } from '../style';
 import { Heading, Copy } from '../pricing/style';
 import { PrimaryButton } from 'src/components/button';
 import Icon from 'src/components/icon';
-import { Intro, ActionsContainer, TextContent } from './style';
+import { Intro, ActionsContainer, TextContent, PageWrapper } from './style';
 import type { ContextRouter } from 'react-router';
 import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
@@ -27,7 +26,7 @@ class Features extends React.Component<Props, State> {
 
   render() {
     return (
-      <Wrapper data-cy="apps-page">
+      <PageWrapper data-cy="apps-page">
         <Head
           title={'Spectrum · Apps'}
           description={'Download Spectrum for Mac and Windows'}
@@ -54,7 +53,7 @@ class Features extends React.Component<Props, State> {
           </Intro>
         </Section>
         <PageFooter />
-      </Wrapper>
+      </PageWrapper>
     );
   }
 }
