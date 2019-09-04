@@ -352,7 +352,7 @@ describe('edit message signed out', () => {
   });
 });
 
-describe('edit message signed in', () => {
+describe.only('edit message signed in', () => {
   beforeEach(() => {
     cy.auth(moderator.userId).then(() => cy.visit(`/thread/${thread.id}`));
   });
@@ -383,6 +383,7 @@ describe('edit message signed in', () => {
       .should('be.visible');
 
     cy.get('[data-cy="edit-message-cancel"]')
+      .scrollIntoView()
       .should('be.visible')
       .click();
 
