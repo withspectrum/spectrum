@@ -383,6 +383,7 @@ describe('edit message signed in', () => {
       .should('be.visible');
 
     cy.get('[data-cy="edit-message-cancel"]')
+      .scrollIntoView()
       .should('be.visible')
       .click();
 
