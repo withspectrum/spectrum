@@ -240,6 +240,12 @@ export const Centralized = () => {
         margin-right: 0;
       }
     }
+
+    @media (min-width: 1660px) {
+      img {
+        margin-bottom: 32px;
+      }
+    }
   `;
 
   return (
