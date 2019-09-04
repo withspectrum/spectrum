@@ -1,5 +1,10 @@
 // @flow
 import styled from 'styled-components';
+import { Wrapper } from '../style';
+
+export const PageWrapper = styled(Wrapper)`
+  min-height: 100vh;
+`;
 
 export const Intro = styled.div`
   display: grid;
