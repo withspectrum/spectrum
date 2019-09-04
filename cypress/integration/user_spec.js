@@ -1,5 +1,5 @@
 import data from '../../shared/testing/data';
-const user = data.users[0];
+const user = data.users[1];
 const communities = data.communities;
 const channels = data.channels;
 const threads = data.threads;
