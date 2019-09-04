@@ -114,9 +114,15 @@ if (servers.length > 0) {
       console.log('Cache cleared!');
     }
     console.log('Deleting old deploy(s)...');
-    exec(now(`rm --safe --yes build-${server}`), {
-      stdio: 'inherit',
-    });
+    if (server === 'hyperion') {
+      exec(now(`rm --safe --yes Spectrum`), {
+        stdio: 'inherit',
+      });
+    } else {
+      exec(now(`rm --safe --yes build-${server}`), {
+        stdio: 'inherit',
+      });
+    }
     console.log('Done!\n');
   });
 }
