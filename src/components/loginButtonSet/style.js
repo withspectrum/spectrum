@@ -17,6 +17,9 @@ export const Container = styled.div`
 export const A = styled.a`
   display: flex;
   grid-column: ${props => (props.githubOnly ? '1 / 3' : 'auto')};
+  @media (min-width: ${MEDIA_BREAK}px) {
+    grid-column: 1 / 2 span;
+  }
 `;
 
 export const SigninButton = styled.div`

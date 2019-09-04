@@ -201,6 +201,9 @@ export const FullscreenContent = styled.div`
   flex-direction: column;
   padding: 32px 16px;
   flex: 1 0 auto;
+  @media (min-width: ${MEDIA_BREAK}px) {
+    padding-top: 40px;
+  }
 `;
 
 export const CodeOfConduct = styled.p`
