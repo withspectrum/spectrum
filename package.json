@@ -47,7 +47,7 @@
     "uuid": "^3.0.1",
     "wait-on": "^2.1.0",
     "webpack-bundle-analyzer": "^3.3.2",
-    "write-file-webpack-plugin": "^4.4.1"
+    "write-file-webpack-plugin": "^4.5.1"
   },
   "dependencies": {
     "@cypress/browserify-preprocessor": "^1.1.2",
