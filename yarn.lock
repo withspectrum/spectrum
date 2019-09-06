@@ -5487,12 +5487,12 @@ draft-js-embed-plugin@^1.2.0:
   dependencies:
     decorate-component-with-props "^1.0.2"
 
-draft-js-export-markdown@^1.3.0:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.3.3.tgz#fcdfdd408b6d380ff9cc788aecf4ef352c0efae3"
-  integrity sha512-sp3zJQMSnQ97eAZXWjbFSDifgZAVNM5KTiTRldNNel9/K1IzKyMfAaMoxsIEL0fXTxDwfpFSaE7dKAwkdROayA==
+draft-js-export-markdown@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-1.4.0.tgz#783731a0aaba4a5962d1d6a37293df7926ea6e45"
+  integrity sha512-blfAvlhGhjVlHNaZ5WJKlrXhcftnwwC5VC+Eu3ztOGpGLaOom4hxhBjbKEWjvbQZJ9zL+xo57ukm39prYZMG5Q==
   dependencies:
-    draft-js-utils "^1.3.3"
+    draft-js-utils "^1.4.0"
 
 draft-js-focus-plugin@^2.2.0:
   version "2.2.0"
@@ -5591,10 +5591,10 @@ draft-js-prism@^1.0.6:
     extend "^3.0.0"
     immutable "*"
 
-draft-js-utils@^1.3.3:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.3.3.tgz#2330ab98218c835d58dc08eacdba6708b201eb27"
-  integrity sha512-ZIF3KE2+dRD6zEoqQyu9HzeG56NWtktfazRnDZFC9GD4NnHgJE5qI+TqGgmjRjSrKzuSQonl5rsx+D4N5m6yhQ==
+draft-js-utils@^1.3.3, draft-js-utils@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-1.4.0.tgz#c60af198108f69b0f1df3572555b23836819d1cf"
+  integrity sha512-8s9FFuKC+lOWGwJ0b3om2PF+uXrqQPaEQlPJI7UxdzxTYGMeKouMPA9+YlPn52zcAVElIZtd2tXj6eQmvlKelw==
 
 draft-js@0.x, draft-js@^0.10.4, "draft-js@npm:draft-js-fork-mxstbr", draft-js@~0.10.0:
   version "0.10.4"
