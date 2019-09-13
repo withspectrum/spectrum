@@ -108,7 +108,7 @@ spectrum/
 ├── docs
 ├── email-templates
 ├── hermes     # Worker server (email sending)
-├── hyperion   # Server rendering server
+├── hyperion   # Rendering server
 ├── mercury    # Worker server (reputation)
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
