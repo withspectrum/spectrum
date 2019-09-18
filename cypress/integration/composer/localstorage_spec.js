@@ -172,7 +172,7 @@ describe('discarding drafts', () => {
   });
 });
 
-describe.only('discarding drafts message', () => {
+describe('discarding drafts message', () => {
   beforeEach(() => {
     cy.auth(publicThreadAuthor.id).then(() =>
       cy.visit(`/thread/${publicThread.id}`)
