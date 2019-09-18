@@ -4,7 +4,6 @@ import theme from 'shared/theme';
 import { zIndex } from 'src/components/globals';
 import {
   MEDIA_BREAK,
-  MIN_MAX_WIDTH,
   TITLEBAR_HEIGHT,
   NAVBAR_WIDTH,
 } from 'src/components/layout';

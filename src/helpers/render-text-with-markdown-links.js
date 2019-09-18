@@ -2,8 +2,8 @@
 import * as React from 'react';
 import replace from 'string-replace-to-array';
 import { Link } from 'react-router-dom';
-const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 import { SPECTRUM_URLS } from 'shared/regexps';
+const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
 export default (text: string) => {
   return replace(text, MARKDOWN_LINK, (fullLink, text, url) => {
