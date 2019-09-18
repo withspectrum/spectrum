@@ -17,7 +17,6 @@ import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import JoinCommunity from 'src/components/joinCommunityWrapper';
 import Icon from 'src/components/icon';
 import { PrimaryOutlineButton } from 'src/components/button';
-import ConditionalWrap from 'src/components/conditionalWrap';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,

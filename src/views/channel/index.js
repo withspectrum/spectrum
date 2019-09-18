@@ -7,9 +7,7 @@ import { withRouter, type History, type Location } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import ThreadFeed from 'src/components/threadFeed';
 import PendingUsersNotification from './components/pendingUsersNotification';
-import getChannelThreadConnection from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import Search from './components/search';
@@ -35,11 +33,6 @@ import { SidebarSection } from 'src/views/community/style';
 import CommunitySidebar from 'src/components/communitySidebar';
 import { FeedsContainer } from './style';
 import { InfoContainer } from '../community/style';
-
-const ThreadFeedWithData = compose(
-  connect(),
-  getChannelThreadConnection
-)(ThreadFeed);
 
 type Props = {
   match: {
@@ -172,7 +165,7 @@ class ChannelView extends React.Component<Props> {
     const selectedView = tab;
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
-      const { isMember, isOwner } = channel.channelPermissions;
+      const { isOwner } = channel.channelPermissions;
       const { community } = channel;
       const isGlobalOwner =
         isOwner || channel.community.communityPermissions.isOwner;

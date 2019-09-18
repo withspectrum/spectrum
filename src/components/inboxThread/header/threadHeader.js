@@ -25,15 +25,7 @@ class Header extends React.Component<HeaderProps> {
     const {
       active,
       viewContext,
-      thread: {
-        author,
-        community,
-        channel,
-        id,
-        watercooler,
-        isLocked,
-        editedBy,
-      },
+      thread: { author, community, channel, id, watercooler, isLocked },
     } = this.props;
 
     const isPinned = id === community.pinnedThreadId;
