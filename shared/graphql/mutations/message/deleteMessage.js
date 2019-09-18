@@ -32,7 +32,7 @@ const deleteMessageOptions = {
             const data = store.readQuery({
               query: getThreadMessageConnectionQuery,
               variables: {
-                id: ownProps.threadId,
+                id: ownProps.threadId || ownProps.thread.id,
               },
             });
 
