@@ -29,6 +29,11 @@ export const Span = styled.span`
   position: relative;
 `;
 
+export const PopperWrapper = styled.div`
+  z-index: 6001;
+  ${props => props.popperStyle};
+`;
+
 export const ProfileCard = styled.div`
   width: 256px;
   background: ${theme.bg.default};

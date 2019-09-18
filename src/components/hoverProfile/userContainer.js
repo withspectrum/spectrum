@@ -5,14 +5,14 @@ import { connect } from 'react-redux';
 import { withApollo, type Client } from 'react-apollo';
 import { Manager, Reference, Popper } from 'react-popper';
 import { createPortal } from 'react-dom';
+import { withCurrentUser } from 'src/components/withCurrentUser';
+import LoadingHoverProfile from './loadingHoverProfile';
 import UserProfile from './userProfile';
-import { Span } from './style';
+import { Span, PopperWrapper } from './style';
 import {
   getUserByUsername,
   getUserByUsernameQuery,
 } from 'shared/graphql/queries/user/getUser';
-import { withCurrentUser } from 'src/components/withCurrentUser';
-import LoadingHoverProfile from './loadingHoverProfile';
 
 const MentionHoverProfile = getUserByUsername(props => {
   if (props.data && props.data.user) {
@@ -88,7 +88,9 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
 
   render() {
     const { children, currentUser, username, style = {} } = this.props;
+    const { visible } = this.state;
     const me = currentUser && currentUser.username === username;
+
     return (
       <Span
         onMouseEnter={this.handleMouseEnter}
@@ -98,23 +100,34 @@ class UserHoverProfileWrapper extends React.Component<Props, State> {
         <Manager tag={false}>
           <Reference>
             {({ ref }) => (
-              <Span ref={ref} style={style}>
+              <div ref={ref} style={style}>
                 {children}
-              </Span>
+              </div>
             )}
           </Reference>
-          {this.state.visible &&
+          {visible &&
             document.body &&
             createPortal(
-              <Popper placement="bottom-start">
+              <Popper
+                placement="bottom-start"
+                modifiers={{
+                  flip: {
+                    enabled: true,
+                  },
+                  preventOverflow: {
+                    enabled: true,
+                    padding: 25,
+                  },
+                }}
+              >
                 {({ style, ref, placement }) => (
-                  <span ref={ref} data-placement={placement}>
-                    <MentionHoverProfile
-                      username={username}
-                      me={me}
-                      style={style}
-                    />
-                  </span>
+                  <PopperWrapper
+                    ref={ref}
+                    popperStyle={style}
+                    data-placement={placement}
+                  >
+                    <MentionHoverProfile username={username} me={me} />
+                  </PopperWrapper>
                 )}
               </Popper>,
               document.body
