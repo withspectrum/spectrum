@@ -36,6 +36,8 @@ export const ViewGrid = styled.main.attrs({
   grid-area: main;
   height: 100%;
   max-height: 100vh;
+  overflow: hidden;
+  overflow-y: auto;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
