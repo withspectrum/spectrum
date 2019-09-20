@@ -35,7 +35,7 @@
     "flow-bin": "0.66",
     "forever": "^0.15.3",
     "is-html": "^1.1.0",
-    "lint-staged": "^3.3.0",
+    "lint-staged": "^9.2.5",
     "micromatch": "^3.0.4",
     "prettier": "^1.14.3",
     "raw-loader": "^0.5.1",
