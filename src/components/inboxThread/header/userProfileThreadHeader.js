@@ -1,10 +1,6 @@
 // @flow
 import * as React from 'react';
-import {
-  UserHoverProfile,
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { UserHoverProfile } from 'src/components/hoverProfile';
 import {
   Container,
   MetaContainer,
@@ -34,11 +30,9 @@ class Header extends React.Component<HeaderProps> {
       <Container active={active}>
         <MetaContainer>
           <TextRow>
-            <CommunityHoverProfile id={community.id}>
-              <MetaTitle active={active} to={`/${community.slug}`}>
-                {community.name}
-              </MetaTitle>
-            </CommunityHoverProfile>
+            <MetaTitle active={active} to={`/${community.slug}`}>
+              {community.name}
+            </MetaTitle>
 
             <Divider>·</Divider>
             <Timestamp {...this.props} />
@@ -66,14 +60,12 @@ class Header extends React.Component<HeaderProps> {
               </MetaSubtitleText>
             )}
 
-            <ChannelHoverProfile id={channel.id}>
-              <MetaSubtitle
-                active={active}
-                to={`/${community.slug}/${channel.slug}`}
-              >
-                # {channel.name}
-              </MetaSubtitle>
-            </ChannelHoverProfile>
+            <MetaSubtitle
+              active={active}
+              to={`/${community.slug}/${channel.slug}`}
+            >
+              # {channel.name}
+            </MetaSubtitle>
 
             {watercooler && (
               <MetaSubtitleWatercooler active={active}>

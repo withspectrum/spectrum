@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import theme from 'shared/theme';
 import { Primary } from 'src/components/themedSection';
 import { Constellations } from 'src/components/illustrations';

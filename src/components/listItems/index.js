@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
-import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
 import Reputation from 'src/components/reputation';
 import ChannelComponent from './channel';
@@ -33,30 +32,26 @@ export class CommunityListItem extends React.Component<CommunityProps> {
 
     return (
       <Wrapper>
-        <CommunityHoverProfile id={community.id} style={{ flex: '1 0 auto' }}>
-          <Row>
-            <CommunityAvatar
-              community={community}
-              size={32}
-              showHoverProfile={false}
-              isClickable={false}
-            />
-            <Col style={{ marginLeft: '12px' }}>
-              <Heading>{community.name}</Heading>
-              {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
-              {typeof reputation === 'number' && reputation > -1 && (
-                <Meta>
-                  {/* $FlowIssue */}
-                  <Reputation size={'default'} reputation={reputation} />
-                </Meta>
-              )}
-            </Col>
-            <ActionContainer className={'action'}>{children}</ActionContainer>
-          </Row>
-          {showDescription && (
-            <Description>{community.description}</Description>
-          )}
-        </CommunityHoverProfile>
+        <Row>
+          <CommunityAvatar
+            community={community}
+            size={32}
+            showHoverProfile={false}
+            isClickable={false}
+          />
+          <Col style={{ marginLeft: '12px' }}>
+            <Heading>{community.name}</Heading>
+            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
+            {typeof reputation === 'number' && reputation > -1 && (
+              <Meta>
+                {/* $FlowIssue */}
+                <Reputation size={'default'} reputation={reputation} />
+              </Meta>
+            )}
+          </Col>
+          <ActionContainer className={'action'}>{children}</ActionContainer>
+        </Row>
+        {showDescription && <Description>{community.description}</Description>}
       </Wrapper>
     );
   }

@@ -16,7 +16,6 @@ import type { CreateCommunityType } from 'shared/graphql/mutations/community/cre
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
 import { searchCommunitiesQuery } from 'shared/graphql/queries/search/searchCommunities';
 import { PrimaryOutlineButton } from 'src/components/button';
-import { CommunityHoverProfile } from 'src/components/hoverProfile';
 import Icon from 'src/components/icon';
 
 import {
@@ -552,21 +551,16 @@ class CreateCommunityForm extends React.Component<Props, State> {
               communitySuggestions.map(suggestion => {
                 return (
                   <Link to={`/${suggestion.slug}`} key={suggestion.id}>
-                    <CommunityHoverProfile
-                      id={suggestion.id}
-                      style={{ flex: '1 0 auto' }}
-                    >
-                      <CommunitySuggestion>
-                        <CommunityAvatar
-                          size={20}
-                          community={suggestion}
-                          isClickable={false}
-                          showHoverProfile={false}
-                        />
-                        <strong>{suggestion.name}</strong>{' '}
-                        {suggestion.metaData.members.toLocaleString()} members
-                      </CommunitySuggestion>
-                    </CommunityHoverProfile>
+                    <CommunitySuggestion>
+                      <CommunityAvatar
+                        size={20}
+                        community={suggestion}
+                        isClickable={false}
+                        showHoverProfile={false}
+                      />
+                      <strong>{suggestion.name}</strong>{' '}
+                      {suggestion.metaData.members.toLocaleString()} members
+                    </CommunitySuggestion>
                   </Link>
                 );
               })}

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { timeDifference } from 'shared/time-difference';
 import { convertTimestampToDate } from 'shared/time-formatting';
-import { openModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import editThreadMutation from 'shared/graphql/mutations/thread/editThread';
 import uploadImageMutation from 'shared/graphql/mutations/uploadImage';

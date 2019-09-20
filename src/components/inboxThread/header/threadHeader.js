@@ -1,10 +1,6 @@
 // @flow
 import * as React from 'react';
-import {
-  UserHoverProfile,
-  CommunityHoverProfile,
-  ChannelHoverProfile,
-} from 'src/components/hoverProfile';
+import { UserHoverProfile } from 'src/components/hoverProfile';
 import {
   Container,
   MetaContainer,
@@ -25,15 +21,7 @@ class Header extends React.Component<HeaderProps> {
     const {
       active,
       viewContext,
-      thread: {
-        author,
-        community,
-        channel,
-        id,
-        watercooler,
-        isLocked,
-        editedBy,
-      },
+      thread: { author, community, channel, id, watercooler, isLocked },
     } = this.props;
 
     const isPinned = id === community.pinnedThreadId;
@@ -86,25 +74,21 @@ class Header extends React.Component<HeaderProps> {
               viewContext !== 'channelInbox' &&
               viewContext !== 'communityProfile' &&
               viewContext !== 'communityInbox' && (
-                <CommunityHoverProfile id={community.id}>
-                  <MetaSubtitle
-                    active={active ? 'true' : undefined}
-                    to={`/${community.slug}`}
-                  >
-                    {community.name}
-                    <Divider>·</Divider>
-                  </MetaSubtitle>
-                </CommunityHoverProfile>
+                <MetaSubtitle
+                  active={active ? 'true' : undefined}
+                  to={`/${community.slug}`}
+                >
+                  {community.name}
+                  <Divider>·</Divider>
+                </MetaSubtitle>
               )}
 
-            <ChannelHoverProfile id={channel.id}>
-              <MetaSubtitle
-                active={active ? 'true' : undefined}
-                to={`/${community.slug}/${channel.slug}`}
-              >
-                # {channel.name}
-              </MetaSubtitle>
-            </ChannelHoverProfile>
+            <MetaSubtitle
+              active={active ? 'true' : undefined}
+              to={`/${community.slug}/${channel.slug}`}
+            >
+              # {channel.name}
+            </MetaSubtitle>
           </TextRow>
         </MetaContainer>
       </Container>

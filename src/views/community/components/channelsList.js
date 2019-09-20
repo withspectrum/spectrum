@@ -16,12 +16,7 @@ import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
 import { WhiteIconButton, OutlineButton } from 'src/components/button';
 import { Spinner } from 'src/components/globals';
-import {
-  SidebarSectionHeader,
-  SidebarSectionHeading,
-  List,
-  NewActivityDot,
-} from '../style';
+import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
 import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
 import { toggleThreadNotificationsMutation } from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import {
@@ -63,12 +58,6 @@ const ChatTab = ({ location, community, currentUser }) =>
                   >
                     {({ loading, error, data }) => {
                       if (data && data.thread) {
-                        const newActivity =
-                          data.thread.currentUserLastSeen &&
-                          data.thread.lastActive &&
-                          new Date(data.thread.currentUserLastSeen) <
-                            new Date(data.thread.lastActive);
-
                         const showNotificationAction = !!data.thread.community
                           .communityPermissions.isMember;
 

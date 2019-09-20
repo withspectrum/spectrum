@@ -85,6 +85,10 @@ describe('post username creation redirects', () => {
     cy.auth(user.id).then(() => cy.visit('/'));
   });
 
+  afterEach(() => {
+    cy.visit('/');
+  });
+
   it('should redirect to previously viewed page 1', () => {
     cy.visit('/spectrum');
     setUsernameIsVisible();

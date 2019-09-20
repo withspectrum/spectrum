@@ -6,7 +6,6 @@ import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import getChannelThreads from 'shared/graphql/queries/channel/getChannelThreadConnection';
 import searchThreads from 'shared/graphql/queries/search/searchThreads';
 import ThreadFeed from 'src/components/threadFeed';
-import Select from 'src/components/select';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   PostsFeedsSelectorContainer,
