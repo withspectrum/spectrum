@@ -90,13 +90,13 @@ export const InputWrapper = styled.div`
   }
 `;
 
-export const Input = styled(MentionsInput).attrs({
-  dataCy: props => props.dataCy || 'chat-input',
+export const Input = styled(MentionsInput).attrs(props => ({
+  dataCy: props.dataCy || 'chat-input',
   spellCheck: true,
   autoCapitalize: 'sentences',
   autoComplete: 'on',
   autoCorrect: 'on',
-})`
+}))`
   font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   font-weight: 400;
   line-height: 1.4;
