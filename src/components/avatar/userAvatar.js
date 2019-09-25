@@ -52,6 +52,13 @@ const GetUserByUsername = (props: HandlerProps) => {
 };
 
 class Avatar extends React.Component<AvatarProps> {
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    if (!curr.user && nextProps.user) return true;
+    if (curr.user.id !== nextProps.user.id) return true;
+    return false;
+  }
+
   render() {
     const {
       user,
@@ -77,10 +84,9 @@ class Avatar extends React.Component<AvatarProps> {
         size={size}
         mobileSize={mobilesize}
       >
-        {showOnlineStatus &&
-          user.isOnline && (
-            <OnlineIndicator onlineBorderColor={onlineBorderColor} />
-          )}
+        {showOnlineStatus && user.isOnline && (
+          <OnlineIndicator onlineBorderColor={onlineBorderColor} />
+        )}
         <ConditionalWrap
           condition={!!user.username && isClickable}
           wrap={() => (

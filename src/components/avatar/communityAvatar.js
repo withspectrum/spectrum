@@ -15,6 +15,13 @@ type Props = {
 };
 
 class Avatar extends React.Component<Props> {
+  shouldComponentUpdate(nextProps) {
+    const curr = this.props;
+    if (!curr.community && nextProps.community) return true;
+    if (curr.community.id !== nextProps.community.id) return true;
+    return false;
+  }
+
   render() {
     const {
       community,
