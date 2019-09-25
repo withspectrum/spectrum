@@ -459,11 +459,7 @@ class Routes extends React.Component<Props, State> {
                       path="/:communitySlug/:channelSlug"
                       component={ChannelView}
                     />
-                    <Route
-                      path="/:communitySlug"
-                      isModal={isModal}
-                      component={CommunityView}
-                    />
+                    <Route path="/:communitySlug" component={CommunityView} />
                   </Switch>
                 </div>
 

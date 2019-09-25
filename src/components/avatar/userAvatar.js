@@ -52,13 +52,6 @@ const GetUserByUsername = (props: HandlerProps) => {
 };
 
 class Avatar extends React.Component<AvatarProps> {
-  shouldComponentUpdate(nextProps) {
-    const curr = this.props;
-    if (!curr.user && nextProps.user) return true;
-    if (curr.user.id !== nextProps.user.id) return true;
-    return false;
-  }
-
   render() {
     const {
       user,
