@@ -333,7 +333,7 @@ export const Line = styled.pre`
   border: 1px solid ${theme.bg.border};
 `;
 
-export const Paragraph = styled.p`
+export const Paragraph = styled.div`
   white-space: pre-wrap;
   word-break: break-word;
 

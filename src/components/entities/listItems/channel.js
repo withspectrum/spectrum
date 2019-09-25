@@ -11,7 +11,13 @@ import LeaveChannelWrapper from 'src/components/leaveChannelWrapper';
 import ToggleChannelNotifications from 'src/components/toggleChannelNotifications';
 import { OutlineButton, PrimaryOutlineButton } from 'src/components/button';
 import Tooltip from 'src/components/tooltip';
-import { Row, Content, Label, Description, ChannelActions } from './style';
+import {
+  ChannelRow,
+  ChannelContent,
+  Label,
+  Description,
+  ChannelActions,
+} from './style';
 
 type Props = {
   channel: ?ChannelInfoType,
@@ -168,9 +174,9 @@ const Channel = (props: Props) => {
 
   return (
     <ErrorBoundary>
-      <Link to={`/${channel.community.slug}/${channel.slug}?tab=posts`}>
-        <Row isActive={isActive}>
-          <Content>
+      <ChannelRow isActive={isActive}>
+        <Link to={`/${channel.community.slug}/${channel.slug}?tab=posts`}>
+          <ChannelContent>
             {name && (
               <Label title={name}>
                 {channel.isPrivate && (
@@ -181,15 +187,15 @@ const Channel = (props: Props) => {
             )}
 
             {description && <Description>{description}</Description>}
-          </Content>
+          </ChannelContent>
+        </Link>
 
-          <ChannelActions>
-            {renderAction()}
-            {renderNotificationPreferences()}
-            {children}
-          </ChannelActions>
-        </Row>
-      </Link>
+        <ChannelActions>
+          {renderAction()}
+          {renderNotificationPreferences()}
+          {children}
+        </ChannelActions>
+      </ChannelRow>
     </ErrorBoundary>
   );
 };

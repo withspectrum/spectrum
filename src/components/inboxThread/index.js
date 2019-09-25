@@ -76,7 +76,7 @@ class InboxThread extends React.Component<Props> {
           <InboxLinkWrapper
             to={{
               pathname: getThreadLink(thread),
-              state: { modal: !!window && window.innerWidth > MEDIA_BREAK },
+              state: { modal: false },
             }}
           />
 

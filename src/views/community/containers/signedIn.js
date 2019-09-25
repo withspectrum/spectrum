@@ -59,10 +59,12 @@ const Component = (props: Props) => {
         lastSeen: new Date(),
       });
     }
-    setCommunityLastSeen({
-      id: community.id,
-      lastSeen: new Date(Date.now() + 10000),
-    });
+    if (!previousCommunity && community) {
+      setCommunityLastSeen({
+        id: community.id,
+        lastSeen: new Date(Date.now() + 10000),
+      });
+    }
   }, [community.id, currentUser]);
 
   const [metaInfo, setMetaInfo] = useState(
