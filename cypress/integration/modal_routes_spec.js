@@ -9,7 +9,7 @@ const communityBeforeUrlIsValid = () =>
 const channelBeforeUrlIsValid = () =>
   cy.url().should('eq', 'http://localhost:3000/spectrum/general?tab=posts');
 
-describe('thread modal route', () => {
+describe.skip('thread modal route', () => {
   const threadSlider = () => cy.get('[data-cy="modal-container"]');
   const threadSliderClose = () => cy.get('[data-cy="thread-slider-close"]');
 
