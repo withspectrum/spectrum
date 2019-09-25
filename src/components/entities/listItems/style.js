@@ -120,4 +120,13 @@ export const Actions = styled.div`
 
 export const ChannelActions = styled(Actions)`
   flex-direction: row;
+  padding: 12px 16px 12px 12px;
+`;
+
+export const ChannelRow = styled(Row)`
+  padding: 0;
+`;
+
+export const ChannelContent = styled(Content)`
+  padding: 12px 16px;
 `;
