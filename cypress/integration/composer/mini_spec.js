@@ -29,8 +29,6 @@ const miniComposerPost = () => cy.get('[data-cy="mini-composer-post"]');
 const miniComposerFullscreen = () =>
   cy.get('[data-cy="mini-composer-fullscreen"]');
 const channelDropdown = () => cy.get('[data-cy="composer-channel-selector"]');
-const pressEscape = () =>
-  cy.get('[data-cy="modal-container"]').trigger('keydown', { keyCode: 27 });
 
 describe('mini composer visibility', () => {
   it('does not appear for signed out users', () => {
@@ -130,7 +128,6 @@ describe('mini composer functionality', () => {
       .click()
       .type(body);
     miniComposerFullscreen().click();
-    channelViewLoaded();
     cy.get('[data-cy="thread-composer-wrapper"]').should('be.visible');
     cy.get('[data-cy="thread-composer-wrapper"]').contains(title);
     cy.get('[data-cy="thread-composer-wrapper"]').contains(body);
@@ -200,7 +197,9 @@ describe('mini composer functionality', () => {
     cy.auth(brian.id);
     cy.visit('/spectrum?tab=posts');
     communityViewLoaded();
-    miniComposerCollapsed().should('be.visible');
+    miniComposerCollapsed()
+      .scrollIntoView()
+      .should('be.visible');
     openMiniComposer();
     miniComposerPost().should('be.disabled');
     miniComposerTitle().type(title);
@@ -213,10 +212,10 @@ describe('mini composer functionality', () => {
     channelDropdown().select('# General');
     miniComposerPost().should('not.be.disabled');
     miniComposerPost().click();
-    cy.get('[data-cy="thread-is-modal"]').should('be.visible');
+    cy.get('[data-cy="thread-view"]').should('be.visible');
 
     // it should clear the draft state post publish
-    pressEscape();
+    cy.visit('/spectrum?tab=posts');
     miniComposerCollapsed()
       .scrollIntoView()
       .should('be.visible');
