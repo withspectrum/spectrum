@@ -228,7 +228,9 @@ describe('mini composer functionality', () => {
     cy.auth(brian.id);
     cy.visit('/spectrum?tab=posts');
     communityViewLoaded();
-    miniComposerCollapsed().should('be.visible');
+    miniComposerCollapsed()
+      .scrollIntoView()
+      .should('be.visible');
     openMiniComposer();
     miniComposerExpanded()
       .scrollIntoView()
@@ -243,7 +245,9 @@ describe('mini composer functionality', () => {
     cy.auth(brian.id);
     cy.visit('/spectrum?tab=posts');
     communityViewLoaded();
-    miniComposerCollapsed().should('be.visible');
+    miniComposerCollapsed()
+      .scrollIntoView()
+      .should('be.visible');
     openMiniComposer();
     channelsWhereBrianIsMember.map(channel => {
       channelDropdown().contains(channel.name);
