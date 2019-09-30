@@ -191,12 +191,12 @@ class Routes extends React.Component<Props, State> {
   componentWillUpdate(nextProps) {
     const { location } = this.props;
     // set previousLocation if props.location is not modal
-    if (
-      nextProps.history.action !== 'POP' &&
-      (!location.state || !location.state.modal)
-    ) {
-      this.previousLocation = this.props.location;
-    }
+    // if (
+    //   nextProps.history.action !== 'POP' &&
+    //   (!location.state || !location.state.modal)
+    // ) {
+    //   this.previousLocation = this.props.location;
+    // }
   }
 
   setNavigationIsOpen = (val: boolean) =>
@@ -223,11 +223,11 @@ class Routes extends React.Component<Props, State> {
     }
 
     const { location } = this.props;
-    const isModal = !!(
+    const isModal = false; /* !!(
       location.state &&
       location.state.modal &&
       this.previousLocation !== location
-    ); // not initial render
+    ); // not initial render */
 
     // allows any UI in the tree to open or close the side navigation on mobile
     const navigationContext = {
