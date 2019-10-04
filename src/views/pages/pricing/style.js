@@ -267,9 +267,9 @@ export const PlanSection = styled.div`
   a {
     display: inline-block;
     align-self: center;
+    margin-top: 24px;
 
     button {
-      margin-top: 24px;
       padding: 8px 16px;
       font-size: 16px;
     }
