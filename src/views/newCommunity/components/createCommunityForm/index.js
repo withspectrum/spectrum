@@ -100,6 +100,16 @@ class CreateCommunityForm extends React.Component<Props, State> {
     this.checkSlug = throttle(this.checkSlug, 500);
   }
 
+  /**
+   * Collection of unicode code points that represent whitespaces and some other non visual characters.
+   */
+  whiteSpaceRegex = /[\u007F\u0080-\u00A0\u0378\u0379\u0380-\u0383\u038B\u038D\u03A2\u0557\u0558\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u180E\u200B-\u200D\u2060\uFEFF]/g;
+
+  /**
+   * Collection of unicode code points that represent hyphens, different from the traditional ocidental hyphen (\u002D).
+   */
+  oddHyphenRegex = /[\u00AD\u058A\u1806\u2010-\u2015\u2E3A\u2E3B\uFE58\uFE63\uFF0D]/g;
+
   componentDidMount() {
     track(events.COMMUNITY_CREATED_INITED);
   }
@@ -123,7 +133,9 @@ class CreateCommunityForm extends React.Component<Props, State> {
       .replace(/-{2,}/g, '-');
     let slug = slugg(lowercaseName);
 
-    if (name.length > 20) {
+    let hasInvalidChars = name.search(this.whiteSpaceRegex) >= 0;
+    let hasOddHyphens = name.search(this.oddHyphenRegex) >= 0;
+    if (hasInvalidChars || hasOddHyphens || name.length > 20) {
       this.setState({
         nameError: true,
       });
@@ -274,7 +286,10 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
   changeDescription = e => {
     const description = e.target.value;
-    if (description.length >= 140) {
+
+    let hasInvalidChars = description.search(this.whiteSpaceRegex) >= 0;
+    let hasOddHyphens = description.search(this.oddHyphenRegex) >= 0;
+    if (hasInvalidChars || hasOddHyphens || description.length >= 140) {
       this.setState({
         descriptionError: true,
       });
@@ -512,7 +527,10 @@ class CreateCommunityForm extends React.Component<Props, State> {
           </Input>
 
           {nameError && (
-            <Error>Community names can be up to 20 characters long.</Error>
+            <Error>
+              Community name has to be between 1 and 20 characters long and
+              can`t have invalid characters.
+            </Error>
           )}
 
           <UnderlineInput
@@ -576,7 +594,8 @@ class CreateCommunityForm extends React.Component<Props, State> {
 
           {descriptionError && (
             <Error>
-              Oop, that’s more than 140 characters - try trimming that up.
+              Oops, there may be some invalid characters or the text is too big
+              (max: 140 characters) - try trimming that up.
             </Error>
           )}
 
