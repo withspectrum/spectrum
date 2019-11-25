@@ -29,10 +29,12 @@ type Props = {
 class ChannelMembers extends Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
-    if (curr.data.channel && nextProps.data.channel) {
+    if (curr.data.channel && nextProps.data.channel && !curr.isFetchingMore) {
       if (
+        curr.data.channel.memberConnect &&
+        nextProps.data.channel.memberConnection &&
         curr.data.channel.memberConnection.edges.length ===
-        nextProps.data.channel.memberConnection.edges.length
+          nextProps.data.channel.memberConnection.edges.length
       ) {
         return false;
       }
