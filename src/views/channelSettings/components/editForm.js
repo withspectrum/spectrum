@@ -15,8 +15,17 @@ import { Notice } from 'src/components/listItems/style';
 import { PrimaryOutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { NullCard } from 'src/components/upsell';
-import { Input, UnderlineInput, TextArea } from 'src/components/formElements';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  Error,
+} from 'src/components/formElements';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
+import {
+  whiteSpaceRegex,
+  oddHyphenRegex,
+} from 'src/views/viewHelpers/textValidationHelper';
 import {
   Form,
   TertiaryActionContainer,
@@ -30,8 +39,10 @@ import type { Dispatch } from 'redux';
 
 type State = {
   name: string,
+  nameError: boolean,
   slug: string,
   description: ?string,
+  descriptionError: boolean,
   isPrivate: boolean,
   channelId: string,
   channelData: Object,
@@ -51,8 +62,10 @@ class ChannelWithData extends React.Component<Props, State> {
 
     this.state = {
       name: channel.name,
+      nameError: false,
       slug: channel.slug,
       description: channel.description,
+      descriptionError: false,
       isPrivate: channel.isPrivate || false,
       channelId: channel.id,
       channelData: channel,
@@ -71,6 +84,10 @@ class ChannelWithData extends React.Component<Props, State> {
       newState[key] = !isPrivate;
     } else {
       newState[key] = value;
+
+      let hasInvalidChars = value.search(whiteSpaceRegex) >= 0;
+      let hasOddHyphens = value.search(oddHyphenRegex) >= 0;
+      this.updateStateOnError(newState, key, hasInvalidChars || hasOddHyphens);
     }
 
     this.setState(prevState => {
@@ -79,6 +96,14 @@ class ChannelWithData extends React.Component<Props, State> {
       });
     });
   };
+
+  updateStateOnError(state, key, setError) {
+    if (key === 'name') {
+      state['nameError'] = setError;
+    } else {
+      state['descriptionError'] = setError;
+    }
+  }
 
   save = e => {
     e.preventDefault();
@@ -163,7 +188,15 @@ class ChannelWithData extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, slug, description, isPrivate, isLoading } = this.state;
+    const {
+      name,
+      nameError,
+      slug,
+      description,
+      descriptionError,
+      isPrivate,
+      isLoading,
+    } = this.state;
     const { channel } = this.props;
 
     if (!channel) {
@@ -195,6 +228,9 @@ class ChannelWithData extends React.Component<Props, State> {
             >
               Name
             </Input>
+            {nameError && (
+              <Error>Channel name can`t have invalid characters.</Error>
+            )}
             <UnderlineInput defaultValue={slug} disabled>
               {`URL: /${channel.community.slug}/`}
             </UnderlineInput>
@@ -206,7 +242,11 @@ class ChannelWithData extends React.Component<Props, State> {
             >
               Description
             </TextArea>
-
+            {descriptionError && (
+              <Error>
+                Oops, there may be some invalid characters - try fixing that up.
+              </Error>
+            )}
             {/* {slug !== 'general' &&
               <Checkbox
                 id="isPrivate"
@@ -247,6 +287,7 @@ class ChannelWithData extends React.Component<Props, State> {
             <Actions>
               <PrimaryOutlineButton
                 onClick={this.save}
+                disabled={nameError || descriptionError}
                 loading={isLoading}
                 data-cy="save-button"
               >
