@@ -27,6 +27,19 @@ type Props = {
 };
 
 class ChannelMembers extends Component<Props> {
+  shouldComponentUpdate(nextProps: Props) {
+    const curr = this.props;
+    if (curr.data.channel && nextProps.data.channel) {
+      if (
+        curr.data.channel.memberConnection.edges.length ===
+        nextProps.data.channel.memberConnection.edges.length
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   render() {
     const {
       data: { channel, fetchMore },
