@@ -31,7 +31,7 @@ class ChannelMembers extends Component<Props> {
     const curr = this.props;
     if (curr.data.channel && nextProps.data.channel && !curr.isFetchingMore) {
       if (
-        curr.data.channel.memberConnect &&
+        curr.data.channel.memberConnection &&
         nextProps.data.channel.memberConnection &&
         curr.data.channel.memberConnection.edges.length ===
           nextProps.data.channel.memberConnection.edges.length
