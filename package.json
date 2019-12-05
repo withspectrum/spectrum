@@ -194,7 +194,7 @@
     "rethinkdb-migrate": "^1.4.0",
     "rethinkhaberdashery": "^2.3.32",
     "sanitize-filename": "^1.6.3",
-    "serialize-javascript": "^1.5.0",
+    "serialize-javascript": "^2.1.1",
     "session-rethinkdb": "^2.0.0",
     "sha1": "^1.1.1",
     "slate": "^0.20.1",
