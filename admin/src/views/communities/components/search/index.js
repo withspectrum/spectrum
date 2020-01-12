@@ -9,6 +9,7 @@ import { ESC, BACKSPACE, ARROW_DOWN, ARROW_UP } from 'src/helpers/keycodes';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
 import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/queries';
+import { ENTER } from 'src/helpers/keycodes';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
@@ -257,9 +258,4 @@ class Search extends Component {
   }
 }
 
-export default compose(
-  withApollo,
-  withRouter,
-  connect(),
-  pure
-)(Search);
+export default compose(withApollo, withRouter, connect(), pure)(Search);
