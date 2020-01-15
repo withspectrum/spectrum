@@ -164,13 +164,9 @@ class ThreadFeedPure extends React.Component<Props, State> {
     }
 
     const uniqueThreads = deduplicateChildren(filteredThreads, 'id');
-    if (uniqueThreads && uniqueThreads.length > 0) {
+    if (uniqueThreads && uniqueThreads.length > 0 && networkStatus === 7) {
       return (
         <Container data-cy="thread-feed">
-          <LoadingPill isVisible={networkStatus === 2 || networkStatus === 1}>
-            <Spinner color={'text.reverse'} size={12} />
-          </LoadingPill>
-
           {this.props.data.community &&
             this.props.data.community.pinnedThread &&
             this.props.data.community.pinnedThread.id && (
