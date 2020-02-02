@@ -19,4 +19,6 @@ const getLoading = () => ({ error, pastDelay }) => {
 export const ThreadView = Loadable({
   loader,
   loading: getLoading(),
+  modules: ['./container'],
+  webpack: () => [require.resolveWeak('./container')],
 });
