@@ -37,7 +37,7 @@ export const sortAndGroupNotificationMessages = messagesToSort => {
       return c > p + 21600000;
     };
 
-    // if we are evaulating a bubble from the same user
+    // if we are evaluating a bubble from the same user
     if (sameUser) {
       // if we are still on the first message
       if (i === 0) {
@@ -54,7 +54,7 @@ export const sortAndGroupNotificationMessages = messagesToSort => {
           // populate the new batch of messages with this next old message
           newArray.push(messages[i]);
         } else {
-          // if the message isn't older than our prefered variance,
+          // if the message isn't older than our preferred variance,
           // we keep populating the same batch of messages
           newArray.push(messages[i]);
         }
@@ -72,7 +72,7 @@ export const sortAndGroupNotificationMessages = messagesToSort => {
       } else {
         // clear the messages array from the previous user
         newArray = [];
-        // and start a new batch of messages from the currently evaulating user
+        // and start a new batch of messages from the currently evaluating user
         newArray.push(messages[i]);
       }
 

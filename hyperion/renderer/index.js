@@ -121,9 +121,9 @@ const renderer = (req: express$Request, res: express$Response) => {
         res.redirect(301, routerContext.url);
         return;
       }
-      // maintainance mode
+      // maintenance mode
       if (IN_MAINTENANCE_MODE) {
-        debug('maintainance mode enabled, sending 503');
+        debug('maintenance mode enabled, sending 503');
         res.status(503);
         res.set('Retry-After', '3600');
       } else {

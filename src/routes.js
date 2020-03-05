@@ -243,7 +243,7 @@ class Routes extends React.Component<Props, State> {
       <ErrorBoundary fallbackComponent={ErrorFallback}>
         <ThemeProvider theme={theme}>
           <NavigationContext.Provider value={navigationContext}>
-            {/* default meta tags, get overriden by anything further down the tree */}
+            {/* default meta tags, get overridden by anything further down the tree */}
             <Head title={title} description={description} />
             <GlobalStyles />
             <GlobalThreadAttachmentStyles />

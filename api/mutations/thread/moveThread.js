@@ -33,7 +33,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       },
     });
 
-    return new UserError('Cannot move a non-existant thread.');
+    return new UserError('Cannot move a non-existent thread.');
   }
 
   const {

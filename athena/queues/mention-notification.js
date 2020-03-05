@@ -89,7 +89,7 @@ export default async ({ data }: Job<MentionNotificationJobData>) => {
   const [actor, context] = await Promise.all([
     // get the thread author info
     fetchPayload('USER', senderId),
-    // get the thread where the mention occured
+    // get the thread where the mention occurred
     fetchPayload('THREAD', threadId),
   ]);
 

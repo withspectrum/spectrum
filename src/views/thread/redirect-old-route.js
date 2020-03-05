@@ -26,7 +26,7 @@ export default getThreadByMatch(props => {
       return <LoadingView />;
     }
 
-    // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existant thread
+    // If we don't have a thread, but also aren't loading anymore it's either a private or a non-existent thread
     if (error) {
       return <ErrorView />;
     }

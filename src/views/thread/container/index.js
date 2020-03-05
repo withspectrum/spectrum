@@ -183,7 +183,7 @@ const ThreadContainer = (props: Props) => {
         component are always at least the height of the screen, minus the
         height of the chat input. This is necessary because we always want
         the chat input at the bottom of the view, so it must always be tricked
-        into thinking that its preceeding sibling is full-height.
+        into thinking that its preceding sibling is full-height.
       */}
       <Stretch
         isModal={isModal}

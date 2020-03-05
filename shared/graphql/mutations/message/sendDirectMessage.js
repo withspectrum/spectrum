@@ -93,7 +93,7 @@ const sendDirectMessageOptions = {
                 node.content.body === addMessage.content.body)
           );
 
-          // Replace the optimistic reponse with the actual db message
+          // Replace the optimistic response with the actual db message
           if (messageInStore && typeof messageInStore.id === 'number') {
             data.directMessageThread.messageConnection.edges = data.directMessageThread.messageConnection.edges.map(
               edge => {

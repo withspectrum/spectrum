@@ -104,7 +104,7 @@ class BanUserModal extends React.Component<Props, State> {
         >
           <Subtitle>
             Banning a user is very hard to undo. Please be sure you want this
-            user to be permanantely banned before completing this step.
+            user to be permanently banned before completing this step.
           </Subtitle>
           <Form>
             <TextArea
