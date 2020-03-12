@@ -40,7 +40,7 @@ Object {
 }
 `;
 
-exports[`queries should return null for a non-existant id 1`] = `
+exports[`queries should return null for a non-existent id 1`] = `
 Object {
   "data": Object {
     "user": null,

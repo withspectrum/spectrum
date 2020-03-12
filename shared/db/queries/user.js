@@ -686,7 +686,7 @@ export const deleteUser = createWriteQuery((userId: string) => ({
 }));
 
 /*
-  Occassionally bad actors will show up on Spectrum and become toxic, spam communities, harass others, or violate our code of conduct. We have a safe way to ban these users in a way that respects the integrity of data across the rest of the database.
+  Occasionally bad actors will show up on Spectrum and become toxic, spam communities, harass others, or violate our code of conduct. We have a safe way to ban these users in a way that respects the integrity of data across the rest of the database.
   Do NOT ever `.delete()` a user record from the database!!
 */
 type BanUserType = {

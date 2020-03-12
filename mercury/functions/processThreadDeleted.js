@@ -22,7 +22,7 @@ import type { ReputationEventJobData } from 'shared/bull/types';
   If a thread is deleted, not only do we need to remove the reputation from the post author, but we also need to remove all of the reputation that was gained by users within the thread:
 
   1. Each time a message was posted, the message creator and thread creator gained reputation
-  2. Eeach reaction within the thread generated reptuation for the message sender and message creator
+  2. Each reaction within the thread generated reputation for the message sender and message creator
 
 */
 

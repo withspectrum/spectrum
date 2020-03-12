@@ -81,7 +81,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
           // populate the new batch of messages with this next old message
           newArray.push(messages[i]);
         } else {
-          // if the message isn't older than our prefered variance,
+          // if the message isn't older than our preferred variance,
           // we keep populating the same batch of messages
           newArray.push(messages[i]);
         }
@@ -101,7 +101,7 @@ export const sortAndGroupMessages = (messages: Array<Output>) => {
       } else {
         // clear the messages array from the previous user
         newArray = [];
-        // and start a new batch of messages from the currently evaulating user
+        // and start a new batch of messages from the currently evaluating user
         newArray.push(messages[i]);
       }
 

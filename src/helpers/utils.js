@@ -38,21 +38,21 @@ export const debounce = (func: Function, wait: number, immediate: boolean) => {
   };
 };
 
-export const throttle = (func: Function, threshhold: number, scope: any) => {
-  threshhold || (threshhold = 250);
+export const throttle = (func: Function, threshold: number, scope: any) => {
+  threshold || (threshold = 250);
   let last, deferTimer;
   return function() {
     let context = scope || this;
 
     let now = +new Date(),
       args = arguments;
-    if (last && now < last + threshhold) {
+    if (last && now < last + threshold) {
       // hold on to it
       clearTimeout(deferTimer);
       deferTimer = setTimeout(function() {
         last = now;
         func.apply(context, args);
-      }, threshhold);
+      }, threshold);
     } else {
       last = now;
       func.apply(context, args);

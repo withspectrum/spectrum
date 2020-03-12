@@ -147,7 +147,7 @@ passport.deserializeUser((data, done) => {
   try {
     const user = JSON.parse(data);
     // Make sure more than the user ID is in the data by checking any other required
-    // field for existance
+    // field for existence
     if (user.id && user.createdAt) {
       return done(null, user);
     }

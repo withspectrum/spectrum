@@ -24,7 +24,7 @@ export default async (job: Job<CommunityNotificationJobData>) => {
   const context = await fetchPayload('COMMUNITY', incomingCommunityId);
   const eventType = 'USER_JOINED_COMMUNITY';
 
-  // determine if a notificaiton already exists of this type, and in this community
+  // determine if a notification already exists of this type, and in this community
   const existing = await checkForExistingNotification(
     eventType,
     incomingCommunityId
@@ -58,7 +58,7 @@ export default async (job: Job<CommunityNotificationJobData>) => {
     }
   );
 
-  // store or update a notificaiton in the db, returns the db record
+  // store or update a notification in the db, returns the db record
   const updatedNotification = await handleNotificationRecord(
     nextNotificationRecord
   );

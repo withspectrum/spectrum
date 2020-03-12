@@ -25,10 +25,10 @@ describe('queries', () => {
     expect(result).toMatchSnapshot();
   });
 
-  it('should return null for a non-existant id', async () => {
+  it('should return null for a non-existent id', async () => {
     const query = /* GraphQL */ `
 			{
-				user(id: "non-existant") {
+				user(id: "non-existent") {
 					id
           username
 				}
