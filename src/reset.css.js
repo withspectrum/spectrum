@@ -112,7 +112,7 @@ export default createGlobalStyle`
 
   .markdown pre {
     font-size: 15px;
-    white-space: pre-wrap;
+    white-space: pre;
   }
 
   .markdown p {
@@ -227,7 +227,7 @@ export default createGlobalStyle`
   .markdown pre code {
     padding: 8px 16px;
     display: block;
-    white-space: pre-wrap;
+    white-space: pre;
     position: relative;
     margin: 0;
     border: none;
