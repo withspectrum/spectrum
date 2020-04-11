@@ -174,7 +174,7 @@ export const PrimaryColumn = styled.section`
     border-right: 0;
     border-bottom: 0;
     grid-column-start: 1;
-    max-width: 100%;
+    max-width: 100vw;
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
