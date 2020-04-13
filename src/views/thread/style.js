@@ -828,6 +828,8 @@ export const Stretch = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  min-width: 1px;
+  max-width: inherit;
   position: relative;
   ${props =>
     props.isModal &&
