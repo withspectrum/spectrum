@@ -72,6 +72,11 @@ const Embed = (props: EmbedData) => {
   return <ExternalEmbed {...props} />;
 };
 
+const EMPTY_THEME = {
+  plain: {},
+  styles: [],
+};
+
 type Options = {
   headings: boolean,
 };
@@ -108,7 +113,7 @@ export const createRenderer = (options: Options) => {
             {...defaultProps}
             code={getStringElements(child).join('\n')}
             language={Array.isArray(data) && data[0].language}
-            theme={undefined}
+            theme={EMPTY_THEME}
             key={keys[index]}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
