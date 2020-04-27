@@ -22,6 +22,7 @@ import {
 import Sidebar from 'src/components/communitySidebar';
 import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 import usePrevious from 'src/hooks/usePrevious';
+import { FullScreenRedirectView } from 'src/views/viewHelpers/fullScreenRedirect';
 
 type Props = {
   community: CommunityInfoType,
@@ -120,13 +121,22 @@ const Component = (props: Props) => {
 
   const { title, description } = metaInfo;
 
+  if (community.redirect && community.website) {
+    window.location = community.website;
+    return <FullScreenRedirectView community={community} />;
+  }
+
   return (
     <React.Fragment>
       <Head
         title={title}
         description={description}
         image={community.profilePhoto}
-      />
+      >
+        {community.redirect && community.website && (
+          <meta httpEquiv="refresh" content={`0;url=${community.website}`} />
+        )}
+      </Head>
 
       <ViewGrid data-cy="community-view">
         <SecondaryPrimaryColumnGrid>

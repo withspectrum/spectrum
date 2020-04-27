@@ -149,6 +149,7 @@ const Community = /* GraphQL */ `
     pinnedThread: Thread
     isPrivate: Boolean
     lastActive: Date
+    redirect: Boolean
     communityPermissions: CommunityPermissions @cost(complexity: 1)
 
     channelConnection: CommunityChannelsConnection @cost(complexity: 1)
@@ -357,6 +358,7 @@ const Community = /* GraphQL */ `
       input: DisableCommunityWatercoolerInput!
     ): Community
     setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
+    toggleCommunityRedirect(communityId: ID!): Community
   }
 
   extend type Subscription {

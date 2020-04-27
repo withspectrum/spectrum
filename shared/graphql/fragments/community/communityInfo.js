@@ -14,6 +14,7 @@ export type CommunityInfoType = {
   watercoolerId: ?string,
   lastActive?: Date,
   isPrivate: boolean,
+  redirect?: Boolean,
   communityPermissions: {
     isMember: boolean,
     isBlocked: boolean,
@@ -43,6 +44,7 @@ export default gql`
     isPrivate
     watercoolerId
     lastActive
+    redirect
     communityPermissions {
       isMember
       isBlocked

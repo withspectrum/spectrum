@@ -180,13 +180,23 @@ class ChannelView extends React.Component<Props> {
         },
       });
 
+      if (community.redirect && community.website)
+        window.location = community.website;
+
       return (
         <React.Fragment>
           <Head
             title={title}
             description={description}
             image={community.profilePhoto}
-          />
+          >
+            {community.redirect && community.website && (
+              <meta
+                httpEquiv="refresh"
+                content={`0;url=${community.website}`}
+              />
+            )}
+          </Head>
 
           <ViewGrid>
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
