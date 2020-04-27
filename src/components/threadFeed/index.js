@@ -5,7 +5,6 @@ import InfiniteList from 'src/components/infiniteScroll';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { connect } from 'react-redux';
 import InboxThread from 'src/components/inboxThread';
-import { Spinner } from 'src/components/globals';
 import { LoadingInboxThread } from 'src/components/loading';
 import ViewError from 'src/components/viewError';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
@@ -14,7 +13,7 @@ import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
-import { Container, LoadingPill } from './style';
+import { Container } from './style';
 import NullState from './nullState';
 
 type Props = {

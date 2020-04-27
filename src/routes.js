@@ -188,17 +188,6 @@ class Routes extends React.Component<Props, State> {
   previousLocation = this.props.location;
   state = { navigationIsOpen: false };
 
-  componentWillUpdate(nextProps) {
-    const { location } = this.props;
-    // set previousLocation if props.location is not modal
-    // if (
-    //   nextProps.history.action !== 'POP' &&
-    //   (!location.state || !location.state.modal)
-    // ) {
-    //   this.previousLocation = this.props.location;
-    // }
-  }
-
   setNavigationIsOpen = (val: boolean) =>
     this.setState({ navigationIsOpen: val });
 
