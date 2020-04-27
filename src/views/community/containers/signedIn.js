@@ -122,7 +122,6 @@ const Component = (props: Props) => {
   const { title, description } = metaInfo;
 
   if (community.redirect && community.website) {
-    window.location = community.website;
     return <FullScreenRedirectView community={community} />;
   }
 
@@ -133,9 +132,7 @@ const Component = (props: Props) => {
         description={description}
         image={community.profilePhoto}
       >
-        {community.redirect && community.website && (
-          <meta httpEquiv="refresh" content={`0;url=${community.website}`} />
-        )}
+        {community.redirect && <meta name="robots" content="noindex" />}
       </Head>
 
       <ViewGrid data-cy="community-view">

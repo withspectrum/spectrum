@@ -33,6 +33,7 @@ import { SidebarSection } from 'src/views/community/style';
 import CommunitySidebar from 'src/components/communitySidebar';
 import { FeedsContainer } from './style';
 import { InfoContainer } from '../community/style';
+import { FullScreenRedirectView } from 'src/views/viewHelpers/fullScreenRedirect';
 
 type Props = {
   match: {
@@ -180,8 +181,9 @@ class ChannelView extends React.Component<Props> {
         },
       });
 
-      if (community.redirect && community.website)
-        window.location = community.website;
+      if (community.redirect && community.website) {
+        return <FullScreenRedirectView community={community} />;
+      }
 
       return (
         <React.Fragment>
@@ -190,12 +192,7 @@ class ChannelView extends React.Component<Props> {
             description={description}
             image={community.profilePhoto}
           >
-            {community.redirect && community.website && (
-              <meta
-                httpEquiv="refresh"
-                content={`0;url=${community.website}`}
-              />
-            )}
+            {community.redirect && <meta name="robots" content="noindex" />}
           </Head>
 
           <ViewGrid>
