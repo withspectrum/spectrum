@@ -331,6 +331,30 @@ class ThreadDetailPure extends React.Component<Props, State> {
                 />
               </BylineContainer>
 
+              {thread.community.website && thread.community.redirect && (
+                <div
+                  style={{
+                    width: 'calc(100% + 32px)',
+                    borderBottom: '1px solid #f6f7f8',
+                    padding: '12px 16px',
+                    background: '#FFE6BF',
+                    marginLeft: '-16px',
+                    marginRight: '-16px',
+                    color: '#7D4A00',
+                  }}
+                >
+                  The {thread.community.name} community has a new home. This
+                  thread is preserved for historical purposes. The content of
+                  this conversation may be innaccurrate or out of date.{' '}
+                  <a
+                    style={{ color: '#D85537', fontWeight: '600' }}
+                    href={thread.community.website}
+                  >
+                    Go to new community home &rarr;
+                  </a>
+                </div>
+              )}
+
               <div style={{ height: '16px' }} />
 
               <ThreadHeading>{thread.content.title}</ThreadHeading>

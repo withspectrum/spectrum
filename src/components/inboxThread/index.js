@@ -23,7 +23,6 @@ import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import getSnippet from 'shared/clients/draft-js/utils/getSnippet';
 import truncate from 'shared/truncate';
-import { MEDIA_BREAK } from 'src/components/layout';
 
 type Props = {
   active: boolean,
