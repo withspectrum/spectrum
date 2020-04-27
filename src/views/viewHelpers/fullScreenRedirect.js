@@ -25,9 +25,11 @@ export const FullScreenRedirectView = (props: Props) => {
           <Heading>{community.name} has a new home</Heading>
           <Description>This community is no longer on Spectrum.</Description>
           <div style={{ padding: '16px' }} />
-          <PrimaryButton href={community.website}>
-            Go to new community page
-          </PrimaryButton>
+          {community.website && (
+            <PrimaryButton href={community.website}>
+              Go to new community page
+            </PrimaryButton>
+          )}
         </Card>
       </CenteredGrid>
     </ViewGrid>
