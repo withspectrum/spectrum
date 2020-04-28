@@ -30,6 +30,7 @@ type State = {
 class RedirectSettings extends React.Component<Props, State> {
   state = {
     isLoadingRedirect: false,
+    isLoadingNoindex: false,
   };
 
   toggleRedirect = e => {
