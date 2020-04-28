@@ -132,8 +132,8 @@ const Component = (props: Props) => {
         description={description}
         image={community.profilePhoto}
       >
-        {community.redirect && community.nofollow && (
-          <meta name="robots" content="noindex" />
+        {community.redirect && community.noindex && (
+          <meta name="robots" content="noindex, nofollow" />
         )}
       </Head>
 

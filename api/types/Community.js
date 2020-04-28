@@ -150,7 +150,7 @@ const Community = /* GraphQL */ `
     isPrivate: Boolean
     lastActive: Date
     redirect: Boolean
-    nofollow: Boolean
+    noindex: Boolean
     communityPermissions: CommunityPermissions @cost(complexity: 1)
 
     channelConnection: CommunityChannelsConnection @cost(complexity: 1)
@@ -360,7 +360,7 @@ const Community = /* GraphQL */ `
     ): Community
     setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
     toggleCommunityRedirect(communityId: ID!): Community
-    toggleCommunityNofollow(communityId: ID!): Community
+    toggleCommunityNoindex(communityId: ID!): Community
   }
 
   extend type Subscription {

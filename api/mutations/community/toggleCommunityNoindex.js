@@ -1,8 +1,8 @@
 // @flow
-import type { GraphQLContext } from '../../';
+import type { GraphQLContext } from '../..';
 import UserError from '../../utils/UserError';
 import {
-  toggleCommunityNofollow,
+  toggleCommunityNoindex,
   getCommunityById,
 } from '../../models/community';
 import {
@@ -28,5 +28,5 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     return new UserError('This community does not exist.');
   }
 
-  return toggleCommunityNofollow(communityId);
+  return toggleCommunityNoindex(communityId);
 });

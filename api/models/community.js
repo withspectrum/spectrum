@@ -509,7 +509,7 @@ export const toggleCommunityRedirect = async (communityId: string) => {
     });
 };
 
-export const toggleCommunityNofollow = async (communityId: string) => {
+export const toggleCommunityNoindex = async (communityId: string) => {
   const community = await db.table('communities').get(communityId);
   if (!community) return null;
 
@@ -518,7 +518,7 @@ export const toggleCommunityNofollow = async (communityId: string) => {
     .get(communityId)
     .update(
       {
-        nofollow: !community.nofollow,
+        noindex: !community.noindex,
       },
       {
         returnChanges: true,

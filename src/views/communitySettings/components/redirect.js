@@ -11,20 +11,20 @@ import {
 } from 'src/components/settingsViews/style';
 import { OutlineButton } from 'src/components/button';
 import toggleCommunityRedirect from 'shared/graphql/mutations/community/toggleCommunityRedirect';
-import toggleCommunityNofollow from 'shared/graphql/mutations/community/toggleCommunityNofollow';
+import toggleCommunityNoindex from 'shared/graphql/mutations/community/toggleCommunityNoindex';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 
 type Props = {
   community: GetCommunityType,
   toggleCommunityRedirect: Function,
-  toggleCommunityNofollow: Function,
+  toggleCommunityNoindex: Function,
   dispatch: Dispatch<Object>,
 };
 
 type State = {
   isLoadingRedirect: boolean,
-  isLoadingNofollow: boolean,
+  isLoadingNoindex: boolean,
 };
 
 class RedirectSettings extends React.Component<Props, State> {
@@ -53,23 +53,23 @@ class RedirectSettings extends React.Component<Props, State> {
       });
   };
 
-  toggleNofollow = e => {
+  toggleNoindex = e => {
     e.preventDefault();
 
     this.setState({
-      isLoadingNofollow: true,
+      isLoadingNoindex: true,
     });
 
     return this.props
-      .toggleCommunityNofollow(this.props.community.id)
+      .toggleCommunityNoindex(this.props.community.id)
       .then(() => {
-        this.setState({ isLoadingNofollow: false });
+        this.setState({ isLoadingNoindex: false });
         return this.props.dispatch(
           addToastWithTimeout('success', 'Community setting saved')
         );
       })
       .catch(err => {
-        this.setState({ isLoadingNofollow: false });
+        this.setState({ isLoadingNoindex: false });
         return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -122,13 +122,13 @@ class RedirectSettings extends React.Component<Props, State> {
               </SectionCardFooter>
               <SectionCardFooter style={{ borderTop: '0', paddingTop: '0' }}>
                 <OutlineButton
-                  disabled={this.state.isLoadingNofollow}
-                  onClick={this.toggleNofollow}
+                  disabled={this.state.isLoadingNoindex}
+                  onClick={this.toggleNoindex}
                   style={{ alignSelf: 'flex-start' }}
                 >
-                  {this.state.isLoadingNofollow
+                  {this.state.isLoadingNoindex
                     ? 'Loading...'
-                    : this.props.community.nofollow
+                    : this.props.community.noindex
                     ? 'Disable'
                     : 'Enable'}
                 </OutlineButton>
@@ -145,6 +145,6 @@ class RedirectSettings extends React.Component<Props, State> {
 
 export default compose(
   toggleCommunityRedirect,
-  toggleCommunityNofollow,
+  toggleCommunityNoindex,
   connect()
 )(RedirectSettings);
