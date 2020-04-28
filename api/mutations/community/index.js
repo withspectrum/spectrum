@@ -18,6 +18,7 @@ import enableCommunityWatercooler from './enableCommunityWatercooler';
 import disableCommunityWatercooler from './disableCommunityWatercooler';
 import setCommunityLastSeen from './setCommunityLastSeen';
 import toggleCommunityRedirect from './toggleCommunityRedirect';
+import toggleCommunityNofollow from './toggleCommunityNofollow.js';
 
 module.exports = {
   Mutation: {
@@ -40,5 +41,6 @@ module.exports = {
     disableCommunityWatercooler,
     setCommunityLastSeen,
     toggleCommunityRedirect,
+    toggleCommunityNofollow,
   },
 };

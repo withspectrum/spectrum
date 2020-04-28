@@ -132,7 +132,9 @@ const Component = (props: Props) => {
         description={description}
         image={community.profilePhoto}
       >
-        {community.redirect && <meta name="robots" content="noindex" />}
+        {community.redirect && community.nofollow && (
+          <meta name="robots" content="noindex" />
+        )}
       </Head>
 
       <ViewGrid data-cy="community-view">

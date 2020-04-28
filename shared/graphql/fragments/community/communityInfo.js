@@ -45,6 +45,7 @@ export default gql`
     watercoolerId
     lastActive
     redirect
+    nofollow
     communityPermissions {
       isMember
       isBlocked
