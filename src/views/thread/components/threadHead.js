@@ -59,7 +59,9 @@ const ThreadHead = (props: Props) => {
         property="article:section"
         content={`${community.name} community`}
       />
-      {community.redirect && <meta name="robots" content="noindex" />}
+      {community.redirect && community.noindex && (
+        <meta name="robots" content="noindex, nofollow" />
+      )}
     </Head>
   );
 };

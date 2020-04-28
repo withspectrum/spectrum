@@ -9,43 +9,68 @@ import {
   SectionSubtitle,
   SectionCardFooter,
 } from 'src/components/settingsViews/style';
-import { TextButton } from 'src/components/button';
+import { OutlineButton } from 'src/components/button';
 import toggleCommunityRedirect from 'shared/graphql/mutations/community/toggleCommunityRedirect';
+import toggleCommunityNoindex from 'shared/graphql/mutations/community/toggleCommunityNoindex';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { Dispatch } from 'redux';
 
 type Props = {
   community: GetCommunityType,
   toggleCommunityRedirect: Function,
+  toggleCommunityNoindex: Function,
   dispatch: Dispatch<Object>,
 };
 
 type State = {
-  isLoading: boolean,
+  isLoadingRedirect: boolean,
+  isLoadingNoindex: boolean,
 };
 
 class RedirectSettings extends React.Component<Props, State> {
   state = {
-    isLoading: false,
+    isLoadingRedirect: false,
+    isLoadingNoindex: false,
   };
 
-  toggle = e => {
+  toggleRedirect = e => {
     e.preventDefault();
 
     this.setState({
-      isLoading: true,
+      isLoadingRedirect: true,
     });
 
     return this.props
       .toggleCommunityRedirect(this.props.community.id)
       .then(() => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoadingRedirect: false });
         return this.props.dispatch(
           addToastWithTimeout('success', 'Community redirect setting saved')
         );
       })
       .catch(err => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoadingRedirect: false });
+        return this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  toggleNoindex = e => {
+    e.preventDefault();
+
+    this.setState({
+      isLoadingNoindex: true,
+    });
+
+    return this.props
+      .toggleCommunityNoindex(this.props.community.id)
+      .then(() => {
+        this.setState({ isLoadingNoindex: false });
+        return this.props.dispatch(
+          addToastWithTimeout('success', 'Community setting saved')
+        );
+      })
+      .catch(err => {
+        this.setState({ isLoadingNoindex: false });
         return this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -57,16 +82,16 @@ class RedirectSettings extends React.Component<Props, State> {
       return (
         <SectionCard data-cy="community-settings-redirect">
           <SectionTitle>Migrate your community elsewhere</SectionTitle>
-          <SectionSubtitle>
+          <SectionSubtitle style={{ marginTop: '8px' }}>
             Enabling this setting will redirect your community and channel pages
             to your community's website.
           </SectionSubtitle>
-          <SectionSubtitle>
+          <SectionSubtitle style={{ marginTop: '8px' }}>
             Existing conversations will stay accessible on Spectrum at their
             current URLs, but no new members can join and no new conversations
             can be created.
           </SectionSubtitle>
-          <SectionSubtitle>
+          <SectionSubtitle style={{ marginTop: '8px' }}>
             We recommend redirecting to a page that explains why users were
             redirected from Spectrum. For example, you can include a query param
             in your community website setting (e.g.{' '}
@@ -74,18 +99,43 @@ class RedirectSettings extends React.Component<Props, State> {
             notice to users arriving there.
           </SectionSubtitle>
           <SectionCardFooter>
-            <TextButton
-              disabled={this.state.isLoading}
-              onClick={this.toggle}
+            <OutlineButton
+              disabled={this.state.isLoadingRedirect}
+              onClick={this.toggleRedirect}
               style={{ alignSelf: 'flex-start' }}
             >
-              {this.state.isLoading
+              {this.state.isLoadingRedirect
                 ? 'Loading...'
                 : this.props.community.redirect
                 ? 'Disable'
                 : 'Enable'}
-            </TextButton>
+            </OutlineButton>
           </SectionCardFooter>
+          {this.props.community.redirect && (
+            <React.Fragment>
+              <SectionCardFooter
+                style={{ marginTop: '24px', paddingTop: '24px' }}
+              >
+                <SectionSubtitle>
+                  Optional: Prevent threads in my community from being indexed
+                  by search engines while redirection is active.
+                </SectionSubtitle>
+              </SectionCardFooter>
+              <SectionCardFooter style={{ borderTop: '0', paddingTop: '0' }}>
+                <OutlineButton
+                  disabled={this.state.isLoadingNoindex}
+                  onClick={this.toggleNoindex}
+                  style={{ alignSelf: 'flex-start' }}
+                >
+                  {this.state.isLoadingNoindex
+                    ? 'Loading...'
+                    : this.props.community.noindex
+                    ? 'Disable'
+                    : 'Enable'}
+                </OutlineButton>
+              </SectionCardFooter>
+            </React.Fragment>
+          )}
         </SectionCard>
       );
     }
@@ -96,5 +146,6 @@ class RedirectSettings extends React.Component<Props, State> {
 
 export default compose(
   toggleCommunityRedirect,
+  toggleCommunityNoindex,
   connect()
 )(RedirectSettings);

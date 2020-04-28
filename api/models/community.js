@@ -509,6 +509,28 @@ export const toggleCommunityRedirect = async (communityId: string) => {
     });
 };
 
+export const toggleCommunityNoindex = async (communityId: string) => {
+  const community = await db.table('communities').get(communityId);
+  if (!community) return null;
+
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        noindex: !community.noindex,
+      },
+      {
+        returnChanges: true,
+      }
+    )
+    .then(result => {
+      if (!Array.isArray(result.changes) || result.changes.length === 0)
+        return getCommunityById(communityId);
+      return result.changes[0].new_val;
+    });
+};
+
 export const setCommunityWatercoolerId = (
   communityId: string,
   threadId: ?string
