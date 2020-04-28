@@ -1,10 +1,8 @@
 // @flow
 const debug = require('debug')('api:mutations:thread:publish-thread');
 import stringSimilarity from 'string-similarity';
-import slugg from 'slugg';
 import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
-import { addMessage } from '../message/addMessage';
 import { uploadImage } from '../../utils/file-storage';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
 import {
@@ -21,13 +19,11 @@ import {
   processReputationEventQueue,
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
-  _adminProcessUserSpammingThreadsQueue,
 } from 'shared/bull/queues';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 import { events } from 'shared/analytics';
 import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { storeMessage } from '../../models/message';
 
 const threadBodyToPlainText = (body: any): string =>
   toPlainText(toState(JSON.parse(body)));
@@ -170,15 +166,6 @@ export default requireAuth(
 
       if (usersPreviousPublishedThreads.length >= MEMBER_SPAM_LMIT) {
         debug('User has posted at least 3 times in the previous 10m');
-        _adminProcessUserSpammingThreadsQueue.add({
-          user: user,
-          threads: usersPreviousPublishedThreads,
-          // $FlowIssue
-          publishing: thread,
-          community: community,
-          channel: channel,
-        });
-
         trackQueue.add({
           userId: user.id,
           event: events.THREAD_CREATED_FAILED,
@@ -238,15 +225,6 @@ export default requireAuth(
           userId: user.id,
           event: events.THREAD_FLAGGED_AS_SPAM,
           context: { channelId: thread.channelId },
-        });
-
-        _adminProcessUserSpammingThreadsQueue.add({
-          user: user,
-          threads: usersPreviousPublishedThreads,
-          // $FlowIssue
-          publishing: thread,
-          community: community,
-          channel: channel,
         });
 
         return new UserError(

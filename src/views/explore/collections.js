@@ -4,10 +4,8 @@ export const collections = [
     curatedContentType: 'top-communities-by-members',
     communities: [
       'spectrum',
-      'zeit',
       'codesandbox',
       'codepen',
-      'next-js',
       'figma',
       'react',
       'specfm',
@@ -58,7 +56,6 @@ export const collections = [
     curatedContentType: 'development-communities',
     communities: [
       'react',
-      'next-js',
       'node',
       'codesandbox',
       'vue-js',
@@ -75,14 +72,13 @@ export const collections = [
       'react-native',
       'frontend',
       'specfm',
-      'zeit',
       'realm',
       'expo',
       'compositor',
       'codepen',
       'bootstrap',
       'tachyons',
-      'divjoy'
+      'divjoy',
     ],
   },
   {
