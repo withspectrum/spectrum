@@ -1,17 +1,31 @@
 // @flow
 import React from 'react';
-import { PrimaryButton } from 'src/components/button';
+import { connect } from 'react-redux';
+import { PrimaryButton, OutlineButton } from 'src/components/button';
 import { Heading, Description, Card } from './style';
 import { CommunityAvatar } from 'src/components/avatar';
+import { openModal } from 'src/actions/modals';
 import { ViewGrid, CenteredGrid } from 'src/components/layout';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
+import type { Dispatch } from 'redux';
 
 type Props = {
   community: CommunityInfoType,
+  dispatch: Dispatch<Object>,
 };
 
-export const FullScreenRedirectView = (props: Props) => {
-  const { community } = props;
+const RedirectView = (props: Props) => {
+  const { community, dispatch } = props;
+
+  const leaveCommunity = () =>
+    dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: community.id,
+        entity: 'team-member-leaving-community',
+        message: 'Are you sure you want to leave this community?',
+        buttonLabel: 'Leave Community',
+      })
+    );
 
   return (
     <ViewGrid>
@@ -42,8 +56,20 @@ export const FullScreenRedirectView = (props: Props) => {
               Visit new community
             </PrimaryButton>
           )}
+          {community.communityPermissions &&
+            community.communityPermissions.isMember &&
+            !community.communityPermissions.isOwner && (
+              <React.Fragment>
+                <div style={{ padding: '8px' }} />
+                <OutlineButton onClick={leaveCommunity}>
+                  Leave community on Spectrum
+                </OutlineButton>
+              </React.Fragment>
+            )}
         </Card>
       </CenteredGrid>
     </ViewGrid>
   );
 };
+
+export const FullScreenRedirectView = connect()(RedirectView);
