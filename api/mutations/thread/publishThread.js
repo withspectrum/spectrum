@@ -101,6 +101,10 @@ export default requireAuth(
       return new UserError('This community doesn’t exist');
     }
 
+    if (community.redirect) {
+      return new UserError('This community is no longer on Spectrum.');
+    }
+
     // if channel wasn't found or is deleted
     if (!channel || channel.deletedAt) {
       trackQueue.add({

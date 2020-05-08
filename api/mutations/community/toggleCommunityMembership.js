@@ -88,6 +88,10 @@ export default async (
       return new UserError("You don't have permission to join this community.");
     }
 
+    if (communityToEvaluate.redirect) {
+      return new UserError('This community is no longer on Spectrum.');
+    }
+
     return await Promise.all([
       createMemberInCommunity(communityId, currentUser.id),
       // join the user to all the default channels in the community
