@@ -116,7 +116,7 @@ export const GutterTimestamp = styled(Link)`
   width: 72px;
   font-size: 14px;
   font-weight: 400;
-  color: ${theme.text.placeholder};
+  color: ${theme.text.secondary};
   opacity: 0;
   ${Truncate};
 
