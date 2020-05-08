@@ -186,7 +186,7 @@ export const Glyph = ({ glyph }: GlyphProps) => {
       );
     case 'download':
       return (
-        <g id="download">
+        <g>
           <path
             id="Union"
             fillRule="evenodd"
@@ -963,7 +963,6 @@ class Icon extends React.Component<Props> {
           viewBox="0 0 32 32"
           preserveAspectRatio="xMidYMid meet"
           fit
-          id={glyph}
         >
           <title id="title">{glyph}</title>
           <Glyph glyph={glyph} />

@@ -9,6 +9,7 @@ type Props = {
   size: number,
   mobilesize?: number,
   isClickable?: boolean,
+  alt: string,
 };
 
 export default class Image extends React.Component<Props> {

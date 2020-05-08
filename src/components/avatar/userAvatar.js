@@ -89,6 +89,7 @@ class Avatar extends React.Component<AvatarProps> {
                 size={size}
                 mobilesize={mobilesize}
                 type={'user'}
+                alt={user.name || user.username}
               />
             </AvatarLink>
           )}
@@ -98,6 +99,7 @@ class Avatar extends React.Component<AvatarProps> {
             size={size}
             mobilesize={mobilesize}
             type={'user'}
+            alt={user.name || user.username}
           />
         </ConditionalWrap>
       </Container>

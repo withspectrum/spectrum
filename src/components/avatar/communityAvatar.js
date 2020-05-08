@@ -47,6 +47,7 @@ class Avatar extends React.Component<Props> {
             size={size}
             mobilesize={mobilesize}
             type={'community'}
+            alt={community.name}
           />
         </ConditionalWrap>
       </Container>
