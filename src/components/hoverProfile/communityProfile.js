@@ -50,6 +50,7 @@ class HoverProfile extends Component<ProfileProps> {
                   type={'community'}
                   size={40}
                   isClickable={false}
+                  alt={community.name}
                 />
               </ProfilePhotoContainer>
             </CoverContainer>

@@ -51,7 +51,12 @@ class HoverProfile extends Component<ProfileProps> {
             <CoverContainer>
               <CoverPhoto src={user.coverPhoto ? user.coverPhoto : null} />
               <ProfilePhotoContainer>
-                <AvatarImage src={user.profilePhoto} type={'user'} size={40} />
+                <AvatarImage
+                  src={user.profilePhoto}
+                  alt={user.name}
+                  type={'user'}
+                  size={40}
+                />
               </ProfilePhotoContainer>
             </CoverContainer>
           </ConditionalWrap>

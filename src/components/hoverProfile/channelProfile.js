@@ -54,6 +54,7 @@ class HoverProfile extends Component<ProfileProps> {
               size={24}
               src={channel.community.profilePhoto}
               type={'community'}
+              alt={channel.community.name}
             />
             <ChannelCommunityLabel>
               {channel.community.name}
