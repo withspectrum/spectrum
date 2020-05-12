@@ -2,7 +2,7 @@ const { parse } = require('url');
 const generateMetaInfo = require('../../shared/generate-meta-info');
 
 // Don't even try if the path is /<value> any of these
-// TODO: Longer, more complete denylist here
+// TODO: Longer, more complete deny list here
 const PATH_DENY_LIST = ['robots.txt', 'home', 'messages', 'notifications'];
 
 type Meta = {
