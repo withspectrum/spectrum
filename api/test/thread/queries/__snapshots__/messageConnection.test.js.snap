@@ -32,3 +32,36 @@ Object {
   },
 }
 `;
+
+exports[`messageConnection should fetch the first message first 1`] = `
+Object {
+  "data": Object {
+    "thread": Object {
+      "messageConnection": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "id": "1",
+            },
+          },
+          Object {
+            "node": Object {
+              "id": "2",
+            },
+          },
+          Object {
+            "node": Object {
+              "id": "3",
+            },
+          },
+          Object {
+            "node": Object {
+              "id": "4",
+            },
+          },
+        ],
+      },
+    },
+  },
+}
+`;

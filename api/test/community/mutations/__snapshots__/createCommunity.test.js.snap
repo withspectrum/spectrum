@@ -23,7 +23,7 @@ Object {
 }
 `;
 
-exports[`should prevent blacklisted community slug 1`] = `
+exports[`should prevent denylisted community slug 1`] = `
 Object {
   "data": Object {
     "createCommunity": null,

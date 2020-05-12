@@ -3,9 +3,9 @@ import UserError from './UserError';
 import type { GraphQLContext } from '../';
 import type { DBChannel, DBCommunity, DBUser } from 'shared/types';
 import {
-  COMMUNITY_SLUG_BLACKLIST,
-  CHANNEL_SLUG_BLACKLIST,
-} from 'shared/slug-blacklists';
+  COMMUNITY_SLUG_DENYLIST,
+  CHANNEL_SLUG_DENYLIST,
+} from 'shared/slug-denylists';
 import { getThreadById } from '../models/thread';
 
 export const isAdmin = (id: string): boolean => {
@@ -17,12 +17,12 @@ export const isAdmin = (id: string): boolean => {
   return admins.indexOf(id) > -1;
 };
 
-export const communitySlugIsBlacklisted = (slug: string): boolean => {
-  return COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1;
+export const communitySlugIsDenylisted = (slug: string): boolean => {
+  return COMMUNITY_SLUG_DENYLIST.indexOf(slug) > -1;
 };
 
-export const channelSlugIsBlacklisted = (slug: string): boolean => {
-  return CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1;
+export const channelSlugIsDenylisted = (slug: string): boolean => {
+  return CHANNEL_SLUG_DENYLIST.indexOf(slug) > -1;
 };
 
 // prettier-ignore
