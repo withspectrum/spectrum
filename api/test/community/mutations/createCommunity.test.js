@@ -22,7 +22,7 @@ const variables = {
   },
 };
 
-const blacklisted = {
+const denylisted = {
   input: {
     ...variables.input,
     slug: 'api',
@@ -55,7 +55,7 @@ it('should create a community', async () => {
   expect(result).toMatchSnapshot();
 });
 
-it('should prevent blacklisted community slug', async () => {
+it('should prevent denylisted community slug', async () => {
   const query = /* GraphQL */ `
     mutation createCommunity($input: CreateCommunityInput!) {
       createCommunity(input: $input) {
@@ -70,7 +70,7 @@ it('should prevent blacklisted community slug', async () => {
 
   expect.assertions(1);
 
-  const result = await request(query, { context, variables: blacklisted });
+  const result = await request(query, { context, variables: denylisted });
   expect(result).toMatchSnapshot();
 });
 
@@ -89,7 +89,7 @@ it('should prevent signed out users from creating a community', async () => {
 
   expect.assertions(1);
 
-  const result = await request(query, { context, variables: blacklisted });
+  const result = await request(query, { context, variables: denylisted });
   expect(result).toMatchSnapshot();
 });
 

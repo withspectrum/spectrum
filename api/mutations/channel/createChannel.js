@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import type { CreateChannelInput } from '../../models/channel';
 import UserError from '../../utils/UserError';
-import { channelSlugIsBlacklisted } from '../../utils/permissions';
+import { channelSlugIsDenyListed } from '../../utils/permissions';
 import { getChannelBySlug, createChannel } from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
 import {
@@ -35,13 +35,13 @@ export default requireAuth(
       );
     }
 
-    if (channelSlugIsBlacklisted(args.input.slug)) {
+    if (channelSlugIsDenyListed(args.input.slug)) {
       trackQueue.add({
         userId: user.id,
         event: events.CHANNEL_CREATED_FAILED,
         context: { communityId: community.id },
         properties: {
-          reason: 'slug blacklisted',
+          reason: 'slug on deny list',
         },
       });
       return new UserError(

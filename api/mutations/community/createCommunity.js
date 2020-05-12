@@ -2,7 +2,7 @@
 import type { GraphQLContext } from '../../';
 import type { CreateCommunityInput } from '../../models/community';
 import UserError from '../../utils/UserError';
-import { communitySlugIsBlacklisted } from '../../utils/permissions';
+import { communitySlugIsDenyListed } from '../../utils/permissions';
 import {
   getCommunitiesBySlug,
   createCommunity,
@@ -63,7 +63,7 @@ export default requireAuth(
       }
     );
 
-    if (communitySlugIsBlacklisted(sanitizedSlug)) {
+    if (communitySlugIsDenyListed(sanitizedSlug)) {
       trackQueue.add({
         userId: user.id,
         event: events.COMMUNITY_CREATED_FAILED,
