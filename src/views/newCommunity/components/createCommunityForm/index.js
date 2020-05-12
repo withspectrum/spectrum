@@ -10,7 +10,7 @@ import { Notice } from 'src/components/listItems/style';
 import { CommunityAvatar } from 'src/components/avatar';
 import { throttle } from 'src/helpers/utils';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { COMMUNITY_SLUG_BLACKLIST } from 'shared/slug-blacklists';
+import { COMMUNITY_SLUG_DENY_LIST } from 'shared/slug-deny-lists';
 import createCommunityMutation from 'shared/graphql/mutations/community/createCommunity';
 import type { CreateCommunityType } from 'shared/graphql/mutations/community/createCommunity';
 import { getCommunityBySlugQuery } from 'shared/graphql/queries/community/getCommunity';
@@ -137,7 +137,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       return;
     }
 
-    if (COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1) {
+    if (COMMUNITY_SLUG_DENY_LIST.indexOf(slug) > -1) {
       this.setState({
         name,
         slug,
@@ -177,7 +177,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
       return;
     }
 
-    if (COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1) {
+    if (COMMUNITY_SLUG_DENY_LIST.indexOf(slug) > -1) {
       this.setState({
         slug,
         slugTaken: true,
@@ -204,7 +204,7 @@ class CreateCommunityForm extends React.Component<Props, State> {
         },
       })
       .then(({ data }) => {
-        if (COMMUNITY_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
+        if (COMMUNITY_SLUG_DENY_LIST.indexOf(this.state.slug) > -1) {
           return this.setState({
             slugTaken: true,
           });

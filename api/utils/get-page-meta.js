@@ -2,8 +2,8 @@ const { parse } = require('url');
 const generateMetaInfo = require('../../shared/generate-meta-info');
 
 // Don't even try if the path is /<value> any of these
-// TODO: Longer, more complete blacklist here
-const PATH_BLACKLIST = ['robots.txt', 'home', 'messages', 'notifications'];
+// TODO: Longer, more complete deny list here
+const PATH_DENY_LIST = ['robots.txt', 'home', 'messages', 'notifications'];
 
 type Meta = {
   title: string,
@@ -47,7 +47,9 @@ export default (
           }
         }
       `).then(res => {
-        const { thread: { type, content, channel } } = res.data;
+        const {
+          thread: { type, content, channel },
+        } = res.data;
         return generateMetaInfo({
           type: 'thread',
           data: {
@@ -91,8 +93,8 @@ export default (
       break;
     }
     default: {
-      const isBlacklisted = PATH_BLACKLIST.includes(first);
-      if (second && !isBlacklisted) {
+      const isDenyListed = PATH_DENY_LIST.includes(first);
+      if (second && !isDenyListed) {
         /**
          * Channel
          */
@@ -109,7 +111,10 @@ export default (
             }
           }
         `).then(res => {
-          const { channel, channel: { community } } = res.data;
+          const {
+            channel,
+            channel: { community },
+          } = res.data;
           return generateMetaInfo({
             type: 'channel',
             data: {
@@ -121,7 +126,7 @@ export default (
             },
           });
         });
-      } else if (!isBlacklisted) {
+      } else if (!isDenyListed) {
         /**
          * Community
          */

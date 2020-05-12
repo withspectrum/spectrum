@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import slugg from 'slugg';
-import { CHANNEL_SLUG_BLACKLIST } from 'shared/slug-blacklists';
+import { CHANNEL_SLUG_DENY_LIST } from 'shared/slug-deny-lists';
 import { withApollo } from 'react-apollo';
 import { closeModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
@@ -122,7 +122,7 @@ class CreateChannelModal extends React.Component<Props, State> {
       });
     }
 
-    if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
+    if (CHANNEL_SLUG_DENY_LIST.indexOf(slug) > -1) {
       return this.setState({
         slug,
         slugTaken: true,
@@ -141,7 +141,7 @@ class CreateChannelModal extends React.Component<Props, State> {
   checkSlug = (slug: string) => {
     const communitySlug = this.props.community.slug;
 
-    if (CHANNEL_SLUG_BLACKLIST.indexOf(slug) > -1) {
+    if (CHANNEL_SLUG_DENY_LIST.indexOf(slug) > -1) {
       return this.setState({
         slug,
         slugTaken: true,
@@ -157,7 +157,7 @@ class CreateChannelModal extends React.Component<Props, State> {
           },
         })
         .then(({ data }: { data: { channel: GetChannelType } }) => {
-          if (CHANNEL_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
+          if (CHANNEL_SLUG_DENY_LIST.indexOf(this.state.slug) > -1) {
             return this.setState({
               slugTaken: true,
             });
