@@ -64,8 +64,24 @@ export default () => {
           >
             Code of Conduct
           </a>
-          <Link to="/privacy">Privacy Policy</Link>
-          <Link to="/terms">Terms of Service</Link>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={
+              'https://help.github.com/en/github/site-policy/github-privacy-statement'
+            }
+          >
+            Privacy Statement
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={
+              'https://help.github.com/en/github/site-policy/github-terms-of-service'
+            }
+          >
+            Terms of Service
+          </a>
         </Safety>
       </FooterGrid>
     </Footer>

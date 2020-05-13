@@ -59,7 +59,7 @@ That being said, this codebase isn't your typical open source project because it
 
 #### Contributions and discussion guidelines
 
-All conversations and communities on Spectrum agree to our underlying [code of conduct](https://github.com/withspectrum/code-of-conduct). This code of conduct also applies to all conversations that happen within our contributor community here on GitHub. We expect discussions in issues and pull requests to stay positive, productive, and respectful. Remember: there are real people on the other side of that screen!
+All conversations and communities on Spectrum agree to GitHub's [Community Guidelines](https://help.github.com/en/github/site-policy/github-community-guidelines) and [Acceptable Use Policies](https://help.github.com/en/github/site-policy/github-acceptable-use-policies). This code of conduct also applies to all conversations that happen within our contributor community here on GitHub. We expect discussions in issues and pull requests to stay positive, productive, and respectful. Remember: there are real people on the other side of that screen!
 
 #### Reporting a bug or discussing a feature idea
 
@@ -261,6 +261,9 @@ yarn run dev:desktop
 <div align="center">	
   <img height="200px" src="public/img/connect.svg" />	
 </div>	
+
+## GitHub
+Spectrum is now part of GitHub. For code of conduct, please see [GitHub's Community Guidelines](https://help.github.com/en/github/site-policy/github-community-guidelines) and [Acceptable Use Policies](https://help.github.com/en/github/site-policy/github-acceptable-use-policies).
 
 ## License	
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.

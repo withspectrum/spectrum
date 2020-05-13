@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
 import { closeModal } from 'src/actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
@@ -82,9 +81,26 @@ class LoginModal extends React.Component<Props> {
                 Code of Conduct
               </a>
               {', '}
-              <Link to={'/privacy'}>Privacy Policy</Link>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={
+                  'https://help.github.com/en/github/site-policy/github-privacy-statement'
+                }
+              >
+                Privacy Statement
+              </a>
               {', and '}
-              <Link to={'/terms'}>Terms of Service</Link>.
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={
+                  'https://help.github.com/en/github/site-policy/github-terms-of-service'
+                }
+              >
+                Terms of Service
+              </a>
+              .
             </CodeOfConduct>
           </Container>
         </ModalContainer>

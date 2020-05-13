@@ -3,7 +3,6 @@ import * as React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { Link } from 'react-router-dom';
 import { OutlineButton } from 'src/components/button';
 import FullscreenView from 'src/components/fullscreenView';
 import LoginButtonSet from 'src/components/loginButtonSet';
@@ -85,8 +84,27 @@ class Login extends React.Component<Props> {
             >
               Code of Conduct
             </a>
-            , <Link to={'/privacy'}>Privacy Policy</Link> and{' '}
-            <Link to={'/terms'}>Terms of Service</Link>.
+            ,{' '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={
+                'https://help.github.com/en/github/site-policy/github-privacy-statement'
+              }
+            >
+              Privacy Statement
+            </a>
+            {', and '}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={
+                'https://help.github.com/en/github/site-policy/github-terms-of-service'
+              }
+            >
+              Terms of Service
+            </a>
+            .
           </CodeOfConduct>
         </FullscreenContent>
       </FullscreenView>
