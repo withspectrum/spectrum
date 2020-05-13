@@ -52,14 +52,6 @@ const checkSignedOutNavbarRenders = () => {
   cy.get('[data-cy="navigation-login"]').should('be.visible');
 };
 
-const checkSignedOutSplashNavbarRenders = () => {
-  cy.visit('/terms');
-  checkSignedOutSplashNavbarLinksRender();
-
-  cy.visit('/privacy');
-  checkSignedOutSplashNavbarLinksRender();
-};
-
 const checkSignedInSplashNavbarRenders = () => {
   cy.visit('/about');
   checkSignedInSplashNavbarLinksRender();
@@ -71,12 +63,6 @@ const checkSignedInSplashNavbarRenders = () => {
   checkSignedInSplashNavbarLinksRender();
 
   cy.visit('/faq');
-  checkSignedInSplashNavbarLinksRender();
-
-  cy.visit('/terms');
-  checkSignedInSplashNavbarLinksRender();
-
-  cy.visit('/privacy');
   checkSignedInSplashNavbarLinksRender();
 };
 
@@ -121,10 +107,6 @@ describe('Navbar logged out', () => {
 
   it('should render splash page navbar', () => {
     checkSignedOutSplashNavbarLinksRender();
-  });
-
-  it('should make sure all splash page navbar links work', () => {
-    checkSignedOutSplashNavbarRenders();
   });
 
   it('should render product navbar', () => {
