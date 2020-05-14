@@ -1,6 +1,4 @@
 const { db } = require('shared/db');
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import type { DBUserSettings } from 'shared/types';
 
 export const createNewUsersSettings = (
@@ -57,17 +55,6 @@ export const getUsersSettings = (userId: string): Promise<Object> => {
 
 // prettier-ignore
 export const updateUsersNotificationSettings = (userId: string, settings: object, type: string, method: string, enabled: string): Promise<Object> => {
-  const event = enabled ? events.USER_NOTIFICATIONS_DISABLED : events.USER_NOTIFICATIONS_ENABLED
-  
-  trackQueue.add({
-    userId,
-    event,
-    properties: {
-      type,
-      method,
-    }
-  })
-
   return db
     .table('usersSettings')
     .getAll(userId, { index: 'userId' })
@@ -81,15 +68,6 @@ export const updateUsersNotificationSettings = (userId: string, settings: object
 export const unsubscribeUserFromEmailNotification = (userId: string, type: object): Promise<Object> => {
   const obj = { notifications: { types: {} } };
   obj['notifications']['types'][type] = { email: false };
-
-  trackQueue.add({
-    userId,
-    event: events.USER_NOTIFICATIONS_DISABLED,
-    properties: {
-      type: type,
-      method: 'email'
-    }
-  })
 
   return db
     .table('usersSettings')

@@ -29,7 +29,6 @@ import {
   MenuContainer,
   MenuOverlay,
 } from '../style';
-import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   currentUser: Object,
@@ -118,10 +117,7 @@ class Nav extends React.Component<Props, State> {
                 Log in
               </LoginTab>
               <AuthTab dark={this.props.dark}>
-                <Link
-                  to="/new/user"
-                  onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
-                >
+                <Link to="/new/user">
                   <PrimaryButton
                     data-cy="navigation-splash-signin"
                     style={{
@@ -172,16 +168,10 @@ class Nav extends React.Component<Props, State> {
                 </AuthLink>
               ) : (
                 <React.Fragment>
-                  <LoginLink
-                    to={'/login'}
-                    onClick={() => track(events.HOME_PAGE_LOG_IN_CLICKED)}
-                  >
+                  <LoginLink to={'/login'}>
                     <span>Log in</span>
                   </LoginLink>
-                  <AuthLink
-                    to={'/new/user'}
-                    onClick={() => track(events.HOME_PAGE_SIGN_IN_CLICKED)}
-                  >
+                  <AuthLink to={'/new/user'}>
                     <span>Sign up</span>
                   </AuthLink>
                 </React.Fragment>

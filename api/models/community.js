@@ -8,10 +8,8 @@ import {
   sendNewCommunityWelcomeEmailQueue,
   _adminSendCommunityCreatedEmailQueue,
   searchQueue,
-  trackQueue,
 } from 'shared/bull/queues';
 import { createChangefeed } from 'shared/changefeed-utils';
-import { events } from 'shared/analytics';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
 
@@ -253,12 +251,6 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
     .run()
     .then(result => result.changes[0].new_val)
     .then(community => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_CREATED,
-        context: { communityId: community.id },
-      });
-
       searchQueue.add({
         id: community.id,
         type: 'community',
@@ -457,24 +449,11 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
     .then(result => {
       if (result.replaced === 1) {
         community = result.changes[0].new_val;
-        trackQueue.add({
-          userId,
-          event: events.COMMUNITY_EDITED,
-          context: { communityId }
-        })
       }
 
       // an update was triggered from the client, but no data was changed
       if (result.unchanged === 1) {
         community = result.changes[0].old_val;
-        trackQueue.add({
-          userId,
-          event: events.COMMUNITY_EDITED_FAILED,
-          context: { communityId },
-          properties: {
-            reason: 'no changes'
-          }
-        })
       }
 
       searchQueue.add({
@@ -572,12 +551,6 @@ export const deleteCommunity = (communityId: string, userId: string): Promise<DB
     )
     .run()
     .then(() => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_DELETED,
-        context: { communityId },
-      });
-
       searchQueue.add({
         id: communityId,
         type: 'community',
@@ -600,14 +573,6 @@ export const setPinnedThreadInCommunity = (communityId: string, value: ?string, 
     .run()
     .then(result => {
       // prettier-ignore
-      const event = value ? events.THREAD_PINNED : events.THREAD_UNPINNED;
-
-      trackQueue.add({
-        userId,
-        event: event,
-        context: { threadId: value },
-      });
-
       return result.changes[0].new_val
     });
 };
@@ -685,12 +650,6 @@ export const setCommunityPendingAdministratorEmail = (communityId: string, email
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_ADMINISTRATOR_EMAIL_ADDED,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId)
     });
 };
@@ -706,11 +665,6 @@ export const updateCommunityAdministratorEmail = (communityId: string, email: st
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_ADMINISTRATOR_EMAIL_VERIFIED,
-        context: { communityId },
-      });
       return await getCommunityById(communityId)
     });
 };

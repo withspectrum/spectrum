@@ -2,8 +2,6 @@
 import { isAuthedResolver, isAdmin } from '../../utils/permissions';
 import UserError from '../../utils/UserError';
 import type { GraphQLContext } from '../../';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { banUser } from 'shared/db/queries/user';
 
 type BanUserInput = {
@@ -44,24 +42,6 @@ export default isAuthedResolver(
       currentUserId: currentUser.id,
     })
       .then(() => {
-        trackQueue.add({
-          userId,
-          event: events.USER_WAS_BANNED,
-          properties: {
-            reason,
-            reportedBy: currentUser.id,
-          },
-        });
-
-        trackQueue.add({
-          userId: currentUser.id,
-          event: events.USER_BANNED_USER,
-          properties: {
-            reason,
-            reportedUser: userId,
-          },
-        });
-
         return true;
       })
       .catch(err => new UserError(err.message));

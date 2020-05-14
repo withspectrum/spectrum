@@ -17,7 +17,6 @@ import {
 import { getCommunitiesBySlug } from 'shared/graphql/queries/community/getCommunities';
 import type { GetCommunitiesType } from 'shared/graphql/queries/community/getCommunities';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
-import { track, transformations, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { Loading } from 'src/components/loading';
 import { ErrorView } from 'src/views/viewHelpers';
@@ -51,10 +50,6 @@ class CollectionSwitcher extends React.Component<{}, State> {
 
   handleSegmentClick(selectedView) {
     if (this.state.selectedView === selectedView) return;
-
-    track(events.EXPLORE_PAGE_SUBCATEGORY_VIEWED, {
-      collection: selectedView,
-    });
 
     return this.setState({ selectedView });
   }
@@ -116,18 +111,6 @@ type CategoryListProps = {
   isLoading: boolean,
 };
 class CategoryList extends React.Component<CategoryListProps> {
-  onLeave = community => {
-    track(events.EXPLORE_PAGE_LEFT_COMMUNITY, {
-      community: transformations.analyticsCommunity(community),
-    });
-  };
-
-  onJoin = community => {
-    track(events.EXPLORE_PAGE_JOINED_COMMUNITY, {
-      community: transformations.analyticsCommunity(community),
-    });
-  };
-
   render() {
     const {
       data: { communities },

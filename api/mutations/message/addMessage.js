@@ -12,12 +12,11 @@ import { setCommunityLastSeen } from '../../models/usersCommunities';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
-import { events } from 'shared/analytics';
 import {
   isAuthedResolver as requireAuth,
   canViewDMThread,
 } from '../../utils/permissions';
-import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
+import { calculateThreadScoreQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
 import processMessageContent, {
   messageTypeObj,
@@ -42,11 +41,6 @@ export const addMessage = async (
   message: $PropertyType<Input, 'message'>,
   userId: string
 ) => {
-  const eventFailed =
-    message.threadType === 'story'
-      ? events.MESSAGE_SENT_FAILED
-      : events.DIRECT_MESSAGE_SENT_FAILED;
-
   if (message.messageType === messageTypeObj.text) {
     message.content.body = processMessageContent(
       messageTypeObj.text,
@@ -60,29 +54,11 @@ export const addMessage = async (
     try {
       body = JSON.parse(message.content.body);
     } catch (err) {
-      trackQueue.add({
-        userId: userId,
-        event: eventFailed,
-        properties: {
-          reason: 'invalid draftjs data',
-          message,
-        },
-      });
-
       throw new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
       );
     }
     if (!validateRawContentState(body)) {
-      trackQueue.add({
-        userId: userId,
-        event: eventFailed,
-        properties: {
-          reason: 'invalid draftjs data',
-          message,
-        },
-      });
-
       throw new UserError(
         'Please provide serialized raw DraftJS content state as content.body'
       );
@@ -92,15 +68,6 @@ export const addMessage = async (
   if (message.parentId) {
     const parent = await getMessage(message.parentId);
     if (parent.threadId !== message.threadId) {
-      trackQueue.add({
-        userId: userId,
-        event: eventFailed,
-        properties: {
-          reason: 'quoted message in different thread',
-          message,
-        },
-      });
-
       throw new UserError('You can only quote messages from the same thread.');
     }
   }
@@ -120,28 +87,10 @@ export const addMessage = async (
     try {
       url = await uploadImage(file, 'threads', message.threadId);
     } catch (err) {
-      trackQueue.add({
-        userId: userId,
-        event: eventFailed,
-        properties: {
-          reason: 'media upload failed',
-          message,
-        },
-      });
-
       throw new UserError(err.message);
     }
 
     if (!url) {
-      trackQueue.add({
-        userId: userId,
-        event: eventFailed,
-        properties: {
-          reason: 'media upload failed',
-          message,
-        },
-      });
-
       throw new UserError(
         "We weren't able to upload this image, please try again"
       );
@@ -162,24 +111,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { message } = args;
   const { user, loaders } = ctx;
 
-  const eventFailed =
-    message.threadType === 'story'
-      ? events.MESSAGE_SENT_FAILED
-      : events.DIRECT_MESSAGE_SENT_FAILED;
-
   /*
    * Permission checks
    */
   if (message.threadType === 'directMessageThread') {
     if (!(await canViewDMThread(user.id, message.threadId, loaders))) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'no permission',
-        },
-      });
-
       return new UserError(
         'You don’t have permission to send a message in this conversation'
       );
@@ -187,27 +123,12 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (message.messageType === messageTypeObj.media && !message.file) {
-    trackQueue.add({
-      userId: user.id,
-      event: eventFailed,
-      properties: {
-        reason: 'media message without file',
-      },
-    });
-
     return new UserError(
       "Can't send media message without an image, please try again."
     );
   }
 
   if (message.messageType !== 'media' && message.file) {
-    trackQueue.add({
-      userId: user.id,
-      event: eventFailed,
-      properties: {
-        reason: 'non media message with file',
-      },
-    });
     return new UserError(
       `To send an image, please use messageType: "media" instead of "${
         message.messageType
@@ -226,24 +147,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     thread = await loaders.thread.load(message.threadId);
 
     if (!thread || thread.deletedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'thread deleted',
-        },
-      });
       return new UserError("Can't reply in a deleted thread.");
     }
 
     if (thread.isLocked) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'thread locked',
-        },
-      });
       return new UserError("Can't reply in a locked thread.");
     }
 
@@ -254,25 +161,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     ]);
 
     if (!channel || channel.deletedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'channel deleted',
-        },
-      });
       return new UserError('This channel doesn’t exist');
     }
 
     if (channel.archivedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'channel archived',
-        },
-      });
-
       return new UserError('This channel has been archived');
     }
 
@@ -282,14 +174,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
     // user can't post if blocked at any level
     if (isBlockedInCommunity || isBlockedInChannel) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'no permission',
-        },
-      });
-
       return new UserError(
         "You don't have permission to post in this conversation"
       );
@@ -299,14 +183,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       channel.isPrivate &&
       (!channelPermissions || !channelPermissions.isMember)
     ) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        properties: {
-          reason: 'no permission',
-        },
-      });
-
       return new UserError(
         'You dont’t have permission to post in this conversation'
       );
@@ -334,7 +210,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     (!channelPermissions || !channelPermissions.isMember)
   ) {
     membershipPromise = async () =>
-      await createMemberInChannel(thread.channelId, user.id, false);
+      await createMemberInChannel(thread.channelId, user.id);
   }
 
   // if the user is not a member of the community, or has previously joined
@@ -399,15 +275,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         };
       })
       .catch(err => {
-        trackQueue.add({
-          userId: user.id,
-          event: eventFailed,
-          properties: {
-            message,
-            reason: 'unknown error',
-            error: err.message,
-          },
-        });
         console.error('Error sending message', err);
         return dbMessage;
       })

@@ -12,8 +12,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -26,16 +24,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
   const { communityId, userId: userToEvaluateId } = args.input;
 
-  if (!await canModerateCommunity(user.id, communityId, loaders)) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
+  if (!(await canModerateCommunity(user.id, communityId, loaders))) {
     return new UserError(
       'You must own or moderate this community to manage members.'
     );
@@ -47,43 +36,16 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!community) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no community',
-      },
-    });
-
     return new UserError("We couldn't find that community.");
   }
 
   if (!userToEvaluatePermissions || userToEvaluatePermissions === 0) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'user not member of community',
-      },
-    });
-
     return new UserError('This person is not a member of your community.');
   }
 
   const userToEvaluatePermission = userToEvaluatePermissions[0];
 
   if (!userToEvaluatePermission.isBlocked) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'user not blocked',
-      },
-    });
-
     return new UserError('This person is not blocked in your community.');
   }
 
@@ -91,12 +53,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const defaultChannelIds = channels.filter(c => c.isDefault).map(c => c.id);
   const unblockInDefaultChannelPromises = defaultChannelIds.map(
     async channelId => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_UNBLOCKED_MEMBER_IN_CHANNEL,
-        context: { channelId },
-      });
-
       return await approveBlockedUserInChannel(channelId, userToEvaluateId);
     }
   );
@@ -106,25 +62,9 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     ...unblockInDefaultChannelPromises,
   ])
     .then(([newPermissions]) => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY,
-        context: { communityId },
-      });
-
       return newPermissions;
     })
     .catch(err => {
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_UNBLOCKED_MEMBER_IN_COMMUNITY_FAILED,
-        context: { communityId },
-        properties: {
-          reason: 'unknown error',
-          error: err.message,
-        },
-      });
-
       return new UserError(err);
     });
 });

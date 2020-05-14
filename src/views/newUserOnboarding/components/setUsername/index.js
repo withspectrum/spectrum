@@ -11,7 +11,6 @@ import { Form, Row } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
 import { ContinueButton } from '../../style';
 import type { Dispatch } from 'redux';
-import { track, events } from 'src/helpers/analytics';
 
 type Props = {
   client: Object,
@@ -55,7 +54,6 @@ class SetUsername extends React.Component<Props, State> {
 
   componentDidMount() {
     this._isMounted = true;
-    track(events.USER_ONBOARDING_SET_USERNAME_STEP_VIEWED);
   }
 
   componentWillUnmount() {

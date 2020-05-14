@@ -9,8 +9,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -22,20 +20,11 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { id: channelId } = args.input;
   const { user, loaders } = ctx;
 
-  if (!await canModerateChannel(user.id, channelId, loaders)) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_JOIN_TOKEN_ENABLED_FAILED,
-      context: { channelId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
+  if (!(await canModerateChannel(user.id, channelId, loaders))) {
     return new UserError('You don’t have permission to manage this channel');
   }
 
   return await getOrCreateChannelSettings(channelId).then(
-    async () => await enableChannelTokenJoin(channelId, user.id)
+    async () => await enableChannelTokenJoin(channelId)
   );
 });

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import Icon from 'src/components/icon';
-import { track, events } from 'src/helpers/analytics';
 import {
   hasDismissedDesktopAppUpsell,
   dismissDesktopAppUpsell,
@@ -39,7 +38,6 @@ class DesktopAppUpsell extends React.Component<{}, State> {
 
     if (desktopUpsellVisible) {
       this.setState({ isVisible: true });
-      track(events.INBOX_DOWNLOAD_MAC_VIEWED);
     }
   }
 
@@ -49,7 +47,6 @@ class DesktopAppUpsell extends React.Component<{}, State> {
   };
 
   download = () => {
-    track(events.INBOX_DOWNLOAD_MAC_CLICKED);
     dismissDesktopAppUpsell();
     return this.setState({ isVisible: false });
   };

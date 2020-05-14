@@ -10,7 +10,6 @@ import getCurrentUserDMThreadConnection, {
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import { LoadingDM } from 'src/components/loading';
 import { ThreadsListScrollContainer } from './style';
-import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { useConnectionRestored } from 'src/hooks/useConnectionRestored';
@@ -67,7 +66,6 @@ class ThreadsList extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscribe();
-    track(events.DIRECT_MESSAGES_VIEWED);
   }
 
   componentDidUpdate(prev: Props) {

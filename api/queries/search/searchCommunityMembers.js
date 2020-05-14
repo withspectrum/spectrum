@@ -3,10 +3,8 @@ import type { GraphQLContext } from '../../';
 import initIndex from 'shared/algolia';
 const usersSearchIndex = initIndex('users');
 import type { Args } from './types';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 
-export default (args: Args, { loaders, user }: GraphQLContext) => {
+export default (args: Args, { loaders }: GraphQLContext) => {
   const { queryString, filter } = args;
   const searchFilter = filter;
 
@@ -16,17 +14,6 @@ export default (args: Args, { loaders, user }: GraphQLContext) => {
   return usersSearchIndex
     .search({ query: queryString, hitsPerPage })
     .then(content => {
-      if (user && user.id) {
-        trackQueue.add({
-          userId: user.id,
-          event: events.SEARCHED_COMMUNITY_MEMBERS,
-          properties: {
-            queryString,
-            hitsCount: content.hits ? content.hits.length : 0,
-          },
-        });
-      }
-
       if (!content.hits || content.hits.length === 0) return [];
       // if no search filter was passed, there's no way to be searching for
       // community members

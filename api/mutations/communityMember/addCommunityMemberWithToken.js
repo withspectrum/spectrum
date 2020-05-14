@@ -10,8 +10,6 @@ import {
 import { getCommunityBySlug } from '../../models/community';
 import { getOrCreateCommunitySettings } from '../../models/communitySettings';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 
 type Input = {
   input: {
@@ -28,14 +26,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const community = await getCommunityBySlug(communitySlug);
 
   if (!community) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_COMMUNITY_WITH_TOKEN_FAILED,
-      properties: {
-        reason: 'no community',
-      },
-    });
-
     return new UserError('No community found in this community');
   }
 
@@ -57,28 +47,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (communityPermissions.isBlocked) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_COMMUNITY_WITH_TOKEN_FAILED,
-      context: { communityId: community.id },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
     return new UserError("You don't have permission to view this community");
   }
 
   if (!settings.joinSettings || !settings.joinSettings.tokenJoinEnabled) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_COMMUNITY_WITH_TOKEN_FAILED,
-      context: { communityId: community.id },
-      properties: {
-        reason: 'no token or changed token',
-      },
-    });
-
     return new UserError(
       "You can't join at this time, the token may have changed"
     );
@@ -87,15 +59,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     settings.joinSettings.tokenJoinEnabled &&
     token !== settings.joinSettings.token
   ) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_COMMUNITY_WITH_TOKEN_FAILED,
-      context: { communityId: community.id },
-      properties: {
-        reason: 'no token or changed token',
-      },
-    });
-
     return new UserError(
       "You can't join at this time, the token may have changed"
     );

@@ -5,8 +5,6 @@ import { getCommunityById } from './community';
 import uuidv4 from 'uuid/v4';
 import axios from 'axios';
 import { decryptString } from 'shared/encryption';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 
 const defaultSettings = {
   brandedLogin: {
@@ -131,7 +129,7 @@ export const createCommunitySettings = (communityId: string): Promise<DBCommunit
 };
 
 // prettier-ignore
-export const enableCommunityBrandedLogin = (communityId: string, userId: string): Promise<DBCommunity> => {
+export const enableCommunityBrandedLogin = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -142,17 +140,12 @@ export const enableCommunityBrandedLogin = (communityId: string, userId: string)
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_BRANDED_LOGIN_ENABLED,
-        context: { communityId }
-      })
       return await getCommunityById(communityId)
     });
 };
 
 // prettier-ignore
-export const disableCommunityBrandedLogin = (communityId: string, userId: string): Promise<DBCommunity> => {
+export const disableCommunityBrandedLogin = (communityId: string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -163,17 +156,12 @@ export const disableCommunityBrandedLogin = (communityId: string, userId: string
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_BRANDED_LOGIN_DISABLED,
-        context: { communityId }
-      })
       return await getCommunityById(communityId)
     });
 };
 
 // prettier-ignore
-export const updateCommunityBrandedLoginMessage = (communityId: string, message: ?string, userId: string): Promise<DBCommunity> => {
+export const updateCommunityBrandedLoginMessage = (communityId: string, message: ?string): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -184,11 +172,6 @@ export const updateCommunityBrandedLoginMessage = (communityId: string, message:
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_BRANDED_LOGIN_SETTINGS_SAVED,
-        context: { communityId }
-      })
       return await getCommunityById(communityId)
     });
 };
@@ -202,8 +185,7 @@ type UpdateSlackSettingsInput = {
 };
 export const updateSlackSettingsAfterConnection = async (
   communityId: string,
-  input: UpdateSlackSettingsInput,
-  userId: string
+  input: UpdateSlackSettingsInput
 ): Promise<DBCommunity> => {
   const settings = await db
     .table('communitySettings')
@@ -226,12 +208,6 @@ export const updateSlackSettingsAfterConnection = async (
           .run();
       })
       .then(async () => {
-        trackQueue.add({
-          userId,
-          event: events.COMMUNITY_SLACK_TEAM_CONNECTED,
-          context: { communityId },
-        });
-
         return await getCommunityById(communityId);
       });
   }
@@ -248,20 +224,13 @@ export const updateSlackSettingsAfterConnection = async (
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_SLACK_TEAM_CONNECTED,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId);
     });
 };
 
 export const markInitialSlackInvitationsSent = async (
   communityId: string,
-  inviteCustomMessage: ?string,
-  userId: string
+  inviteCustomMessage: ?string
 ): Promise<DBCommunity> => {
   return db
     .table('communitySettings')
@@ -274,12 +243,6 @@ export const markInitialSlackInvitationsSent = async (
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_SLACK_TEAM_INVITES_SENT,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId);
     });
 };
@@ -365,25 +328,13 @@ const handleSlackChannelResponse = async (data: Object, communityId: string) => 
   ];
 
   if (data.error && errorsToTriggerRest.indexOf(data.error) >= 0) {
-    trackQueue.add({
-      userId: 'ADMIN',
-      event: events.COMMUNITY_SLACK_TEAM_RESET,
-      context: { communityId },
-      properties: {
-        error: data.error
-      }
-    })
-    
     return resetSlackSettings(communityId);
   }
 
   return [];
 };
 
-export const enableCommunityTokenJoin = (
-  communityId: string,
-  userId: string
-) => {
+export const enableCommunityTokenJoin = (communityId: string) => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -395,20 +346,11 @@ export const enableCommunityTokenJoin = (
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_JOIN_TOKEN_ENABLED,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId);
     });
 };
 
-export const disableCommunityTokenJoin = (
-  communityId: string,
-  userId: string
-) => {
+export const disableCommunityTokenJoin = (communityId: string) => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -420,20 +362,11 @@ export const disableCommunityTokenJoin = (
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_JOIN_TOKEN_DISABLED,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId);
     });
 };
 
-export const resetCommunityJoinToken = (
-  communityId: string,
-  userId: string
-) => {
+export const resetCommunityJoinToken = (communityId: string) => {
   return db
     .table('communitySettings')
     .getAll(communityId, { index: 'communityId' })
@@ -444,12 +377,6 @@ export const resetCommunityJoinToken = (
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.COMMUNITY_JOIN_TOKEN_RESET,
-        context: { communityId },
-      });
-
       return await getCommunityById(communityId);
     });
 };

@@ -7,7 +7,6 @@ import compose from 'recompose/compose';
 import { withRouter, type History, type Location } from 'react-router-dom';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import SetUsername from './components/setUsername';
-import { track, events } from 'src/helpers/analytics';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
 import { setTitlebarProps } from 'src/actions/titlebar';
@@ -35,7 +34,6 @@ class NewUserOnboarding extends React.Component<Props> {
   saveUsername = () => {
     const { history, location } = this.props;
     const { state } = location;
-    track(events.USER_ONBOARDING_SET_USERNAME);
     if (state && state.redirect) return history.replace(state.redirect);
     return history.replace('/');
   };

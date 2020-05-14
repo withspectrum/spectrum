@@ -1,9 +1,4 @@
-import { setUser, unsetUser } from 'src/helpers/analytics';
-
 export const logout = () => {
-  // no longer track analytics
-  unsetUser();
-
   import('shared/graphql')
     .then(module => module.clearApolloStore)
     .then(clearApolloStore => {
@@ -20,15 +15,13 @@ export const logout = () => {
 export const setTrackingContexts = async (user: ?GetUserType) => {
   if (!user || !user.id) return logout();
 
-  // get an anonymized userId for Sentry and Amplitude
+  // get an anonymized userId for Sentry
   const response = await fetch(
     `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
   );
   const { text: id } = await response.json();
-  return Promise.all([setAmplitudeUserContext(id), setRavenUserContext(id)]);
+  return await setRavenUserContext(id);
 };
-
-export const setAmplitudeUserContext = (id: string) => setUser(id);
 
 export const setRavenUserContext = (id: string) => {
   // logs the user id to Sentry

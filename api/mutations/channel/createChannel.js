@@ -9,8 +9,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(
   async (_: any, args: CreateChannelInput, ctx: GraphQLContext) => {
@@ -22,28 +20,12 @@ export default requireAuth(
     if (
       !(await canModerateCommunity(user.id, args.input.communityId, loaders))
     ) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_CREATED_FAILED,
-        context: { communityId: community.id },
-        properties: {
-          reason: 'no permission',
-        },
-      });
       return new UserError(
         'You don’t have permission to create channels in this community'
       );
     }
 
     if (channelSlugIsDenyListed(args.input.slug)) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_CREATED_FAILED,
-        context: { communityId: community.id },
-        properties: {
-          reason: 'slug on deny list',
-        },
-      });
       return new UserError(
         'This channel url is reserved - please try another name'
       );
@@ -55,14 +37,6 @@ export default requireAuth(
     );
 
     if (channelWithSlug) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.CHANNEL_CREATED_FAILED,
-        context: { communityId: community.id },
-        properties: {
-          reason: 'slug taken',
-        },
-      });
       return new UserError(
         'A channel with this url already exists in this community - please try another name'
       );

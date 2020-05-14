@@ -13,7 +13,6 @@ import { withCurrentUser } from 'src/components/withCurrentUser';
 import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
-import { track, events, transformations } from 'src/helpers/analytics';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
@@ -99,12 +98,6 @@ const ActionsDropdown = (props: Props) => {
   };
 
   const triggerChangeChannel = () => {
-    track(events.THREAD_MOVED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
-
     dispatch(openModal('CHANGE_CHANNEL', { thread }));
   };
 
@@ -176,12 +169,6 @@ const ActionsDropdown = (props: Props) => {
     } else {
       message = 'Are you sure you want to delete this thread?';
     }
-
-    track(events.THREAD_DELETED_INITED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
 
     return dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {

@@ -2,13 +2,7 @@
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
 import { createNewUsersSettings } from 'api/models/usersSettings';
-import {
-  sendNewUserWelcomeEmailQueue,
-  trackQueue,
-  identifyQueue,
-  searchQueue,
-} from 'shared/bull/queues';
-import { events } from 'shared/analytics';
+import { sendNewUserWelcomeEmailQueue, searchQueue } from 'shared/bull/queues';
 import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
@@ -125,8 +119,6 @@ export const storeUser = createWriteQuery((user: Object) => ({
     .run()
     .then(res => {
       const dbUser = res.changes[0].new_val || res.changes[0].old_val;
-      identifyQueue.add({ userId: dbUser.id });
-      trackQueue.add({ userId: dbUser.id, event: events.USER_CREATED });
       sendNewUserWelcomeEmailQueue.add({ user: dbUser });
 
       if (dbUser.username) {
@@ -171,16 +163,6 @@ export const saveUserProvider = createWriteQuery(
           const user = changes[0].new_val || changes[0].old_val;
           if (!user)
             throw new Error(`Failed to update user with ID ${userId}.`);
-
-          trackQueue.add({
-            userId: userId,
-            event: events.USER_ADDED_PROVIDER,
-            properties: {
-              providerMethod,
-            },
-          });
-
-          identifyQueue.add({ userId });
 
           return user;
         }
@@ -360,26 +342,11 @@ export const editUser = createWriteQuery(
                       .then(result => {
                         // if an update happened
                         if (result.replaced === 1) {
-                          trackQueue.add({
-                            userId,
-                            event: events.USER_EDITED,
-                          });
-
-                          identifyQueue.add({ userId });
-
                           return result.changes[0].new_val;
                         }
 
                         // an update was triggered from the client, but no data was changed
                         if (result.unchanged === 1) {
-                          trackQueue.add({
-                            userId,
-                            event: events.USER_EDITED_FAILED,
-                            properties: {
-                              reason: 'no changes',
-                            },
-                          });
-
                           return result.changes[0].old_val;
                         }
                       })
@@ -408,26 +375,11 @@ export const editUser = createWriteQuery(
                       .then(result => {
                         // if an update happened
                         if (result.replaced === 1) {
-                          trackQueue.add({
-                            userId,
-                            event: events.USER_EDITED,
-                          });
-
-                          identifyQueue.add({ userId });
-
                           return result.changes[0].new_val;
                         }
 
                         // an update was triggered from the client, but no data was changed
                         if (result.unchanged === 1) {
-                          trackQueue.add({
-                            userId,
-                            event: events.USER_EDITED_FAILED,
-                            properties: {
-                              reason: 'no changes',
-                            },
-                          });
-
                           return result.changes[0].old_val;
                         }
                       })
@@ -470,26 +422,11 @@ export const editUser = createWriteQuery(
                     .then(result => {
                       // if an update happened
                       if (result.replaced === 1) {
-                        trackQueue.add({
-                          userId,
-                          event: events.USER_EDITED,
-                        });
-
-                        identifyQueue.add({ userId });
-
                         return result.changes[0].new_val;
                       }
 
                       // an update was triggered from the client, but no data was changed
                       if (result.unchanged === 1) {
-                        trackQueue.add({
-                          userId,
-                          event: events.USER_EDITED_FAILED,
-                          properties: {
-                            reason: 'no changes',
-                          },
-                        });
-
                         return result.changes[0].old_val;
                       }
                     })
@@ -510,25 +447,11 @@ export const editUser = createWriteQuery(
               .then(result => {
                 // if an update happened
                 if (result.replaced === 1) {
-                  trackQueue.add({
-                    userId,
-                    event: events.USER_EDITED,
-                  });
-
-                  identifyQueue.add({ userId });
-
                   return result.changes[0].new_val;
                 }
 
                 // an update was triggered from the client, but no data was changed
                 if (result.unchanged === 1) {
-                  trackQueue.add({
-                    userId,
-                    event: events.USER_EDITED_FAILED,
-                    properties: {
-                      reason: 'no changes',
-                    },
-                  });
                   return result.changes[0].old_val;
                 }
               });
@@ -581,11 +504,6 @@ export const setUserPendingEmail = createWriteQuery(
               `Failed to set user pending email to ${pendingEmail} for user ${userId}.`
             );
 
-          trackQueue.add({
-            userId: user.id,
-            event: events.USER_ADDED_EMAIL,
-          });
-
           return user;
         }
       ),
@@ -617,11 +535,6 @@ export const updateUserEmail = createWriteQuery(
             throw new Error(
               `Failed to update user email to ${email} for user ${userId}.`
             );
-
-          trackQueue.add({
-            userId: user.id,
-            event: events.USER_VERIFIED_EMAIL,
-          });
 
           return user;
         }
@@ -672,13 +585,6 @@ export const deleteUser = createWriteQuery((userId: string) => ({
           event: 'deleted',
         });
 
-        trackQueue.add({
-          userId: userId,
-          event: events.USER_DELETED,
-        });
-
-        identifyQueue.add({ userId });
-
         return user;
       }
     ),
@@ -719,9 +625,6 @@ export const banUser = createWriteQuery((args: BanUserType) => {
           no longer listed as members of communities or channels
           and their DMs cant be seen by other users
         */
-
-        // updates the indentification information in amplitude analytics
-        identifyQueue.add({ userId });
 
         searchQueue.add({
           id: userId,

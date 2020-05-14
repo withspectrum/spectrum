@@ -22,7 +22,6 @@ import {
   ThreadSubtitle,
   BylineContainer,
 } from '../style';
-import { track, events, transformations } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import { ENTER } from 'src/helpers/keycodes';
 import type { Dispatch } from 'redux';
@@ -71,12 +70,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
 
   setThreadState() {
     const { thread } = this.props;
-
-    track(events.THREAD_VIEWED, {
-      thread: transformations.analyticsThread(thread),
-      channel: transformations.analyticsChannel(thread.channel),
-      community: transformations.analyticsCommunity(thread.community),
-    });
 
     const parsedBody = JSON.parse(thread.content.body);
 
@@ -137,14 +130,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       });
 
     this.props.toggleEdit && this.props.toggleEdit();
-
-    if (!isEditing) {
-      track(events.THREAD_EDITED_INITED, {
-        thread: transformations.analyticsThread(thread),
-        channel: transformations.analyticsChannel(thread.channel),
-        community: transformations.analyticsCommunity(thread.community),
-      });
-    }
   };
 
   handleKeyPress = e => {

@@ -30,7 +30,6 @@ import { setTitlebarProps } from 'src/actions/titlebar';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
@@ -115,9 +114,6 @@ class NotificationsPure extends React.Component<Props, State> {
 
         WebPushManager.getSubscription()
           .then(subscription => {
-            if (!subscription) {
-              track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
-            }
             this.setState({
               showWebPushPrompt: !subscription,
             });
@@ -151,13 +147,11 @@ class NotificationsPure extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     this.setState({
       webPushPromptLoading: true,
     });
     WebPushManager.subscribe()
       .then(subscription => {
-        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
@@ -165,7 +159,6 @@ class NotificationsPure extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         this.setState({
           webPushPromptLoading: false,
         });
@@ -183,7 +176,6 @@ class NotificationsPure extends React.Component<Props, State> {
     this.setState({
       showWebPushPrompt: false,
     });
-    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_DISMISSED);
   };
 
   markSingleNotificationSeen = (id: string) => {

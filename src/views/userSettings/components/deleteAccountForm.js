@@ -24,7 +24,6 @@ import deleteCurrentUserMutation from 'shared/graphql/mutations/user/deleteCurre
 import { SERVER_URL } from 'src/api/constants';
 import { Link } from 'react-router-dom';
 import { Loading } from 'src/components/loading';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type State = {
@@ -63,7 +62,6 @@ class DeleteAccountForm extends React.Component<Props, State> {
   }
 
   initDelete = () => {
-    track(events.USER_DELETED_INITED);
     this.setState({ deleteInited: true });
   };
 
@@ -73,8 +71,6 @@ class DeleteAccountForm extends React.Component<Props, State> {
     this.setState({
       isLoading: true,
     });
-
-    track(events.USER_DELETED);
 
     this.props
       .deleteCurrentUser()

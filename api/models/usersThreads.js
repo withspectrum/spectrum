@@ -1,8 +1,6 @@
 // @flow
 import type { DBUsersThreads } from 'shared/types';
 const { db } = require('shared/db');
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 // invoked only when a thread is created or a user leaves a message on a thread.
 // Because a user could leave multiple messages on a thread, we first check
@@ -22,14 +20,6 @@ export const createParticipantInThread = (threadId: string, userId: string): Pro
         const { id, isParticipant, receiveNotifications } = result[0];
         if (isParticipant) return;
 
-        if (receiveNotifications === true) {
-          trackQueue.add({
-            userId,
-            event: events.THREAD_NOTIFICATIONS_ENABLED,
-            context: { threadId }
-          })
-        }
-
         // otherwise, mark them as a participant
         return db
           .table('usersThreads')
@@ -43,12 +33,6 @@ export const createParticipantInThread = (threadId: string, userId: string): Pro
           .run();
       } else {
         // if there is no relationship with the thread, create one
-        trackQueue.add({
-          userId,
-          event: events.THREAD_NOTIFICATIONS_ENABLED,
-          context: { threadId }
-        })
-
         return db.table('usersThreads').insert({
           createdAt: new Date(),
           userId,
@@ -82,13 +66,6 @@ export const createNotifiedUserInThread = (threadId: string, userId: string): Pr
       receiveNotifications: true,
     })
     .run()
-    .then(() => {
-      trackQueue.add({
-        userId,
-        event: events.THREAD_NOTIFICATIONS_ENABLED,
-        context: { threadId }
-      })
-    })
 };
 
 // prettier-ignore
@@ -156,15 +133,6 @@ export const updateThreadNotificationStatusForUser = (threadId: string, userId: 
       // if no record exists, the user is trying to mute a thread they
       // aren't a member of - e.g. someone mentioned them in a thread
       // so create a record
-
-      const event = value ? events.THREAD_NOTIFICATIONS_ENABLED : events.THREAD_NOTIFICATIONS_DISABLED
-
-      trackQueue.add({
-        userId,
-        event,
-        context: { threadId }
-      })
-
       if (!results || results.length === 0) {
         return db.table('usersThreads').insert({
           createdAt: new Date(),

@@ -1,8 +1,6 @@
 // @flow
 const { db } = require('shared/db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import type { DBChannel } from 'shared/types';
 
 // reusable query parts -- begin
@@ -195,12 +193,6 @@ const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<D
     .run()
     .then(result => result.changes[0].new_val)
     .then(channel => {
-      trackQueue.add({
-        userId: userId,
-        event: events.CHANNEL_CREATED,
-        context: { channelId: channel.id },
-      });
-
       // only trigger a new channel notification is the channel is public
       if (!channel.isPrivate) {
         sendChannelNotificationQueue.add({ channel, userId });
@@ -228,7 +220,7 @@ const createGeneralChannel = (communityId: string, userId: string): Promise<DBCh
 };
 
 // prettier-ignore
-const editChannel = async ({ input }: EditChannelInput, userId: string): Promise<DBChannel> => {
+const editChannel = async ({ input }: EditChannelInput): Promise<DBChannel> => {
   const { name, slug, description, isPrivate, channelId } = input;
 
   const channelRecord = await db
@@ -252,26 +244,11 @@ const editChannel = async ({ input }: EditChannelInput, userId: string): Promise
     .then(result => {
       // if an update happened
       if (result.replaced === 1) {
-        trackQueue.add({
-          userId,
-          event: events.CHANNEL_EDITED,
-          context: { channelId: channelId },
-        });
-
         return result.changes[0].new_val;
       }
 
       // an update was triggered from the client, but no data was changed
       if (result.unchanged === 1) {
-        trackQueue.add({
-          userId,
-          event: events.CHANNEL_EDITED_FAILED,
-          context: { channelId: channelId },
-          properties: {
-            reason: 'no changes',
-          },
-        });
-
         return result.changes[0].old_val;
       }
 
@@ -294,54 +271,35 @@ const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
         nonAtomic: true,
       }
     )
-    .run()
-    .then(() => {
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_DELETED,
-        context: { channelId },
-      });
-    });
+    .run();
 };
 
 // prettier-ignore
-const archiveChannel = (channelId: string, userId: string): Promise<DBChannel> => {
+const archiveChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
     .update({ archivedAt: new Date() }, { returnChanges: 'always' })
     .run()
     .then(result => {
-      trackQueue.add({
-        userId: userId,
-        event: events.CHANNEL_ARCHIVED,
-        context: { channelId },
-      });
-
       return result.changes[0].new_val || result.changes[0].old_val;
     });
 };
 
 // prettier-ignore
-const restoreChannel = (channelId: string, userId: string): Promise<DBChannel> => {
+const restoreChannel = (channelId: string): Promise<DBChannel> => {
   return db
     .table('channels')
     .get(channelId)
     .update({ archivedAt: db.literal() }, { returnChanges: 'always' })
     .run()
     .then(result => {
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_RESTORED,
-        context: { channelId },
-      });
-
       return result.changes[0].new_val || result.changes[0].old_val;
     });
 };
 
 // prettier-ignore
-const archiveAllPrivateChannels = async (communityId: string, userId: string) => {
+const archiveAllPrivateChannels = async (communityId: string) => {
   const channels = await db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
@@ -350,22 +308,12 @@ const archiveAllPrivateChannels = async (communityId: string, userId: string) =>
 
   if (!channels || channels.length === 0) return;
 
-  const trackingPromises = channels.map(channel => {
-    return trackQueue.add({
-      userId,
-      event: events.CHANNEL_ARCHIVED,
-      context: { channelId: channel.id },
-    });
-  });
-
-  const archivePromise = db
+  return await db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
     .filter({ isPrivate: true })
     .update({ archivedAt: new Date() })
     .run();
-
-  return await Promise.all([...trackingPromises, archivePromise]);
 };
 
 const incrementMemberCount = (channelId: string): Promise<DBChannel> => {

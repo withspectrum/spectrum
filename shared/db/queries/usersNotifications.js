@@ -1,8 +1,5 @@
 // @flow
 const { db, createReadQuery, createWriteQuery } = require('shared/db');
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
-import { trackNotification } from './utils/trackNotifications';
 import type { DBNotification } from 'shared/types';
 /*
 ===========================================================
@@ -22,11 +19,6 @@ export const markSingleNotificationSeen = createWriteQuery(
       })
       .run()
       .then(() => {
-        trackQueue.add({
-          userId,
-          event: events.NOTIFICATION_MARKED_AS_SEEN,
-          context: { notificationId },
-        });
         return true;
       })
       .catch(err => false),
@@ -46,10 +38,6 @@ export const markNotificationsSeen = createWriteQuery(
       })
       .run()
       .then(() => {
-        trackQueue.add({
-          userId,
-          event: events.NOTIFICATIONS_MARKED_AS_SEEN,
-        });
         return true;
       }),
     invalidateTags: () => [userId, ...notifications],
@@ -116,7 +104,6 @@ export const storeUsersNotifications = createWriteQuery(
       })
       .run()
       .then(res => {
-        trackNotification(notificationId, userId);
         return res;
       }),
     invalidateTags: () => [userId, notificationId],
@@ -136,8 +123,6 @@ export const markUsersNotificationsAsNew = createWriteQuery(
 				So in this section we check to see if an existing usersNotifications row exists, otherwise we create a new one. All users passed into this function should return an updated or new usersNotifications record.
 			*/
         if (result && result.length > 0) {
-          trackNotification(notificationId, userId);
-
           return db
             .table('usersNotifications')
             .getAll([userId, notificationId], {

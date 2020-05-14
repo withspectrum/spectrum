@@ -5,8 +5,6 @@ import {
   processReputationEventQueue,
 } from 'shared/bull/queues';
 import type { DBThreadReaction } from 'shared/types';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { incrementReactionCount, decrementReactionCount } from './thread';
 import { getThreadById } from './thread';
 
@@ -60,13 +58,6 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
           : null
 
         await Promise.all([
-          trackQueue.add({
-            userId,
-            event: events.THREAD_REACTION_CREATED,
-            context: {
-              threadReactionId: thisReaction.id,
-            },
-          }),
           sendReactionNotification,
           processReputationEventQueue.add({
             userId,
@@ -104,11 +95,6 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
             : null
 
           await Promise.all([
-            trackQueue.add({
-              userId,
-              event: events.THREAD_REACTION_CREATED,
-              context: { threadReactionId: threadReaction.id },
-            }),
             processReputationEventQueue.add({
               userId,
               type: 'thread reaction created',
@@ -137,11 +123,6 @@ export const removeThreadReaction = (threadId: string, userId: string): Promise<
       const threadReaction = results[0];
 
       await Promise.all([
-        trackQueue.add({
-          userId,
-          event: events.THREAD_REACTION_DELETED,
-          context: { threadReactionId: threadReaction.id },
-        }),
         processReputationEventQueue.add({
           userId,
           type: 'thread reaction deleted',

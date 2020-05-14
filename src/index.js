@@ -13,7 +13,6 @@ import webPushManager from 'src/helpers/web-push-manager';
 import { history } from 'src/helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from 'src/store';
-import { track, events } from 'src/helpers/analytics';
 import { wsLink } from 'shared/graphql';
 import { subscribeToDesktopPush } from 'src/subscribe-to-desktop-push';
 import RedirectHandler from 'src/components/redirectHandler';
@@ -90,19 +89,6 @@ wsLink.subscriptionClient.on('connected', () =>
 wsLink.subscriptionClient.on('reconnected', () =>
   store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'reconnected' })
 );
-
-// This fires when a user is prompted to add the app to their homescreen
-// We use it to track it happening in Google Analytics so we have those sweet metrics
-window.addEventListener('beforeinstallprompt', e => {
-  track(events.PWA_HOME_SCREEN_PROMPTED);
-  e.userChoice.then(choiceResult => {
-    if (choiceResult.outcome === 'dismissed') {
-      track(events.PWA_HOME_SCREEN_DISMISSED);
-    } else {
-      track(events.PWA_HOME_SCREEN_ADDED);
-    }
-  });
-});
 
 subscribeToDesktopPush(data => {
   if (data && data.href) history.push(data.href);

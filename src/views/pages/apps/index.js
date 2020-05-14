@@ -7,7 +7,6 @@ import { PrimaryButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { Intro, ActionsContainer, TextContent, PageWrapper } from './style';
 import type { ContextRouter } from 'react-router';
-import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
 import { DESKTOP_APP_MAC_URL } from 'src/helpers/desktop-app-utils';
 
@@ -20,10 +19,6 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {
-    track(events.APPS_PAGE_VIEWED);
-  }
-
   render() {
     return (
       <PageWrapper data-cy="apps-page">
@@ -41,10 +36,7 @@ class Features extends React.Component<Props, State> {
               </Copy>
 
               <ActionsContainer>
-                <PrimaryButton
-                  href={DESKTOP_APP_MAC_URL}
-                  onClick={() => track(events.APPS_PAGE_DOWNLOAD_MAC_CLICKED)}
-                >
+                <PrimaryButton href={DESKTOP_APP_MAC_URL}>
                   <Icon glyph={'apple'} />
                   Download for Mac
                 </PrimaryButton>

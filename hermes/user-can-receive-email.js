@@ -1,7 +1,5 @@
 // @flow
 import { getUserById } from 'shared/db/queries/user';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import type { ToType } from './send-email';
 
 type Props = {
@@ -11,14 +9,6 @@ type Props = {
 
 export const userCanReceiveEmail = async ({ to, userId }: Props) => {
   if (!to) {
-    if (userId) {
-      trackQueue.add({
-        userId: userId,
-        event: events.EMAIL_BOUNCED,
-        properties: { error: 'To field was not provided' },
-      });
-    }
-
     return false;
   }
 

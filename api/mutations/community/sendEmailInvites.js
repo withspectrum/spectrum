@@ -7,8 +7,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Contact = {
   email: string,
@@ -25,19 +23,13 @@ type Input = {
 };
 
 export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
-  const { input, input: { id: communityId } } = args;
+  const {
+    input,
+    input: { id: communityId },
+  } = args;
   const { user: currentUser, loaders } = ctx;
 
-  if (!await canModerateCommunity(currentUser.id, communityId, loaders)) {
-    trackQueue.add({
-      userId: currentUser.id,
-      event: events.COMMUNITY_EMAIL_INVITE_SENT_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
+  if (!(await canModerateCommunity(currentUser.id, communityId, loaders))) {
     return new UserError(
       "You don't have permission to invite people to this community."
     );
@@ -47,12 +39,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     .filter(user => user.email !== currentUser.email)
     .filter(user => user && user.email && isEmail(user.email))
     .map(user => {
-      trackQueue.add({
-        userId: currentUser.id,
-        event: events.COMMUNITY_EMAIL_INVITE_SENT,
-        context: { communityId },
-      });
-
       return sendCommunityInviteNotificationQueue.add({
         recipient: {
           email: user.email,

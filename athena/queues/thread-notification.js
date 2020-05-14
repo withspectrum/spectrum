@@ -16,8 +16,6 @@ import { getCommunitySettings } from '../models/communitySettings';
 import { truncateString } from '../utils/truncateString';
 import { handleSlackChannelResponse } from '../utils/slack';
 import { decryptString } from 'shared/encryption';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 import { signThread, signUser } from 'shared/imgix';
 
 export default async (job: Job<ThreadNotificationJobData>) => {
@@ -139,12 +137,6 @@ export default async (job: Job<ThreadNotificationJobData>) => {
         ],
       },
     }).then(response => {
-      trackQueue.add({
-        userId: author.id,
-        event: events.THREAD_SENT_TO_SLACK,
-        context: { threadId: incomingThread.id },
-      });
-
       return handleSlackChannelResponse(
         response.data,
         incomingThread.communityId

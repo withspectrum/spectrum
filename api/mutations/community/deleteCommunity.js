@@ -11,8 +11,6 @@ import {
   isAuthedResolver as requireAuth,
   canAdministerCommunity,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   communityId: string,
@@ -25,28 +23,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const communityToEvaluate = await loaders.community.load(communityId);
 
   if (!communityToEvaluate || communityToEvaluate.deletedAt) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.COMMUNITY_DELETED_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no community found',
-      },
-    });
-
     return new UserError("This community doesn't exist.");
   }
 
-  if (!await canAdministerCommunity(user.id, communityId, loaders)) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.COMMUNITY_DELETED_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
+  if (!(await canAdministerCommunity(user.id, communityId, loaders))) {
     return new UserError(
       "You don't have permission to make changes to this community."
     );

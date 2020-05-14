@@ -34,7 +34,6 @@ import Status from 'src/views/status';
 import Login from 'src/views/login';
 import DirectMessages from 'src/views/directMessages';
 import { ThreadView } from 'src/views/thread';
-import AnalyticsTracking from 'src/components/analyticsTracking';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Maintenance from 'src/components/maintenance';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
@@ -253,9 +252,6 @@ class Routes extends React.Component<Props, State> {
             </ErrorBoundary>
             <ErrorBoundary>
               <QueryParamToastDispatcher />
-            </ErrorBoundary>
-            <ErrorBoundary>
-              <AnalyticsTracking />
             </ErrorBoundary>
             <ErrorBoundary>
               <AnnouncementBanner />

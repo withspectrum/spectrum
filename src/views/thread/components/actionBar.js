@@ -10,7 +10,6 @@ import compose from 'recompose/compose';
 import { PrimaryOutlineButton, TextButton } from 'src/components/button';
 import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import { track, events } from 'src/helpers/analytics';
 import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import { InputHints, DesktopLink } from 'src/components/composer/style';
@@ -108,13 +107,7 @@ class ActionBar extends React.Component<Props> {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Icon
-                          glyph={'facebook'}
-                          size={24}
-                          onClick={() =>
-                            track(events.THREAD_SHARED, { method: 'facebook' })
-                          }
-                        />
+                        <Icon glyph={'facebook'} size={24} />
                       </a>
                     </ShareButton>
                   </Tooltip>
@@ -130,13 +123,7 @@ class ActionBar extends React.Component<Props> {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Icon
-                          glyph={'twitter'}
-                          size={24}
-                          onClick={() =>
-                            track(events.THREAD_SHARED, { method: 'twitter' })
-                          }
-                        />
+                        <Icon glyph={'twitter'} size={24} />
                       </a>
                     </ShareButton>
                   </Tooltip>
@@ -155,13 +142,7 @@ class ActionBar extends React.Component<Props> {
                 <Tooltip content={'Copy link'}>
                   <ShareButton data-cy="thread-copy-link-button">
                     <a>
-                      <Icon
-                        glyph={'link'}
-                        size={24}
-                        onClick={() =>
-                          track(events.THREAD_SHARED, { method: 'link' })
-                        }
-                      />
+                      <Icon glyph={'link'} size={24} />
                     </a>
                   </ShareButton>
                 </Tooltip>

@@ -34,7 +34,6 @@ import {
   GeneralNotice,
   Location,
 } from 'src/components/editForm/style';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type State = {
@@ -171,11 +170,6 @@ class ChannelWithData extends React.Component<Props, State> {
         </p>
       </div>
     );
-
-    track(events.CHANNEL_DELETED_INITED, {
-      channel: transformations.analyticsChannel(channel),
-      community: transformations.analyticsCommunity(channel.community),
-    });
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {

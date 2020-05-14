@@ -9,7 +9,6 @@ import { modalStyles } from '../styles';
 import { OutlineButton } from 'src/components/button';
 import LoginButtonSet from 'src/components/loginButtonSet';
 import { Container, CodeOfConduct } from './style';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type Props = {
@@ -22,11 +21,6 @@ class LoginModal extends React.Component<Props> {
   close = () => {
     this.props.dispatch(closeModal());
   };
-
-  componentDidMount() {
-    const redirectPath = `${window.location.href}`;
-    track(events.LOGIN_MODAL_VIEWED, { redirectPath });
-  }
 
   render() {
     const { isOpen } = this.props;
@@ -74,9 +68,6 @@ class LoginModal extends React.Component<Props> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() =>
-                  track(events.CODE_OF_CONDUCT_CLICKED, { location: 'login' })
-                }
               >
                 Code of Conduct
               </a>

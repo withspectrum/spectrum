@@ -4,7 +4,6 @@ import { storeItem, getItemFromStorage } from 'src/helpers/localStorage';
 import { Overview, Centralized, CommunitySearch, Chat, Yours } from '../view';
 import PageFooter from '../components/footer';
 import { Wrapper } from '../style';
-import { track, events } from 'src/helpers/analytics';
 
 type State = {
   preferredSigninMethod: string,
@@ -19,10 +18,6 @@ class Splash extends React.Component<{}, State> {
     this.state = {
       preferredSigninMethod,
     };
-  }
-
-  componentDidMount() {
-    track(events.HOME_PAGE_VIEWED);
   }
 
   trackSignin = (type: string, method: string) => {

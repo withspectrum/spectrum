@@ -20,7 +20,6 @@ import {
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
 import queryString from 'query-string';
-import { track, events } from 'src/helpers/analytics';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
 import { OutlineButton } from 'src/components/button';
 
@@ -63,8 +62,6 @@ export class Login extends React.Component<Props, State> {
       const searchObj = queryString.parse(this.props.location.search);
       this.setState({ redirectPath: searchObj.r });
     }
-
-    track(events.LOGIN_PAGE_VIEWED, { redirectPath: this.state.redirectPath });
   }
 
   render() {
@@ -120,11 +117,6 @@ export class Login extends React.Component<Props, State> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() =>
-                  track(events.CODE_OF_CONDUCT_CLICKED, {
-                    location: 'branded login',
-                  })
-                }
               >
                 Code of Conduct
               </a>

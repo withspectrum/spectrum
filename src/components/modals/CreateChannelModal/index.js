@@ -14,7 +14,6 @@ import { getChannelBySlugAndCommunitySlugQuery } from 'shared/graphql/queries/ch
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import createChannelMutation from 'shared/graphql/mutations/channel/createChannel';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 
@@ -73,13 +72,6 @@ class CreateChannelModal extends React.Component<Props, State> {
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
-  }
-
-  componentDidMount() {
-    const { community } = this.props;
-    track(events.CHANNEL_CREATED_INITED, {
-      community: transformations.analyticsCommunity(community),
-    });
   }
 
   close = () => {

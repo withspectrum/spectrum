@@ -25,8 +25,6 @@ import {
   getUsersJoinedChannels,
   getUsersJoinedCommunities,
 } from '../../models/search';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 
 const threadsSearchIndex = initIndex('threads_and_messages');
 
@@ -38,18 +36,6 @@ export default async (args: Args, { loaders, user }: GraphQLContext) => {
     threadsSearchIndex
       .search({ query: queryString, filters })
       .then(content => {
-        if (user && user.id) {
-          trackQueue.add({
-            userId: user.id,
-            event: events.SEARCHED_CONVERSATIONS,
-            properties: {
-              queryString,
-              filters,
-              hitsCount: content.hits ? content.hits.length : 0,
-            },
-          });
-        }
-
         if (!content.hits || content.hits.length === 0) return null;
         return content.hits.map(o => ({
           threadId: o.threadId,
