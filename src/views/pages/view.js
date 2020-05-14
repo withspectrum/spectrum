@@ -37,7 +37,6 @@ import {
   PrimaryCTA,
   Content,
 } from './style';
-import { track, events } from 'src/helpers/analytics';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Overview = () => {
@@ -164,16 +163,8 @@ export const Overview = () => {
             that are built to last.
           </ThisCopy>
           <Actions>
-            <ThisPrimaryCTA
-              to="/login"
-              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
-            >
-              Join Spectrum
-            </ThisPrimaryCTA>
-            <ThisSecondaryCTA
-              to="/new/community"
-              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
-            >
+            <ThisPrimaryCTA to="/login">Join Spectrum</ThisPrimaryCTA>
+            <ThisSecondaryCTA to="/new/community">
               Create your community
             </ThisSecondaryCTA>
           </Actions>
@@ -264,12 +255,7 @@ export const Centralized = () => {
             wins!
           </ThisCopy>
           <Actions>
-            <ThisPrimaryCTA
-              to="/explore"
-              onClick={() => track(events.HOME_PAGE_EXPLORE_CLICKED)}
-            >
-              Explore communities
-            </ThisPrimaryCTA>
+            <ThisPrimaryCTA to="/explore">Explore communities</ThisPrimaryCTA>
           </Actions>
         </Text>
       </ThisContent>
@@ -382,12 +368,7 @@ export const Chat = () => {
           </ThisCopy>
 
           <Actions>
-            <ThisPrimaryCTA
-              to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9"
-              onClick={() =>
-                track(events.HOME_PAGE_EXAMPLE_CONVERSATION_CLICKED)
-              }
-            >
+            <ThisPrimaryCTA to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9">
               Check out a conversation
             </ThisPrimaryCTA>
           </Actions>
@@ -468,10 +449,7 @@ export const Sell = () => {
         </Text>
       </ThisContent>
       <Actions>
-        <PrimaryCTA
-          to="/new/community"
-          onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
-        >
+        <PrimaryCTA to="/new/community">
           Start building your community
         </PrimaryCTA>
       </Actions>
@@ -662,16 +640,8 @@ export const Yours = () => {
             </Quote>
           </Quotes>
           <Actions>
-            <ThisPrimaryCTA
-              to="/login"
-              onClick={() => track(events.HOME_PAGE_JOIN_SPECTRUM_CLICKED)}
-            >
-              Join Spectrum
-            </ThisPrimaryCTA>
-            <ThisSecondaryCTA
-              to="/explore"
-              onClick={() => track(events.HOME_PAGE_CREATE_COMMUNITY_CLICKED)}
-            >
+            <ThisPrimaryCTA to="/login">Join Spectrum</ThisPrimaryCTA>
+            <ThisSecondaryCTA to="/explore">
               Explore communities
             </ThisSecondaryCTA>
           </Actions>

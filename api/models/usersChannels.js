@@ -1,7 +1,5 @@
 // @flow
 const { db } = require('shared/db');
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import {
   incrementMemberCount,
   decrementMemberCount,
@@ -21,11 +19,6 @@ import type { DBUsersChannels, DBChannel } from 'shared/types';
 // the creation is automatically an owner and a member
 // prettier-ignore
 const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
-  trackQueue.add({
-    userId,
-    event: events.USER_WAS_ADDED_AS_OWNER_IN_CHANNEL,
-    context: { channelId }
-  })
   return db
     .table('usersChannels')
     .insert(
@@ -52,15 +45,7 @@ const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChan
 
 // creates a single member in a channel. invoked when a user joins a public channel
 // prettier-ignore
-const createMemberInChannel = (channelId: string, userId: string, token: boolean): Promise<DBChannel> => {
-  const event = token ? events.USER_JOINED_CHANNEL_WITH_TOKEN : events.USER_JOINED_CHANNEL
-
-  trackQueue.add({
-    userId,
-    event,
-    context: { channelId }
-  })
-
+const createMemberInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -125,19 +110,6 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
     .then(async result => {
       if (result && result.changes && result.changes.length > 0) {
         const join = result.changes[0].old_val;
-        if (join.isPending) {
-          trackQueue.add({
-            userId,
-            event: events.USER_CANCELED_REQUEST_TO_JOIN_CHANNEL,
-            context: { channelId }
-          })
-        } else {
-          trackQueue.add({
-            userId,
-            event: events.USER_LEFT_CHANNEL,
-            context: { channelId }
-          })
-        }
 
         await decrementMemberCount(channelId)
         return db.table('channels').get(join.channelId).run();
@@ -149,13 +121,6 @@ const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBCh
 
 // prettier-ignore
 const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
-
-  trackQueue.add({
-    userId,
-    event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
-    context: { channelId }
-  })
-
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -196,13 +161,6 @@ const removeMembersInChannel = async (channelId: string): Promise<Array<?DBUsers
 // to join a private channel
 // prettier-ignore
 const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
-
-  trackQueue.add({
-    userId,
-    event: events.USER_REQUESTED_TO_JOIN_CHANNEL,
-    context: { channelId }
-  })
-
   return db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -271,13 +229,6 @@ const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
 // private channels modifying pending users to be blocked
 // prettier-ignore
 const blockUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-
-  trackQueue.add({
-    userId,
-    event: events.USER_WAS_BLOCKED_IN_CHANNEL,
-    context: { channelId }
-  })
-
   await decrementMemberCount(channelId)
 
   return db
@@ -301,13 +252,6 @@ const blockUserInChannel = async (channelId: string, userId: string): Promise<DB
 // owner when managing a private channel
 // prettier-ignore
 const approvePendingUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-
-  trackQueue.add({
-    userId,
-    event: events.USER_WAS_APPROVED_IN_CHANNEL,
-    context: { channelId }
-  })
-
   await incrementMemberCount(channelId)
 
   return db
@@ -372,12 +316,6 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
 // as a member
 // prettier-ignore
 const approveBlockedUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  trackQueue.add({
-    userId,
-    event: events.USER_WAS_UNBLOCKED_IN_CHANNEL,
-    context: { channelId }
-  })
-
   await incrementMemberCount(channelId)
 
   return db
@@ -444,7 +382,7 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
       // create all the necessary relationships
       return Promise.all(
         defaultChannelsTheUserHasNotJoined.map(channel =>
-          createMemberInChannel(channel, userId, false)
+          createMemberInChannel(channel, userId)
         )
       );
     }
@@ -453,14 +391,6 @@ const createMemberInDefaultChannels = (communityId: string, userId: string): Pro
 
 // prettier-ignore
 const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<?DBChannel> => {
-  const event = value ? events.CHANNEL_NOTIFICATIONS_ENABLED : events.CHANNEL_NOTIFICATIONS_DISABLED
-
-  trackQueue.add({
-    userId,
-    event,
-    context: { channelId }
-  })
-
   const permissions = await db
     .table('usersChannels')
     .getAll([userId, channelId], { index: 'userIdAndChannelId' })
@@ -487,7 +417,7 @@ const toggleUserChannelNotifications = async (userId: string, channelId: string,
   // then again some time later the user wants notifications about that channel
   if (!channel.isPrivate) {
     // if permissions don't exist, create a usersChannel relationship with notifications on
-    return createMemberInChannel(channelId, userId, false)
+    return createMemberInChannel(channelId, userId)
   }
 
   return null
@@ -500,14 +430,6 @@ const removeUsersChannelMemberships = async (userId: string) => {
     .run();
 
   if (!usersChannels || usersChannels.length === 0) return;
-
-  const trackingPromises = usersChannels.map(usersChannel => {
-    return trackQueue.add({
-      userId,
-      event: events.USER_LEFT_CHANNEL,
-      context: { channelId: usersChannel.channelId },
-    });
-  });
 
   const memberCountPromises = usersChannels.map(usersChannel => {
     return decrementMemberCount(usersChannel.channelId);
@@ -524,11 +446,7 @@ const removeUsersChannelMemberships = async (userId: string) => {
     })
     .run();
 
-  return await Promise.all([
-    ...trackingPromises,
-    memberCountPromises,
-    channelPromise,
-  ]);
+  return await Promise.all([memberCountPromises, channelPromise]);
 };
 
 /*

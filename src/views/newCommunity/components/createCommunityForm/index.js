@@ -45,7 +45,6 @@ import {
   DeleteCoverButton,
 } from './style';
 import { FormContainer, Form, Actions } from '../../style';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type State = {
@@ -102,10 +101,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
-  }
-
-  componentDidMount() {
-    track(events.COMMUNITY_CREATED_INITED);
   }
 
   changeName = e => {
@@ -653,11 +648,6 @@ class CreateCommunityForm extends React.Component<Props, State> {
                 href="https://github.com/withspectrum/code-of-conduct"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() =>
-                  track(events.CODE_OF_CONDUCT_CLICKED, {
-                    location: 'community onboarding',
-                  })
-                }
               >
                 Spectrum Code of Conduct
               </a>{' '}

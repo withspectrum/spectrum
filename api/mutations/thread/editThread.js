@@ -9,13 +9,7 @@ import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import processThreadContent from 'shared/draft-utils/process-thread-content';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
-import {
-  LEGACY_PREFIX,
-  hasLegacyPrefix,
-  stripLegacyPrefix,
-} from 'shared/imgix';
+import { hasLegacyPrefix, stripLegacyPrefix } from 'shared/imgix';
 
 type Input = {
   input: EditThreadInput,
@@ -26,15 +20,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user } = ctx;
 
   if (input.type === 'SLATE') {
-    trackQueue.add({
-      userId: user.id,
-      event: events.THREAD_EDITED_FAILED,
-      context: { threadId: input.threadId },
-      properties: {
-        reason: 'slate type',
-      },
-    });
-
     return new UserError(
       "You're on an old version of Spectrum, please refresh your browser."
     );
@@ -47,15 +32,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // if the thread doesn't exist
   if (!threads || !threadToEvaluate) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.THREAD_EDITED_FAILED,
-      context: { threadId: input.threadId },
-      properties: {
-        reason: 'thread does not exist',
-      },
-    });
-
     return new UserError("This thread doesn't exist");
   }
 
@@ -73,15 +49,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // only the thread creator can edit the thread
   // also prevent deletion if the user was blocked
   if (!canEdit) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.THREAD_EDITED_FAILED,
-      context: { threadId: input.threadId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
     return new UserError(
       "You don't have permission to make changes to this thread."
     );
@@ -158,15 +125,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       )
     );
   } catch (err) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.THREAD_EDITED_FAILED,
-      context: { threadId: input.threadId },
-      properties: {
-        reason: 'images failed to upload',
-      },
-    });
-
     return new UserError(err.message);
   }
 

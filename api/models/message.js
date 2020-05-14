@@ -5,7 +5,6 @@ import {
   sendDirectMessageNotificationQueue,
   processReputationEventQueue,
   _adminProcessToxicMessageQueue,
-  trackQueue,
   searchQueue,
 } from 'shared/bull/queues';
 import { NEW_DOCUMENTS } from './utils';
@@ -15,7 +14,6 @@ import {
   incrementMessageCount,
   decrementMessageCount,
 } from './thread';
-import { events } from 'shared/analytics';
 import type { DBMessage } from 'shared/types';
 
 export type MessageTypes = 'text' | 'media';
@@ -145,11 +143,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
     .then(async message => {
       if (message.threadType === 'directMessageThread') {
         await Promise.all([
-          trackQueue.add({
-            userId,
-            event: events.DIRECT_MESSAGE_SENT,
-            context: { messageId: message.id },
-          }),
           sendDirectMessageNotificationQueue.add({ message, userId }),
         ])
       }
@@ -166,11 +159,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
           userId,
           type: 'message created',
           entityId: message.threadId,
-        }),
-        trackQueue.add({
-          userId,
-          event: events.MESSAGE_SENT,
-          context: { messageId: message.id },
         }),
         _adminProcessToxicMessageQueue.add({ message }),
 
@@ -230,17 +218,7 @@ export const deleteMessage = (userId: string, messageId: string) => {
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
     .then(async message => {
-      const event =
-        message.threadType === 'story'
-          ? events.MESSAGE_DELETED
-          : events.DIRECT_MESSAGE_DELETED;
-
       await Promise.all([
-        trackQueue.add({
-          userId,
-          event,
-          context: { messageId },
-        }),
         processReputationEventQueue.add({
           userId,
           type: 'message deleted',
@@ -271,17 +249,6 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
 
   if (!messages || messages.length === 0) return;
 
-  const trackingPromises = messages.map(message => {
-    const event = message.threadType === 'story'
-      ? events.MESSAGE_DELETED
-      : events.DIRECT_MESSAGE_DELETED
-    return trackQueue.add({
-      userId,
-      event,
-      context: { messageId: message.id },
-    });
-  });
-
   const searchPromises = messages.map(message => {
     if (message.threadType !== 'story') return null
     return searchQueue.add({
@@ -301,7 +268,6 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
     .run();
 
   return await Promise.all([
-    ...trackingPromises, 
     deletePromise,
     ...searchPromises
   ]).then(() => {
@@ -326,7 +292,7 @@ type EditInput = {
 };
 
 // prettier-ignore
-export const editMessage = (message: EditInput, userId: string): Promise<DBMessage> => {
+export const editMessage = (message: EditInput): Promise<DBMessage> => {
   // Insert a message
   return db
     .table('messages')
@@ -352,20 +318,7 @@ export const editMessage = (message: EditInput, userId: string): Promise<DBMessa
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
     .then(message => {
-      if (message.threadType === 'directMessageThread') {
-        trackQueue.add({
-          userId,
-          event: events.DIRECT_MESSAGE_EDITED,
-          context: { messageId: message.id },
-        });
-      }
       if (message.threadType === 'story') {
-        trackQueue.add({
-          userId,
-          event: events.MESSAGE_EDITED,
-          context: { messageId: message.id },
-        });
-
         searchQueue.add({
           id: message.id,
           type: 'message',

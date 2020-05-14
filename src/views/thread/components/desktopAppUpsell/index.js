@@ -2,7 +2,6 @@
 import React from 'react';
 import compose from 'recompose/compose';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import { track, events } from 'src/helpers/analytics';
 import {
   hasDismissedDesktopAppUpsell,
   dismissDesktopAppUpsell,
@@ -37,12 +36,10 @@ class DesktopAppUpsell extends React.Component<Props, State> {
 
     if (desktopUpsellVisible) {
       this.setState({ isVisible: true });
-      track(events.THREAD_VIEW_DOWNLOAD_MAC_VIEWED);
     }
   }
 
   download = () => {
-    track(events.THREAD_VIEW_DOWNLOAD_MAC_CLICKED);
     dismissDesktopAppUpsell();
     return this.setState({ isVisible: false });
   };

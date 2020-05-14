@@ -9,7 +9,6 @@ import { subscribeToWebPush } from 'shared/graphql/subscriptions';
 import { ListContainer, Notice } from 'src/components/listItems/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { EmailListItem } from '../style';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type State = {
@@ -31,7 +30,6 @@ class NotificationSettings extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_VIEWED);
     WebPushManager.getPermissionState().then(result => {
       if (result === 'denied') {
         this.setState({
@@ -47,10 +45,8 @@ class NotificationSettings extends React.Component<Props, State> {
   }
 
   subscribeToWebPush = () => {
-    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     WebPushManager.subscribe()
       .then(subscription => {
-        track(events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED);
         this.setState({
           subscription,
           webPushBlocked: false,
@@ -58,7 +54,6 @@ class NotificationSettings extends React.Component<Props, State> {
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
-        track(events.WEB_PUSH_NOTIFICATIONS_BLOCKED);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -69,11 +64,9 @@ class NotificationSettings extends React.Component<Props, State> {
   };
 
   unsubscribeFromWebPush = () => {
-    track(events.WEB_PUSH_NOTIFICATIONS_PROMPT_CLICKED);
     WebPushManager.unsubscribe()
       .then(result => {
         if (result) {
-          track(events.WEB_PUSH_NOTIFICATIONS_UNSUBSCRIBED);
           this.setState({
             subscription: false,
           });

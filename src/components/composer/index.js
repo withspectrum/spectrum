@@ -35,7 +35,6 @@ import {
   ButtonRow,
   Wrapper,
 } from './style';
-import { events, track } from 'src/helpers/analytics';
 import { ESC, ENTER } from 'src/helpers/keycodes';
 import Inputs from './inputs';
 import ComposerLocationSelectors from './LocationSelectors';
@@ -132,7 +131,6 @@ class ComposerWithData extends React.Component<Props, State> {
       })
     );
 
-    track(events.THREAD_CREATED_INITED);
     // $FlowIssue
     document.addEventListener('keydown', this.handleGlobalKeyPress, false);
   }

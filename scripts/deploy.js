@@ -15,7 +15,6 @@ const now = (cmd = '') => `now ${cmd} --scope space-program`;
 
 const VALID_SERVERS = [
   'all',
-  'analytics',
   'api',
   'athena',
   'chronos',

@@ -23,7 +23,6 @@ import {
   EtcCTA,
 } from './style';
 import type { ContextRouter } from 'react-router';
-import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
 
 type Props = {
@@ -35,10 +34,6 @@ type State = {
 };
 
 class Features extends React.Component<Props, State> {
-  componentDidMount() {
-    track(events.FEATURES_PAGE_VIEWED);
-  }
-
   render() {
     return (
       <Wrapper data-cy="features-page">
@@ -55,12 +50,7 @@ class Features extends React.Component<Props, State> {
                 organically, moderate it effectively, and measure its ROI for
                 your organization.
               </Copy>
-              <PrimaryButton
-                to={'/new/community'}
-                onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
-              >
-                Get started
-              </PrimaryButton>
+              <PrimaryButton to={'/new/community'}>Get started</PrimaryButton>
             </TextContent>
             <Waterfall src="/img/waterfall.png" />
           </Intro>
@@ -332,12 +322,7 @@ class Features extends React.Component<Props, State> {
           </EtcGrid>
           <EtcCTA>
             <EtcName>What are you waiting for?</EtcName>
-            <PrimaryButton
-              to={'/new/community'}
-              onClick={() => track(events.FEATURES_PAGE_GET_STARTED_CLICKED)}
-            >
-              Get started
-            </PrimaryButton>
+            <PrimaryButton to={'/new/community'}>Get started</PrimaryButton>
           </EtcCTA>
         </Section>
         <PageFooter />

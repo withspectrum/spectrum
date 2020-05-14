@@ -13,34 +13,17 @@ import { createGeneralChannel } from '../../models/channel';
 import { createOwnerInChannel } from '../../models/usersChannels';
 import { publishThread } from '../../models/thread';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 import Raven from 'shared/raven';
 
 export default requireAuth(
   async (_: any, args: CreateCommunityInput, { user }: GraphQLContext) => {
     if (!user.email) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_CREATED_FAILED,
-        properties: {
-          reason: 'no email address',
-        },
-      });
       return new UserError(
         'You must have a working email address to create communities. Add an email address in your settings.'
       );
     }
 
     if (!args.input.slug || args.input.slug.length === 0) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_CREATED_FAILED,
-        properties: {
-          reason: 'no slug',
-        },
-      });
-
       return new UserError(
         'Communities must have a valid url so people can find it!'
       );
@@ -64,14 +47,6 @@ export default requireAuth(
     );
 
     if (communitySlugIsDenyListed(sanitizedSlug)) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_CREATED_FAILED,
-        properties: {
-          reason: 'url taken',
-        },
-      });
-
       return new UserError(
         `This url is already taken - feel free to change it if
         you're set on the name ${args.input.name}!`
@@ -83,14 +58,6 @@ export default requireAuth(
 
     // if a community with this slug already exists
     if (communities.length > 0) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.COMMUNITY_CREATED_FAILED,
-        properties: {
-          reason: 'community already exists',
-        },
-      });
-
       return new UserError('A community with this slug already exists.');
     }
 

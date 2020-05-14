@@ -6,7 +6,6 @@ import { Primary } from 'src/components/themedSection';
 import { Constellations } from 'src/components/illustrations';
 import { Button } from 'src/components/button';
 import { Tagline, Copy } from 'src/views/pages/style';
-import { track, events } from 'src/helpers/analytics';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 // $FlowFixMe
@@ -92,12 +91,7 @@ const CommunitySearchWrapper = props => {
             Building communities on Spectrum is easy and free!
           </SecondaryCopy>
 
-          <Button
-            to={'/new/community'}
-            onClick={() => track(events.EXPLORE_PAGE_CREATE_COMMUNITY_CLICKED)}
-          >
-            Create a community
-          </Button>
+          <Button to={'/new/community'}>Create a community</Button>
         </SecondaryContent>
       </ThisContent>
       <Constellations />

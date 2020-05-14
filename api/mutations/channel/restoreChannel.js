@@ -6,8 +6,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -22,29 +20,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // TODO: Figure out how to not have to do this - somehow combine forces with canModerateChannel function which is fetching most of the same data anyways
   const channel = await loaders.channel.load(channelId);
 
-  if (!await canModerateChannel(user.id, channelId, loaders)) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_RESTORED_FAILED,
-      context: { channelId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
+  if (!(await canModerateChannel(user.id, channelId, loaders))) {
     return new UserError('You don’t have permission to manage this channel');
   }
 
   if (!channel.archivedAt) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_RESTORED_FAILED,
-      context: { channelId },
-      properties: {
-        reason: 'channel already restored',
-      },
-    });
     return new UserError('Channel already restored');
   }
 
-  return await restoreChannel(channelId, user.id);
+  return await restoreChannel(channelId);
 });

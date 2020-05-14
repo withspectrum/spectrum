@@ -160,7 +160,6 @@ module.exports = function override(config, env) {
       new webpack.DefinePlugin({
         'process.env': {
           SENTRY_DSN_CLIENT: `"${process.env.SENTRY_DSN_CLIENT}"`,
-          AMPLITUDE_API_KEY: `"${process.env.AMPLITUDE_API_KEY}"`,
         },
       })
     );

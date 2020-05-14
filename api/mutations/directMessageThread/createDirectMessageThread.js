@@ -7,18 +7,13 @@ import {
   createDirectMessageThread,
   setDirectMessageThreadLastActive,
 } from '../../models/directMessageThread';
-import { uploadImage } from '../../utils/file-storage';
-import { storeMessage } from '../../models/message';
 import {
   setUserLastSeenInDirectMessageThread,
   createMemberInDirectMessageThread,
 } from '../../models/usersDirectMessageThreads';
 import { addMessage } from '../message/addMessage';
 import type { FileUpload } from 'shared/types';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { messageTypeObj } from 'shared/draft-utils/message-types';
 import type { MessageType } from 'shared/draft-utils/message-types';
 
 export type CreateDirectMessageThreadInput = {
@@ -41,14 +36,6 @@ export default requireAuth(
     const { input } = args;
 
     if (!input.participants) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.DIRECT_MESSAGE_THREAD_CREATED_FAILED,
-        properties: {
-          reason: 'no users selected',
-        },
-      });
-
       return new UserError('Nobody was selected to create a thread.');
     }
 
@@ -96,11 +83,6 @@ export default requireAuth(
       ]).then(() => threadToReturn);
     }
 
-    trackQueue.add({
-      userId: user.id,
-      event: events.DIRECT_MESSAGE_THREAD_CREATED,
-    });
-
     return await Promise.all([
       createMemberInDirectMessageThread(threadId, user.id, true),
       addMessage(
@@ -111,10 +93,6 @@ export default requireAuth(
         user.id
       ),
       participants.map(participant => {
-        trackQueue.add({
-          userId: participant,
-          event: events.DIRECT_MESSAGE_THREAD_RECEIVED,
-        });
         return createMemberInDirectMessageThread(threadId, participant, false);
       }),
     ]).then(() => threadToReturn);

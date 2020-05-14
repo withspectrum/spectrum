@@ -5,8 +5,6 @@ import {
   processReputationEventQueue,
 } from 'shared/bull/queues';
 import type { DBReaction } from 'shared/types';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type ReactionType = 'like';
 
@@ -55,14 +53,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
 
         // user is re-reacting
         if (thisReaction.deletedAt) {
-          trackQueue.add({
-            userId,
-            event: events.REACTION_CREATED,
-            context: {
-              reactionId: thisReaction.id,
-            },
-          });
-
           processReputationEventQueue.add({
             userId,
             type: 'reaction created',
@@ -77,15 +67,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
             })
             .run();
         }
-
-        // deleting reaction
-        trackQueue.add({
-          userId,
-          event: events.REACTION_DELETED,
-          context: {
-            reactionId: thisReaction.id,
-          },
-        });
 
         processReputationEventQueue.add({
           userId,
@@ -116,12 +97,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
         .run()
         .then(result => result.changes[0].new_val)
         .then(reaction => {
-          trackQueue.add({
-            userId,
-            event: events.REACTION_CREATED,
-            context: { reactionId: reaction.id },
-          });
-
           sendReactionNotificationQueue.add({ reaction, userId });
 
           processReputationEventQueue.add({

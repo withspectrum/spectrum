@@ -17,7 +17,6 @@ import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
 import Overview from './components/overview';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
@@ -39,33 +38,13 @@ type Props = {
 
 class ChannelSettings extends React.Component<Props> {
   componentDidMount() {
-    const { dispatch, data } = this.props;
+    const { dispatch } = this.props;
 
     dispatch(
       setTitlebarProps({
         title: 'Settings',
       })
     );
-
-    if (data && data.channel) {
-      const { channel } = data;
-
-      track(events.CHANNEL_SETTINGS_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.data.channel && this.props.data.channel) {
-      const { channel } = this.props.data;
-
-      track(events.CHANNEL_SETTINGS_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
-    }
   }
 
   togglePending = (userId, action) => {

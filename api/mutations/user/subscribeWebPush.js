@@ -4,8 +4,6 @@ import type { WebPushSubscription } from './';
 import UserError from '../../utils/UserError';
 import { storeSubscription } from '../../models/web-push-subscription';
 import sendWebPushNotification from 'shared/send-web-push-notification';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -15,11 +13,6 @@ type Input = {
 export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { user } = ctx;
   const { subscription } = args;
-
-  trackQueue.add({
-    userId: user.id,
-    event: events.WEB_PUSH_NOTIFICATIONS_SUBSCRIBED,
-  });
 
   return storeSubscription(subscription, user.id)
     .then(() => {

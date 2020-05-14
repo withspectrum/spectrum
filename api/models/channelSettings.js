@@ -2,8 +2,6 @@
 const { db } = require('shared/db');
 import type { DBChannelSettings, DBChannel } from 'shared/types';
 import { getChannelById } from './channel';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import uuidv4 from 'uuid/v4';
 
 const defaultSettings = {
@@ -67,7 +65,7 @@ export const getChannelsSettings = (channelIds: Array<string>): Promise<?DBChann
     });
 };
 
-export const enableChannelTokenJoin = (channelId: string, userId: string) => {
+export const enableChannelTokenJoin = (channelId: string) => {
   return db
     .table('channelSettings')
     .getAll(channelId, { index: 'channelId' })
@@ -79,17 +77,11 @@ export const enableChannelTokenJoin = (channelId: string, userId: string) => {
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_JOIN_TOKEN_ENABLED,
-        context: { channelId },
-      });
-
       return await getChannelById(channelId);
     });
 };
 
-export const disableChannelTokenJoin = (channelId: string, userId: string) => {
+export const disableChannelTokenJoin = (channelId: string) => {
   return db
     .table('channelSettings')
     .getAll(channelId, { index: 'channelId' })
@@ -101,17 +93,11 @@ export const disableChannelTokenJoin = (channelId: string, userId: string) => {
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_JOIN_TOKEN_DISABLED,
-        context: { channelId },
-      });
-
       return await getChannelById(channelId);
     });
 };
 
-export const resetChannelJoinToken = (channelId: string, userId: string) => {
+export const resetChannelJoinToken = (channelId: string) => {
   return db
     .table('channelSettings')
     .getAll(channelId, { index: 'channelId' })
@@ -122,12 +108,6 @@ export const resetChannelJoinToken = (channelId: string, userId: string) => {
     })
     .run()
     .then(async () => {
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_JOIN_TOKEN_RESET,
-        context: { channelId },
-      });
-
       return await getChannelById(channelId);
     });
 };
@@ -139,7 +119,7 @@ type UpdateInput = {
 };
 
 // prettier-ignore
-export const updateChannelSlackBotLinks = async ({ channelId, slackChannelId, eventType }: UpdateInput, userId: string): Promise<DBChannel> => {
+export const updateChannelSlackBotLinks = async ({ channelId, slackChannelId, eventType }: UpdateInput): Promise<DBChannel> => {
   const settings: DBChannelSettings = await getOrCreateChannelSettings(
     channelId
   );
@@ -172,13 +152,6 @@ export const updateChannelSlackBotLinks = async ({ channelId, slackChannelId, ev
     })
     .run()
     .then(async () => {
-
-      trackQueue.add({
-        userId,
-        event: events.CHANNEL_SLACK_BOT_LINK_UPDATED,
-        context: { channelId },
-      });
-
       return await getChannelById(channelId)
     });
 };

@@ -1,11 +1,7 @@
 // @flow
-import isEmail from 'validator/lib/isEmail';
 import sg from '@sendgrid/mail';
-import fs from 'fs';
 const debug = require('debug')('hermes:send-email');
 const stringify = require('json-stringify-pretty-compact');
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { userCanReceiveEmail } from './user-can-receive-email';
 const { SENDGRID_API_KEY } = process.env;
 
@@ -63,13 +59,6 @@ const sendEmail = async (options: Options): Promise<void> => {
     );
 
     return Promise.resolve();
-  }
-
-  if (userId) {
-    trackQueue.add({
-      userId: userId,
-      event: events.EMAIL_RECEIVED,
-    });
   }
 
   if (await !userCanReceiveEmail({ to, userId })) return Promise.resolve();

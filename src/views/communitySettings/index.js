@@ -11,7 +11,6 @@ import Header from 'src/components/settingsViews/header';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { View } from './style';
 import type { ContextRouter } from 'react-router';
-import { track, events, transformations } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
 import { setTitlebarProps } from 'src/actions/titlebar';
@@ -36,15 +35,6 @@ class CommunitySettings extends React.Component<Props> {
         title: 'Settings',
       })
     );
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.data.community && this.props.data.community) {
-      const { community } = this.props.data;
-      track(events.COMMUNITY_SETTINGS_VIEWED, {
-        community: transformations.analyticsCommunity(community),
-      });
-    }
   }
 
   render() {

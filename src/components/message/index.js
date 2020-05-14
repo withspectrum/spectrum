@@ -17,7 +17,6 @@ import EditingBody from './editingBody';
 import { openModal } from 'src/actions/modals';
 import { replyToMessage } from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
-import { track, events } from 'src/helpers/analytics';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -117,12 +116,6 @@ class Message extends React.Component<Props, State> {
     }
 
     const message = 'Are you sure you want to delete this message?';
-
-    track(
-      this.props.threadType === 'story'
-        ? events.MESSAGE_DELETED_INITED
-        : events.DIRECT_MESSAGE_DELETED_INITED
-    );
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {

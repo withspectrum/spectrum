@@ -14,8 +14,6 @@ import {
 } from '../../models/usersCommunities';
 import { getOrCreateChannelSettings } from '../../models/channelSettings';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 
 type Input = {
   input: {
@@ -32,14 +30,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const channel = await getChannelBySlug(channelSlug, communitySlug);
 
   if (!channel) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
-      properties: {
-        reason: 'no channel',
-      },
-    });
-
     return new UserError('No channel found in this community');
   }
 
@@ -66,28 +56,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (channelPermissions.isBlocked || communityPermissions.isBlocked) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
-      context: { channelId: channel.id },
-      properties: {
-        reason: 'no permission',
-      },
-    });
-
     return new UserError("You don't have permission to view this channel");
   }
 
   if (!settings.joinSettings || !settings.joinSettings.tokenJoinEnabled) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
-      context: { channelId: channel.id },
-      properties: {
-        reason: 'no token or changed token',
-      },
-    });
-
     return new UserError(
       "You can't join at this time, the token may have changed"
     );
@@ -96,15 +68,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     settings.joinSettings.tokenJoinEnabled &&
     token !== settings.joinSettings.token
   ) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
-      context: { channelId: channel.id },
-      properties: {
-        reason: 'no token or changed token',
-      },
-    });
-
     return new UserError(
       "You can't join at this time, the token may have changed"
     );
@@ -119,7 +82,7 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         if (channelPermissions.isPending) {
           return await approvePendingUserInChannel(channel.id, user.id);
         } else {
-          return await createMemberInChannel(channel.id, user.id, true);
+          return await createMemberInChannel(channel.id, user.id);
         }
       })
       .then(joinedChannel => joinedChannel);
@@ -130,17 +93,8 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   if (!channelPermissions.isMember) {
-    return await createMemberInChannel(channel.id, user.id, true);
+    return await createMemberInChannel(channel.id, user.id);
   }
-
-  trackQueue.add({
-    userId: user.id,
-    event: events.USER_JOINED_CHANNEL_WITH_TOKEN_FAILED,
-    context: { channelId: channel.id },
-    properties: {
-      reason: 'unknown error',
-    },
-  });
 
   return new UserError("Couldn't authenticate this request to join a channel");
 });

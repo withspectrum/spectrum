@@ -5,13 +5,10 @@ import type { EditUserInput } from 'shared/db/queries/user';
 import UserError from '../../utils/UserError';
 import {
   getUserByUsername,
-  getUserById,
   editUser,
   getUsersByEmail,
   setUserPendingEmail,
 } from 'shared/db/queries/user';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import isEmail from 'validator/lib/isEmail';
 import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
@@ -24,27 +21,11 @@ export default requireAuth(
     // If the user is trying to change their username check whether there's a person with that username already
     if (input.username) {
       if (input.username === 'null' || input.username === 'undefined') {
-        trackQueue.add({
-          userId: currentUser.id,
-          event: events.USER_EDITED_FAILED,
-          properties: {
-            reason: 'bad username input',
-          },
-        });
-
         return new UserError('Nice try! 😉');
       }
 
       const dbUser = await getUserByUsername(input.username);
       if (dbUser && dbUser.id !== currentUser.id) {
-        trackQueue.add({
-          userId: currentUser.id,
-          event: events.USER_EDITED_FAILED,
-          properties: {
-            reason: 'username taken',
-          },
-        });
-
         return new UserError(
           'Looks like that username got swooped! Try another?'
         );

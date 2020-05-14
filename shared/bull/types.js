@@ -369,17 +369,6 @@ export type SendSlackInvitationsJobData = {
   userId: string,
 };
 
-export type TrackAnalyticsData = {
-  userId: string,
-  event: string,
-  context?: Object,
-  properties?: Object,
-};
-
-export type IdentifyAnalyticsData = {
-  userId: string,
-};
-
 export type AdminProcessUserReportedJobData = {
   userId: string,
   reason: string,
@@ -496,10 +485,6 @@ export type Queues = {
   // mercury
   processReputationEventQueue: BullQueue<ReputationEventJobData>,
   calculateThreadScoreQueue: BullQueue<CalculateThreadScoreJobData>,
-
-  // analytics
-  trackQueue: BullQueue<TrackAnalyticsData>,
-  identifyQueue: BullQueue<IdentifyAnalyticsData>,
 
   // vulcan
   searchQueue: BullQueue<SearchIndexJobData>,

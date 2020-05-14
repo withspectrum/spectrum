@@ -7,7 +7,6 @@ import { closeModal } from 'src/actions/modals';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import reportUserMutation from 'shared/graphql/mutations/user/reportUser';
-import { track, events } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import ModalContainer from '../modalContainer';
 import { TextButton, PrimaryOutlineButton } from 'src/components/button';
@@ -36,14 +35,6 @@ class ReportUserModal extends React.Component<Props, State> {
     reasonError: false,
     isLoading: false,
   };
-
-  componentDidMount() {
-    const { user, currentUser } = this.props;
-    track(events.USER_REPORTED_USER_INITED, {
-      reportedUser: user.id,
-      reportingUser: currentUser.id,
-    });
-  }
 
   close = () => {
     this.props.dispatch(closeModal());

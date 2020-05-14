@@ -13,7 +13,6 @@ import { View } from './style';
 import Overview from './components/overview';
 import Header from 'src/components/settingsViews/header';
 import type { ContextRouter } from 'react-router';
-import { track, events } from 'src/helpers/analytics';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
 import { setTitlebarProps } from 'src/actions/titlebar';
@@ -29,7 +28,6 @@ type Props = {
 
 class UserSettings extends React.Component<Props> {
   componentDidMount() {
-    track(events.USER_SETTINGS_VIEWED);
     const { dispatch } = this.props;
     return dispatch(
       setTitlebarProps({

@@ -7,8 +7,6 @@ import { removeUsersChannelMemberships } from '../../models/usersChannels';
 import { disableAllThreadNotificationsForUser } from '../../models/usersThreads';
 import { disableAllUsersEmailSettings } from '../../models/usersSettings';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 export default requireAuth(async (_: any, __: any, ctx: GraphQLContext) => {
   const { user } = ctx;

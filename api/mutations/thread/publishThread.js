@@ -21,8 +21,6 @@ import {
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
 import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 const threadBodyToPlainText = (body: any): string =>
@@ -54,15 +52,6 @@ export default requireAuth(
     let { type } = thread;
 
     if (type === 'SLATE') {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'slate type',
-        },
-      });
-
       return new UserError(
         "You're on an old version of Spectrum, please refresh your browser."
       );
@@ -89,15 +78,6 @@ export default requireAuth(
     ]);
 
     if (!community || community.deletedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'community doesn’t exist',
-        },
-      });
-
       return new UserError('This community doesn’t exist');
     }
 
@@ -107,28 +87,10 @@ export default requireAuth(
 
     // if channel wasn't found or is deleted
     if (!channel || channel.deletedAt) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'channel doesn’t exist',
-        },
-      });
-
       return new UserError("This channel doesn't exist");
     }
 
     if (channel.isArchived) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'channel archived',
-        },
-      });
-
       return new UserError('This channel has been archived');
     }
 
@@ -138,15 +100,6 @@ export default requireAuth(
       currentUserChannelPermissions.isBlocked ||
       currentUserCommunityPermissions.isBlocked
     ) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'no permission',
-        },
-      });
-
       return new UserError(
         "You don't have permission to create threads in this channel."
       );
@@ -170,15 +123,6 @@ export default requireAuth(
 
       if (usersPreviousPublishedThreads.length >= MEMBER_SPAM_LMIT) {
         debug('User has posted at least 3 times in the previous 10m');
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_CREATED_FAILED,
-          context: { channelId: thread.channelId },
-          properties: {
-            reason: 'user spamming threads',
-          },
-        });
-
         return new UserError(
           'You’ve been posting a lot! Please wait a few minutes before posting more.'
         );
@@ -224,12 +168,6 @@ export default requireAuth(
 
       if (isSpamming) {
         debug('User is spamming similar content');
-
-        trackQueue.add({
-          userId: user.id,
-          event: events.THREAD_FLAGGED_AS_SPAM,
-          context: { channelId: thread.channelId },
-        });
 
         return new UserError(
           'It looks like you’ve been posting about a similar topic recently - please wait a while before posting more.'
@@ -292,12 +230,6 @@ export default requireAuth(
         'Thread determined to be toxic, not sending notifications or adding rep'
       );
 
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_FLAGGED_AS_TOXIC,
-        context: { threadId: dbThread.id },
-      });
-
       // generate an alert for admins
       _adminProcessToxicThreadQueue.add({ thread: dbThread });
       processReputationEventQueue.add({
@@ -344,15 +276,6 @@ export default requireAuth(
         )
       );
     } catch (err) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.THREAD_CREATED_FAILED,
-        context: { channelId: thread.channelId },
-        properties: {
-          reason: 'images failed to upload',
-        },
-      });
-
       return new UserError(err.message);
     }
 

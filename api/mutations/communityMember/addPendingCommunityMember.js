@@ -9,11 +9,7 @@ import {
 } from '../../models/usersCommunities';
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import {
-  trackQueue,
-  sendPrivateCommunityRequestQueue,
-} from 'shared/bull/queues';
+import { sendPrivateCommunityRequestQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -31,15 +27,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   ]);
 
   if (!community) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'no community',
-      },
-    });
-
     return new UserError("We couldn't find that community.");
   }
 
@@ -57,28 +44,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     const permission = permissions[0];
 
     if (permission.isBlocked) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-        context: { communityId },
-        properties: {
-          reason: 'user blocked',
-        },
-      });
-
       return new UserError("You aren't able to join this community.");
     }
 
     if (permission.isOwner || permission.isModerator || permission.isMember) {
-      trackQueue.add({
-        userId: user.id,
-        event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-        context: { communityId },
-        properties: {
-          reason: 'already member',
-        },
-      });
-
       return new UserError("You're already a member of this community.");
     }
 
@@ -93,15 +62,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const permission = permissions[0];
 
   if (permission && permission.isBlocked) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'user blocked',
-      },
-    });
-
     return new UserError("You aren't able to join this community.");
   }
 
@@ -109,28 +69,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     permission &&
     (permission.isOwner || permission.isModerator || permissions.isMember)
   ) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'already member',
-      },
-    });
-
     return new UserError("You're already a member of this community.");
   }
 
   if (permission && permission.isPending) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.USER_REQUESTED_TO_JOIN_COMMUNITY_FAILED,
-      context: { communityId },
-      properties: {
-        reason: 'already pending',
-      },
-    });
-
     return new UserError('You have already requested to join this community.');
   }
 

@@ -12,14 +12,9 @@ import {
   PlanPrice,
   PlanDescription,
 } from '../pricing/style';
-import { track, events } from 'src/helpers/analytics';
 import Head from 'src/components/head';
 
 class Support extends React.Component<{}> {
-  componentDidMount() {
-    track(events.SUPPORT_PAGE_VIEWED);
-  }
-
   render() {
     return (
       <Wrapper data-cy="support-page">
@@ -47,10 +42,7 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <OutlineButton
-                to="/spectrum/hugs-n-bugs"
-                onClick={() => track(events.SUPPORT_PAGE_REPORT_BUG)}
-              >
+              <OutlineButton to="/spectrum/hugs-n-bugs">
                 Join Hugs-n-Bugs
               </OutlineButton>
             </PlanSection>
@@ -64,10 +56,7 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <OutlineButton
-                to="/spectrum/feature-requests"
-                onClick={() => track(events.SUPPORT_PAGE_REQUEST_FEATURE)}
-              >
+              <OutlineButton to="/spectrum/feature-requests">
                 Request a feature
               </OutlineButton>
             </PlanSection>
@@ -81,21 +70,11 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <OutlineButton
-                href="https://twitter.com/withspectrum"
-                onClick={() => track(events.SUPPORT_PAGE_FOLLOW_ON_TWITTER)}
-              >
+              <OutlineButton href="https://twitter.com/withspectrum">
                 Follow us on Twitter
               </OutlineButton>
 
-              <OutlineButton
-                to="/spectrum"
-                onClick={() =>
-                  track(events.SUPPORT_PAGE_JOIN_SPECTRUM_COMMUNITY)
-                }
-              >
-                Join our community
-              </OutlineButton>
+              <OutlineButton to="/spectrum">Join our community</OutlineButton>
             </PlanSection>
 
             <PlanSection style={{ gridArea: 'four' }}>
@@ -107,10 +86,7 @@ class Support extends React.Component<{}> {
                 </PlanDescription>
               </div>
 
-              <OutlineButton
-                href="mailto:hi@spectrum.chat"
-                onClick={() => track(events.SUPPORT_PAGE_EMAIL_US)}
-              >
+              <OutlineButton href="mailto:hi@spectrum.chat">
                 Email us
               </OutlineButton>
             </PlanSection>

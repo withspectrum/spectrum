@@ -13,7 +13,6 @@ import {
   CodeOfConduct,
 } from './style';
 import queryString from 'query-string';
-import { track, events } from 'src/helpers/analytics';
 import { CLIENT_URL } from 'src/api/constants';
 import { setTitlebarProps } from 'src/actions/titlebar';
 
@@ -28,16 +27,8 @@ type Props = {
 
 class Login extends React.Component<Props> {
   componentDidMount() {
-    let redirectPath;
     const { dispatch } = this.props;
     dispatch(setTitlebarProps({ title: 'Login' }));
-
-    if (this.props.location) {
-      const searchObj = queryString.parse(this.props.location.search);
-      redirectPath = searchObj.r;
-    }
-
-    track(events.LOGIN_PAGE_VIEWED, { redirectPath });
   }
 
   render() {
@@ -78,9 +69,6 @@ class Login extends React.Component<Props> {
               href="https://github.com/withspectrum/code-of-conduct"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() =>
-                track(events.CODE_OF_CONDUCT_CLICKED, { location: 'login' })
-              }
             >
               Code of Conduct
             </a>

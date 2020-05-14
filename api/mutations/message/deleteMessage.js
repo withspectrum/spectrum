@@ -11,9 +11,8 @@ import { setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
-import { events } from 'shared/analytics';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { trackQueue, calculateThreadScoreQueue } from 'shared/bull/queues';
+import { calculateThreadScoreQueue } from 'shared/bull/queues';
 
 type Input = {
   id: string,
@@ -26,36 +25,14 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const message = await getMessage(id);
 
   if (!message) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.MESSAGE_DELETED_FAILED,
-      properties: {
-        reason: 'message not found',
-      },
-    });
-
     return new UserError('This message does not exist.');
   }
-
-  const eventFailed =
-    message.threadType === 'story'
-      ? events.MESSAGE_DELETED_FAILED
-      : events.DIRECT_MESSAGE_DELETED_FAILED;
 
   const thread = await loaders.thread.load(message.threadId);
 
   if (message.senderId !== user.id) {
     // Only the sender can delete a directMessageThread message
     if (message.threadType === 'directMessageThread') {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        context: { messageId: id },
-        properties: {
-          reason: 'message not sent by user',
-        },
-      });
-
       return new UserError('You can only delete your own messages.');
     }
 
@@ -70,15 +47,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       channelPermissions.isModerator ||
       communityPermissions.isModerator;
     if (!canModerate) {
-      trackQueue.add({
-        userId: user.id,
-        event: eventFailed,
-        context: { messageId: id },
-        properties: {
-          reason: 'no permission',
-        },
-      });
-
       return new UserError("You don't have permission to delete this message.");
     }
   }

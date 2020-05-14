@@ -31,7 +31,6 @@ import {
   DeleteCoverButton,
 } from 'src/components/editForm/style';
 import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 
 type State = {
@@ -258,10 +257,6 @@ class EditForm extends React.Component<Props, State> {
       </div>
     );
 
-    track(events.COMMUNITY_DELETED_INITED, {
-      community: transformations.analyticsCommunity(community),
-    });
-
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
         id: communityId,
@@ -307,14 +302,13 @@ class EditForm extends React.Component<Props, State> {
         <SectionTitle>Community Settings</SectionTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
-            {coverPhoto &&
-              !/default_images/.test(coverPhoto) && (
-                <DeleteCoverWrapper>
-                  <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
-                    <Icon glyph="view-close-small" size={'16'} />
-                  </DeleteCoverButton>
-                </DeleteCoverWrapper>
-              )}
+            {coverPhoto && !/default_images/.test(coverPhoto) && (
+              <DeleteCoverWrapper>
+                <DeleteCoverButton onClick={e => this.deleteCoverPhoto(e)}>
+                  <Icon glyph="view-close-small" size={'16'} />
+                </DeleteCoverButton>
+              </DeleteCoverWrapper>
+            )}
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
@@ -399,4 +393,8 @@ class EditForm extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(), editCommunityMutation, withRouter)(EditForm);
+export default compose(
+  connect(),
+  editCommunityMutation,
+  withRouter
+)(EditForm);

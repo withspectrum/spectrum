@@ -12,7 +12,6 @@ import {
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icon';
 import { Logo } from 'src/components/logo';
-import { track, events } from 'src/helpers/analytics';
 
 export default () => {
   return (
@@ -56,11 +55,6 @@ export default () => {
             href="https://github.com/withspectrum/code-of-conduct"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() =>
-              track(events.CODE_OF_CONDUCT_CLICKED, {
-                location: 'splash page footer',
-              })
-            }
           >
             Code of Conduct
           </a>

@@ -8,8 +8,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
 } from '../../utils/permissions';
-import { events } from 'shared/analytics';
-import { trackQueue } from 'shared/bull/queues';
 
 type Input = {
   channelId: string,
@@ -19,30 +17,13 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   const { channelId } = args;
   const { user, loaders } = ctx;
 
-  if (!await canModerateChannel(user.id, channelId, loaders)) {
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_DELETED_FAILED,
-      context: { channelId },
-      properties: {
-        reason: 'no permission',
-      },
-    });
+  if (!(await canModerateChannel(user.id, channelId, loaders))) {
     return new UserError('You don’t have permission to manage this channel');
   }
 
   const channel = await getChannelById(channelId);
 
   if (channel.slug === 'general') {
-    trackQueue.add({
-      userId: user.id,
-      event: events.CHANNEL_DELETED_FAILED,
-      context: { channelId },
-      properties: {
-        reason: 'general channel',
-      },
-    });
-
     return new UserError("The general channel can't be deleted");
   }
 

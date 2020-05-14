@@ -38,11 +38,7 @@ slackRouter.get('/', (req: any, res: any) => {
     .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
       const input = constructInput(data, connectedBy);
-      return updateSlackSettingsAfterConnection(
-        communityId,
-        input,
-        connectedBy
-      );
+      return updateSlackSettingsAfterConnection(communityId, input);
     })
     .then(community => community.slug)
     .then(slug => {
@@ -66,11 +62,7 @@ slackRouter.get('/onboarding', (req: any, res: any) => {
     .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
       const input = constructInput(data, connectedBy);
-      return updateSlackSettingsAfterConnection(
-        communityId,
-        input,
-        connectedBy
-      );
+      return updateSlackSettingsAfterConnection(communityId, input);
     })
     .then(community => community.id)
     .then(id => {

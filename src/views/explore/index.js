@@ -7,7 +7,6 @@ import Head from 'src/components/head';
 import Search from './components/search';
 import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Charts } from './view';
-import { track, events } from 'src/helpers/analytics';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { ViewGrid } from 'src/components/layout';
@@ -22,7 +21,6 @@ class Explore extends React.Component<Props> {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(setTitlebarProps({ title: 'Explore' }));
-    track(events.EXPLORE_PAGE_VIEWED);
   }
 
   render() {

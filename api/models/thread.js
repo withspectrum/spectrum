@@ -1,11 +1,7 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import {
-  processReputationEventQueue,
-  trackQueue,
-  searchQueue,
-} from 'shared/bull/queues';
+import { processReputationEventQueue, searchQueue } from 'shared/bull/queues';
 const { parseRange, NEW_DOCUMENTS } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
@@ -13,7 +9,6 @@ import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { DBThread, FileUpload } from 'shared/types';
 import type { Timeframe } from './utils';
-import { events } from 'shared/analytics';
 
 const NOT_WATERCOOLER = thread =>
   db.not(thread.hasFields('watercooler')).or(thread('watercooler').eq(false));
@@ -467,12 +462,6 @@ export const publishThread = (
         event: 'created',
       });
 
-      trackQueue.add({
-        userId,
-        event: events.THREAD_CREATED,
-        context: { threadId: thread.id },
-      });
-
       return thread;
     });
 };
@@ -496,21 +485,6 @@ export const setThreadLock = (threadId: string, value: boolean, userId: string, 
       .run()
       .then(async () => {
         const thread = await getThreadById(threadId)
-
-        const event = value
-          ? byModerator
-            ? events.THREAD_LOCKED_BY_MODERATOR
-            : events.THREAD_LOCKED
-          : byModerator
-            ? events.THREAD_UNLOCKED_BY_MODERATOR
-            : events.THREAD_UNLOCKED
-
-        trackQueue.add({
-          userId,
-          event,
-          context: { threadId }
-        })
-
         return thread
       })
   );
@@ -555,12 +529,6 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
         type: 'thread',
         event: 'deleted'
       })
-
-      trackQueue.add({
-        userId,
-        event: events.THREAD_DELETED,
-        context: { threadId },
-      });
 
       processReputationEventQueue.add({
         userId: thread.creatorId,
@@ -614,23 +582,8 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
           event: 'edited'
         })
 
-        trackQueue.add({
-          userId,
-          event: events.THREAD_EDITED,
-          context: { threadId: input.threadId }
-        })
-
         return thread;
       }
-
-      trackQueue.add({
-        userId,
-        event: events.THREAD_EDITED_FAILED,
-        context: { threadId: input.threadId },
-        properties: {
-          reason: 'no changes'
-        }
-      })
 
       // an update was triggered from the client, but no data was changed
       return result.changes[0].old_val;
@@ -665,7 +618,7 @@ export const updateThreadWithImages = (id: string, body: string) => {
     });
 };
 
-export const moveThread = (id: string, channelId: string, userId: string) => {
+export const moveThread = (id: string, channelId: string) => {
   return db
     .table('threads')
     .get(id)
@@ -686,23 +639,8 @@ export const moveThread = (id: string, channelId: string, userId: string) => {
           event: 'moved',
         });
 
-        trackQueue.add({
-          userId,
-          event: events.THREAD_MOVED,
-          context: { threadId: id },
-        });
-
         return thread;
       }
-
-      trackQueue.add({
-        userId,
-        event: events.THREAD_MOVED_FAILED,
-        context: { threadId: id },
-        properties: {
-          reason: 'no changes',
-        },
-      });
 
       return null;
     });

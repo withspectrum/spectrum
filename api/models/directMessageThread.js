@@ -2,8 +2,6 @@
 const { db } = require('shared/db');
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
-import { trackQueue } from 'shared/bull/queues';
-import { events } from 'shared/analytics';
 import { getDirectMessageThreadRecords } from './usersDirectMessageThreads';
 
 export type DBDirectMessageThread = {
@@ -66,13 +64,6 @@ const createDirectMessageThread = (isGroup: boolean, userId: string): DBDirectMe
     )
     .run()
     .then(result => {
-      trackQueue.add({
-        userId,
-        event: events.DIRECT_MESSAGE_THREAD_CREATED,
-        properties: {
-          isGroup
-        }
-      })
       return result.changes[0].new_val
     });
 };

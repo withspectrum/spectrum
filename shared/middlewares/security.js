@@ -85,7 +85,6 @@ function securityMiddleware(
         'www.google-analytics.com',
         'cdn.ravenjs.com',
         'cdn.polyfill.io',
-        'cdn.amplitude.com',
 
         // Note: We will execution of any inline scripts that have the following
         // nonce identifier attached to them.

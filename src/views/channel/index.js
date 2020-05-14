@@ -18,7 +18,6 @@ import { ChannelProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { MobileChannelAction } from 'src/components/titlebar/actions';
 import { CommunityAvatar } from 'src/components/avatar';
-import { track, events, transformations } from 'src/helpers/analytics';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
 import MembersList from './components/MembersList';
@@ -70,10 +69,6 @@ class ChannelView extends React.Component<Props> {
     if (this.props.data && this.props.data.channel) {
       const { channel } = this.props.data;
 
-      track(events.CHANNEL_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
       this.props.dispatch(
         setTitlebarProps({
           title: `# ${channel.name}`,
@@ -130,10 +125,6 @@ class ChannelView extends React.Component<Props> {
           rightAction: <MobileChannelAction channel={channel} />,
         })
       );
-      track(events.CHANNEL_VIEWED, {
-        channel: transformations.analyticsChannel(channel),
-        community: transformations.analyticsCommunity(channel.community),
-      });
       const { location, history } = this.props;
       const { search } = location;
       const { tab } = querystring.parse(search);
