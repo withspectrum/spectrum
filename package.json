@@ -33,7 +33,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.12.4",
     "flow-bin": "0.66",
-    "forever": "^0.15.3",
+    "forever": "^2.0.0",
     "is-html": "^1.1.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
