@@ -19,6 +19,8 @@ export const TitlebarContainer = styled.div`
   height: ${TITLEBAR_HEIGHT}px;
   max-height: ${TITLEBAR_HEIGHT}px;
   grid-area: titlebar;
+  position: fixed;
+  top: 0;
 
   ${isDesktopApp() &&
     css`

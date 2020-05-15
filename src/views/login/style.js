@@ -199,7 +199,7 @@ export const FullscreenContent = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 32px 16px;
+  padding: 16vh 32px 16px 32px;
   flex: 1 0 auto;
   @media (min-width: ${MEDIA_BREAK}px) {
     padding-top: 40px;
