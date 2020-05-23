@@ -34,3 +34,5 @@ public/uploads
 cypress/screenshots/
 cypress/videos/
 cacert
+.env
+.env.*
