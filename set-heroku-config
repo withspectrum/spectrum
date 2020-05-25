@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+
+ENV_FILE=.env
+heroku config:set -a spectrum-chat-hyperion $(cat $ENV_FILE | tr '\n' ' ')
