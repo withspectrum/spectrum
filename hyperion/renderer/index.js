@@ -141,7 +141,7 @@ const renderer = (req: express$Request, res: express$Response) => {
           `s-maxage=${ONE_HOUR}, stale-while-revalidate=${FIVE_MINUTES}, must-revalidate`
         );
       } else {
-        res.setHeader('Cache-Control', 's-maxage=0');
+        res.setHeader('Cache-Control', 's-maxage=0, private');
       }
 
       res.write(
