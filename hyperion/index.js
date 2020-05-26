@@ -35,7 +35,7 @@ app.use(toobusy);
 addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 app.use(
-  '/api',
+  ['/api', '/api/**'],
   createProxyMiddleware({
     target: 'https://api.spectrum.chat',
     changeOrigin: true,
@@ -43,7 +43,7 @@ app.use(
 );
 
 app.use(
-  '/auth',
+  ['/auth', '/auth/**'],
   createProxyMiddleware({
     target: 'https://api.spectrum.chat',
     changeOrigin: true,
@@ -51,7 +51,7 @@ app.use(
 );
 
 app.use(
-  '/websocket',
+  ['websocket', '/websocket/**'],
   createProxyMiddleware({
     target: 'https://api.spectrum.chat',
     changeOrigin: true,
