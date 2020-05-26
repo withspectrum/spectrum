@@ -29,6 +29,11 @@ app.use(statsd);
 // Trust the now proxy
 app.set('trust proxy', true);
 
+app.use(toobusy);
+
+// Security middleware.
+addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
+
 app.use(
   '/api',
   createProxyMiddleware({
@@ -50,13 +55,9 @@ app.use(
   createProxyMiddleware({
     target: 'https://api.spectrum.chat',
     changeOrigin: true,
+    ws: true,
   })
 );
-
-app.use(toobusy);
-
-// Security middleware.
-addSecurityMiddleware(app, { enableNonce: true, enableCSP: true });
 
 // Serve static files from the build folder
 app.use(
@@ -115,34 +116,6 @@ if (process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV) {
 // Cross origin request support
 import cors from 'shared/middlewares/cors';
 app.use(cors);
-
-// Redirect requests to /api and /auth to the production API
-// This allows deploy previews to work, as this route would only be called
-// if there's no path alias in Now for hyperionurl.com/api, which would only
-// happen on deploy previews
-app.use('/api', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
-
-app.use('/auth', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
-
-app.use('/websocket', (req: express$Request, res: express$Response) => {
-  const redirectUrl = `${req.baseUrl}${req.path}`;
-  res.redirect(
-    req.method === 'POST' || req.xhr ? 307 : 301,
-    `https://spectrum.chat${redirectUrl}`
-  );
-});
 
 // In development the Webpack HMR server requests /sockjs-node constantly,
 // so let's patch that through to it!
