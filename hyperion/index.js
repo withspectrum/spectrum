@@ -51,7 +51,7 @@ app.use(
 );
 
 app.use(
-  ['websocket', '/websocket/**'],
+  ['/websocket', '/websocket/**'],
   createProxyMiddleware({
     target: 'https://api.spectrum.chat',
     changeOrigin: true,
