@@ -46,6 +46,10 @@ const GITHUB_OAUTH_CLIENT_ID = IS_PROD
   ? '208a2e8684d88883eded'
   : 'ed3e924f4a599313c83b';
 
+const CALLBACK_BASE = IS_PROD
+  ? 'https://spectrum.chat'
+  : 'http://localhost:3001';
+
 const isSerializedJSON = (str: string) =>
   str[0] === '{' && str[str.length - 1] === '}';
 
@@ -88,9 +92,7 @@ const init = () => {
       {
         consumerKey: TWITTER_OAUTH_CLIENT_ID,
         consumerSecret: TWITTER_OAUTH_CLIENT_SECRET,
-        callbackURL: IS_PROD
-          ? 'https://spectrum.chat/auth/twitter/callback'
-          : 'http://localhost:3001/auth/twitter/callback',
+        callbackURL: `${CALLBACK_BASE}/auth/twitter/callback`,
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
@@ -153,7 +155,7 @@ const init = () => {
       {
         clientID: FACEBOOK_OAUTH_CLIENT_ID,
         clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
-        callbackURL: '/auth/facebook/callback',
+        callbackURL: `${CALLBACK_BASE}/auth/facebook/callback`,
         profileFields: [
           'id',
           'displayName',
@@ -219,7 +221,7 @@ const init = () => {
       {
         clientID: GOOGLE_OAUTH_CLIENT_ID,
         clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
+        callbackURL: `${CALLBACK_BASE}/auth/google/callback`,
       },
       (token, tokenSecret, profile, done) => {
         const name =
@@ -284,7 +286,7 @@ const init = () => {
       {
         clientID: GITHUB_OAUTH_CLIENT_ID,
         clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
-        callbackURL: '/auth/github/callback',
+        callbackURL: `${CALLBACK_BASE}/auth/github/callback`,
         scope: ['user'],
         passReqToCallback: true,
       },
