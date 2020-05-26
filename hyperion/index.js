@@ -50,13 +50,14 @@ app.use(
   })
 );
 
-const wsProxy = createProxyMiddleware(['/websocket', '/websocket/**'], {
-  target: 'https://api.spectrum.chat',
-  changeOrigin: true,
-  ws: true,
-});
-
-app.use(wsProxy);
+app.use(
+  ['/websocket', '/websocket/**'],
+  createProxyMiddleware({
+    target: 'https://api.spectrum.chat',
+    changeOrigin: true,
+    ws: true,
+  })
+);
 
 // Serve static files from the build folder
 app.use(
@@ -204,9 +205,7 @@ process.on('uncaughtException', async err => {
 });
 
 Loadable.preloadAll().then(() => {
-  const server = app.listen(PORT);
-  server.on('upgrade', wsProxy.upgrade);
-
+  app.listen(PORT);
   debug(
     `Hyperion, the server-side renderer, running at http://localhost:${PORT}`
   );
