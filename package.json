@@ -126,6 +126,7 @@
     "hot-shots": "^5.9.2",
     "hpp": "^0.2.2",
     "hsts": "^2.1.0",
+    "http-proxy-middleware": "^1.0.4",
     "idx": "^2.4.0",
     "imgix-core-js": "^1.0.6",
     "ioredis": "3.2.2",

@@ -16,6 +16,7 @@ import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
 import rateLimiter from 'shared/middlewares/rate-limiter';
 import addSecurityMiddleware from 'shared/middlewares/security';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const PORT = process.env.PORT || 3006;
 const ONE_HOUR = 3600;
@@ -27,6 +28,30 @@ app.use(statsd);
 
 // Trust the now proxy
 app.set('trust proxy', true);
+
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: 'https://api.spectrum.chat',
+    changeOrigin: true,
+  })
+);
+
+app.use(
+  '/auth',
+  createProxyMiddleware({
+    target: 'https://api.spectrum.chat',
+    changeOrigin: true,
+  })
+);
+
+app.use(
+  '/websocket',
+  createProxyMiddleware({
+    target: 'https://api.spectrum.chat',
+    changeOrigin: true,
+  })
+);
 
 app.use(toobusy);
 
