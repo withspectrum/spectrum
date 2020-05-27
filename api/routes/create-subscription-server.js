@@ -18,6 +18,7 @@ const createSubscriptionsServer = (server: any, path: string) => {
       execute,
       subscribe,
       schema,
+      keepAlive: 10000,
     },
     {
       server,
