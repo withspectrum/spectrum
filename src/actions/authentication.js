@@ -17,7 +17,7 @@ export const setTrackingContexts = async (user: ?GetUserType) => {
 
   // get an anonymized userId for Sentry
   const response = await fetch(
-    `https://micro-anonymizomatic-woewfxwpkp.now.sh?text=${user.id}`
+    `https://anonymize.spectrum.chat/api/anonymize?text=${user.id}`
   );
   const { text: id } = await response.json();
   return await setRavenUserContext(id);
