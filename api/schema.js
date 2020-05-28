@@ -61,8 +61,6 @@ const fileMutations = require('./mutations/files');
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
 const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
-const threadSubscriptions = require('./subscriptions/thread');
-const communitySubscriptions = require('./subscriptions/community');
 
 const rateLimit = require('./utils/rate-limit-directive').default;
 
@@ -132,9 +130,7 @@ const resolvers = merge(
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
-  directMessageThreadSubscriptions,
-  threadSubscriptions,
-  communitySubscriptions
+  directMessageThreadSubscriptions
 );
 
 if (process.env.NODE_ENV === 'development' && debug.enabled) {

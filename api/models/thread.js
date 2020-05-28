@@ -3,7 +3,6 @@ const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
 import { processReputationEventQueue, searchQueue } from 'shared/bull/queues';
 const { parseRange, NEW_DOCUMENTS } = require('./utils');
-import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -696,38 +695,4 @@ export const decrementReactionCount = (threadId: string) => {
         .sub(1),
     })
     .run();
-};
-
-const hasChanged = (field: string) =>
-  db
-    .row('old_val')(field)
-    .ne(db.row('new_val')(field));
-
-const getUpdatedThreadsChangefeed = () =>
-  db
-    .table('threads')
-    .changes({
-      includeInitial: false,
-    })
-    .filter(
-      NEW_DOCUMENTS.or(
-        hasChanged('content')
-          .or(hasChanged('lastActive'))
-          .or(hasChanged('channelId'))
-          .or(hasChanged('communityId'))
-          .or(hasChanged('creatorId'))
-          .or(hasChanged('isPublished'))
-          .or(hasChanged('modifiedAt'))
-          .or(hasChanged('messageCount'))
-          .or(hasChanged('reactionCount'))
-      )
-    )('new_val')
-    .run();
-
-export const listenToUpdatedThreads = (cb: Function): Function => {
-  return createChangefeed(
-    getUpdatedThreadsChangefeed,
-    cb,
-    'listenToUpdatedThreads'
-  );
 };
