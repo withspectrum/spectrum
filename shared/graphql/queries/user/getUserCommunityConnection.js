@@ -48,7 +48,6 @@ export const getCurrentUserCommunityConnection = graphql(
   {
     options: {
       fetchPolicy: 'cache-and-network',
-      pollInterval: 60 * 1000 * 5,
     },
     props: props => ({
       ...props,

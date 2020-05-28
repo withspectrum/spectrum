@@ -108,7 +108,6 @@ const getUserThreadConnectionOptions = {
       kind,
     },
     fetchPolicy: 'cache-and-network',
-    pollInterval: 60 * 1000 * 5,
   }),
 };
 
