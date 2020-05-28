@@ -16,7 +16,6 @@ import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/helpers/navigation-context';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { MIN_WIDTH_TO_EXPAND_NAVIGATION } from 'src/components/layout';
-import formatNotification from 'shared/notification-to-text';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
 type Props = {
@@ -25,7 +24,6 @@ type Props = {
     directMessageNotifications?: GetDirectMessageNotificationsType,
   },
   isActive: boolean,
-  subscribeToDMs: Function,
   markDirectMessageNotificationsSeen: Function,
   dispatch: Function,
   refetch: Function,
@@ -33,21 +31,7 @@ type Props = {
 };
 
 const DirectMessagesTab = (props: Props) => {
-  const { count, data, isActive, currentUser } = props;
-
-  // $FlowIssue
-  React.useEffect(() => {
-    const unsubscribe = props.subscribeToDMs(notification => {
-      const { title, body } = formatNotification(
-        notification,
-        currentUser && currentUser.id
-      );
-      // TODO @mxstbr - make this clickable and not show up if the user
-      // is currently viewing the DM (modal or view)
-      // props.dispatch(addToastWithTimeout('notification', title));
-    });
-    return unsubscribe;
-  }, []);
+  const { count, data, isActive } = props;
 
   const unseenCount = data.directMessageNotifications
     ? data.directMessageNotifications.edges

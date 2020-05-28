@@ -19,7 +19,6 @@ import getNotifications, {
 import markSingleNotificationSeenMutation from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
 import { getAccessibilityActiveState } from './accessibility';
 import { NavigationContext } from 'src/helpers/navigation-context';
-import formatNotification from 'shared/notification-to-text';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { AvatarGrid, AvatarLink, Label, IconWrapper, RedDot } from './style';
 
@@ -29,7 +28,6 @@ type Props = {
   location: Object,
   data: {
     notifications?: GetNotificationsType,
-    subscribeToNewNotifications: Function,
   },
   markSingleNotificationSeen: Function,
   dispatch: Function,
@@ -38,25 +36,10 @@ type Props = {
 };
 
 const NotificationsTab = (props: Props) => {
-  const { count, data, isActive, match, currentUser } = props;
+  const { count, data, isActive, match } = props;
 
   const isWideViewport =
     window && window.innerWidth > MIN_WIDTH_TO_EXPAND_NAVIGATION;
-
-  // $FlowIssue Subscribe on mount
-  React.useEffect(() => {
-    const unsubscribe = data.subscribeToNewNotifications(notification => {
-      const { title } = formatNotification(
-        notification,
-        currentUser && currentUser.id
-      );
-      // TODO @mxstbr - make this clickable and not show up if the user
-      // is currently viewing the thing the notification is about - mainly
-      // thread view and new user joins on community
-      // props.dispatch(addToastWithTimeout('notification', title));
-    });
-    return unsubscribe;
-  }, []);
 
   const unseenCount =
     data.notifications &&

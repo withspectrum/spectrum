@@ -20,7 +20,6 @@ type Props = {
     hasNextPage: boolean,
     fetchMore: Function,
   },
-  subscribeToNewMessages: Function,
   isLoading: boolean,
   hasError: boolean,
   isFetchingMore: boolean,
@@ -28,14 +27,7 @@ type Props = {
 };
 
 const MessagesSubscriber = (props: Props) => {
-  const {
-    subscribeToNewMessages,
-    setLastSeen,
-    id,
-    data,
-    isLoading,
-    hasError,
-  } = props;
+  const { setLastSeen, id, data, isLoading, hasError } = props;
 
   const { messages, directMessageThread } = data;
 
@@ -52,7 +44,6 @@ const MessagesSubscriber = (props: Props) => {
   useEffect(() => {
     setLastSeen(id);
     scrollToBottom();
-    return subscribeToNewMessages();
   }, [id]);
 
   const refHeight = ref && ref.scrollHeight;

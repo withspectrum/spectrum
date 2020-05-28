@@ -29,7 +29,6 @@ type Props = {
   history: History,
   sidenavIsOpen: boolean,
   setNavigationIsOpen: Function,
-  subscribeToUpdatedCommunities: Function,
 };
 
 const CommunityListItem = props => {
@@ -141,8 +140,6 @@ const CommunityList = (props: Props) => {
         }
       }
     };
-
-    props.subscribeToUpdatedCommunities();
 
     isDesktopApp() &&
       window.addEventListener('keydown', handleCommunitySwitch, false);

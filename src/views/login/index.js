@@ -12,7 +12,6 @@ import {
   FullscreenContent,
   CodeOfConduct,
 } from './style';
-import queryString from 'query-string';
 import { CLIENT_URL } from 'src/api/constants';
 import { setTitlebarProps } from 'src/actions/titlebar';
 

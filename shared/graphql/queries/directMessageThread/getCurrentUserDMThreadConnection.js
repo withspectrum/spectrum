@@ -5,7 +5,6 @@ import userDirectMessageThreadsConnectionFragment from '../../fragments/user/use
 import type { UserDirectMessageThreadsConnectionType } from '../../fragments/user/userDirectMessageThreadConnection';
 import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
-import { subscribeToUpdatedDirectMessageThreads } from '../../subscriptions';
 
 export type GetCurrentUserDMThreadConnectionType = {
   ...$Exact<UserInfoType>,
@@ -39,6 +38,7 @@ export const getCurrentUserDMThreadConnectionOptions = {
     variables: {
       after: '',
     },
+    pollInterval: 60 * 1000 * 5,
     fetchPolicy: 'cache-and-network',
   },
   // $FlowFixMe
@@ -82,32 +82,6 @@ export const getCurrentUserDMThreadConnectionOptions = {
             return foo;
           },
         }),
-      subscribeToUpdatedDirectMessageThreads: () => {
-        return props.data.subscribeToMore({
-          document: subscribeToUpdatedDirectMessageThreads,
-          updateQuery: (prev, { subscriptionData }) => {
-            const updatedDirectMessageThread =
-              subscriptionData.data.directMessageThreadUpdated;
-            if (!updatedDirectMessageThread) return prev;
-
-            // Add the new notification to the data
-            return Object.assign({}, prev, {
-              ...prev,
-              directMessageThreadsConnection: {
-                ...prev.user.directMessageThreadsConnection,
-                edges: [
-                  ...prev.user.directMessageThreadsConnection.edges,
-                  {
-                    node: updatedDirectMessageThread,
-                    cursor: '__this-is-a-cursor__',
-                    __typename: 'DirectMessageThread',
-                  },
-                ],
-              },
-            });
-          },
-        });
-      },
     },
   }),
 };

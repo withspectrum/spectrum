@@ -69,8 +69,8 @@ type State = {
 };
 
 class NotificationsPure extends React.Component<Props, State> {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       showWebPushPrompt: false,

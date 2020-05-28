@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import userInfoFragment from '../../fragments/user/userInfo';
 import type { UserInfoType } from '../../fragments/user/userInfo';
 import userCommunityConnectionFragment from '../../fragments/user/userCommunityConnection';
-import { subscribeToUpdatedCommunities } from '../../subscriptions';
 import type { UserCommunityConnectionType } from '../../fragments/user/userCommunityConnection';
 
 export type GetUserCommunityConnectionType = {
@@ -47,24 +46,12 @@ const getUserCommunityConnectionOptions = {
 export const getCurrentUserCommunityConnection = graphql(
   getCurrentUserCommunityConnectionQuery,
   {
-    options: { fetchPolicy: 'cache-first' },
+    options: {
+      fetchPolicy: 'cache-and-network',
+      pollInterval: 60 * 1000 * 5,
+    },
     props: props => ({
       ...props,
-      subscribeToUpdatedCommunities: communityIds => {
-        const variables = communityIds
-          ? {
-              variables: {
-                communityIds,
-              },
-            }
-          : {};
-        return props.data.subscribeToMore({
-          document: subscribeToUpdatedCommunities,
-          ...variables,
-          // No need to do anything fancy here, Apollo Client will automatically update the community by its ID
-          updateQuery: prev => prev,
-        });
-      },
     }),
   }
 );

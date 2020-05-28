@@ -28,7 +28,6 @@ import {
 
 type Props = {
   currentUser: Object,
-  subscribeToUpdatedDirectMessageThreads: Function,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
   activeThreadId: ?string,
@@ -50,24 +49,6 @@ class ThreadsList extends React.Component<Props, State> {
     subscription: null,
   };
 
-  subscribe = () => {
-    this.setState({
-      subscription: this.props.dmData.subscribeToUpdatedDirectMessageThreads(),
-    });
-  };
-
-  unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
-  };
-
-  componentDidMount() {
-    this.subscribe();
-  }
-
   componentDidUpdate(prev: Props) {
     const curr = this.props;
 
@@ -75,10 +56,6 @@ class ThreadsList extends React.Component<Props, State> {
     if (didReconnect && curr.dmData.refetch) {
       curr.dmData.refetch();
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   shouldComponentUpdate(nextProps) {

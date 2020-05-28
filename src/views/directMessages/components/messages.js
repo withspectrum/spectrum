@@ -21,23 +21,16 @@ type Props = {
     hasNextPage: boolean,
     fetchMore: Function,
   },
-  subscribeToNewMessages: Function,
   isLoading: boolean,
   hasError: boolean,
   isFetchingMore: boolean,
   setLastSeen: Function,
 };
 
-type State = {
-  subscription: ?Function,
-};
+type State = {};
 
 class MessagesWithData extends React.Component<Props, State> {
-  subscription: ?Function;
-
   componentDidMount() {
-    this.subscribe();
-
     const thread = this.props.data.directMessageThread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
     if (thread) {
@@ -46,18 +39,6 @@ class MessagesWithData extends React.Component<Props, State> {
       elem.scrollTop = elem.scrollHeight;
     }
   }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  subscribe = () => {
-    this.subscription = this.props.subscribeToNewMessages();
-  };
-
-  unsubscribe = () => {
-    if (this.subscription) this.subscription();
-  };
 
   getSnapshotBeforeUpdate(prev) {
     const curr = this.props;
@@ -146,11 +127,8 @@ class MessagesWithData extends React.Component<Props, State> {
       prev.data.directMessageThread.id !== data.directMessageThread.id;
 
     if (firstLoad) {
-      this.subscribe();
       setLastSeen(data.directMessageThread.id);
     } else if (newThread) {
-      this.unsubscribe();
-      this.subscribe();
       setLastSeen(data.directMessageThread.id);
     }
   }

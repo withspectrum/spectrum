@@ -60,16 +60,11 @@ export const getNotificationsQuery = gql`
 `;
 
 export const getNotificationsOptions = {
+  options: {
+    pollInterval: 60 * 1000 * 2,
+  },
   props: ({
-    data: {
-      fetchMore,
-      error,
-      loading,
-      notifications,
-      subscribeToMore,
-      refetch,
-      networkStatus,
-    },
+    data: { fetchMore, error, loading, notifications, refetch, networkStatus },
   }: any) => ({
     data: {
       networkStatus,
@@ -105,58 +100,6 @@ export const getNotificationsOptions = {
           },
         }),
       refetch: () => refetch(),
-      subscribeToNewNotifications: (callback?: Function) =>
-        subscribeToMore({
-          document: subscribeToNewNotifications,
-          updateQuery: (prev, { subscriptionData }) => {
-            let newNotification =
-              subscriptionData.data && subscriptionData.data.notificationAdded;
-            if (!newNotification) return prev;
-
-            if (callback) callback(newNotification);
-
-            const notificationNode = {
-              ...newNotification,
-              __typename: 'Notification',
-            };
-
-            if (!prev.notifications) {
-              return {
-                __typename: 'NotificationsConnection',
-                pageInfo: {
-                  hasNextPage: true,
-                  __typename: 'PageInfo',
-                },
-                notifications: {
-                  edges: [
-                    {
-                      node: notificationNode,
-                      cursor: '__this-is-a-cursor__',
-                      __typename: 'NotificationEdge',
-                    },
-                  ],
-                },
-                ...prev,
-              };
-            }
-
-            // Add the new notification to the data
-            return Object.assign({}, prev, {
-              ...prev,
-              notifications: {
-                ...prev.notifications,
-                edges: [
-                  {
-                    node: notificationNode,
-                    cursor: '__this-is-a-cursor__',
-                    __typename: 'NotificationEdge',
-                  },
-                  ...prev.notifications.edges,
-                ],
-              },
-            });
-          },
-        }),
     },
   }),
 };
