@@ -19,6 +19,8 @@ const VALID_SERVERS = [
   'vulcan',
 ];
 
+const serverType = s => (['api', 'hyperion'].includes(s) ? 'web' : 'worker');
+
 let servers = args;
 
 /*
@@ -60,16 +62,18 @@ console.log(
  * Build and push Docker images for each server
  */
 servers.forEach(s => {
+  const type = serverType(s);
+
   exec(
-    `docker build -t spectrum_${s} -t registry.heroku.com/spectrum-chat-${s}/web -f docker/Dockerfile.${s} .`
+    `docker build -t spectrum_${s} -t registry.heroku.com/spectrum-chat-${s}/${type} -f docker/Dockerfile.${s} .`
   );
 
-  exec(`docker push registry.heroku.com/spectrum-chat-${s}/web`);
+  exec(`docker push registry.heroku.com/spectrum-chat-${s}/${type}`);
 });
 
 /*
  * Release new images for each server
  */
 servers.forEach(s => {
-  exec(`heroku container:release web -a spectrum-chat-${s}`);
+  exec(`heroku container:release ${serverType(s)} -a spectrum-chat-${s}`);
 });
