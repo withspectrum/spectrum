@@ -151,10 +151,9 @@ const Channel = (props: Props) => {
           <Tooltip content={tipText}>
             <span style={{ marginLeft: '8px', display: 'flex' }}>
               <OutlineButton
-                disabled={isLoading}
                 onMouseEnter={() => setIsHoveringNotifications(true)}
                 onMouseLeave={() => setIsHoveringNotifications(false)}
-                style={{ padding: '4px' }}
+                style={{ padding: '4px', opacity: isLoading ? 0.6 : 1 }}
                 size={'small'}
               >
                 <Icon
