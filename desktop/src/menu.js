@@ -123,6 +123,9 @@ const template = [
           }
         },
       },
+      { role: 'resetZoom' },
+      { role: 'zoomIn' },
+      { role: 'zoomOut' },
     ],
   },
   {
