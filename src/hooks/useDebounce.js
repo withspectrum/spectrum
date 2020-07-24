@@ -1,5 +1,8 @@
+// @flow
+import { useState, useEffect } from 'react';
+
 // @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
-function useDebounce(value, delay) {
+function useDebounce(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {

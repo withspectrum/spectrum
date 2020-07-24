@@ -10,6 +10,7 @@ import Select from 'src/components/select';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { PostsFeedsSelectorContainer, SearchInput } from '../style';
 import MiniComposer from 'src/components/composerMini';
+import useDebounce from 'src/hooks/useDebounce';
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
@@ -18,23 +19,6 @@ type Props = {
   community: GetCommunityType,
   currentUser: ?UserInfoType,
 };
-
-// @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value]);
-
-  return debouncedValue;
-}
 
 export const PostsFeeds = withCurrentUser((props: Props) => {
   const { community, currentUser } = props;
