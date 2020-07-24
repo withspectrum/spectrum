@@ -12,8 +12,6 @@ export const MentionsInputStyle = {
       boxShadow: '1px 0 12px rgba(0,0,0,0.12)',
       borderRadius: '4px',
       overflow: 'hidden',
-      bottom: '28px',
-      position: 'absolute',
     },
   },
 };

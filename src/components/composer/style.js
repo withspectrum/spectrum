@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
@@ -342,4 +343,5 @@ export const InputsGrid = styled.div`
   overflow-y: auto;
   background: ${theme.bg.default};
   padding-bottom: 48px;
+  height: 100%;
 `;

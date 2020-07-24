@@ -312,6 +312,12 @@ const MiniComposer = ({
                       minHeight: '80px',
                       padding: '12px',
                     },
+                    highlighter: {
+                      minHeight: '80px',
+                    },
+                    suggestions: {
+                      marginTop: '35px',
+                    },
                   }}
                   inputRef={bodyEditor}
                   value={body}
