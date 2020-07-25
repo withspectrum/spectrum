@@ -764,12 +764,19 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2":
+"@babel/runtime@7.4.5", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2":
   version "7.4.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
   integrity sha512-TuI4qpWZP6lGOGIuGWtp9sPluqYICmbk8T/1vpSysqJxRPkudh/ofFWyqdcMsDf2s7KvDL4/YHgKyvcS3g9CJQ==
   dependencies:
     regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.3.4":
+  version "7.10.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
+  integrity sha512-otddXKhdNn7d0ptoFRHtMLa8LqDxLYwTjB4nYgM1yy5N6gU/MUf8zqyyLltCH3yAVitBzmwK4us+DD0l/MauAg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
 
 "@babel/runtime@^7.5.4":
   version "7.7.4"
@@ -10017,7 +10024,7 @@ lodash@4.17.15, lodash@^4.17.13, lodash@^4.17.15:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
-"lodash@>=3.5 <5", lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.7.0:
+"lodash@>=3.5 <5", lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.7.0:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -12560,14 +12567,15 @@ react-loadable@^5.5.0:
   dependencies:
     prop-types "^15.5.0"
 
-react-mentions@^2.4.1:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/react-mentions/-/react-mentions-2.4.2.tgz#d88eddb85643381352c6021e62ffe94c09066b98"
-  integrity sha512-il9PuG0lXRoMBjm1JDMEjRaRDmHBFd0O4fOANFZmX/8dIBJhBieO5ii+imNNvVb16/ft4MGxsQq8MgCdLobnTA==
+react-mentions@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/react-mentions/-/react-mentions-4.0.1.tgz#454850eb549ca19f0199a5490e8efb38cd1f56d6"
+  integrity sha512-AsHwGulJ6wpkWPn2ymryTK/ghozgDC1wg1avzFW6V5cP4zPD7fq603ygPJlTZRUXy3RLmn+NoamMrLYBuSHhHg==
   dependencies:
-    lodash "^4.5.1"
+    "@babel/runtime" "7.4.5"
+    invariant "^2.2.4"
     prop-types "^15.5.8"
-    substyle "^6.1.1"
+    substyle "^9.1.0"
 
 react-modal@^3.7.1:
   version "3.8.1"
@@ -13009,6 +13017,11 @@ regenerator-runtime@^0.13.2:
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
   integrity sha512-S/TQAZJO+D3m9xeN1WTI8dLKBBiRgXBlTJvbWjCThHWZj9EvHK70Ff50/tYj2J/fvBY6JtFVwRuazHN2E7M9BA==
+
+regenerator-runtime@^0.13.4:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
+  integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
 
 regenerator-transform@^0.10.0:
   version "0.10.1"
@@ -14331,15 +14344,13 @@ subscriptions-transport-ws@^0.9.11, subscriptions-transport-ws@^0.9.15, subscrip
     symbol-observable "^1.0.4"
     ws "^5.2.0"
 
-substyle@^6.1.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/substyle/-/substyle-6.3.1.tgz#29801f06e016dda8df91b531a69338d6e096fa58"
-  integrity sha512-S25YRgVQB25cLXgGAJ7AXTYewkIB/9Fa1Y7jxkN48U4N6rbK9YhVEiF7vtPGLlJl8ebSOJ3N4t8cd6jL8MH7Uw==
+substyle@^9.1.0:
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/substyle/-/substyle-9.2.0.tgz#71144955058f8f19509187bb9466a13ffbb41710"
+  integrity sha512-iPvumr9jSEKrCBik3UOYJfvtw2T6Ki7mzx3tMTA6Xtl7mpjLOgPfnImt6kjrdOvvFe05aWxUEgB9jWLm/IBJBQ==
   dependencies:
-    hoist-non-react-statics "^3.1.0"
-    invariant "^2.2.0"
-    prop-types "^15.5.8"
-    warning "^2.1.0"
+    "@babel/runtime" "^7.3.4"
+    invariant "^2.2.4"
 
 suffix@^0.1.0:
   version "0.1.1"
@@ -15366,13 +15377,6 @@ walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
-
-warning@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
-  integrity sha1-ISINnGOvx3qMkhEeARr3Bc4MaQE=
-  dependencies:
-    loose-envify "^1.0.0"
 
 warning@^3.0.0:
   version "3.0.0"

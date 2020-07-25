@@ -1,7 +1,8 @@
 // @flow
-import React from 'react';
+import React, { useMemo } from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
 import { withApollo } from 'react-apollo';
+import { merge } from 'lodash';
 import { MentionsInputStyle } from './style';
 import MentionSuggestion from './mentionSuggestion';
 import { searchUsersQuery } from 'shared/graphql/queries/search/searchUsers';
@@ -21,6 +22,7 @@ type Props = {
   inputRef?: Function,
   dataCy?: string,
   networkDisabled?: boolean,
+  style: Object,
 };
 
 const cleanSuggestionUserObject = (user: ?Object) => {
@@ -116,18 +118,23 @@ const SpectrumMentionsInput = (props: Props) => {
     ...rest
   } = props;
 
+  const style = useMemo(() => {
+    return merge({}, props.style, MentionsInputStyle);
+  }, [props.style]);
+
   return (
     <MentionsInput
-      displayTransform={username => `@${username}`}
       markup="@[__id__]"
       data-cy={props.dataCy}
       {...rest}
-      style={{ ...(props.style || {}), ...MentionsInputStyle }}
+      style={style}
+      allowSuggestionsAboveCursor
     >
       <Mention
         trigger="@"
         data={searchUsers}
         appendSpaceOnAdd={true}
+        displayTransform={username => `@${username}`}
         renderSuggestion={(
           entry,
           search,
