@@ -12,6 +12,7 @@ import {
   SearchInput,
 } from 'src/views/community/style';
 import MiniComposer from 'src/components/composerMini';
+import useDebounce from 'src/hooks/useDebounce';
 
 const ChannelThreadFeed = compose(getChannelThreads)(ThreadFeed);
 const SearchThreadFeed = compose(searchThreads)(ThreadFeed);
@@ -20,23 +21,6 @@ type Props = {
   channel: GetChannelType,
   currentUser: ?UserInfoType,
 };
-
-// @see https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
-function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value]);
-
-  return debouncedValue;
-}
 
 export default withCurrentUser((props: Props) => {
   const { channel, currentUser } = props;
