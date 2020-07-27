@@ -8,6 +8,12 @@
 
 This is the main monorepo codebase of [Spectrum](https://spectrum.chat). Every single line of code that's not packaged into a reusable library is in this repository.
 
+
+<a href="https://github.com/withspectrum/spectrum/blob/alpha/LICENSE"><img alt="PyPI - License" src="https://img.shields.io/badge/license-BSD--3-green.svg?style=flat-square"><a/>
+ [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+<img alt="Maintenance" src="https://img.shields.io/maintenance/yes/2020?style=flat-square">
+![All Contributors](https://img.shields.io/badge/all_contributors-93-orange.svg?style=flat-square)
+  
 ## What is Spectrum?
 
 ### Vision
