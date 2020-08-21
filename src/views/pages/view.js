@@ -20,7 +20,6 @@ import {
   ExpoLogo,
   FigmaLogo,
   InvisionLogo,
-  ZeitLogo,
   SketchLogo,
   RealmLogo,
   NodeLogo,
@@ -263,7 +262,6 @@ export const Centralized = () => {
         <FigmaLogo />
         <BootstrapLogo />
         <ExpoLogo />
-        <ZeitLogo />
         <SketchLogo />
         <AbstractLogo />
         <RealmLogo />

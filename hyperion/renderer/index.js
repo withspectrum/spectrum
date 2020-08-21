@@ -134,7 +134,7 @@ const renderer = (req: express$Request, res: express$Response) => {
       const { helmet } = helmetContext;
       debug('write header');
       // Use now's CDN to cache the rendered pages in CloudFlare for half an hour
-      // Ref https://zeit.co/docs/features/cdn
+      // Ref https://vercel.co/docs/features/cdn
       if (!req.user) {
         res.setHeader(
           'Cache-Control',
