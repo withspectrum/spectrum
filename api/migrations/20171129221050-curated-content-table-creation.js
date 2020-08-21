@@ -35,7 +35,6 @@ exports.up = function(r, conn) {
           {
             type: 'development-communities',
             data: [
-              'zeit',
               'realm',
               'expo',
               'compositor',

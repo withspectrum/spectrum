@@ -29,5 +29,3 @@ export const NodeLogo = () => <Logo src="/img/logos/nodejs.svg" alt="" />;
 export const RealmLogo = () => <Logo src="/img/logos/realm.svg" alt="" />;
 
 export const SketchLogo = () => <Logo src="/img/logos/sketch.svg" alt="" />;
-
-export const ZeitLogo = () => <Logo src="/img/logos/zeit.svg" alt="" />;

@@ -2,11 +2,11 @@
 
 # Deployments
 
-We use [`now`](https://now.sh) by Zeit for all of our deployments.
+We use [`now`](https://now.sh) by Vercel for all of our deployments.
 
 ### Installation
 
-We recommend installing the [now desktop app](http://zeit.co/download) as it'll keep the command line tool up to date automatically!
+We recommend installing the [now desktop app](http://vercel.co/download) as it'll keep the command line tool up to date automatically!
 
 If you'd rather not install an app (or are using Windows Substem for Linux) you can also install now with npm:
 
@@ -20,7 +20,7 @@ All our workers are aliased to `<workername>.workers.spectrum.chat`, with the on
 
 #### Path aliases
 
-[Now's path alias feature](https://zeit.co/docs/features/path-aliases) takes care of routing requests to the right workers. To see our current production aliases check the `rules.json` file in the root of the project.
+[Now's path alias feature](https://vercel.co/docs/features/path-aliases) takes care of routing requests to the right workers. To see our current production aliases check the `rules.json` file in the root of the project.
 
 To deploy new rules, simply run the following command: (assuming `rules.json` has the changes)
 
