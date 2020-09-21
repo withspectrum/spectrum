@@ -133,7 +133,7 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 
 #### Code Style
 
-We run Prettier on-commit, which means you can write code in whatever style you want and it will be automatically formatted according to the common style when you run `git commit`. We also have ESLint setup, although we've disabled all stylistic rules since Prettier takes care of those.
+We run Prettier on-commit, which means you can write code in whatever style you want and it will be automatically formatted according to the common style when you run `git commit`. We also have ESLint set up, although we've disabled all stylistic rules since Prettier takes care of those.
 
 ##### Rules
 
