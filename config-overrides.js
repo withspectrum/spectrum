@@ -163,6 +163,11 @@ module.exports = function override(config, env) {
         },
       })
     );
+    // Remove "data-cy" attribute in production
+    config = injectBabelPlugin(
+      ['react-remove-properties', { properties: ['data-cy'] }],
+      config
+    );
   }
 
   // NOTE(@mxstbr): This works around an issue where webpack was resolving the "module" path of b2a
