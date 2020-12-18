@@ -82,7 +82,6 @@ function securityMiddleware(
       scriptSrc: [
         "'self'",
         "'unsafe-eval'",
-        'www.google-analytics.com',
         'cdn.ravenjs.com',
         'cdn.polyfill.io',
 
