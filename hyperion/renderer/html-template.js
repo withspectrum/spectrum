@@ -62,9 +62,6 @@ export const getHeader = ({
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-icon-114x114-precomposed.png" />
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-icon-144x144-precomposed.png" />
         ${metaTags}
-        <script type="text/javascript" nonce="${nonce}">
-            !function(e,a,t,n,g,c,o){e.GoogleAnalyticsObject=g,e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),o=a.getElementsByTagName(t)[0],c.defer=1,c.src="https://www.google-analytics.com/analytics.js",o.parentNode.insertBefore(c,o)}(window,document,"script",0,"ga"),ga("create","UA-92673909-1","auto"),ga("send","pageview"),ga('set', 'anonymizeIp', true)
-        </script>
       </head>
       <body>
         <div id="root">`;
