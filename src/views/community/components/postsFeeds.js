@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import compose from 'recompose/compose';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';

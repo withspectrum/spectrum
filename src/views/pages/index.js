@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
 import Nav from './components/nav';
-import Support from './support';
 import Features from './features';
 import Home from './home';
 import Terms from './terms';
 import Privacy from './privacy';
 import Faq from './faq';
-import Apps from './apps';
 import { StyledViewGrid } from './style';
 
 type Props = {
@@ -17,9 +15,6 @@ type Props = {
 class Pages extends React.Component<Props> {
   renderPage = () => {
     switch (this.props.match.path) {
-      case '/support': {
-        return <Support {...this.props} />;
-      }
       case '/features': {
         return <Features {...this.props} />;
       }
@@ -33,9 +28,6 @@ class Pages extends React.Component<Props> {
       }
       case '/faq': {
         return <Faq {...this.props} />;
-      }
-      case '/apps': {
-        return <Apps {...this.props} />;
       }
       case '/':
       case '/about':

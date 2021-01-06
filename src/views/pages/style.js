@@ -294,10 +294,10 @@ export const Footer = styled.div`
 export const FooterGrid = styled.div`
   flex: auto;
   display: grid;
-  grid-template-columns: auto 1fr repeat(3, minmax(160px, auto));
+  grid-template-columns: auto 1fr repeat(2, minmax(160px, auto));
   grid-template-rows: 1fr;
   grid-column-gap: 32px;
-  grid-template-areas: 'masthead . apps support safety';
+  grid-template-areas: 'masthead . support safety';
   align-items: flex-start;
   justify-items: flex-start;
 
@@ -306,7 +306,7 @@ export const FooterGrid = styled.div`
     grid-template-rows: auto;
     grid-column-gap: 0;
     grid-row-gap: 32px;
-    grid-template-areas: 'masthead' 'apps' 'support' 'safety';
+    grid-template-areas: 'masthead' 'support' 'safety';
   }
 `;
 
@@ -359,14 +359,6 @@ export const LinkSection = styled(FooterSection)`
   a + a {
     margin-top: 8px;
   }
-`;
-
-export const Support = styled(LinkSection)`
-  grid-area: support;
-`;
-
-export const Apps = styled(LinkSection)`
-  grid-area: apps;
 `;
 
 export const Safety = styled(LinkSection)`
@@ -486,10 +478,10 @@ export const NavContainer = styled.div`
 export const Tabs = styled.div`
   display: grid;
   padding: 0 16px;
-  grid-template-columns: auto 1fr repeat(4, auto);
+  grid-template-columns: auto 1fr repeat(3, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features apps support login auth';
+  grid-template-areas: 'logo . features login auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -600,14 +592,6 @@ export const FeaturesLink = styled(DropdownLink)`
   grid-area: features;
 `;
 
-export const AppsLink = styled(DropdownLink)`
-  grid-area: apps;
-`;
-
-export const SupportLink = styled(DropdownLink)`
-  grid-area: support;
-`;
-
 export const ExploreLink = styled(DropdownLink)`
   grid-area: explore;
 `;
@@ -637,8 +621,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(5, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'features' 'apps' 'support' 'explore' 'login' '.' 'auth';
+  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'features' 'explore' 'login' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
@@ -695,22 +679,6 @@ export const MenuTab = styled.div`
 
 export const FeaturesTab = styled(Tab)`
   grid-area: features;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
-export const AppsTab = styled(Tab)`
-  grid-area: apps;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
-export const SupportTab = styled(Tab)`
-  grid-area: support;
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: none;

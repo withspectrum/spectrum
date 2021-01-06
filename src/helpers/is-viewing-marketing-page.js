@@ -12,10 +12,7 @@ export const isViewingMarketingPage = (
     viewing === '/home' ||
     viewing === '/about' ||
     viewing === '/code-of-conduct' ||
-    viewing === '/contact' ||
-    viewing === '/support' ||
     viewing === '/faq' ||
-    viewing === '/features' ||
-    viewing === '/apps'
+    viewing === '/features'
   );
 };

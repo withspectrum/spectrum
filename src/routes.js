@@ -323,16 +323,13 @@ class Routes extends React.Component<Props, State> {
 
                     {/* Public Business Pages */}
                     <Route path="/about" component={Pages} />
-                    <Route path="/contact" component={Pages} />
                     <Route path="/terms" component={Pages} />
                     <Route path="/privacy" component={Pages} />
                     <Route path="/terms.html" component={Pages} />
                     <Route path="/privacy.html" component={Pages} />
                     <Route path="/code-of-conduct" component={Pages} />
-                    <Route path="/support" component={Pages} />
                     <Route path="/features" component={Pages} />
                     <Route path="/faq" component={Pages} />
-                    <Route path="/apps" component={Pages} />
 
                     {/* App Pages */}
                     <Route
