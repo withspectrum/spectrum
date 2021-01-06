@@ -1,14 +1,6 @@
 // @flow
 import * as React from 'react';
-import {
-  Footer,
-  FooterGrid,
-  Masthead,
-  Support,
-  Apps,
-  Safety,
-  SocialLinks,
-} from '../style';
+import { Footer, FooterGrid, Masthead, Safety, SocialLinks } from '../style';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icon';
 import { Logo } from 'src/components/logo';
@@ -38,17 +30,6 @@ export default () => {
             </a>
           </SocialLinks>
         </Masthead>
-        <Apps>
-          <span>Apps</span>
-          <Link to={`/apps`}>Mac</Link>
-        </Apps>
-        <Support>
-          <span>Support</span>
-          <Link to={`/spectrum`}>Community</Link>
-          <Link to={`/spectrum/hugs-n-bugs`}>Bug reports</Link>
-          <Link to={`/spectrum/feature-requests`}>Feature requests</Link>
-          <a href="mailto:hi@spectrum.chat">Email support</a>
-        </Support>
         <Safety>
           <span>Safety</span>
           <a

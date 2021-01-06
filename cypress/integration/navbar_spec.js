@@ -6,10 +6,6 @@ const coreSplashPageNavbarLinksVisible = () => {
   cy.get('[data-cy="navigation-splash"]').should('be.visible');
 
   cy.get('[data-cy="navigation-splash-features"]').should('be.visible');
-
-  cy.get('[data-cy="navigation-splash-apps"]').should('be.visible');
-
-  cy.get('[data-cy="navigation-splash-support"]').should('be.visible');
 };
 
 const checkSignedOutSplashNavbarLinksRender = () => {
@@ -43,10 +39,6 @@ const checkSignedOutNavbarRenders = () => {
 
   cy.get('[data-cy="navigation-explore"]').should('be.visible');
 
-  cy.get('[data-cy="navigation-support"]').should('be.visible');
-
-  cy.get('[data-cy="navigation-apps"]').should('be.visible');
-
   cy.get('[data-cy="navigation-features"]').should('be.visible');
 
   cy.get('[data-cy="navigation-login"]').should('be.visible');
@@ -59,7 +51,6 @@ const checkSignedInSplashNavbarRenders = () => {
   cy.visit('/features');
   checkSignedInSplashNavbarLinksRender();
 
-  cy.visit('/support');
   checkSignedInSplashNavbarLinksRender();
 
   cy.visit('/faq');

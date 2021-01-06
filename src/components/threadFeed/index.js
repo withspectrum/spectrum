@@ -216,9 +216,7 @@ class ThreadFeedPure extends React.Component<Props, State> {
       return (
         <ViewError
           heading={'We ran into an issue loading the feed'}
-          subheading={
-            'Try refreshing the page below. If you’re still seeing this error, you can email us at hi@spectrum.chat.'
-          }
+          subheading={'Try refreshing the page.'}
           refresh
         />
       );

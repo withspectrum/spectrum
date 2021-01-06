@@ -14,17 +14,13 @@ import {
   Tabs,
   LogoTab,
   MenuTab,
-  SupportTab,
   FeaturesTab,
   LoginTab,
-  AppsTab,
   AuthTab,
   LogoLink,
   AuthLink,
   LoginLink,
-  SupportLink,
   FeaturesLink,
-  AppsLink,
   ExploreLink,
   MenuContainer,
   MenuOverlay,
@@ -78,22 +74,6 @@ class Nav extends React.Component<Props, State> {
           >
             Features
           </FeaturesTab>
-          <AppsTab
-            dark={this.props.dark}
-            selected={this.props.location === 'apps'}
-            to="/apps"
-            data-cy="navigation-splash-apps"
-          >
-            Apps
-          </AppsTab>
-          <SupportTab
-            dark={this.props.dark}
-            selected={this.props.location === 'support'}
-            to="/support"
-            data-cy="navigation-splash-support"
-          >
-            Support
-          </SupportTab>
           {this.props.currentUser ? (
             <AuthTab dark={this.props.dark}>
               <Link to={'/'}>
@@ -147,15 +127,6 @@ class Nav extends React.Component<Props, State> {
               >
                 Features
               </FeaturesLink>
-              <AppsLink to="/apps" selected={this.props.location === 'apps'}>
-                Apps
-              </AppsLink>
-              <SupportLink
-                to="/support"
-                selected={this.props.location === 'support'}
-              >
-                Support
-              </SupportLink>
               <ExploreLink
                 to="/explore"
                 selected={this.props.location === 'explore'}

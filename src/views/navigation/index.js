@@ -102,56 +102,6 @@ const Navigation = (props: Props) => {
                 )}
               </Route>
 
-              <Route path="/support">
-                {({ match }) => (
-                  <Tooltip
-                    content="Support"
-                    placement={'left'}
-                    isEnabled={!isWideViewport}
-                  >
-                    <AvatarGrid isActive={!!match}>
-                      <AvatarLink
-                        to={'/support'}
-                        data-cy="navigation-support"
-                        onClick={() => setNavigationIsOpen(false)}
-                        {...getAccessibilityActiveState(!!match)}
-                      >
-                        <IconWrapper>
-                          <Icon glyph="support" />
-                        </IconWrapper>
-
-                        <Label>Support</Label>
-                      </AvatarLink>
-                    </AvatarGrid>
-                  </Tooltip>
-                )}
-              </Route>
-
-              <Route path="/apps">
-                {({ match }) => (
-                  <Tooltip
-                    content="Apps"
-                    placement={'left'}
-                    isEnabled={!isWideViewport}
-                  >
-                    <AvatarGrid isActive={!!match}>
-                      <AvatarLink
-                        to={'/apps'}
-                        data-cy="navigation-apps"
-                        onClick={() => setNavigationIsOpen(false)}
-                        {...getAccessibilityActiveState(!!match)}
-                      >
-                        <IconWrapper>
-                          <Icon glyph="download" />
-                        </IconWrapper>
-
-                        <Label>Apps</Label>
-                      </AvatarLink>
-                    </AvatarGrid>
-                  </Tooltip>
-                )}
-              </Route>
-
               <Route path="/explore">
                 {({ match }) => (
                   <Tooltip
