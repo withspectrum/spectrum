@@ -244,7 +244,7 @@ class Search extends React.Component<Props, State> {
             }}
             type="text"
             value={searchString}
-            placeholder="Search for communities or topics..."
+            placeholder="Search..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
           />

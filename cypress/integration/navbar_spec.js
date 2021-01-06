@@ -2,12 +2,7 @@ import data from '../../shared/testing/data';
 
 const user = data.users[0];
 
-const coreSplashPageNavbarLinksVisible = () => {
-  cy.get('[data-cy="navigation-splash"]').should('be.visible');
-};
-
 const checkSignedOutSplashNavbarLinksRender = () => {
-  coreSplashPageNavbarLinksVisible();
   cy.get('[data-cy="navigation-splash-login"]').should('be.visible');
   cy.get('[data-cy="navigation-splash-signin"]').should('be.visible');
 };
