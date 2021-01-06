@@ -287,8 +287,8 @@ export const Footer = styled.div`
   flex: none;
   position: relative;
   padding: 32px;
-  background-color: ${theme.bg.reverse};
-  color: ${theme.text.reverse};
+  background-color: ${theme.bg.default};
+  color: ${theme.text.default};
 `;
 
 export const FooterGrid = styled.div`
@@ -363,20 +363,11 @@ export const LinkSection = styled(FooterSection)`
 
 export const Safety = styled(LinkSection)`
   grid-area: safety;
+  margin-top: 24px;
 
   span + a,
   a + a {
     margin-top: 8px;
-  }
-`;
-
-export const SocialLinks = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 16px;
-
-  > a + a {
-    margin-left: 8px;
   }
 `;
 
@@ -478,10 +469,10 @@ export const NavContainer = styled.div`
 export const Tabs = styled.div`
   display: grid;
   padding: 0 16px;
-  grid-template-columns: auto 1fr repeat(3, auto);
+  grid-template-columns: auto 1fr repeat(2, auto);
   grid-column-gap: 32px;
   grid-template-rows: auto;
-  grid-template-areas: 'logo . features login auth';
+  grid-template-areas: 'logo . login auth';
   align-items: center;
   justify-items: center;
   color: ${props =>
@@ -587,11 +578,6 @@ export const LogoLink = styled(DropdownLink)`
     color: ${theme.brand.alt};
   }
 `;
-
-export const FeaturesLink = styled(DropdownLink)`
-  grid-area: features;
-`;
-
 export const ExploreLink = styled(DropdownLink)`
   grid-area: explore;
 `;
@@ -621,8 +607,8 @@ export const MenuContainer = styled.div`
   position: fixed;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto 16px repeat(3, auto) 1fr auto;
-  grid-template-areas: 'logo' '.' 'features' 'explore' 'login' '.' 'auth';
+  grid-template-rows: auto 16px repeat(2, auto) 1fr auto;
+  grid-template-areas: 'logo' '.' 'explore' 'login' '.' 'auth';
   align-content: start;
   left: 0;
   top: 0;
@@ -673,14 +659,6 @@ export const MenuTab = styled.div`
   }
 
   @media (min-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
-export const FeaturesTab = styled(Tab)`
-  grid-area: features;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
     display: none;
   }
 `;

@@ -105,12 +105,6 @@ const ChannelSettings = Loadable({
 });
 
 /* prettier-ignore */
-const NewCommunity = Loadable({
-  loader: () => import('./views/newCommunity'/* webpackChunkName: "NewCommunity" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const NewDirectMessage = Loadable({
   loader: () => import('./views/newDirectMessage'/* webpackChunkName: "NewDirectMessage" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
@@ -136,16 +130,13 @@ const ErrorFallback = Loadable({
 
 const HomeViewRedirectFallback = signedOutFallback(HomeViewRedirect, Pages);
 const HomeFallback = signedOutFallback(HomeViewRedirect, () => (
-  <Redirect to="/" />
+  <Redirect to="/explore" />
 ));
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const CommunityLoginFallback = signedOutFallback(
   props => <Redirect to={`/${props.match.params.communitySlug}`} />,
   CommunityLoginView
 );
-const NewCommunityFallback = signedOutFallback(NewCommunity, () => (
-  <Login redirectPath={`${CLIENT_URL}/new/community`} />
-));
 const NewDirectMessageFallback = signedOutFallback(NewDirectMessage, () => (
   <Login redirectPath={`${CLIENT_URL}/new/message`} />
 ));
@@ -317,36 +308,64 @@ class Routes extends React.Component<Props, State> {
                     <Route
                       exact
                       path="/"
-                      component={HomeViewRedirectFallback}
+                      render={() => <Redirect to="/explore" />}
                     />
-                    <Route exact path="/home" component={HomeFallback} />
 
                     {/* Public Business Pages */}
-                    <Route path="/about" component={Pages} />
+                    <Route
+                      path="/home"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/about"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/contact"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/support"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/faq"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/features"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/new/community"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+                    <Route
+                      path="/new"
+                      exact
+                      render={() => <Redirect to="/explore" />}
+                    />
+
                     <Route path="/terms" component={Pages} />
                     <Route path="/privacy" component={Pages} />
                     <Route path="/terms.html" component={Pages} />
                     <Route path="/privacy.html" component={Pages} />
                     <Route path="/code-of-conduct" component={Pages} />
-                    <Route path="/features" component={Pages} />
-                    <Route path="/faq" component={Pages} />
 
                     {/* App Pages */}
-                    <Route
-                      path="/new/community"
-                      component={NewCommunityFallback}
-                    />
                     <Route path="/new/thread" component={ComposerFallback} />
                     <Route path="/new/search" component={Search} />
                     <Route path="/new/user" component={NewUserOnboarding} />
                     <Route
                       path="/new/message"
                       component={NewDirectMessageFallback}
-                    />
-
-                    <Route
-                      path="/new"
-                      render={() => <Redirect to="/new/community" />}
                     />
 
                     <Route path="/login" component={LoginFallback} />
@@ -364,7 +383,7 @@ class Routes extends React.Component<Props, State> {
                     <Route
                       exact
                       path="/users"
-                      render={() => <Redirect to="/" />}
+                      render={() => <Redirect to="/explore" />}
                     />
                     <Route exact path="/users/:username" component={UserView} />
                     <Route

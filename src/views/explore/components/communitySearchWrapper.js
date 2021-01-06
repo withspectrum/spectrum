@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import theme from 'shared/theme';
 import { Primary } from 'src/components/themedSection';
 import { Constellations } from 'src/components/illustrations';
-import { Button } from 'src/components/button';
 import { Tagline, Copy } from 'src/views/pages/style';
 import { MEDIA_BREAK } from 'src/components/layout';
 
@@ -33,26 +32,9 @@ const CommunitySearchWrapper = props => {
     }
   `;
 
-  const SecondaryContent = styled(ThisContent)`
-    margin-top: 32px;
-    margin-bottom: 0;
-    padding: 0;
-
-    button {
-      flex: 1;
-    }
-  `;
-
   const ThisTagline = styled(Tagline)`
     margin-bottom: 0;
     font-weight: 800;
-  `;
-
-  const SecondaryTagline = styled(ThisTagline)`
-    font-size: 20px;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 2px;
   `;
 
   const ThisCopy = styled(Copy)`
@@ -67,10 +49,6 @@ const CommunitySearchWrapper = props => {
     }
   `;
 
-  const SecondaryCopy = styled(ThisCopy)`
-    margin-bottom: 16px;
-  `;
-
   return (
     <Primary
       style={{
@@ -82,17 +60,9 @@ const CommunitySearchWrapper = props => {
       <ThisContent>
         <ThisTagline>Find a community</ThisTagline>
         <ThisCopy>
-          Try searching for topics like “crypto” or for products like “React”
+          {/* Try searching for topics like “crypto” or for products like “React” */}
         </ThisCopy>
         {props.children}
-        <SecondaryContent>
-          <SecondaryTagline>Create your own community</SecondaryTagline>
-          <SecondaryCopy>
-            Building communities on Spectrum is easy and free!
-          </SecondaryCopy>
-
-          <Button to={'/new/community'}>Create a community</Button>
-        </SecondaryContent>
       </ThisContent>
       <Constellations />
     </Primary>

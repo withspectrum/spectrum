@@ -79,10 +79,6 @@ class UpsellNewUser extends Component {
     });
   };
 
-  createCommunity = () => {
-    this.props.history.push('/new/community');
-  };
-
   clickShareLink = () => {};
 
   savedUsername = () => {
@@ -179,10 +175,6 @@ class UpsellNewUser extends Component {
             building a new space for people who like the same things? Create a
             community in less than a minute:
           </SmallSubtitle>
-
-          <OutlineButton onClick={this.createCommunity}>
-            Create a community
-          </OutlineButton>
         </Section>
 
         <Section>

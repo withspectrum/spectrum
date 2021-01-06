@@ -4,20 +4,12 @@ const user = data.users[0];
 
 const coreSplashPageNavbarLinksVisible = () => {
   cy.get('[data-cy="navigation-splash"]').should('be.visible');
-
-  cy.get('[data-cy="navigation-splash-features"]').should('be.visible');
 };
 
 const checkSignedOutSplashNavbarLinksRender = () => {
   coreSplashPageNavbarLinksVisible();
   cy.get('[data-cy="navigation-splash-login"]').should('be.visible');
   cy.get('[data-cy="navigation-splash-signin"]').should('be.visible');
-};
-
-const checkSignedInSplashNavbarLinksRender = () => {
-  coreSplashPageNavbarLinksVisible();
-
-  cy.get('[data-cy="navigation-splash-profile"]').should('be.visible');
 };
 
 const checkProductNavbarLinksRender = () => {
@@ -39,22 +31,7 @@ const checkSignedOutNavbarRenders = () => {
 
   cy.get('[data-cy="navigation-explore"]').should('be.visible');
 
-  cy.get('[data-cy="navigation-features"]').should('be.visible');
-
   cy.get('[data-cy="navigation-login"]').should('be.visible');
-};
-
-const checkSignedInSplashNavbarRenders = () => {
-  cy.visit('/about');
-  checkSignedInSplashNavbarLinksRender();
-
-  cy.visit('/features');
-  checkSignedInSplashNavbarLinksRender();
-
-  checkSignedInSplashNavbarLinksRender();
-
-  cy.visit('/faq');
-  checkSignedInSplashNavbarLinksRender();
 };
 
 describe('Navbar logged in', () => {
@@ -84,10 +61,6 @@ describe('Navbar logged in', () => {
 
     cy.visit(`/spectrum/general`);
     checkProductNavbarLinksRender();
-  });
-
-  it('should render splash navbar when viewing splash pages', () => {
-    checkSignedInSplashNavbarRenders();
   });
 });
 

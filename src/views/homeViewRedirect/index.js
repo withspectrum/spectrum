@@ -19,10 +19,13 @@ type Props = {
 };
 
 const HomeViewRedirect = (props: Props) => {
+  console.log(' home view redirect');
   const { data, history } = props;
   const { user, loading } = data;
 
   if (loading) return <LoadingView />;
+
+  console.log({ user });
 
   // if the user slipped past our route fallback for signed in/out, force
   // a logout and redirect back to the home page

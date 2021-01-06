@@ -50,8 +50,6 @@ export const PrivateCommunity = (props: Props) => {
           <Heading>{heading}</Heading>
           <Description>{description}</Description>
           <ActionsRow>
-            <OutlineButton to={'/'}>Go home</OutlineButton>
-
             <RequestJoinCommunity
               isPending={isPending}
               communityId={community.id}
