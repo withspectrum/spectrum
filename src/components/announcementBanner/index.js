@@ -4,7 +4,7 @@ import Icon from 'src/components/icon';
 import { Bar, Content, Dismiss } from './style';
 import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
 
-const lsKey = 'hasDismissedPrivacyTermsRedirectBanner';
+const lsKey = 'hasDismissedSunsetAnnouncementBanner';
 
 type State = {
   visible: boolean,
@@ -31,25 +31,14 @@ class Banner extends React.Component<{}, State> {
         <Content>
           <Icon glyph="announcement" size="24" />
           <p>
-            Spectrum has updated its{' '}
+            Spectrum will become read-only on August 10, 2021. Learn more about
+            the decision in our{' '}
             <a
-              target="_blank"
-              rel="noopener noreferrer"
               href={
-                'https://help.github.com/en/github/site-policy/github-privacy-statement'
+                'https://spectrum.chat/spectrum/general/join-us-on-our-new-journey~e4ca0386-f15c-4ba8-8184-21cf5fa39cf5'
               }
             >
-              Privacy Statement
-            </a>
-            {', and '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={
-                'https://help.github.com/en/github/site-policy/github-terms-of-service'
-              }
-            >
-              Terms of Service
+              official announcement
             </a>
             .
           </p>

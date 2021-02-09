@@ -14,13 +14,11 @@ import {
   Tabs,
   LogoTab,
   MenuTab,
-  FeaturesTab,
   LoginTab,
   AuthTab,
   LogoLink,
   AuthLink,
   LoginLink,
-  FeaturesLink,
   ExploreLink,
   MenuContainer,
   MenuOverlay,
@@ -66,14 +64,6 @@ class Nav extends React.Component<Props, State> {
             <Logo />
             <Icon glyph={'logo'} />
           </LogoTab>
-          <FeaturesTab
-            dark={this.props.dark}
-            selected={this.props.location === 'features'}
-            to="/features"
-            data-cy="navigation-splash-features"
-          >
-            Features
-          </FeaturesTab>
           {this.props.currentUser ? (
             <AuthTab dark={this.props.dark}>
               <Link to={'/'}>
@@ -121,12 +111,6 @@ class Nav extends React.Component<Props, State> {
               <LogoLink to="/">
                 <Logo />
               </LogoLink>
-              <FeaturesLink
-                to="/features"
-                selected={this.props.location === 'features'}
-              >
-                Features
-              </FeaturesLink>
               <ExploreLink
                 to="/explore"
                 selected={this.props.location === 'explore'}

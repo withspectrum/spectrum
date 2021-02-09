@@ -95,7 +95,6 @@ class DeleteAccountForm extends React.Component<Props, State> {
           <SectionTitle>Delete my account</SectionTitle>
           <SectionSubtitle>
             You can delete your account at any time.{' '}
-            <Link to={'/faq'}>Read more about how we delete accounts</Link>.
           </SectionSubtitle>
 
           {ownsCommunities && (

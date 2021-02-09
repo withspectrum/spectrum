@@ -1,63 +1,41 @@
 // @flow
 import * as React from 'react';
-import { Footer, FooterGrid, Masthead, Safety, SocialLinks } from '../style';
-import { Link } from 'react-router-dom';
-import Icon from 'src/components/icon';
-import { Logo } from 'src/components/logo';
+import { Footer, FooterGrid, Masthead, Safety } from '../style';
 
 export default () => {
   return (
     <Footer>
       <FooterGrid>
         <Masthead>
-          <Link to="/">
-            <Logo />
-          </Link>
-          <SocialLinks>
+          <Safety>
+            <span>Safety</span>
             <a
-              href="https://github.com/withspectrum"
+              href="https://github.com/withspectrum/code-of-conduct"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Icon glyph="github" hoverColor={'text.reverse'} />
+              Code of Conduct
             </a>
             <a
-              href="https://twitter.com/withspectrum"
               target="_blank"
               rel="noopener noreferrer"
+              href={
+                'https://help.github.com/en/github/site-policy/github-privacy-statement'
+              }
             >
-              <Icon glyph="twitter" hoverColor={'text.reverse'} />
+              Privacy Statement
             </a>
-          </SocialLinks>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={
+                'https://help.github.com/en/github/site-policy/github-terms-of-service'
+              }
+            >
+              Terms of Service
+            </a>
+          </Safety>
         </Masthead>
-        <Safety>
-          <span>Safety</span>
-          <a
-            href="https://github.com/withspectrum/code-of-conduct"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Code of Conduct
-          </a>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={
-              'https://help.github.com/en/github/site-policy/github-privacy-statement'
-            }
-          >
-            Privacy Statement
-          </a>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={
-              'https://help.github.com/en/github/site-policy/github-terms-of-service'
-            }
-          >
-            Terms of Service
-          </a>
-        </Safety>
       </FooterGrid>
     </Footer>
   );

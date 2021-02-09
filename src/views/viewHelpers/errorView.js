@@ -27,9 +27,6 @@ export const ErrorView = (props: Props) => {
           </Emoji>
           <Heading>{heading}</Heading>
           <Description>{subheading}</Description>
-          <ActionsRow>
-            <PrimaryButton to={'/'}>Go home</PrimaryButton>
-          </ActionsRow>
         </Card>
       </CenteredGrid>
     </ViewGrid>

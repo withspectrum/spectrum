@@ -52,56 +52,6 @@ const Navigation = (props: Props) => {
             <NavigationGrid isOpen={navigationIsOpen}>
               <DesktopMenuIconsCover />
 
-              <Route path="/about">
-                {({ match }) => (
-                  <Tooltip
-                    content="Home"
-                    placement={'left'}
-                    isEnabled={!isWideViewport}
-                  >
-                    <AvatarGrid isActive={!!match}>
-                      <AvatarLink
-                        to={'/about'}
-                        data-cy="navigation-home"
-                        onClick={() => setNavigationIsOpen(false)}
-                        {...getAccessibilityActiveState(!!match)}
-                      >
-                        <IconWrapper>
-                          <Icon glyph="logo" />
-                        </IconWrapper>
-
-                        <Label>Home</Label>
-                      </AvatarLink>
-                    </AvatarGrid>
-                  </Tooltip>
-                )}
-              </Route>
-
-              <Route path="/features">
-                {({ match }) => (
-                  <Tooltip
-                    content="Features"
-                    placement={'left'}
-                    isEnabled={!isWideViewport}
-                  >
-                    <AvatarGrid isActive={!!match}>
-                      <AvatarLink
-                        to={'/features'}
-                        data-cy="navigation-features"
-                        onClick={() => setNavigationIsOpen(false)}
-                        {...getAccessibilityActiveState(!!match)}
-                      >
-                        <IconWrapper>
-                          <Icon glyph="announcement" />
-                        </IconWrapper>
-
-                        <Label>Features</Label>
-                      </AvatarLink>
-                    </AvatarGrid>
-                  </Tooltip>
-                )}
-              </Route>
-
               <Route path="/explore">
                 {({ match }) => (
                   <Tooltip
@@ -259,45 +209,6 @@ const Navigation = (props: Props) => {
                 navigationIsOpen={navigationIsOpen}
                 {...props}
               />
-
-              {currentUser && (
-                <React.Fragment>
-                  <Divider />
-                  <Route path="/new/community">
-                    {({ match }) => (
-                      <Tooltip
-                        content="Create a community"
-                        placement={'left'}
-                        isEnabled={!isWideViewport}
-                      >
-                        <AvatarGrid
-                          isActive={
-                            match &&
-                            match.url === '/new/community' &&
-                            match.isExact
-                          }
-                        >
-                          <AvatarLink
-                            to={'/new/community'}
-                            data-cy="navigation-new-community"
-                            {...getAccessibilityActiveState(
-                              match &&
-                                match.url === '/new/community' &&
-                                match.isExact
-                            )}
-                          >
-                            <IconWrapper>
-                              <Icon glyph="plus" />
-                            </IconWrapper>
-
-                            <Label>Create a community</Label>
-                          </AvatarLink>
-                        </AvatarGrid>
-                      </Tooltip>
-                    )}
-                  </Route>
-                </React.Fragment>
-              )}
             </NavigationGrid>
           </NavigationWrapper>
         )}
