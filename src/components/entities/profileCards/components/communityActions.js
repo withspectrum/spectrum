@@ -56,6 +56,10 @@ export const UnconnectedCommunityActions = (props: Props) => {
     );
   }
 
+  if (community.redirect) {
+    return <div style={{ padding: '8px' }} />;
+  }
+
   return (
     <ActionsRowContainer>
       <JoinCommunity

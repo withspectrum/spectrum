@@ -31,7 +31,6 @@ import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
 import LockedMessages from '../components/lockedMessages';
-import DesktopAppUpsell from '../components/desktopAppUpsell';
 import { ChatInputWrapper } from 'src/components/layout';
 import { Stretch, LockedText } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
@@ -207,7 +206,7 @@ const ThreadContainer = (props: Props) => {
               onMessagesLoaded={updateMentionSuggestions}
             />
 
-            {canChat && (
+            {canChat && !community.redirect && (
               <ChatInputWrapper>
                 <ChatInput
                   threadType="story"
@@ -217,7 +216,7 @@ const ThreadContainer = (props: Props) => {
               </ChatInputWrapper>
             )}
 
-            {!canChat && !isLocked && (
+            {!canChat && !isLocked && !community.redirect && (
               <ChatInputWrapper>
                 <JoinCommunity
                   community={community}
@@ -270,9 +269,6 @@ const ThreadContainer = (props: Props) => {
           <SecondaryPrimaryColumnGrid>
             <SecondaryColumn>
               <CommunitySidebar community={thread.community} />
-              <ErrorBoundary>
-                <DesktopAppUpsell />
-              </ErrorBoundary>
             </SecondaryColumn>
             {renderPrimaryColumn(false)}
           </SecondaryPrimaryColumnGrid>

@@ -76,16 +76,6 @@ export const NullState = (props: NullStateProps) => (
   </NullCol>
 );
 
-export const UpsellMiniCreateCommunity = () => {
-  return (
-    <MiniNullCard
-      bg="onboarding"
-      heading="Create a community"
-      copy="Building communities on Spectrum is easy and free forever"
-    />
-  );
-};
-
 type SigninState = {
   isSigningIn: boolean,
   signinType: string,
