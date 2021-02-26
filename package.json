@@ -138,7 +138,7 @@
     "jsonwebtoken": "^8.3.0",
     "keygrip": "^1.0.3",
     "linkify-it": "^2.2.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "lodash.intersection": "^4.4.0",
     "moment": "^2.22.2",
     "ms": "^2.1.1",
