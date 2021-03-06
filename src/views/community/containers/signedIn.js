@@ -1,14 +1,12 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import { withRouter, type Location } from 'react-router-dom';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import Head from 'src/components/head';
 import { CommunityAvatar } from 'src/components/avatar';
 import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
@@ -19,6 +17,7 @@ import {
   PrimaryColumn,
   SecondaryColumn,
 } from 'src/components/layout';
+import SignedInHead from './signedInHead';
 import Sidebar from 'src/components/communitySidebar';
 import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
 import usePrevious from 'src/hooks/usePrevious';
@@ -68,26 +67,7 @@ const Component = (props: Props) => {
     }
   }, [community.id, currentUser]);
 
-  const [metaInfo, setMetaInfo] = useState(
-    generateMetaInfo({
-      type: 'community',
-      data: {
-        name: community.name,
-        description: community.description,
-      },
-    })
-  );
-
   useEffect(() => {
-    setMetaInfo(
-      generateMetaInfo({
-        type: 'community',
-        data: {
-          name: `${community.name} community`,
-          description: community.description,
-        },
-      })
-    );
     dispatch(
       setTitlebarProps({
         title: community.name,
@@ -119,24 +99,18 @@ const Component = (props: Props) => {
     );
   }, [location]);
 
-  const { title, description } = metaInfo;
-
   if (community.redirect && community.website) {
-    return <FullScreenRedirectView community={community} />;
+    return (
+      <React.Fragment>
+        <SignedInHead community={community} />
+        <FullScreenRedirectView community={community} />
+      </React.Fragment>
+    );
   }
 
   return (
     <React.Fragment>
-      <Head
-        title={title}
-        description={description}
-        image={community.profilePhoto}
-      >
-        {community.redirect && community.noindex && (
-          <meta name="robots" content="noindex, nofollow" />
-        )}
-      </Head>
-
+      <SignedInHead community={community} />
       <ViewGrid data-cy="community-view">
         <SecondaryPrimaryColumnGrid>
           <SecondaryColumn>
