@@ -15,6 +15,7 @@ export type CommunityInfoType = {
   lastActive?: Date,
   isPrivate: boolean,
   redirect?: Boolean,
+  noindex?: Boolean,
   communityPermissions: {
     isMember: boolean,
     isBlocked: boolean,
