@@ -34,21 +34,21 @@ export default async (job: Job<SendDigestEmailJobData>): Promise<void> => {
 
   if (!unsubscribeToken) return Promise.resolve();
 
-  const tag =
-    timeframe === 'daily'
-      ? 'send daily digest email'
-      : 'send weekly digest email';
+  const hasMoreThenTwoThreads = threads.length > 2;
+  const hasOnlyOneThread = threads.length === 1;
+
   const subjectPrefix =
     timeframe === 'daily' ? 'Spectrum Daily Digest' : 'Spectrum Weekly Digest';
 
-  const subjectStart =
-    threads.length > 2
-      ? `${threads[0].content.title}, ${threads[1].content.title}`
-      : `${threads[0].content.title}`;
+  const subjectStart = hasMoreThenTwoThreads
+    ? `${threads[0].content.title}, ${threads[1].content.title}`
+    : `${threads[0].content.title}`;
 
-  const subjectEnd = ` and ${
-    threads.length > 2 ? threads.length - 2 : threads.length - 1
-  } more active conversations in your communities`;
+  const subjectEnd = hasOnlyOneThread
+    ? ''
+    : ` and ${
+        hasMoreThenTwoThreads ? threads.length - 2 : threads.length - 1
+      } more active conversations in your communities`;
 
   const subject = `${subjectPrefix}: ${subjectStart}${subjectEnd}`;
 
