@@ -7,7 +7,7 @@ type Props = {
   description?: string,
   image?: string,
   children?: any,
-  type?: 'article',
+  type?: 'article' | 'profile',
 };
 
 export default ({ title, description, image, type, children }: Props) => {
