@@ -54,11 +54,17 @@ export const Body = (props: BodyProps) => {
         return null;
       }
       return (
-        <Image
-          key={message.id}
-          onClick={openGallery}
-          src={message.content.body}
-        />
+        <WrapperComponent key={message.id} me={me}>
+          {message.parent && showParent && (
+            // $FlowIssue
+            <QuotedMessage message={message.parent} />
+          )}
+          <Image
+            key={message.id}
+            onClick={openGallery}
+            src={message.content.body}
+          />
+        </WrapperComponent>
       );
     }
     case messageTypeObj.draftjs: {
@@ -68,6 +74,16 @@ export const Body = (props: BodyProps) => {
           {message.parent && showParent && (
             // $FlowIssue
             <QuotedMessage message={message.parent} />
+          )}
+          {(message.attachments || []).map(
+            (attachment, index) =>
+              attachment.data && (
+                <Image
+                  key={index}
+                  onClick={openGallery}
+                  src={attachment.data.url}
+                />
+              )
           )}
           {emojiOnly ? (
             <Emoji>
