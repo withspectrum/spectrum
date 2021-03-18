@@ -60,6 +60,15 @@ const sendDirectMessageOptions = {
                   // TODO(@mxstbr): Get the rest of information
                 }
               : null,
+            attachments: (message.attachments || []).map(attachment => ({
+              attachmentType: attachment.attachmentType,
+              data: {
+                name: attachment.data.name,
+                url: attachment.data.url,
+                __typename: 'AttachmentData',
+              },
+              __typename: 'MessageAttachment',
+            })),
             content: {
               ...message.content,
               __typename: 'MessageContent',

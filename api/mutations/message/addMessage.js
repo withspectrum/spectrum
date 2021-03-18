@@ -21,6 +21,7 @@ import { validateRawContentState } from '../../utils/validate-draft-js-input';
 import processMessageContent, {
   messageTypeObj,
 } from 'shared/draft-utils/process-message-content';
+import type { MessageThreadAttachment } from 'shared/types';
 import type { MessageType } from 'shared/draft-utils/message-types';
 
 type Input = {
@@ -31,6 +32,7 @@ type Input = {
     content: {
       body: string,
     },
+    attachments?: [MessageThreadAttachment],
     parentId?: string,
     file?: FileUpload,
     bot?: boolean,
@@ -73,7 +75,12 @@ export const addMessage = async (
   }
 
   // construct the shape of the object to be stored in the db
-  let messageForDb = Object.assign({}, message);
+  const { attachments, ...rest } = message;
+  let messageForDb = Object.assign(
+    {},
+    attachments && attachments.length ? message : rest
+  );
+
   if (message.file && message.messageType === messageTypeObj.media) {
     const { file } = message;
 

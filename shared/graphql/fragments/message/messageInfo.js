@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import type { MessageThreadAttachment } from 'shared/types';
 import threadParticipantFragment from '../thread/threadParticipant';
 import type { ThreadParticipantType } from '../thread/threadParticipant';
 
@@ -30,6 +31,7 @@ export type MessageInfoType = {
   content: {
     body: string,
   },
+  attachments: ?Array<MessageThreadAttachment>,
 };
 
 export default gql`
@@ -49,6 +51,13 @@ export default gql`
       content {
         body
       }
+      attachments {
+        attachmentType
+        data {
+          name
+          url
+        }
+      }
     }
     author {
       ...threadParticipant
@@ -59,6 +68,13 @@ export default gql`
     }
     content {
       body
+    }
+    attachments {
+      attachmentType
+      data {
+        name
+        url
+      }
     }
   }
   ${threadParticipantFragment}

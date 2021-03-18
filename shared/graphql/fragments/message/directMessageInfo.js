@@ -58,6 +58,13 @@ export default gql`
       content {
         body
       }
+      attachments {
+        attachmentType
+        data {
+          name
+          url
+        }
+      }
     }
     reactions {
       count
@@ -65,6 +72,13 @@ export default gql`
     }
     content {
       body
+    }
+    attachments {
+      attachmentType
+      data {
+        name
+        url
+      }
     }
   }
   ${userInfoFragment}

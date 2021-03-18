@@ -7,6 +7,7 @@ import thread from './thread';
 import reactions from './reactions';
 import parent from './parent';
 import content from './content';
+import attachments from './attachments';
 
 module.exports = {
   Query: {
@@ -20,5 +21,6 @@ module.exports = {
     reactions,
     parent,
     content,
+    attachments,
   },
 };
