@@ -20,6 +20,16 @@ const Message = /* GraphQL */ `
     hasReacted: Boolean
   }
 
+  type AttachmentData {
+    name: String
+    url: String
+  }
+
+  type MessageAttachment {
+    attachmentType: String
+    data: AttachmentData
+  }
+
   type Message @cacheControl(maxAge: 600) {
     id: ID!
     timestamp: Date!
@@ -28,6 +38,7 @@ const Message = /* GraphQL */ `
     author: ThreadParticipant! @cost(complexity: 2)
     reactions: ReactionData @cost(complexity: 1)
     messageType: MessageTypes!
+    attachments: [MessageAttachment]
     parent: Message
     modifiedAt: Date
     bot: Boolean
@@ -38,11 +49,22 @@ const Message = /* GraphQL */ `
     body: String
   }
 
+  input AttachmentDataInput {
+    name: String
+    url: String
+  }
+
+  input MessageAttachmentInput {
+    attachmentType: String
+    data: AttachmentDataInput
+  }
+
   input MessageInput {
     threadId: ID!
     threadType: ThreadTypes!
     messageType: MessageTypes!
     content: MessageContentInput!
+    attachments: [MessageAttachmentInput]
     parentId: String
     file: Upload
   }

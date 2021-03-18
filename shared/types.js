@@ -100,6 +100,14 @@ type DBMessageEdits = {
   timestamp: string,
 };
 
+export type MessageThreadAttachment = {
+  attachmentType: 'media',
+  data: {
+    name: string,
+    url: string,
+  },
+};
+
 export type DBMessage = {
   content: {
     body: string,
@@ -114,6 +122,7 @@ export type DBMessage = {
   timestamp: Date,
   parentId?: string,
   edits?: Array<DBMessageEdits>,
+  attachments?: [MessageThreadAttachment],
   modifiedAt?: string,
 };
 
