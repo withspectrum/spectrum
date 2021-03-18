@@ -24,9 +24,14 @@ import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
 import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
+import type { MessageThreadAttachment } from 'shared/types';
 import { MarkdownHint } from 'src/components/markdownHint';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import { MEDIA_BREAK } from 'src/components/layout';
+import uploadImage, {
+  type UploadImageInput,
+  type UploadImageType,
+} from 'shared/graphql/mutations/uploadImage';
 
 const QuotedMessage = connect()(
   getMessageById(props => {
@@ -55,6 +60,7 @@ type Props = {
   onRef: Function,
   currentUser: Object,
   dispatch: Dispatch<Object>,
+  uploadImage: (input: UploadImageInput) => Promise<UploadImageType>,
   createThread: Function,
   sendMessage: Function,
   sendDirectMessage: Function,
@@ -146,7 +152,15 @@ const ChatInput = (props: Props) => {
     changeText(text);
   };
 
-  const sendMessage = ({ file, body }: { file?: any, body?: string }) => {
+  const sendMessage = ({
+    file,
+    body,
+    attachments,
+  }: {
+    file?: any,
+    body?: string,
+    attachments?: Array<?MessageThreadAttachment>,
+  }) => {
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
@@ -167,6 +181,7 @@ const ChatInput = (props: Props) => {
       messageType: file ? 'media' : 'text',
       threadType: props.threadType,
       parentId: props.quotedMessage,
+      attachments,
       content: {
         body,
       },
@@ -204,18 +219,39 @@ const ChatInput = (props: Props) => {
     }
 
     scrollToBottom();
+    const attachments: Array<?MessageThreadAttachment> = [];
+    const hasAttachment = mediaFile && text.length;
 
     if (mediaFile) {
       setIsSendingMediaMessage(true);
-      scrollToBottom();
-      await sendMessage({
-        file: mediaFile,
-        body: '{"blocks":[],"entityMap":{}}',
-      })
-        .then(() => {
+      const uploaderHandler = hasAttachment
+        ? props.uploadImage({
+            image: mediaFile,
+            type: 'threads',
+          })
+        : sendMessage({
+            file: mediaFile,
+            body: '{"blocks":[],"entityMap":{}}',
+          });
+
+      await uploaderHandler
+        .then(response => {
+          if (hasAttachment) {
+            const { data } = response;
+
+            attachments.push({
+              attachmentType: 'media',
+              data: {
+                name: mediaFile.name,
+                url: data.uploadImage,
+              },
+            });
+          }
+
           setIsSendingMediaMessage(false);
           setMediaPreview(null);
           setAttachedMediaFile(null);
+          scrollToBottom();
         })
         .catch(err => {
           setIsSendingMediaMessage(false);
@@ -223,24 +259,28 @@ const ChatInput = (props: Props) => {
         });
     }
 
-    if (text.length === 0) return;
-
-    // workaround react-mentions bug by replacing @[username] with @username
-    // @see withspectrum/spectrum#4587
-    sendMessage({ body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
-      // .then(() => {
-      //   // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
-      //   if (
-      //     props.threadType === 'story' &&
-      //     props.threadId &&
-      //     props.refetchThread
-      //   ) {
-      //     return props.refetchThread();
-      //   }
-      // })
-      .catch(err => {
-        // props.dispatch(addToastWithTimeout('error', err.message));
-      });
+    if (text.length) {
+      // workaround react-mentions bug by replacing @[username] with @username
+      // @see withspectrum/spectrum#4587
+      sendMessage({
+        body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1'),
+        attachments,
+      })
+        .then(() => {
+          //   // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
+          //   if (
+          //     props.threadType === 'story' &&
+          //     props.threadId &&
+          //     props.refetchThread
+          //   ) {
+          //     return props.refetchThread();
+          //   }
+          scrollToBottom();
+        })
+        .catch(err => {
+          // props.dispatch(addToastWithTimeout('error', err.message));
+        });
+    }
 
     // Clear the chat input now that we're sending a message for sure
     onChange({ target: { value: '' } });
@@ -376,6 +416,7 @@ const map = (state, ownProps) => ({
 
 export default compose(
   withCurrentUser,
+  uploadImage,
   sendMessage,
   sendDirectMessage,
   // $FlowIssue
