@@ -16,7 +16,6 @@ export const Title = styled.h1`
   color: ${theme.text.default};
   width: 100%;
   font-weight: 800;
-  font-size: 24px;
   line-height: 1.25;
   margin-bottom: 8px;
   padding: 0;
