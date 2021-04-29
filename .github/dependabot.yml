@@ -1,0 +1,42 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: apollo-server-core
+    versions:
+    - 2.19.2
+    - 2.20.0
+    - 2.21.0
+    - 2.21.1
+    - 2.21.2
+    - 2.22.1
+    - 2.22.2
+  - dependency-name: urijs
+    versions:
+    - 1.19.5
+  - dependency-name: lint-staged
+    versions:
+    - 10.5.3
+  - dependency-name: react-helmet-async
+    versions:
+    - 1.0.7
+  - dependency-name: lodash
+    versions:
+    - 4.17.20
+  - dependency-name: prismjs
+    versions:
+    - 1.21.0
+  - dependency-name: elliptic
+    versions:
+    - 6.5.3
+  - dependency-name: react-modal
+    versions:
+    - 3.11.2
+  - dependency-name: handlebars
+    versions:
+    - 4.7.6
