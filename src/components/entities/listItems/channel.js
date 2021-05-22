@@ -136,13 +136,7 @@ const Channel = (props: Props) => {
     const tipText = receiveNotifications
       ? 'Mute notifications'
       : 'Enable channel notifications';
-    const glyph = receiveNotifications
-      ? isHoveringNotifications
-        ? 'mute'
-        : 'notification'
-      : isHoveringNotifications
-      ? 'notification'
-      : 'mute';
+    const glyph = receiveNotifications ? 'notification' : 'mute';
 
     return (
       <ToggleChannelNotifications
