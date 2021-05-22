@@ -51,12 +51,15 @@ export const CommunityMeta = (props: Props) => {
           <React.Fragment>
             <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <Icon glyph={'person'} size={20} />{' '}
-              {community.metaData.members.toLocaleString()} members
+              {community.metaData.members.toLocaleString()}{' '}
+              {community.metaData.members == 1 ? 'member' : 'members'}
             </MetaRow>
 
             <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
-              members online
+              {community.metaData.onlineMembers == 1
+                ? 'member online'
+                : 'members online'}
             </MetaRow>
           </React.Fragment>
         )}
