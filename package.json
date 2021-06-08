@@ -179,7 +179,7 @@
     "react-router": "4.x",
     "react-router-dom": "4.x",
     "react-textarea-autosize": "^6.1.0",
-    "react-transition-group": "^2.5.0",
+    "react-transition-group": "^4.4.2",
     "react-trend": "^1.2.4",
     "react-visibility-sensor": "^5.0.1",
     "recompose": "^0.27.1",
