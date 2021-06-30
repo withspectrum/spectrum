@@ -204,7 +204,7 @@
     "stopword": "^0.1.13",
     "string-replace-to-array": "^1.0.3",
     "string-similarity": "^2.0.0",
-    "striptags": "2.x",
+    "striptags": "3.x",
     "styled-components": "^4.1.3",
     "subscriptions-transport-ws": "^0.9.15",
     "textversionjs": "^1.1.3",
