@@ -39,13 +39,3 @@ export const Content = styled.div`
     flex: 1 1 auto;
   }
 `;
-
-export const Dismiss = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  padding-bottom: 4px;
-  padding: 0 12px 4px 12px;
-  cursor: pointer;
-`;

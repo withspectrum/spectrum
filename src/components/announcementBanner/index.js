@@ -1,31 +1,9 @@
 // @flow
 import * as React from 'react';
 import Icon from 'src/components/icon';
-import { Bar, Content, Dismiss } from './style';
-import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
-
-const lsKey = 'hasDismissedSunsetAnnouncementBanner';
-
-type State = {
-  visible: boolean,
-};
-
-class Banner extends React.Component<{}, State> {
-  state = { visible: false };
-
-  componentDidMount() {
-    const hidden = getItemFromStorage(lsKey);
-    if (!hidden) this.setState({ visible: true });
-  }
-
-  dismiss = () => {
-    storeItem(lsKey, true);
-    return this.setState({ visible: false });
-  };
-
+import { Bar, Content } from './style';
+class Banner extends React.Component<{}> {
   render() {
-    const { visible } = this.state;
-    if (!visible) return null;
     return (
       <Bar>
         <Content>
@@ -43,7 +21,6 @@ class Banner extends React.Component<{}, State> {
             .
           </p>
         </Content>
-        <Dismiss onClick={this.dismiss}>×</Dismiss>
       </Bar>
     );
   }
