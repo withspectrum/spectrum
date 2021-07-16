@@ -244,9 +244,6 @@ class Routes extends React.Component<Props, State> {
             <ErrorBoundary>
               <QueryParamToastDispatcher />
             </ErrorBoundary>
-            <ErrorBoundary>
-              <AnnouncementBanner />
-            </ErrorBoundary>
 
             {/* 
               while users should be able to browse communities/threads
@@ -300,6 +297,9 @@ class Routes extends React.Component<Props, State> {
                 <Route component={GlobalTitlebar} />
 
                 <div css={isModal ? { overflow: 'hidden' } : {}}>
+                  <ErrorBoundary>
+                    <AnnouncementBanner />
+                  </ErrorBoundary>
                   {/*
                     switch only renders the first match. Subrouting happens downstream
                     https://reacttraining.com/react-router/web/api/Switch
