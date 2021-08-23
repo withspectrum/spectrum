@@ -68,7 +68,6 @@ class ConversationGrowth extends React.Component<Props> {
                   isCurrentUser={
                     currentUser && member.user.id === currentUser.id
                   }
-                  isOnline={member.user.isOnline}
                   profilePhoto={member.user.profilePhoto}
                   avatarSize={40}
                   showHoverProfile={false}

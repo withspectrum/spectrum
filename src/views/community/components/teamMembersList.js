@@ -85,7 +85,6 @@ class Component extends React.Component<Props> {
                 username={user.username}
                 profilePhoto={user.profilePhoto}
                 isCurrentUser={currentUser && user.id === currentUser.id}
-                isOnline={user.isOnline}
                 avatarSize={40}
                 showHoverProfile={false}
                 messageButton={currentUser && user.id !== currentUser.id}

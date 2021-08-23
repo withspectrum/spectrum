@@ -267,7 +267,6 @@ export type DBUser = {
   googleProviderId?: ?string,
   username: ?string,
   timezone?: ?number,
-  isOnline?: boolean,
   lastSeen?: ?string,
   description?: ?string,
   website?: ?string,

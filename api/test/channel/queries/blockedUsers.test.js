@@ -31,7 +31,6 @@ it('should not fetch blocked users if not authed', async () => {
           description
           website
           username
-          isOnline
           timezone
         }
       }
@@ -56,7 +55,6 @@ it('should not fetch blocked users if no permissions', async () => {
           description
           website
           username
-          isOnline
           timezone
         }
       }
@@ -83,7 +81,6 @@ it('should fetch blocked users if moderates channel', async () => {
           description
           website
           username
-          isOnline
           timezone
         }
       }
@@ -110,7 +107,6 @@ it('should fetch blocked users if moderates community', async () => {
           description
           website
           username
-          isOnline
           timezone
         }
       }
@@ -137,7 +133,6 @@ it('should fetch blocked users if owns community', async () => {
           description
           website
           username
-          isOnline
           timezone
         }
       }

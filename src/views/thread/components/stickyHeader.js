@@ -37,11 +37,7 @@ const StickyHeader = (props: Props) => {
     <StickyHeaderContainer>
       <StickyHeaderContent onClick={scrollToTop}>
         <CommunityHeaderMeta>
-          <UserAvatar
-            showHoverProfile
-            showOnlineStatus
-            username={thread.author.user.username}
-          />
+          <UserAvatar showHoverProfile username={thread.author.user.username} />
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>
               {truncate(thread.content.title, 80)}

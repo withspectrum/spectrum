@@ -28,7 +28,6 @@ export default gql`
       lastSeen
       lastActive
       userId
-      isOnline
     }
   }
 `;

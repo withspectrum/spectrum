@@ -10,7 +10,6 @@ export type UserInfoType = {
   description: ?string,
   website: ?string,
   username: string,
-  isOnline: boolean,
   timezone: number,
   betaSupporter?: boolean,
 };
@@ -25,7 +24,6 @@ export default gql`
     description
     website
     username
-    isOnline
     timezone
     betaSupporter
   }

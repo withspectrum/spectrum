@@ -79,6 +79,10 @@ const ActionsDropdown = (props: Props) => {
 
   const [flyoutOpen, setFlyoutOpen] = useState(false);
 
+  if (!shouldRenderDeleteThreadAction) {
+    return null;
+  }
+
   return (
     <DropWrap style={{ marginRight: '8px' }}>
       <Manager>

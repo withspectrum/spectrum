@@ -184,7 +184,6 @@ const Navigation = (props: Props) => {
                       >
                         <UserAvatar
                           size={32}
-                          showOnlineStatus={false}
                           user={currentUser}
                           isClickable={false}
                           showHoverProfile={false}

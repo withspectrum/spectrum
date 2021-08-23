@@ -9,11 +9,11 @@ import { config } from 'shared/cache/redis';
 import createLoaders from './loaders';
 import createErrorFormatter from './utils/create-graphql-error-formatter';
 import schema from './schema';
-import { setUserOnline } from 'shared/db/queries/user';
 import { statsd } from 'shared/statsd';
 import { getUserIdFromReq } from './utils/session-store';
 import UserError from './utils/UserError';
 import type { DBUser } from 'shared/types';
+import { getUserById } from '../shared/db/queries/user';
 
 // NOTE(@mxstbr): Evil hack to make graphql-cost-analysis work with Apollo Server v2
 // @see pa-bru/graphql-cost-analysis#12
@@ -82,18 +82,10 @@ const server = new ProtectedApolloServer({
   },
   subscriptions: {
     path: '/websocket',
-    onDisconnect: rawSocket => {
-      connections--;
-      return getUserIdFromReq(rawSocket.upgradeReq)
-        .then(id => id && setUserOnline(id, false))
-        .catch(err => {
-          console.error(err);
-        });
-    },
     onConnect: (connectionParams, rawSocket) => {
       connections++;
       return getUserIdFromReq(rawSocket.upgradeReq)
-        .then(id => (id ? setUserOnline(id, true) : null))
+        .then(id => (id ? getUserById(id) : null))
         .then(user => {
           return {
             user: user || null,

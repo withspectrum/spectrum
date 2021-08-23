@@ -294,7 +294,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
                   isCurrentUser={
                     currentUser && author.user.id === currentUser.id
                   }
-                  isOnline={author.user.isOnline}
                   avatarSize={40}
                   showHoverProfile={false}
                   messageButton={

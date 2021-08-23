@@ -7,7 +7,7 @@ import {
 } from 'shared/graphql/queries/user/getUser';
 import { UserHoverProfile } from 'src/components/hoverProfile';
 import AvatarImage from './image';
-import { Container, AvatarLink, OnlineIndicator } from './style';
+import { Container, AvatarLink } from './style';
 import ConditionalWrap from 'src/components/conditionalWrap';
 
 type HandlerProps = {
@@ -17,7 +17,6 @@ type HandlerProps = {
   mobilesize?: number,
   style?: Object,
   showHoverProfile?: boolean,
-  showOnlineStatus?: boolean,
   isClickable?: boolean,
   dataCy?: string,
   onlineBorderColor?: ?Function,
@@ -59,9 +58,7 @@ class Avatar extends React.Component<AvatarProps> {
       size = 32,
       mobilesize,
       style,
-      showOnlineStatus = true,
       isClickable = true,
-      onlineBorderColor = null,
     } = this.props;
 
     const src = user.profilePhoto;
@@ -77,9 +74,6 @@ class Avatar extends React.Component<AvatarProps> {
         size={size}
         mobileSize={mobilesize}
       >
-        {showOnlineStatus && user.isOnline && (
-          <OnlineIndicator onlineBorderColor={onlineBorderColor} />
-        )}
         <ConditionalWrap
           condition={!!user.username && isClickable}
           wrap={() => (

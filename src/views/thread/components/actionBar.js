@@ -68,64 +68,6 @@ class ActionBar extends React.Component<Props> {
     } else {
       return (
         <ActionBarContainer>
-          <div style={{ display: 'flex' }}>
-            <LikeButton thread={thread} />
-
-            <ShareButtons>
-              {!thread.channel.isPrivate && (
-                <React.Fragment>
-                  <Tooltip content={'Share on Facebook'}>
-                    <ShareButton facebook data-cy="thread-facebook-button">
-                      <a
-                        href={`https://www.facebook.com/sharer/sharer.php?t=${encodeURIComponent(
-                          thread.content.title
-                        )}&u=https://spectrum.chat${getThreadLink(thread)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Icon glyph={'facebook'} size={24} />
-                      </a>
-                    </ShareButton>
-                  </Tooltip>
-
-                  <Tooltip content={'Tweet'}>
-                    <ShareButton twitter data-cy="thread-tweet-button">
-                      <a
-                        href={`https://twitter.com/share?url=https://spectrum.chat${getThreadLink(
-                          thread
-                        )}&text=${encodeURIComponent(
-                          thread.content.title
-                        )} on @withspectrum`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Icon glyph={'twitter'} size={24} />
-                      </a>
-                    </ShareButton>
-                  </Tooltip>
-                </React.Fragment>
-              )}
-
-              <Clipboard
-                style={{ background: 'none' }}
-                data-clipboard-text={`${CLIENT_URL}${getThreadLink(thread)}`}
-                onSuccess={() =>
-                  this.props.dispatch(
-                    addToastWithTimeout('success', 'Copied to clipboard')
-                  )
-                }
-              >
-                <Tooltip content={'Copy link'}>
-                  <ShareButton data-cy="thread-copy-link-button">
-                    <a>
-                      <Icon glyph={'link'} size={24} />
-                    </a>
-                  </ShareButton>
-                </Tooltip>
-              </Clipboard>
-            </ShareButtons>
-          </div>
-
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <ActionsDropdown
               thread={thread}

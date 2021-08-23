@@ -91,7 +91,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />
@@ -127,7 +126,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />
@@ -149,7 +147,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />

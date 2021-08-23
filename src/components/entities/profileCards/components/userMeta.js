@@ -21,7 +21,7 @@ type Props = {
 
 export const UserMeta = (props: Props) => {
   const { user } = props;
-  const { description, website, isOnline } = user;
+  const { description, website } = user;
   const formattedDescription = description && renderTextWithLinks(description);
   const formattedWebsite = website && addProtocolToString(website);
 
@@ -67,12 +67,6 @@ export const UserMeta = (props: Props) => {
             }
           }}
         />
-
-        {isOnline && (
-          <MetaRow>
-            <OnlineDot /> Online now
-          </MetaRow>
-        )}
       </MetaLinksContainer>
     </MetaContainer>
   );

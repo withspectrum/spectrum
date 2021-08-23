@@ -70,7 +70,6 @@ class Nav extends React.Component<Props, State> {
                   user={this.props.currentUser}
                   dataCy="navigation-splash-profile"
                   clickable={false}
-                  showOnlineStatus={false}
                   showHoverProfile={false}
                 />
               </Link>
