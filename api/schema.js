@@ -44,14 +44,11 @@ const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
 
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
-const reactionMutations = require('./mutations/reaction');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
 const fileMutations = require('./mutations/files');
-
-const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 const Root = /* GraphQL */ `
   # The dummy queries and mutations are necessary because
@@ -95,7 +92,6 @@ const resolvers = merge(
   // mutations
   messageMutations,
   threadMutations,
-  reactionMutations,
   communityMutations,
   channelMutations,
   userMutations,

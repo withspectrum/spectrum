@@ -65,7 +65,6 @@ const ThreadContainer = (props: Props) => {
   */
 
   const [, setMentionSuggestions] = useState([thread.author.user]);
-  const [isEditing, setEditing] = useState(false);
   const updateMentionSuggestions = (thread: GetThreadType) => {
     const { messageConnection, author } = thread;
 
@@ -107,21 +106,14 @@ const ThreadContainer = (props: Props) => {
           <StickyHeader thread={thread} />
         </ErrorBoundary>
 
-        <ThreadDetail
-          thread={thread}
-          toggleEdit={() => setEditing(!isEditing)}
-        />
+        <ThreadDetail thread={thread} />
 
-        {!isEditing && (
-          <React.Fragment>
-            <MessagesSubscriber
-              id={thread.id}
-              thread={thread}
-              isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
-              onMessagesLoaded={updateMentionSuggestions}
-            />
-          </React.Fragment>
-        )}
+        <MessagesSubscriber
+          id={thread.id}
+          thread={thread}
+          isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
+          onMessagesLoaded={updateMentionSuggestions}
+        />
       </Stretch>
     </PrimaryColumn>
   );

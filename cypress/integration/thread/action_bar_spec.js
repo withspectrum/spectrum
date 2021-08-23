@@ -26,50 +26,11 @@ const publicThreadAuthor = data.users.find(
 const nonMemberUser = data.users.find(u => u.id === constants.QUIET_USER_ID);
 const memberInChannelUser = data.users.find(u => u.id === constants.BRYN_ID);
 
-const lockThread = () => {
-  // lock the thread
-  cy.get('[data-cy="thread-dropdown-lock"]').contains('Lock chat');
-  cy.get('[data-cy="thread-dropdown-lock"]')
-    .first()
-    .click();
-  cy.get('[data-cy="thread-dropdown-lock"]').contains('Unlock chat');
-
-  // unlock the thread
-  cy.get('[data-cy="thread-dropdown-lock"]')
-    .first()
-    .click();
-  cy.get('[data-cy="thread-dropdown-lock"]').contains('Lock chat');
-};
-
-const pinThread = () => {
-  // pin the thread
-  cy.get('[data-cy="thread-dropdown-pin"]')
-    .first()
-    .click();
-  cy.get('[data-cy="thread-dropdown-pin"]').contains('Unpin');
-
-  // unpin the thread
-  cy.get('[data-cy="thread-dropdown-pin"]')
-    .first()
-    .click();
-  cy.get('[data-cy="thread-dropdown-pin"]').contains('Pin');
-};
-
 const triggerThreadDelete = () => {
   cy.get('[data-cy="thread-dropdown-delete"]')
     .first()
     .click();
   cy.get('[data-cy="delete-button"]').should('be.visible');
-  cy.get('div.ReactModal__Overlay')
-    .should('be.visible')
-    .click('topLeft');
-};
-
-const triggerMovingThread = () => {
-  cy.get('[data-cy="thread-dropdown-move"]')
-    .first()
-    .click();
-  cy.get('[data-cy="move-thread-modal"]').should('be.visible');
   cy.get('div.ReactModal__Overlay')
     .should('be.visible')
     .click('topLeft');
@@ -90,8 +51,6 @@ describe('action bar renders', () => {
 
     it('should render', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
-      cy.get('[data-cy="thread-facebook-button"]').should('be.visible');
-      cy.get('[data-cy="thread-tweet-button"]').should('be.visible');
       cy.get('[data-cy="thread-copy-link-button"]').should('be.visible');
       cy.get('[data-cy="thread-actions-dropdown-trigger"]').should(
         'not.be.visible'

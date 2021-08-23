@@ -93,39 +93,8 @@ const Thread = /* GraphQL */ `
     body: String
   }
 
-  input EditThreadInput {
-    threadId: ID!
-    content: ThreadContentInput!
-    attachments: [AttachmentInput]
-    filesToUpload: [Upload]
-  }
-
-  input ThreadInput {
-    channelId: ID!
-    communityId: ID!
-    type: ThreadType
-    content: ThreadContentInput!
-    attachments: [AttachmentInput]
-    filesToUpload: [Upload]
-  }
-
-  input AddThreadReactionInput {
-    threadId: ID!
-    type: ThreadReactionTypes
-  }
-
-  input RemoveThreadReactionInput {
-    threadId: ID!
-  }
-
   extend type Mutation {
-    publishThread(thread: ThreadInput!): Thread
-    editThread(input: EditThreadInput!): Thread
-    setThreadLock(threadId: ID!, value: Boolean!): Thread
     deleteThread(threadId: ID!): Boolean
-    moveThread(threadId: ID!, channelId: ID!): Thread
-    addThreadReaction(input: AddThreadReactionInput!): Thread
-    removeThreadReaction(input: RemoveThreadReactionInput!): Thread
   }
 `;
 

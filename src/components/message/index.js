@@ -59,21 +59,14 @@ type Props = {|
   deleteMessage: Function,
 |};
 
-type State = {
-  isEditing: boolean,
-};
-
 class Message extends React.Component<Props, State> {
   wrapperRef: React$Node;
-
-  state = { isEditing: false };
 
   setWrapperRef = (node: React$Node) => {
     this.wrapperRef = node;
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const isEditing = this.state.isEditing !== nextState.isEditing;
+  shouldComponentUpdate(nextProps) {
     const newMessage = nextProps.message.id !== this.props.message.id;
     const updatedReactionCount =
       nextProps.message.reactions.count !== this.props.message.reactions.count;
@@ -81,12 +74,7 @@ class Message extends React.Component<Props, State> {
       nextProps.message.reactions.hasReacted !==
       this.props.message.reactions.hasReacted;
 
-    if (
-      newMessage ||
-      updatedReactionCount ||
-      updatedReactionState ||
-      isEditing
-    ) {
+    if (newMessage || updatedReactionCount || updatedReactionState) {
       return true;
     }
 
@@ -134,8 +122,6 @@ class Message extends React.Component<Props, State> {
     }
   };
 
-  initEditMessage = () => this.setState({ isEditing: true });
-  cancelEdit = () => this.setState({ isEditing: false });
   clearSelectedMessage = () => {
     const { history, location } = this.props;
     const { pathname } = location;
@@ -155,7 +141,6 @@ class Message extends React.Component<Props, State> {
       threadType,
       location,
     } = this.props;
-    const { isEditing } = this.state;
 
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
     const messageUrl =
@@ -217,7 +202,7 @@ class Message extends React.Component<Props, State> {
               message={message}
             />
 
-            {message.modifiedAt && !isEditing && (
+            {message.modifiedAt && (
               <Tooltip
                 content={`Edited ${convertTimestampToDate(
                   new Date(message.modifiedAt)
@@ -272,7 +257,7 @@ class Message extends React.Component<Props, State> {
               />
             )}
 
-            {!isEditing && !isOptimistic && (
+            {!isOptimistic && (
               <ActionsContainer>
                 <Actions>
                   {canModerateMessage && (

@@ -20,11 +20,6 @@ const Reaction = /* GraphQL */ `
   extend type Query {
     reaction(id: String!): Reaction
   }
-
-  extend type Mutation {
-    # Returns true if toggling completed successfully
-    toggleReaction(reaction: ReactionInput!): Message
-  }
 `;
 
 module.exports = Reaction;

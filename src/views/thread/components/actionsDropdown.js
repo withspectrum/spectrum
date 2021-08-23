@@ -9,16 +9,13 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
 type Props = {
   thread: Object,
-  toggleEdit?: Function,
   // Injected
   currentUser: Object,
   dispatch: Function,
-  setThreadLock: Function,
 };
 
 const ActionsDropdown = (props: Props) => {
@@ -142,6 +139,5 @@ const ActionsDropdown = (props: Props) => {
 
 export default compose(
   withCurrentUser,
-  connect(),
-  setThreadLockMutation
+  connect()
 )(ActionsDropdown);

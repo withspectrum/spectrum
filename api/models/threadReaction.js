@@ -1,10 +1,6 @@
 // @flow
 import { db } from 'shared/db';
 import type { DBThreadReaction } from 'shared/types';
-import { incrementReactionCount, decrementReactionCount } from './thread';
-import { getThreadById } from './thread';
-
-type ThreadReactionType = 'like';
 
 // prettier-ignore
 export const getThreadReactions = (threadIds: Array<string>): Promise<Array<DBThreadReaction>> => {
@@ -28,87 +24,4 @@ export const hasReactedToThread = (
     .count()
     .eq(1)
     .run();
-};
-
-type ThreadReactionInput = {
-  threadId: string,
-  type: ThreadReactionType,
-};
-
-// prettier-ignore
-export const addThreadReaction = (input: ThreadReactionInput, userId: string): Promise<DBThreadReaction> => {
-  return db
-    .table('threadReactions')
-    .getAll(input.threadId, { index: 'threadId' })
-    .filter({ userId })
-    .run()
-    .then(async results => {
-      const thread = await getThreadById(input.threadId)
-      // if the reaction already exists in the db, it was previously deleted
-      // just remove the deletedAt field
-      if (results && results.length > 0) {
-        const thisReaction = results[0];
-
-        await Promise.all([
-          incrementReactionCount(thisReaction.threadId)
-        ])
-
-        return db
-          .table('threadReactions')
-          .get(thisReaction.id)
-          .update({
-            deletedAt: db.literal(),
-          }, { returnChanges: 'always' })
-          .run()
-          .then(result => result.changes[0].new_val || result.changes[0].new_val)
-      }
-
-      return db
-        .table('threadReactions')
-        .insert(
-          {
-            ...input,
-            userId,
-            createdAt: Date.now(),
-          },
-          { returnChanges: 'always' }
-        )
-        .run()
-        .then(result => result.changes[0].new_val)
-        .then(async threadReaction => {
-          await Promise.all([
-            incrementReactionCount(threadReaction.threadId)
-          ])
-
-          return threadReaction;
-        });
-    });
-};
-
-// prettier-ignore
-export const removeThreadReaction = (threadId: string, userId: string): Promise<?DBThreadReaction> => {
-  return db
-    .table('threadReactions')
-    .getAll(threadId, { index: 'threadId' })
-    .filter({ userId })
-    .run()
-    .then(async results => {
-      // no reaction exists to be removed
-      if (!results || results.length === 0) return null;
-
-      const threadReaction = results[0];
-
-      await Promise.all([
-        decrementReactionCount(threadId)
-      ])
-
-      return db
-        .table('threadReactions')
-        .get(threadReaction.id)
-        .update({
-          deletedAt: new Date(),
-        }, { returnChanges: 'always' })
-        .run()
-        .then(result => result.changes[0].new_val || result.changes[0].new_val)
-    });
 };
