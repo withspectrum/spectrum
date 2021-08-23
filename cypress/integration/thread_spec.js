@@ -179,89 +179,12 @@ describe('Thread View', () => {
       cy.get('[data-cy="thread-view"]').should('be.visible');
       // ensure messages have loaded
       cy.contains('This is the first message!').should('be.visible');
-
-      // click the first like action in the message action bar
-      cy.get('[data-cy="like-action"]')
-        .first()
-        .should('be.visible')
-        .click({ force: true });
-      // message should be liked
-      cy.get('[data-cy="unlike-action"]').should('be.visible');
-      // only one message should be liked
-      cy.get('[data-cy="like-action"]').should($p => {
-        expect($p).to.have.length(2);
-      });
-      // the other three messages should not be liked
-      cy.get('[data-cy="unlike-action"]').should($p => {
-        expect($p).to.have.length(1);
-      });
       // the message should not be selected
       cy.get('[data-cy="message-selected"]').should('not.be.visible');
       // the url should not have changed
       cy.url().should('not.contain', `?m`);
-
-      // unlike the message from the message action bar
-      cy.get('[data-cy="unlike-action"]')
-        .first()
-        .should('be.visible')
-        .click({ force: true });
-      // message should not be liked
-      cy.get('[data-cy="unlike-action"]').should('not.be.visible');
-      // the rest of the messages should not be liked
-      cy.get('[data-cy="like-action"]').should($p => {
-        expect($p).to.have.length(3);
-      });
       // the url should not have changed
       cy.url().should('not.contain', `?m`);
-    });
-
-    it('should unlike a message from the inline reaction', () => {
-      cy.get('[data-cy="thread-view"]').should('be.visible');
-      // ensure messages have loaded
-      cy.contains('This is the first message!').should('be.visible');
-
-      // click the first like action in the message action bar
-      cy.get('[data-cy="like-action"]')
-        .first()
-        .should('be.visible')
-        .click({ force: true });
-      // message should be liked
-      cy.get('[data-cy="inline-unlike-action"]').should('be.visible');
-      // should click the inline unlike button
-      cy.get('[data-cy="inline-unlike-action"]').click();
-      // no inline like buttons should be visible
-      cy.get('[data-cy="inline-unlike-action"]').should('not.be.visible');
-      // the url should not have changed
-      cy.url().should('not.contain', `?m`);
-    });
-
-    it('should not allow user to like their own message from inline reaction', () => {
-      cy.get('[data-cy="thread-view"]').should('be.visible');
-      // ensure messages have loaded
-      cy.contains('This is the first message!').should('be.visible');
-
-      // the last message should have an inline unlike action
-      cy.get('[data-cy="inline-like-action"]')
-        .should('be.visible')
-        .click();
-
-      // the message should still have the unlike action
-      cy.get('[data-cy="inline-like-action"]').should('be.visible');
-
-      // the message should not have an inline like action
-      cy.get('[data-cy="inline-unlike-action"]').should('not.be.visible');
-    });
-
-    it('should not allow a user to like their own message from action bar', () => {
-      cy.get('[data-cy="thread-view"]').should('be.visible');
-      // ensure messages have loaded
-      cy.contains('This is the first message!').should('be.visible');
-
-      // the last message should not contain a like action in the message
-      // action bar
-      cy.get('[data-cy="message"]')
-        .last()
-        .should('not.contain', '[data-cy="like-action"]');
     });
   });
 

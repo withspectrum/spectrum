@@ -22,7 +22,6 @@ import { UserAvatar } from 'src/components/avatar';
 import AuthorByline from './authorByline';
 import Icon from 'src/components/icon';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import toggleReactionMutation from 'shared/graphql/mutations/reaction/toggleReaction';
 import {
   convertTimestampToTime,
   convertTimestampToDate,
@@ -51,7 +50,6 @@ type Props = {|
   canModerateMessage: boolean,
   thread: GetThreadType,
   threadType: 'directMessageThread' | 'story',
-  toggleReaction: Function,
   location: Location,
   history: History,
   dispatch: Dispatch<Object>,
@@ -136,7 +134,6 @@ class Message extends React.Component<Props, State> {
       dispatch,
       message,
       canModerateMessage,
-      toggleReaction,
       thread,
       threadType,
       location,
@@ -217,42 +214,27 @@ class Message extends React.Component<Props, State> {
             {message.reactions.count > 0 && (
               <Reaction
                 message={message}
-                toggleReaction={toggleReaction}
                 me={me}
                 currentUser={currentUser}
                 dispatch={dispatch}
-                render={({ me, count, hasReacted, mutation }) => (
-                  <Tooltip
-                    content={me ? 'Likes' : hasReacted ? 'Unlike' : 'Like'}
+                render={({ me, count, hasReacted }) => (
+                  <ReactionWrapper
+                    hasCount={count}
+                    hasReacted={hasReacted}
+                    me={me}
                   >
-                    <ReactionWrapper
-                      hasCount={count}
-                      hasReacted={hasReacted}
-                      me={me}
-                      onClick={
-                        me
-                          ? (e: any) => {
-                              e.stopPropagation();
-                            }
-                          : (e: any) => {
-                              e.stopPropagation();
-                              mutation();
-                            }
+                    <Icon
+                      data-cy={
+                        hasReacted
+                          ? 'inline-unlike-action'
+                          : 'inline-like-action'
                       }
-                    >
-                      <Icon
-                        data-cy={
-                          hasReacted
-                            ? 'inline-unlike-action'
-                            : 'inline-like-action'
-                        }
-                        glyph="like-fill"
-                        size={16}
-                        color={'text.reverse'}
-                      />
-                      <span>{count}</span>
-                    </ReactionWrapper>
-                  </Tooltip>
+                      glyph="like-fill"
+                      size={16}
+                      color={'text.reverse'}
+                    />
+                    <span>{count}</span>
+                  </ReactionWrapper>
                 )}
               />
             )}
@@ -276,7 +258,6 @@ class Message extends React.Component<Props, State> {
                     <Clipboard
                       style={{
                         background: 'none',
-                        borderLeft: '1px solid #DFE7EF',
                       }}
                       data-clipboard-text={
                         thread
@@ -318,6 +299,5 @@ export default compose(
   deleteMessage,
   withCurrentUser,
   withRouter,
-  toggleReactionMutation,
   connect()
 )(Message);

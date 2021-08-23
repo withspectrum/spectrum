@@ -82,7 +82,6 @@ export const Actions = styled.ul`
 `;
 
 export const Action = styled.li`
-  border-left: 1px solid ${theme.bg.border};
   padding: 3px 10px;
   display: flex;
   flex: 0 1 auto;
