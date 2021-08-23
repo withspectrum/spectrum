@@ -10,7 +10,6 @@ import {
   Description,
   MetaLinksContainer,
   MetaRow,
-  OnlineDot,
 } from '../style';
 
 type Props = {

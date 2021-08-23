@@ -13,8 +13,6 @@ import {
 import { createParticipantInThread } from '../../models/usersThreads';
 import type { FileUpload, DBThread } from 'shared/types';
 import { toPlainText, toState } from 'shared/draft-utils';
-import { setCommunityLastActive } from '../../models/community';
-import { setCommunityLastSeen } from '../../models/usersCommunities';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 const threadBodyToPlainText = (body: any): string =>
@@ -184,18 +182,7 @@ export default requireAuth(
     const dbThread: DBThread = await publishThread(threadObject, user.id);
 
     // create a relationship between the thread and the author and set community lastActive
-    const timestamp = new Date(dbThread.createdAt).getTime();
-    await Promise.all([
-      createParticipantInThread(dbThread.id, user.id),
-      setCommunityLastActive(dbThread.communityId, new Date(timestamp)),
-      // Make sure Community.lastSeen > Community.lastActive by one second
-      // for the author
-      setCommunityLastSeen(
-        dbThread.communityId,
-        user.id,
-        new Date(timestamp + 1000)
-      ),
-    ]);
+    await Promise.all([createParticipantInThread(dbThread.id, user.id)]);
 
     if (!thread.filesToUpload || thread.filesToUpload.length === 0) {
       return dbThread;

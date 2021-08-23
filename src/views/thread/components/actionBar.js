@@ -1,20 +1,11 @@
 // @flow
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Clipboard from 'react-clipboard.js';
-import { CLIENT_URL } from 'src/api/constants';
-import { addToastWithTimeout } from 'src/actions/toasts';
-import Tooltip from 'src/components/tooltip';
-import Icon from 'src/components/icon';
 import compose from 'recompose/compose';
 import { PrimaryOutlineButton, TextButton } from 'src/components/button';
-import { LikeButton } from 'src/components/threadLikes';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
-import getThreadLink from 'src/helpers/get-thread-link';
 import type { Dispatch } from 'redux';
 import {
-  ShareButtons,
-  ShareButton,
   ActionBarContainer,
   FixedBottomActionBarContainer,
   EditDone,

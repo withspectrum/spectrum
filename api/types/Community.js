@@ -230,16 +230,6 @@ const Community = /* GraphQL */ `
     isModerator: Boolean
   }
 
-  input CreateCommunityInput {
-    name: String!
-    slug: LowercaseString!
-    description: String
-    website: String
-    file: Upload
-    coverFile: Upload
-    isPrivate: Boolean
-  }
-
   input EditCommunityInput {
     name: String
     description: String
@@ -250,106 +240,9 @@ const Community = /* GraphQL */ `
     communityId: ID!
   }
 
-  input UpgradeCommunityInput {
-    plan: String!
-    token: String!
-    communityId: String!
-  }
-
-  input DowngradeCommunityInput {
-    id: String!
-  }
-
-  input UpdateAdministratorEmailInput {
-    id: ID!
-    email: LowercaseString!
-  }
-
-  input EnableBrandedLoginInput {
-    id: String!
-  }
-
-  input DisableBrandedLoginInput {
-    id: String!
-  }
-
-  input SaveBrandedLoginSettingsInput {
-    id: String!
-    message: String
-  }
-
-  input ImportSlackMembersInput
-    @deprecated(
-      reason: "Slack imports are no longer used, invites sent directly with sendSlackInvites"
-    ) {
-    id: String!
-  }
-
-  input SendSlackInvitesInput {
-    id: ID!
-    customMessage: String
-  }
-
-  input EnableCommunityTokenJoinInput {
-    id: ID!
-  }
-
-  input DisableCommunityTokenJoinInput {
-    id: ID!
-  }
-
-  input ResetCommunityJoinTokenInput {
-    id: ID!
-  }
-
-  input EnableCommunityWatercoolerInput {
-    id: ID!
-  }
-
-  input DisableCommunityWatercoolerInput {
-    id: ID!
-  }
-
-  input SetCommunityLastSeenInput {
-    id: ID!
-    lastSeen: Date!
-  }
-
   extend type Mutation {
-    createCommunity(input: CreateCommunityInput!): Community
-      @rateLimit(max: 3, window: "15m")
     editCommunity(input: EditCommunityInput!): Community
     deleteCommunity(communityId: ID!): Boolean
-    toggleCommunityMembership(communityId: ID!): Community
-      @deprecated(
-        reason: "Use the new addCommunityMember or removeCommunityMember mutations"
-      )
-    sendSlackInvites(input: SendSlackInvitesInput!): Community
-    importSlackMembers(input: ImportSlackMembersInput!): Boolean
-      @deprecated(reason: "Importing slack members is deprecated")
-    pinThread(threadId: ID!, communityId: ID!, value: String): Community
-    upgradeCommunity(input: UpgradeCommunityInput!): Community
-      @deprecated(
-        reason: "Use feature level upgrade mutations like enableCommunityAnalytics"
-      )
-    downgradeCommunity(input: DowngradeCommunityInput!): Community
-      @deprecated(
-        reason: "Use feature level downgrade mutations like disableCommunityAnalytics"
-      )
-    updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
-    enableBrandedLogin(input: EnableBrandedLoginInput!): Community
-    disableBrandedLogin(input: DisableBrandedLoginInput!): Community
-    saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
-    enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
-    disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
-    resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
-    enableCommunityWatercooler(
-      input: EnableCommunityWatercoolerInput!
-    ): Community
-    disableCommunityWatercooler(
-      input: DisableCommunityWatercoolerInput!
-    ): Community
-    setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
     toggleCommunityRedirect(communityId: ID!): Community
     toggleCommunityNoindex(communityId: ID!): Community
   }

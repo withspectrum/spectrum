@@ -11,7 +11,6 @@ import {
   Description,
   MetaLinksContainer,
   MetaRow,
-  OnlineDot,
   Username,
 } from '../style';
 

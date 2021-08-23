@@ -8,9 +8,7 @@ import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMe
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
 import { setCommunityLastActive } from '../../models/community';
-import { setCommunityLastSeen } from '../../models/usersCommunities';
 import addCommunityMember from '../communityMember/addCommunityMember';
-import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 import type { FileUpload } from 'shared/types';
 import {
   isAuthedResolver as requireAuth,
@@ -228,46 +226,32 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   }
 
   const timestamp = new Date(dbMessage.timestamp).getTime();
-  return (
-    membershipPromise()
-      .then(() => createParticipantInThread(message.threadId, user.id))
-      .then(() =>
-        setCommunityLastActive(thread.communityId, new Date(timestamp))
-      )
-      // Make sure Community.lastSeen > Community.lastActive by one second
-      // for the author
-      .then(() =>
-        setCommunityLastSeen(
-          thread.communityId,
-          user.id,
-          new Date(timestamp + 10000)
-        )
-      )
-      .then(async () => {
-        const contextPermissions = {
-          communityId: thread.communityId,
-          isModerator: communityPermissions
-            ? communityPermissions.isModerator
-            : false,
-          isOwner: communityPermissions ? communityPermissions.isOwner : false,
-        };
+  return membershipPromise()
+    .then(() => createParticipantInThread(message.threadId, user.id))
+    .then(async () => {
+      const contextPermissions = {
+        communityId: thread.communityId,
+        isModerator: communityPermissions
+          ? communityPermissions.isModerator
+          : false,
+        isOwner: communityPermissions ? communityPermissions.isOwner : false,
+      };
 
-        calculateThreadScoreQueue.add(
-          {
-            threadId: message.threadId,
-          },
-          {
-            jobId: message.threadId,
-          }
-        );
-        return {
-          ...dbMessage,
-          contextPermissions,
-        };
-      })
-      .catch(err => {
-        console.error('Error sending message', err);
-        return dbMessage;
-      })
-  );
+      calculateThreadScoreQueue.add(
+        {
+          threadId: message.threadId,
+        },
+        {
+          jobId: message.threadId,
+        }
+      );
+      return {
+        ...dbMessage,
+        contextPermissions,
+      };
+    })
+    .catch(err => {
+      console.error('Error sending message', err);
+      return dbMessage;
+    });
 });

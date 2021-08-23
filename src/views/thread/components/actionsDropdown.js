@@ -9,8 +9,6 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icon';
 import { TextButton } from 'src/components/button';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import toggleThreadNotificationsMutation from 'shared/graphql/mutations/thread/toggleThreadNotifications';
-import pinThreadMutation from 'shared/graphql/mutations/community/pinCommunityThread';
 import setThreadLockMutation from 'shared/graphql/mutations/thread/lockThread';
 import { FlyoutRow, DropWrap, Label } from '../style';
 
@@ -20,8 +18,6 @@ type Props = {
   // Injected
   currentUser: Object,
   dispatch: Function,
-  pinThread: Function,
-  toggleThreadNotifications: Function,
   setThreadLock: Function,
 };
 
@@ -147,7 +143,5 @@ const ActionsDropdown = (props: Props) => {
 export default compose(
   withCurrentUser,
   connect(),
-  toggleThreadNotificationsMutation,
-  pinThreadMutation,
   setThreadLockMutation
 )(ActionsDropdown);
