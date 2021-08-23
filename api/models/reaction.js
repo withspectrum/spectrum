@@ -1,6 +1,5 @@
 // @flow
 import { db } from 'shared/db';
-import { sendReactionNotificationQueue } from 'shared/bull/queues';
 import type { DBReaction } from 'shared/types';
 
 type ReactionType = 'like';
@@ -82,8 +81,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
         .run()
         .then(result => result.changes[0].new_val)
         .then(reaction => {
-          sendReactionNotificationQueue.add({ reaction, userId });
-
           return reaction;
         });
     })

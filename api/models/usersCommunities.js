@@ -1,6 +1,5 @@
 // @flow
 const { db } = require('shared/db');
-import { sendCommunityNotificationQueue } from 'shared/bull/queues';
 import type { DBUsersCommunities, DBCommunity } from 'shared/types';
 import {
   incrementMemberCount,
@@ -100,7 +99,6 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
     })
     .then(async result => {
       await Promise.all([
-        sendCommunityNotificationQueue.add({ communityId, userId }),
         incrementMemberCount(communityId)
       ])
       return result.changes[0].new_val;

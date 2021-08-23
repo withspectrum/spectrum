@@ -1,6 +1,5 @@
 // @flow
 const { db } = require('shared/db');
-import { sendChannelNotificationQueue } from 'shared/bull/queues';
 import type { DBChannel } from 'shared/types';
 
 // reusable query parts -- begin
@@ -193,11 +192,6 @@ const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<D
     .run()
     .then(result => result.changes[0].new_val)
     .then(channel => {
-      // only trigger a new channel notification is the channel is public
-      if (!channel.isPrivate) {
-        sendChannelNotificationQueue.add({ channel, userId });
-      }
-
       return channel;
     });
 };

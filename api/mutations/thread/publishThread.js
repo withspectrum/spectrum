@@ -15,11 +15,6 @@ import type { FileUpload, DBThread } from 'shared/types';
 import { toPlainText, toState } from 'shared/draft-utils';
 import { setCommunityLastActive } from '../../models/community';
 import { setCommunityLastSeen } from '../../models/usersCommunities';
-import {
-  sendThreadNotificationQueue,
-  _adminProcessToxicThreadQueue,
-} from 'shared/bull/queues';
-import getPerspectiveScore from 'athena/queues/moderationEvents/perspective';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 const threadBodyToPlainText = (body: any): string =>
@@ -187,54 +182,6 @@ export default requireAuth(
 
     // $FlowFixMe
     const dbThread: DBThread = await publishThread(threadObject, user.id);
-
-    // we check for toxicity here only to determine whether or not to send
-    // email notifications - the thread will be published regardless, but we can
-    // prevent some abuse and spam if we ensure people dont get email notifications
-    // with titles like "fuck you"
-    const checkToxicity = async () => {
-      const body = thread.content.body
-        ? threadBodyToPlainText(thread.content.body)
-        : '';
-      const title = thread.content.title;
-      const text = `${title} ${body}`;
-
-      const scores = await getPerspectiveScore(text).catch(err =>
-        console.error(
-          'Error getting thread moderation scores from providers',
-          err.message
-        )
-      );
-
-      const perspectiveScore = scores && scores[1];
-
-      // if neither models returned results
-      if (!perspectiveScore) {
-        debug('Toxicity checks from providers say not toxic');
-        return false;
-      }
-
-      // if both services agree that the thread is >= 98% toxic
-      if (perspectiveScore >= 0.9) {
-        debug('Thread is toxic according to both providers');
-        return true;
-      }
-
-      return false;
-    };
-
-    const threadIsToxic = await checkToxicity();
-    if (!isOwnerOrModerator && threadIsToxic) {
-      debug(
-        'Thread determined to be toxic, not sending notifications or adding rep'
-      );
-
-      // generate an alert for admins
-      _adminProcessToxicThreadQueue.add({ thread: dbThread });
-    } else {
-      debug('Thread is not toxic, send notifications and add rep');
-      sendThreadNotificationQueue.add({ thread: dbThread });
-    }
 
     // create a relationship between the thread and the author and set community lastActive
     const timestamp = new Date(dbThread.createdAt).getTime();

@@ -13,4 +13,3 @@ windows:
       - yarn run dev:api
       - yarn run dev:web
       - yarn run dev:hermes
-      - yarn run dev:athena

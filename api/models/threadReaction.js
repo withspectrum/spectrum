@@ -1,6 +1,5 @@
 // @flow
 import { db } from 'shared/db';
-import { sendThreadReactionNotificationQueue } from 'shared/bull/queues';
 import type { DBThreadReaction } from 'shared/types';
 import { incrementReactionCount, decrementReactionCount } from './thread';
 import { getThreadById } from './thread';
@@ -50,12 +49,7 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
       if (results && results.length > 0) {
         const thisReaction = results[0];
 
-        const sendReactionNotification = thread && (thread.creatorId !== userId)
-          ? sendThreadReactionNotificationQueue.add({ threadReaction: thisReaction, userId })
-          : null
-
         await Promise.all([
-          sendReactionNotification,
           incrementReactionCount(thisReaction.threadId)
         ])
 
@@ -82,12 +76,7 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
         .run()
         .then(result => result.changes[0].new_val)
         .then(async threadReaction => {
-          const sendReactionNotification = thread && (thread.creatorId !== userId)
-            ? sendThreadReactionNotificationQueue.add({ threadReaction, userId })
-            : null
-
           await Promise.all([
-            sendReactionNotification,
             incrementReactionCount(threadReaction.threadId)
           ])
 

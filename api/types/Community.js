@@ -333,8 +333,6 @@ const Community = /* GraphQL */ `
     sendSlackInvites(input: SendSlackInvitesInput!): Community
     importSlackMembers(input: ImportSlackMembersInput!): Boolean
       @deprecated(reason: "Importing slack members is deprecated")
-    sendEmailInvites(input: EmailInvitesInput!): Boolean
-      @rateLimit(max: 5000, window: "1w", arrayLengthField: "input.contacts")
     pinThread(threadId: ID!, communityId: ID!, value: String): Community
     upgradeCommunity(input: UpgradeCommunityInput!): Community
       @deprecated(

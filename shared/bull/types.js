@@ -11,10 +11,6 @@ import type {
   DBNotificationsJoin,
   FileUpload,
 } from '../types';
-import type {
-  Recipient,
-  NewMessageNotificationEmailThread,
-} from 'athena/queues/new-message-in-thread/buffer-email';
 
 export type Job<JobData> = {|
   id: string,
@@ -419,26 +415,6 @@ export type AdminToxicContentEmailJobData = {
 };
 
 export type Queues = {
-  // athena
-  sendThreadNotificationQueue: BullQueue<ThreadNotificationJobData>,
-  sendCommunityNotificationQueue: BullQueue<CommunityNotificationJobData>,
-  trackUserThreadLastSeenQueue: BullQueue<UserThreadLastSeenJobData>,
-  sendReactionNotificationQueue: BullQueue<ReactionNotificationJobData>,
-  sendThreadReactionNotificationQueue: BullQueue<ThreadReactionNotificationJobData>,
-  sendPrivateChannelRequestQueue: BullQueue<PrivateChannelRequestJobData>,
-  sendPrivateChannelRequestApprovedQueue: BullQueue<PrivateChannelRequestApprovedJobData>,
-  sendPrivateCommunityRequestQueue: BullQueue<PrivateCommunityRequestJobData>,
-  sendPrivateCommunityRequestApprovedQueue: BullQueue<PrivateCommunityRequestApprovedJobData>,
-  sendPrivateChannelInviteNotificationQueue: BullQueue<PrivateChannelInviteNotificationJobData>,
-  sendCommunityInviteNotificationQueue: BullQueue<CommunityInviteNotificationJobData>,
-  sendChannelNotificationQueue: BullQueue<ChannelNotificationJobData>,
-  sendDirectMessageNotificationQueue: BullQueue<DirectMessageNotificationJobData>,
-  sendMessageNotificationQueue: BullQueue<MessageNotificationJobData>,
-  sendMentionNotificationQueue: BullQueue<MentionNotificationJobData>,
-  sendNotificationAsPushQueue: BullQueue<PushNotificationsJobData>,
-  slackImportQueue: BullQueue<SlackImportJobData>,
-  sendSlackInvitationsQueue: BullQueue<SendSlackInvitationsJobData>,
-
   // hermes
   sendNewUserWelcomeEmailQueue: BullQueue<NewUserWelcomeEmailJobData>,
   sendNewCommunityWelcomeEmailQueue: BullQueue<NewCommunityWelcomeEmailJobData>,
@@ -461,12 +437,7 @@ export type Queues = {
 
   // admin
   _adminSendCommunityCreatedEmailQueue: BullQueue<AdminCommunityCreatedEmailJobData>,
-  _adminProcessToxicMessageQueue: BullQueue<AdminToxicMessageJobData>,
-  _adminProcessToxicThreadQueue: BullQueue<AdminToxicThreadJobData>,
   _adminProcessSlackImportQueue: BullQueue<AdminSlackImportJobData>,
   _adminProcessUserReportedQueue: BullQueue<AdminProcessUserReportedJobData>,
-  // TODO: Properly type this
-  _adminSendToxicContentEmailQueue: BullQueue<AdminToxicContentEmailJobData>,
-  _adminProcessUserSpammingThreadsQueue: BullQueue<AdminUserSpammingThreadsJobData>,
   _adminSendActiveCommunityReportEmailQueue: BullQueue<AdminActiveCommunityReportEmailJobData>,
 };

@@ -13,7 +13,6 @@ debug
 now-secrets.json
 build-iris
 build-api
-build-athena
 build-hermes
 build-vulcan
 build-hyperion

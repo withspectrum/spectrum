@@ -11,7 +11,6 @@
 - api
 - hyperion (frontend)
 - desktop
-- athena
 - vulcan
 - hermes
 

@@ -1,8 +1,6 @@
 //@flow
 const { db } = require('shared/db');
 import {
-  sendMessageNotificationQueue,
-  sendDirectMessageNotificationQueue,
   _adminProcessToxicMessageQueue,
   searchQueue,
 } from 'shared/bull/queues';
@@ -140,15 +138,9 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
     .run()
     .then(result => result.changes[0].new_val)
     .then(async message => {
-      if (message.threadType === 'directMessageThread') {
-        await Promise.all([
-          sendDirectMessageNotificationQueue.add({ message, userId }),
-        ])
-      }
 
       if (message.threadType === 'story') {
         await Promise.all([
-        sendMessageNotificationQueue.add({ message }),
         searchQueue.add({
           id: message.id,
           type: 'message',

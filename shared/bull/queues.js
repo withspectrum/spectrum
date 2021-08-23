@@ -28,53 +28,10 @@ import {
   SENDGRID_WEBHOOK_EVENT,
 } from 'hermes/queues/constants';
 
-import {
-  MENTION_NOTIFICATION,
-  THREAD_NOTIFICATION,
-  PROCESS_ADMIN_TOXIC_MESSAGE,
-  COMMUNITY_NOTIFICATION,
-  PROCESS_ADMIN_TOXIC_THREAD,
-  TRACK_USER_LAST_SEEN,
-  REACTION_NOTIFICATION,
-  THREAD_REACTION_NOTIFICATION,
-  PRIVATE_CHANNEL_REQUEST_SENT,
-  PRIVATE_CHANNEL_REQUEST_APPROVED,
-  PRIVATE_COMMUNITY_REQUEST_SENT,
-  PRIVATE_COMMUNITY_REQUEST_APPROVED,
-  COMMUNITY_INVITE_NOTIFICATION,
-  CHANNEL_NOTIFICATION,
-  DIRECT_MESSAGE_NOTIFICATION,
-  MESSAGE_NOTIFICATION,
-  SEND_PUSH_NOTIFICATIONS,
-  SLACK_IMPORT,
-  SEND_SLACK_INVITIATIONS,
-} from 'athena/queues/constants';
-
 import { SEARCH_INDEXING_EVENT } from 'vulcan/queues/constants';
 
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
-  // athena - notifications
-  sendThreadNotificationQueue: THREAD_NOTIFICATION,
-  sendCommunityNotificationQueue: COMMUNITY_NOTIFICATION,
-  trackUserThreadLastSeenQueue: TRACK_USER_LAST_SEEN,
-  sendReactionNotificationQueue: REACTION_NOTIFICATION,
-  sendThreadReactionNotificationQueue: THREAD_REACTION_NOTIFICATION,
-  sendPrivateChannelRequestQueue: PRIVATE_CHANNEL_REQUEST_SENT,
-  sendPrivateChannelRequestApprovedQueue: PRIVATE_CHANNEL_REQUEST_APPROVED,
-  sendPrivateCommunityRequestQueue: PRIVATE_COMMUNITY_REQUEST_SENT,
-  sendPrivateCommunityRequestApprovedQueue: PRIVATE_COMMUNITY_REQUEST_APPROVED,
-  sendPrivateChannelInviteNotificationQueue:
-    'private channel invite notification',
-  sendCommunityInviteNotificationQueue: COMMUNITY_INVITE_NOTIFICATION,
-  sendChannelNotificationQueue: CHANNEL_NOTIFICATION,
-  sendDirectMessageNotificationQueue: DIRECT_MESSAGE_NOTIFICATION,
-  sendMessageNotificationQueue: MESSAGE_NOTIFICATION,
-  sendMentionNotificationQueue: MENTION_NOTIFICATION,
-  sendNotificationAsPushQueue: SEND_PUSH_NOTIFICATIONS,
-  slackImportQueue: SLACK_IMPORT,
-  sendSlackInvitationsQueue: SEND_SLACK_INVITIATIONS,
-
   // hermes - emails
   sendNewUserWelcomeEmailQueue: SEND_NEW_USER_WELCOME_EMAIL,
   sendNewCommunityWelcomeEmailQueue: SEND_NEW_COMMUNITY_WELCOME_EMAIL,
@@ -97,8 +54,6 @@ exports.QUEUE_NAMES = {
 
   // admin
   _adminSendCommunityCreatedEmailQueue: SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
-  _adminProcessToxicMessageQueue: PROCESS_ADMIN_TOXIC_MESSAGE,
-  _adminProcessToxicThreadQueue: PROCESS_ADMIN_TOXIC_THREAD,
   _adminProcessSlackImportQueue: SEND_ADMIN_SLACK_IMPORT_PROCESSED_EMAIL,
   _adminSendToxicContentEmailQueue: SEND_ADMIN_TOXIC_MESSAGE_EMAIL,
   _adminProcessUserSpammingThreadsQueue: SEND_ADMIN_USER_SPAMMING_THREADS_NOTIFICATION_EMAIL,

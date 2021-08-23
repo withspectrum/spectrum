@@ -4,7 +4,6 @@
 
 Our asynchronos background job processing is powered by a series of worker servers.
 
-- [Athena](athena/intro.md): processes notifications
 - [Hermes](hermes/intro.md): sends emails
 - [Vulcan](vulcan/intro.md): indexes content for search
 
@@ -14,7 +13,6 @@ Each one of these can be run and developed independently with matching `npm run 
 
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
 
-- Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
 - Vulcan is the god of fire, including the fire of volcanoes, metalworking, and the forge.
 

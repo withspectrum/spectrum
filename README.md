@@ -102,8 +102,6 @@ Here is a list of all the big technologies we use:
 ```sh
 spectrum/
 ├── api        # API server
-├── athena     # Worker server (notifications and general processing)
-├── desktop    # desktop apps (build with electron)
 ├── docs
 ├── email-templates
 ├── hermes     # Worker server (email sending)
@@ -122,7 +120,6 @@ spectrum/
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
 
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
-- Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
 
 </details>
