@@ -128,38 +128,6 @@ const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
   return channelsByIdsQuery(...channelIds).run();
 };
 
-type GroupedCount = {
-  group: string,
-  reduction: number,
-};
-
-// prettier-ignore
-const getChannelsThreadCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
-  return threadsByChannelsQuery(...channelIds)
-    .group('channelId')
-    .count()
-    .run();
-};
-
-// prettier-ignore
-const getChannelsMemberCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
-  return membersByChannelsQuery(...channelIds)
-    .group('channelId')
-    .count()
-    .run();
-};
-
-export type CreateChannelInput = {
-  input: {
-    communityId: string,
-    name: string,
-    description: string,
-    slug: string,
-    isPrivate: boolean,
-    isDefault: boolean,
-  },
-};
-
 export type EditChannelInput = {
   input: {
     channelId: string,
@@ -168,49 +136,6 @@ export type EditChannelInput = {
     slug: string,
     isPrivate: Boolean,
   },
-};
-
-// prettier-ignore
-const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<DBChannel> => {
-  const { communityId, name, slug, description, isPrivate, isDefault } = input;
-
-  return db
-    .table('channels')
-    .insert(
-      {
-        communityId,
-        createdAt: new Date(),
-        name,
-        description,
-        slug,
-        isPrivate,
-        isDefault: isDefault ? true : false,
-        memberCount: 0,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val)
-    .then(channel => {
-      return channel;
-    });
-};
-
-// prettier-ignore
-const createGeneralChannel = (communityId: string, userId: string): Promise<DBChannel> => {
-  return createChannel(
-    {
-      input: {
-        name: 'General',
-        slug: 'general',
-        description: 'General Chatter',
-        communityId,
-        isPrivate: false,
-        isDefault: true,
-      },
-    },
-    userId
-  );
 };
 
 // prettier-ignore
@@ -268,129 +193,6 @@ const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
     .run();
 };
 
-// prettier-ignore
-const archiveChannel = (channelId: string): Promise<DBChannel> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update({ archivedAt: new Date() }, { returnChanges: 'always' })
-    .run()
-    .then(result => {
-      return result.changes[0].new_val || result.changes[0].old_val;
-    });
-};
-
-// prettier-ignore
-const restoreChannel = (channelId: string): Promise<DBChannel> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update({ archivedAt: db.literal() }, { returnChanges: 'always' })
-    .run()
-    .then(result => {
-      return result.changes[0].new_val || result.changes[0].old_val;
-    });
-};
-
-// prettier-ignore
-const archiveAllPrivateChannels = async (communityId: string) => {
-  const channels = await db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isPrivate: true })
-    .run();
-
-  if (!channels || channels.length === 0) return;
-
-  return await db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isPrivate: true })
-    .update({ archivedAt: new Date() })
-    .run();
-};
-
-const incrementMemberCount = (channelId: string): Promise<DBChannel> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      {
-        memberCount: db
-          .row('memberCount')
-          .default(0)
-          .add(1),
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
-};
-
-const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      {
-        memberCount: db
-          .row('memberCount')
-          .default(1)
-          .sub(1),
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
-};
-
-const setMemberCount = (
-  channelId: string,
-  value: number
-): Promise<DBChannel> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      {
-        memberCount: value,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val || result.changes[0].old_val);
-};
-
-const getChannelsOnlineMemberCounts = (channelIds: Array<string>) => {
-  return db
-    .table('usersChannels')
-    .getAll(...channelIds, {
-      index: 'channelId',
-    })
-    .filter({ isBlocked: false, isMember: true })
-    .pluck(['channelId', 'userId'])
-    .eqJoin('userId', db.table('users'))
-    .pluck('left', { right: ['lastSeen', 'isOnline'] })
-    .zip()
-    .filter(rec =>
-      rec('isOnline')
-        .eq(true)
-        .or(
-          rec('lastSeen')
-            .toEpochTime()
-            .ge(
-              db
-                .now()
-                .toEpochTime()
-                .sub(86400)
-            )
-        )
-    )
-    .group('channelId')
-    .count()
-    .run();
-};
-
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -398,20 +200,9 @@ module.exports = {
   getChannelsByCommunity,
   getPublicChannelsByCommunity,
   getChannelsByUserAndCommunity,
-  createChannel,
-  createGeneralChannel,
   editChannel,
   deleteChannel,
-  getChannelsMemberCounts,
-  getChannelsThreadCounts,
   getChannels,
-  archiveChannel,
-  restoreChannel,
-  archiveAllPrivateChannels,
-  incrementMemberCount,
-  decrementMemberCount,
-  setMemberCount,
-  getChannelsOnlineMemberCounts,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

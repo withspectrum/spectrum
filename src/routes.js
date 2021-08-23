@@ -24,7 +24,6 @@ import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
-import PrivateChannelJoin from 'src/views/privateChannelJoin';
 import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
 import ThreadSlider from 'src/views/threadSlider';
 import Navigation from 'src/views/navigation';
@@ -352,14 +351,6 @@ class Routes extends React.Component<Props, State> {
                     <Route
                       path="/:communitySlug/:channelSlug/settings"
                       component={ChannelSettingsFallback}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug/join/:token"
-                      component={PrivateChannelJoin}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug/join"
-                      component={PrivateChannelJoin}
                     />
                     <Route
                       path="/:communitySlug/settings"

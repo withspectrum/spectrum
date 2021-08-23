@@ -5,11 +5,9 @@ import BanUserModal from './BanUserModal';
 import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
 import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import ReportUserModal from './ReportUserModal';
-import RestoreChannelModal from './RestoreChannelModal';
 
 const MODAL_COMPONENTS = {
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
-  RESTORE_CHANNEL_MODAL: RestoreChannelModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
   CLOSE_COMPOSER_CONFIRMATION_MODAL: CloseComposerConfirmationModal,

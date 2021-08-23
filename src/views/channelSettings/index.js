@@ -5,14 +5,9 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import Head from 'src/components/head';
 import { Upsell404Channel } from 'src/components/upsell';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import togglePendingUserInChannelMutation from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
-import type { ToggleChannelPendingUserType } from 'shared/graphql/mutations/channel/toggleChannelPendingUser';
-import unblockUserInChannelMutation from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
-import type { UnblockChannelBlockedUserType } from 'shared/graphql/mutations/channel/unblockChannelBlockedUser';
 import ViewError from 'src/components/viewError';
 import { View } from 'src/components/settingsViews/style';
 import Header from 'src/components/settingsViews/header';
@@ -31,8 +26,6 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   dispatch: Dispatch<Object>,
-  togglePendingUser: Function,
-  unblockUser: Function,
   history: Object,
 };
 
@@ -46,64 +39,6 @@ class ChannelSettings extends React.Component<Props> {
       })
     );
   }
-
-  togglePending = (userId, action) => {
-    const {
-      data: { channel },
-      dispatch,
-    } = this.props;
-    const input = {
-      channelId: channel.id,
-      userId,
-      action,
-    };
-
-    this.props
-      .togglePendingUser(input)
-      .then(({ data }: ToggleChannelPendingUserType) => {
-        // the mutation returns a channel object. if it exists,
-        const { togglePendingUser } = data;
-        if (togglePendingUser !== undefined) {
-          if (action === 'block') {
-          }
-
-          if (action === 'approve') {
-          }
-
-          dispatch(addToastWithTimeout('success', 'Saved!'));
-        }
-        return;
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
-  unblock = (userId: string) => {
-    const {
-      data: { channel },
-      dispatch,
-    } = this.props;
-
-    const input = {
-      channelId: channel.id,
-      userId,
-    };
-
-    this.props
-      .unblockUser(input)
-      .then(({ data }: UnblockChannelBlockedUserType) => {
-        const { unblockUser } = data;
-        // the mutation returns a channel object. if it exists,
-        if (unblockUser !== undefined) {
-          dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
-        }
-        return;
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
 
   render() {
     const {
@@ -150,8 +85,6 @@ class ChannelSettings extends React.Component<Props> {
                 community={channel.community}
                 channel={channel}
                 communitySlug={communitySlug}
-                togglePending={this.togglePending}
-                unblock={this.unblock}
               />
             );
           default:
@@ -200,7 +133,5 @@ export default compose(
   connect(),
   withRouter,
   getChannelByMatch,
-  togglePendingUserInChannelMutation,
-  unblockUserInChannelMutation,
   viewNetworkHandler
 )(ChannelSettings);

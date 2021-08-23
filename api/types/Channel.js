@@ -27,15 +27,6 @@ const Channel = /* GraphQL */ `
     onlineMembers: Int
   }
 
-  input CreateChannelInput {
-    name: String!
-    slug: LowercaseString!
-    description: String
-    communityId: ID!
-    isPrivate: Boolean
-    isDefault: Boolean
-  }
-
   input EditChannelInput {
     name: String
     slug: LowercaseString
@@ -96,47 +87,9 @@ const Channel = /* GraphQL */ `
     ): Channel @cost(complexity: 1) @cacheControl(maxAge: 1200)
   }
 
-  input ArchiveChannelInput {
-    channelId: ID!
-  }
-
-  input RestoreChannelInput {
-    channelId: ID!
-  }
-
-  input JoinChannelWithTokenInput {
-    communitySlug: LowercaseString!
-    channelSlug: LowercaseString!
-    token: String!
-  }
-
-  input EnableChannelTokenJoinInput {
-    id: ID!
-  }
-
-  input DisableChannelTokenJoinInput {
-    id: ID!
-  }
-
-  input ResetChannelJoinTokenInput {
-    id: ID!
-  }
-
   extend type Mutation {
-    createChannel(input: CreateChannelInput!): Channel
-      @rateLimit(max: 10, window: "10m")
     editChannel(input: EditChannelInput!): Channel
     deleteChannel(channelId: ID!): Boolean
-    toggleChannelSubscription(channelId: ID!): Channel
-    joinChannelWithToken(input: JoinChannelWithTokenInput!): Channel
-    toggleChannelNotifications(channelId: ID!): Channel
-    togglePendingUser(input: TogglePendingUserInput!): Channel
-    unblockUser(input: UnblockUserInput!): Channel
-    archiveChannel(input: ArchiveChannelInput!): Channel
-    restoreChannel(input: RestoreChannelInput!): Channel
-    enableChannelTokenJoin(input: EnableChannelTokenJoinInput!): Channel
-    disableChannelTokenJoin(input: DisableChannelTokenJoinInput!): Channel
-    resetChannelJoinToken(input: ResetChannelJoinTokenInput!): Channel
   }
 `;
 
