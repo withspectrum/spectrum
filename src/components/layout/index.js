@@ -35,12 +35,12 @@ export const ViewGrid = styled.main.attrs({
   display: grid;
   grid-area: main;
   height: 100%;
-  max-height: calc(100vh - 48px);
+  max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px - 48px);
+    max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
@@ -153,7 +153,7 @@ export const CenteredGrid = styled.div`
     width: 100%;
     max-width: 100%;
     grid-template-columns: 1fr;
-    height: calc(100vh - ${TITLEBAR_HEIGHT}px - 48px);
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
@@ -175,12 +175,12 @@ export const PrimaryColumn = styled.section`
     border-bottom: 0;
     grid-column-start: 1;
     max-width: 100vw;
-    height: calc(100vh - ${TITLEBAR_HEIGHT}px - 48px);
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `;
 
 export const SecondaryColumn = styled.section`
-  height: calc(100vh - 48px);
+  height: 100vh;
   overflow: hidden;
   overflow-y: auto;
   position: sticky;
@@ -195,7 +195,7 @@ export const SecondaryColumn = styled.section`
   }
 
   @media (max-width: ${MEDIA_BREAK}px) {
-    height: calc(100vh - ${TITLEBAR_HEIGHT}px - 48px);
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     display: none;
   }
 `;
