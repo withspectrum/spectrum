@@ -162,17 +162,6 @@ class ThreadsList extends React.Component<Props, State> {
           <NoCommunitySelected hideOnDesktop>
             <div>
               <NoCommunityHeading>No conversation selected</NoCommunityHeading>
-              <NoCommunitySubheading>
-                Choose from an existing conversation, or start a new one.
-              </NoCommunitySubheading>
-              <PrimaryOutlineButton
-                to={{
-                  pathname: '/new/message',
-                  state: { modal: true },
-                }}
-              >
-                New message
-              </PrimaryOutlineButton>
             </div>
           </NoCommunitySelected>
         </ThreadsListScrollContainer>
@@ -197,18 +186,7 @@ class ThreadsList extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <DesktopTitlebar
-          title={'Messages'}
-          rightAction={
-            <PrimaryOutlineButton
-              data-cy="compose-dm"
-              size={'small'}
-              to={{ pathname: '/new/message', state: { modal: true } }}
-            >
-              New
-            </PrimaryOutlineButton>
-          }
-        />
+        <DesktopTitlebar title={'Messages'} />
         <ThreadsListScrollContainer>
           {uniqueThreads.map(thread => {
             if (!thread) return null;

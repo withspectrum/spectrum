@@ -1,67 +1,6 @@
 import data from '../../shared/testing/data';
 
 const user = data.users.find(user => user.username === 'brian');
-const directMessages = data.usersDirectMessageThreads.filter(
-  udm => udm.userId === user.id
-);
-
-const newMessage = 'Persist New Message';
-
-describe('/new/message', () => {
-  beforeEach(() => {
-    cy.auth(user.id);
-  });
-
-  it('should show the message composer modal with search', () => {
-    cy.visit('/new/message');
-    cy.get('[data-cy="dm-composer"]').should('be.visible');
-    cy.get('[data-cy="dm-composer-search"]').should('be.visible');
-  });
-
-  it('should render in a modal from another view', () => {
-    cy.visit('/users/bryn');
-    cy.get('[data-cy="message-user-button"]')
-      .last()
-      .should('be.visible')
-      .click();
-    cy.get('[data-cy="dm-composer"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').should('be.visible');
-    cy.url().should('include', '/new/message');
-  });
-
-  it('should send a direct message', () => {
-    cy.visit('/users/bryn');
-    cy.get('[data-cy="message-user-button"]')
-      .last()
-      .should('be.visible')
-      .click();
-    cy.get('[data-cy="dm-composer"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').type(newMessage);
-    cy.get('[data-cy="chat-input-send-button"]').click();
-    cy.get('[data-cy="message-group"]').should('be.visible');
-  });
-
-  it('should persist the dm chat input', () => {
-    cy.visit('/users/bryn');
-    cy.get('[data-cy="message-user-button"]')
-      .last()
-      .should('be.visible')
-      .click();
-    cy.get('[data-cy="dm-composer"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').type(newMessage);
-    cy.wait(2000);
-    cy.reload();
-    cy.visit('/users/bryn');
-    cy.get('[data-cy="message-user-button"]')
-      .last()
-      .should('be.visible')
-      .click();
-    cy.get('[data-cy="dm-composer"]').should('be.visible');
-    cy.get('[data-cy="chat-input"]').contains(newMessage);
-  });
-});
 
 describe('/messages', () => {
   beforeEach(() => {
@@ -81,13 +20,6 @@ describe('/messages', () => {
     cy.get('[data-cy="dm-list-item"]').should($p => {
       expect($p).to.have.length(1);
     });
-  });
-
-  it('should open conversation composer', () => {
-    cy.get('[data-cy="compose-dm"]')
-      .should('be.visible')
-      .click();
-    cy.url().should('eq', 'http://localhost:3000/new/message');
   });
 
   it('should select an individual conversation', () => {

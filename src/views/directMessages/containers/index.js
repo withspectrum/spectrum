@@ -35,11 +35,6 @@ class DirectMessages extends React.Component<Props, State> {
     dispatch(
       setTitlebarProps({
         title: 'Messages',
-        rightAction: (
-          <PrimaryOutlineButton size={'small'} to={'/new/message'}>
-            New
-          </PrimaryOutlineButton>
-        ),
       })
     );
   }
@@ -51,11 +46,6 @@ class DirectMessages extends React.Component<Props, State> {
       dispatch(
         setTitlebarProps({
           title: 'Messages',
-          rightAction: (
-            <PrimaryOutlineButton size={'small'} to={'/new/message'}>
-              New
-            </PrimaryOutlineButton>
-          ),
         })
       );
     }
@@ -82,17 +72,6 @@ class DirectMessages extends React.Component<Props, State> {
                   <NoCommunityHeading>
                     No conversation selected
                   </NoCommunityHeading>
-                  <NoCommunitySubheading>
-                    Choose from an existing conversation, or start a new one.
-                  </NoCommunitySubheading>
-                  <PrimaryOutlineButton
-                    to={{
-                      pathname: '/new/message',
-                      state: { modal: true },
-                    }}
-                  >
-                    New message
-                  </PrimaryOutlineButton>
                 </div>
               </NoCommunitySelected>
             )}

@@ -170,16 +170,6 @@ class ExistingThread extends React.Component<Props> {
                   <Loading />
                 )}
               </ViewContent>
-
-              <ChatInputWrapper>
-                <ChatInput
-                  threadId={id}
-                  currentUser={currentUser}
-                  threadType={'directMessageThread'}
-                  onRef={chatInput => (this.chatInput = chatInput)}
-                  participants={mentionSuggestions}
-                />
-              </ChatInputWrapper>
             </MessagesContainer>
           </div>
         );

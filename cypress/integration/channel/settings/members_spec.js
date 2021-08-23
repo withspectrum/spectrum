@@ -33,16 +33,4 @@ describe('sending a message to channel member', () => {
         .should('be.visible');
     });
   });
-
-  it('should init a new dm', () => {
-    cy.get('[data-cy="channel-overview"]').should('be.visible');
-
-    cy.get('[data-cy="message-user-button"]')
-      .first()
-      .click();
-
-    cy.url().should('include', '/new/message');
-
-    cy.get('[data-cy="write-direct-message-titlebar"]').should('be.visible');
-  });
 });
