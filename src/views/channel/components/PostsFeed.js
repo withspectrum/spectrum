@@ -11,7 +11,6 @@ import {
   PostsFeedsSelectorContainer,
   SearchInput,
 } from 'src/views/community/style';
-import MiniComposer from 'src/components/composerMini';
 import useDebounce from 'src/hooks/useDebounce';
 
 const ChannelThreadFeed = compose(getChannelThreads)(ThreadFeed);
@@ -54,13 +53,6 @@ export default withCurrentUser((props: Props) => {
           data-cy="channel-search-input"
         />
       </PostsFeedsSelectorContainer>
-      {currentUser && isMember && (
-        <MiniComposer
-          community={channel.community}
-          fixedChannelId={channel.id}
-          currentUser={currentUser}
-        />
-      )}
 
       {debouncedServerSearchQuery && (
         <SearchThreadFeed

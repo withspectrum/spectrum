@@ -9,7 +9,6 @@ import ThreadFeed from 'src/components/threadFeed';
 import Select from 'src/components/select';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { PostsFeedsSelectorContainer, SearchInput } from '../style';
-import MiniComposer from 'src/components/composerMini';
 import useDebounce from 'src/hooks/useDebounce';
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
@@ -63,9 +62,6 @@ export const PostsFeeds = withCurrentUser((props: Props) => {
           value={clientSearchQuery}
         />
       </PostsFeedsSelectorContainer>
-      {currentUser && isMember && (
-        <MiniComposer community={community} currentUser={currentUser} />
-      )}
 
       {debouncedServerSearchQuery && (
         <SearchThreadFeed
