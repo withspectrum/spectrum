@@ -44,7 +44,6 @@ const Community = /* GraphQL */ `
   type CommunityMetaData @cacheControl(maxAge: 1800) {
     members: Int
     channels: Int
-    onlineMembers: Int
   }
 
   type SlackImport @deprecated(reason: "Use the slack settings field instead") {

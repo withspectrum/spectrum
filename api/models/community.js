@@ -153,37 +153,6 @@ export const getCommunitiesMemberCounts = (communityIds: Array<string>) => {
     .run();
 };
 
-export const getCommunitiesOnlineMemberCounts = (
-  communityIds: Array<string>
-) => {
-  return db
-    .table('usersCommunities')
-    .getAll(...communityIds.map(id => [id, true]), {
-      index: 'communityIdAndIsMember',
-    })
-    .pluck(['communityId', 'userId'])
-    .eqJoin('userId', db.table('users'))
-    .pluck('left', { right: ['lastSeen', 'isOnline'] })
-    .zip()
-    .filter(rec =>
-      rec('isOnline')
-        .eq(true)
-        .or(
-          rec('lastSeen')
-            .toEpochTime()
-            .ge(
-              db
-                .now()
-                .toEpochTime()
-                .sub(86400)
-            )
-        )
-    )
-    .group('communityId')
-    .count()
-    .run();
-};
-
 export const setCommunityLastActive = (id: string, lastActive: Date) => {
   return db
     .table('communities')

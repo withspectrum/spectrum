@@ -3,7 +3,6 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   getCommunitiesChannelCounts,
-  getCommunitiesOnlineMemberCounts,
   getCommunitiesMemberCounts,
 } from '../models/community';
 import { getCommunitiesSettings } from '../models/communitySettings';
@@ -25,11 +24,6 @@ export const __createCommunityMemberCountLoader = createLoader(
 
 export const __createCommunityChannelCountLoader = createLoader(
   communityIds => getCommunitiesChannelCounts(communityIds),
-  'group'
-);
-
-export const __createCommunityOnlineMemberCountLoader = createLoader(
-  communityIds => getCommunitiesOnlineMemberCounts(communityIds),
   'group'
 );
 

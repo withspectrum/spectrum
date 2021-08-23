@@ -16,7 +16,6 @@ import {
   __createChannelLoader,
   __createChannelThreadCountLoader,
   __createChannelMemberCountLoader,
-  __createChannelOnlineMemberCountLoader,
   __createChannelPendingMembersLoader,
   __createChannelSettingsLoader,
 } from './channel';
@@ -26,7 +25,6 @@ import {
   __createCommunityChannelCountLoader,
   __createCommunitySettingsLoader,
   __createCommunityMemberCountLoader,
-  __createCommunityOnlineMemberCountLoader,
 } from './community';
 import {
   __createDirectMessageThreadLoader,
@@ -56,7 +54,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
   channelMemberCount: __createChannelMemberCountLoader(options),
-  channelOnlineMemberCount: __createChannelOnlineMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
   channelPendingUsers: __createChannelPendingMembersLoader(options),
   channelSettings: __createChannelSettingsLoader(options),
@@ -64,7 +61,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   communityBySlug: __createCommunityBySlugLoader(options),
   communityChannelCount: __createCommunityChannelCountLoader(options),
   communityMemberCount: __createCommunityMemberCountLoader(options),
-  communityOnlineMemberCount: __createCommunityOnlineMemberCountLoader(options),
   communitySettings: __createCommunitySettingsLoader(options),
   directMessageThread: __createDirectMessageThreadLoader(options),
   directMessageParticipants: __createDirectMessageParticipantsLoader(options),

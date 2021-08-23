@@ -53,11 +53,6 @@ export const CommunityMeta = (props: Props) => {
               <Icon glyph={'person'} size={20} />{' '}
               {community.metaData.members.toLocaleString()} members
             </MetaRow>
-
-            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
-              <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
-              members online
-            </MetaRow>
           </React.Fragment>
         )}
       </MetaLinksContainer>
