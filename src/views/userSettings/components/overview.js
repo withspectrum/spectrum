@@ -2,7 +2,6 @@
 import * as React from 'react';
 import type { GetCurrentUserSettingsType } from 'shared/graphql/queries/user/getCurrentUserSettings';
 import UserEditForm from './editForm';
-import EmailSettings from './emailSettings';
 import NotificationSettings from './notificationSettings';
 import DeleteAccountForm from './deleteAccountForm';
 import DownloadDataForm from './downloadDataForm';
@@ -32,17 +31,6 @@ class Overview extends React.Component<Props> {
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
             <DownloadDataForm user={user} />
-          </ErrorBoundary>
-        </Column>
-        <Column>
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <EmailSettings user={user} />
-          </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            {!isDesktopApp() &&
-              'serviceWorker' in navigator &&
-              'PushManager' in window && <NotificationSettings largeOnly />}
           </ErrorBoundary>
 
           <Logout />
