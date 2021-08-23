@@ -42,7 +42,6 @@ import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
 import { LoadingView } from 'src/views/viewHelpers';
 import GlobalTitlebar from 'src/views/globalTitlebar';
-import NoUsernameHandler from 'src/views/authViewHandler/noUsernameHandler';
 import { NavigationContext } from 'src/helpers/navigation-context';
 
 const Explore = Loadable({
@@ -245,23 +244,6 @@ class Routes extends React.Component<Props, State> {
               <QueryParamToastDispatcher />
             </ErrorBoundary>
 
-            {/* 
-              while users should be able to browse communities/threads
-              if they are signed out (eg signedOutFallback), they should not
-              be allowed to use the app after signing up if they dont set a username.
-
-              otherwise we can get into a state where people are sending DMs,
-              sending messages, and posting threads without having a user profile
-              that people can report or link to.
-
-              this global component simply listens for users without a username
-              to be authenticated, and if so forces a redirect to /new/user 
-              prompting them to set a username
-            */}
-            <ErrorBoundary>
-              <NoUsernameHandler currentUser={currentUser} />
-            </ErrorBoundary>
-
             {isModal && (
               <Route
                 // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
@@ -362,7 +344,6 @@ class Routes extends React.Component<Props, State> {
                     {/* App Pages */}
                     <Route path="/new/thread" component={ComposerFallback} />
                     <Route path="/new/search" component={Search} />
-                    <Route path="/new/user" component={NewUserOnboarding} />
                     <Route
                       path="/new/message"
                       component={NewDirectMessageFallback}

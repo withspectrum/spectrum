@@ -15,7 +15,7 @@ export const GithubSigninButton = (props: ButtonProps) => {
     >
       <GithubButton showAfter={showAfter} preferred={preferred}>
         <Icon glyph={'github'} />
-        <Label>{githubOnly ? 'Sign up' : 'Log in'} with GitHub</Label>
+        <Label>Log in with GitHub</Label>
       </GithubButton>
     </A>
   );

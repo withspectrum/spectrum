@@ -198,11 +198,6 @@ const ChatInput = (props: Props) => {
       );
     }
 
-    if (!props.currentUser) {
-      // user is trying to send a message without being signed in
-      return props.dispatch(openModal('LOGIN_MODAL', {}));
-    }
-
     scrollToBottom();
 
     if (mediaFile) {

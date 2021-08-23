@@ -6,7 +6,6 @@ import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import RestoreChannelModal from './RestoreChannelModal';
-import LoginModal from './LoginModal';
 import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
 import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
@@ -17,7 +16,6 @@ const MODAL_COMPONENTS = {
   REP_EXPLAINER_MODAL: RepExplainerModal,
   CHANGE_CHANNEL: ChangeChannelModal,
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
-  LOGIN_MODAL: LoginModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,
   CLOSE_COMPOSER_CONFIRMATION_MODAL: CloseComposerConfirmationModal,

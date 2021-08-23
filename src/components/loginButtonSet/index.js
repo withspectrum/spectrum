@@ -99,18 +99,6 @@ class LoginButtonSet extends React.Component<Props> {
             }
             showAfter={preferredSigninMethod === 'github'}
           />
-
-          {!githubOnly && (
-            <div style={{ gridColumn: 'span 2' }}>
-              <div style={{ padding: '16px' }} />
-              <OutlineButton
-                css={{ width: '100%' }}
-                to={`/new/user?r=${postAuthRedirectPath}`}
-              >
-                New to Spectrum? Click here to sign up.
-              </OutlineButton>
-            </div>
-          )}
         </Container>
       </React.Fragment>
     );

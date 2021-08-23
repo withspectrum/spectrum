@@ -86,20 +86,6 @@ class Nav extends React.Component<Props, State> {
               >
                 Log in
               </LoginTab>
-              <AuthTab dark={this.props.dark}>
-                <Link to="/new/user">
-                  <PrimaryButton
-                    data-cy="navigation-splash-signin"
-                    style={{
-                      fontWeight: '700',
-                      fontSize: '16px',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    Sign up
-                  </PrimaryButton>
-                </Link>
-              </AuthTab>
             </React.Fragment>
           )}
           <MenuTab dark={this.props.dark} open={this.state.menuIsOpen}>
@@ -122,14 +108,9 @@ class Nav extends React.Component<Props, State> {
                   <span>Return home</span>
                 </AuthLink>
               ) : (
-                <React.Fragment>
-                  <LoginLink to={'/login'}>
-                    <span>Log in</span>
-                  </LoginLink>
-                  <AuthLink to={'/new/user'}>
-                    <span>Sign up</span>
-                  </AuthLink>
-                </React.Fragment>
+                <LoginLink to={'/login'}>
+                  <span>Log in</span>
+                </LoginLink>
               )}
             </MenuContainer>
             <MenuOverlay

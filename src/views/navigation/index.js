@@ -82,7 +82,7 @@ const Navigation = (props: Props) => {
               <Route path="/login">
                 {({ match }) => (
                   <Tooltip
-                    content="Log in or sign up"
+                    content="Log in"
                     placement={'left'}
                     isEnabled={!isWideViewport}
                   >
@@ -97,7 +97,7 @@ const Navigation = (props: Props) => {
                           <Icon glyph="door-enter" />
                         </IconWrapper>
 
-                        <Label>Log in or sign up</Label>
+                        <Label>Log in</Label>
                       </AvatarLink>
                     </AvatarGrid>
                   </Tooltip>

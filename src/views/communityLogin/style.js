@@ -49,18 +49,6 @@ export const LoginImageContainer = styled.div`
   margin-top: 32px;
 `;
 
-export const SignupFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  font-size: 14px;
-  color: ${theme.text.alt};
-  font-weight: 500;
-  border-top: 2px solid ${theme.bg.wash};
-  margin-top: 40px;
-  width: 100%;
-`;
-
 export const SigninLink = styled.span`
   color: ${theme.brand.default};
   margin-left: 6px;

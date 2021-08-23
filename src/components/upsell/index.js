@@ -2,9 +2,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icon';
-import { storeItem } from 'src/helpers/localStorage';
 import { Button, OutlineButton } from 'src/components/button';
-import Login from 'src/views/login';
 import {
   Title,
   MiniTitle,
@@ -13,10 +11,6 @@ import {
   Actions,
   NullCol,
   LargeEmoji,
-  UpsellIconContainer,
-  SignupButton,
-  SignupFooter,
-  SigninLink,
   HeadingIconWrapper,
 } from './style';
 
@@ -75,84 +69,6 @@ export const NullState = (props: NullStateProps) => (
     {props.children}
   </NullCol>
 );
-
-type SigninState = {
-  isSigningIn: boolean,
-  signinType: string,
-};
-
-type SigninProps = {
-  view?: Object,
-  noShadow?: boolean,
-  title?: string,
-  glyph?: string,
-  redirectPath?: string,
-};
-
-export class UpsellSignIn extends React.Component<SigninProps, SigninState> {
-  state = {
-    isSigningIn: false,
-    signinType: '',
-  };
-
-  toggleSigningIn = (type: string) => {
-    const { isSigningIn } = this.state;
-    this.setState({
-      isSigningIn: !isSigningIn,
-      signinType: type,
-    });
-  };
-
-  trackSignin = (type: string, method: string) => {
-    storeItem('preferred_signin_method', method);
-  };
-
-  render() {
-    const { view, noShadow, title, glyph } = this.props;
-    const { isSigningIn, signinType } = this.state;
-
-    if (isSigningIn) {
-      return (
-        <Login
-          close={this.toggleSigningIn}
-          signinType={signinType}
-          redirectPath={window.location}
-        />
-      );
-    } else {
-      const subtitle = view
-        ? view.type === 'community'
-          ? `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${
-              view.data.name
-            } community and get in on the conversation.`
-          : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${
-              view.data.community.name
-            } community and get in on the conversation.`
-        : 'Spectrum is a place where communities can share, discuss, and grow together. Sign up below to get in on the conversation.';
-
-      return (
-        <NullCard bg={'signup'} noPadding noShadow={noShadow}>
-          <UpsellIconContainer>
-            <Icon glyph={glyph || 'explore'} size={56} />
-          </UpsellIconContainer>
-          <Title>{title || 'Find your people.'}</Title>
-          <Subtitle>{subtitle}</Subtitle>
-
-          <SignupButton onClick={() => this.toggleSigningIn('signup')}>
-            Sign up
-          </SignupButton>
-          <SignupFooter>
-            Already have an account?{' '}
-            <SigninLink onClick={() => this.toggleSigningIn('login')}>
-              {' '}
-              Sign in
-            </SigninLink>
-          </SignupFooter>
-        </NullCard>
-      );
-    }
-  }
-}
 
 export const Upsell404Channel = ({ community }: { community: string }) => {
   return (

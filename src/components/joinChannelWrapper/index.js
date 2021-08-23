@@ -34,7 +34,7 @@ const JoinChannel = (props: Props) => {
     e && e.preventDefault() && e.stopPropogation();
 
     if (!currentUser || !currentUser.id) {
-      return dispatch(openModal('LOGIN_MODAL'));
+      return dispatch(addToastWithTimeout('error', 'You must be logged in.'));
     }
 
     setIsLoading(true);
