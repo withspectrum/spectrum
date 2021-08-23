@@ -41,14 +41,6 @@ const ActionsDropdown = (props: Props) => {
   const isChannelOwner = currentUser && channelPermissions.isOwner;
   const isCommunityOwner = currentUser && communityPermissions.isOwner;
 
-  const shouldRenderEditThreadAction =
-    (isThreadAuthor ||
-      isChannelModerator ||
-      isCommunityModerator ||
-      isChannelOwner ||
-      isCommunityOwner) &&
-    toggleEdit;
-
   const shouldRenderDeleteThreadAction =
     isThreadAuthor ||
     isChannelModerator ||
@@ -125,18 +117,6 @@ const ActionsDropdown = (props: Props) => {
                     }}
                   >
                     <Flyout data-cy="thread-actions-dropdown" style={style}>
-                      {shouldRenderEditThreadAction && (
-                        <FlyoutRow>
-                          <TextButton
-                            onClick={toggleEdit}
-                            data-cy={'thread-dropdown-edit'}
-                          >
-                            <Icon size={24} glyph={'edit'} />
-                            <Label>Edit post</Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
-
                       {shouldRenderDeleteThreadAction && (
                         <FlyoutRow>
                           <TextButton

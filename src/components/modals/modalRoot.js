@@ -1,18 +1,14 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import CreateChannelModal from './CreateChannelModal';
-import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
-import ChangeChannelModal from './ChangeChannelModal';
-import RestoreChannelModal from './RestoreChannelModal';
-import ReportUserModal from './ReportUserModal';
 import BanUserModal from './BanUserModal';
 import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
+import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
+import ReportUserModal from './ReportUserModal';
+import RestoreChannelModal from './RestoreChannelModal';
 
 const MODAL_COMPONENTS = {
-  CREATE_CHANNEL_MODAL: CreateChannelModal,
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
-  CHANGE_CHANNEL: ChangeChannelModal,
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
   REPORT_USER_MODAL: ReportUserModal,
   BAN_USER_MODAL: BanUserModal,

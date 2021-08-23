@@ -12,7 +12,6 @@ import uploadImageMutation from 'shared/graphql/mutations/uploadImage';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import ThreadRenderer from 'src/components/threadRenderer';
 import ActionBar from './actionBar';
-import ThreadEditInputs from 'src/components/composer/inputs';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { UserListItem } from 'src/components/entities';
 import {
@@ -283,19 +282,7 @@ class ThreadDetailPure extends React.Component<Props, State> {
     return (
       <ThreadWrapper isEditing={isEditing} ref={this.props.ref}>
         <ThreadContent isEditing={isEditing}>
-          {isEditing ? (
-            <ThreadEditInputs
-              uploadFiles={this.uploadFiles}
-              title={this.state.title}
-              body={this.state.body}
-              autoFocus
-              bodyRef={ref => (this.bodyEditor = ref)}
-              changeBody={this.changeBody}
-              changeTitle={this.changeTitle}
-              onKeyDown={this.handleKeyPress}
-              isEditing={isEditing}
-            />
-          ) : (
+          {!isEditing && (
             <React.Fragment>
               <BylineContainer>
                 <UserListItem

@@ -72,12 +72,6 @@ const ChannelView = Loadable({
 });
 
 /* prettier-ignore */
-const Notifications = Loadable({
-  loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const UserSettings = Loadable({
   loader: () => import('./views/userSettings'/* webpackChunkName: "UserSettings" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
@@ -129,9 +123,6 @@ const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
   <Login />
-));
-const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Login redirectPath={`${CLIENT_URL}/notifications`} />
 ));
 
 export const RouteModalContext = React.createContext({
@@ -334,10 +325,6 @@ class Routes extends React.Component<Props, State> {
                       exact
                       path="/users/:username/settings"
                       component={UserSettingsFallback}
-                    />
-                    <Route
-                      path="/notifications"
-                      component={NotificationsFallback}
                     />
 
                     <Route
