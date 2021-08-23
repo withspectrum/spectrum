@@ -222,27 +222,6 @@ const ActionsDropdown = (props: Props) => {
                     }}
                   >
                     <Flyout data-cy="thread-actions-dropdown" style={style}>
-                      <FlyoutRow>
-                        <TextButton
-                          onClick={toggleNotification}
-                          data-cy={'thread-dropdown-notifications'}
-                        >
-                          <Icon
-                            size={24}
-                            glyph={
-                              thread.receiveNotifications
-                                ? 'notification-fill'
-                                : 'notification'
-                            }
-                          />
-                          <Label>
-                            {thread.receiveNotifications
-                              ? 'Subscribed'
-                              : 'Notify me'}
-                          </Label>
-                        </TextButton>
-                      </FlyoutRow>
-
                       {shouldRenderEditThreadAction && (
                         <FlyoutRow>
                           <TextButton
@@ -251,68 +230,6 @@ const ActionsDropdown = (props: Props) => {
                           >
                             <Icon size={24} glyph={'edit'} />
                             <Label>Edit post</Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
-
-                      {shouldRenderPinThreadAction && (
-                        <FlyoutRow>
-                          <TextButton
-                            onClick={togglePinThread}
-                            data-cy={'thread-dropdown-pin'}
-                            loading={isPinningThread}
-                          >
-                            <Icon
-                              size={24}
-                              glyph={isPinned ? 'pin-fill' : 'pin'}
-                            />
-                            <Label>
-                              {isPinned
-                                ? isPinningThread
-                                  ? 'Unpinning...'
-                                  : 'Unpin thread'
-                                : isPinningThread
-                                ? 'Pinning...'
-                                : 'Pin thread'}
-                            </Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
-
-                      {shouldRenderMoveThreadAction && (
-                        <FlyoutRow hideBelow={1024}>
-                          <TextButton
-                            onClick={triggerChangeChannel}
-                            data-cy={'thread-dropdown-move'}
-                          >
-                            <Icon size={24} glyph={'channel'} />
-                            <Label>Move thread</Label>
-                          </TextButton>
-                        </FlyoutRow>
-                      )}
-
-                      {shouldRenderLockThreadAction && (
-                        <FlyoutRow>
-                          <TextButton
-                            onClick={lockThread}
-                            data-cy={'thread-dropdown-lock'}
-                            loading={isLockingThread}
-                          >
-                            <Icon
-                              size={24}
-                              glyph={
-                                thread.isLocked ? 'private' : 'private-unlocked'
-                              }
-                            />
-                            <Label>
-                              {thread.isLocked
-                                ? isLockingThread
-                                  ? 'Unlocking'
-                                  : 'Unlock chat'
-                                : isLockingThread
-                                ? 'Locking...'
-                                : 'Lock chat'}
-                            </Label>
                           </TextButton>
                         </FlyoutRow>
                       )}
