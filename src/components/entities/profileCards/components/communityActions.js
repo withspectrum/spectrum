@@ -41,17 +41,6 @@ export const UnconnectedCommunityActions = (props: Props) => {
             Settings
           </OutlineButton>
         )}
-
-        {!isOwner && (
-          <OutlineButton
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onClick={leaveCommunity}
-            data-cy="leave-community-button"
-          >
-            {isHovering ? 'Leave community' : 'Member'}
-          </OutlineButton>
-        )}
       </ActionsRowContainer>
     );
   }
@@ -60,22 +49,7 @@ export const UnconnectedCommunityActions = (props: Props) => {
     return <div style={{ padding: '8px' }} />;
   }
 
-  return (
-    <ActionsRowContainer>
-      <JoinCommunity
-        community={community}
-        render={({ isLoading }) => (
-          <PrimaryButton
-            data-cy="profile-join-button"
-            isLoading={isLoading}
-            icon={'door-enter'}
-          >
-            {isLoading ? 'Joining...' : 'Join community'}
-          </PrimaryButton>
-        )}
-      />
-    </ActionsRowContainer>
-  );
+  return <div style={{ padding: '8px' }} />;
 };
 
 export const CommunityActions = connect()(UnconnectedCommunityActions);
