@@ -77,27 +77,6 @@ class PendingUsers extends React.Component<Props> {
                       <EditDropdown
                         render={() => (
                           <Dropdown>
-                            <InitDirectMessageWrapper
-                              user={user}
-                              render={
-                                <DropdownSection style={{ borderBottom: '0' }}>
-                                  <DropdownAction>
-                                    <Icon
-                                      glyph={'message-simple-new'}
-                                      size={'32'}
-                                    />
-                                  </DropdownAction>
-                                  <DropdownSectionText>
-                                    <DropdownSectionTitle>
-                                      Send Direct Message
-                                    </DropdownSectionTitle>
-                                  </DropdownSectionText>
-                                </DropdownSection>
-                              }
-                            />
-
-                            <DropdownSectionDivider />
-
                             <DropdownSection
                               onClick={() => togglePending(user.id, 'approve')}
                             >

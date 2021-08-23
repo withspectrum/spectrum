@@ -201,24 +201,6 @@ class EditDropdown extends React.Component<Props, State> {
         {isOpen && (
           <OutsideClickHandler onOutsideClick={this.close}>
             <Dropdown>
-              <InitDirectMessageWrapper
-                user={user}
-                render={
-                  <DropdownSection style={{ borderBottom: '0' }}>
-                    <DropdownAction>
-                      <Icon glyph={'message-simple-new'} size={'32'} />
-                    </DropdownAction>
-                    <DropdownSectionText>
-                      <DropdownSectionTitle>
-                        Send Direct Message
-                      </DropdownSectionTitle>
-                    </DropdownSectionText>
-                  </DropdownSection>
-                }
-              />
-
-              <DropdownSectionDivider />
-
               {configuration &&
                 configuration.map((role, i) => {
                   return role.mutation ? (
