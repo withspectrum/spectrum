@@ -158,7 +158,6 @@ class Message extends React.Component<Props, State> {
     } = this.props;
     const { isEditing } = this.state;
 
-    const canEditMessage = me && message.messageType !== 'media';
     const selectedMessageId = btoa(new Date(message.timestamp).getTime() - 1);
     const messageUrl =
       threadType === 'story' && thread

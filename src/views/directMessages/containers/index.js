@@ -6,7 +6,6 @@ import type { Match } from 'react-router';
 import Head from 'src/components/head';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
-import { PrimaryOutlineButton } from 'src/components/button';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   ViewGrid,
@@ -17,7 +16,6 @@ import {
   StyledSecondaryColumn,
   NoCommunitySelected,
   NoCommunityHeading,
-  NoCommunitySubheading,
 } from '../style';
 
 type Props = {

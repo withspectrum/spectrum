@@ -97,12 +97,6 @@ const ChannelSettings = Loadable({
 });
 
 /* prettier-ignore */
-const NewDirectMessage = Loadable({
-  loader: () => import('./views/newDirectMessage'/* webpackChunkName: "NewDirectMessage" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const Pages = Loadable({
   loader: () => import('./views/pages'/* webpackChunkName: "Splash" */),
   loading: ({ isLoading }) => isLoading && null,

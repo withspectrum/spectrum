@@ -19,12 +19,7 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { DesktopTitlebar } from 'src/components/titlebar';
-import { PrimaryOutlineButton } from 'src/components/button';
-import {
-  NoCommunitySelected,
-  NoCommunityHeading,
-  NoCommunitySubheading,
-} from '../style';
+import { NoCommunitySelected, NoCommunityHeading } from '../style';
 
 type Props = {
   currentUser: Object,

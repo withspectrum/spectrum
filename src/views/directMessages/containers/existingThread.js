@@ -9,7 +9,7 @@ import Icon from 'src/components/icon';
 import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
-import ChatInput, { cleanSuggestionUserObject } from 'src/components/chatInput';
+import ChatInput from 'src/components/chatInput';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import getDirectMessageThread, {
   type GetDirectMessageThreadType,
@@ -17,7 +17,6 @@ import getDirectMessageThread, {
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { UserAvatar } from 'src/components/avatar';
 import { MessagesContainer, ViewContent } from '../style';
-import { ChatInputWrapper } from 'src/components/layout';
 import { Loading } from 'src/components/loading';
 import { ErrorBoundary } from 'src/components/error';
 import type { WebsocketConnectionType } from 'src/reducers/connectionStatus';
@@ -142,9 +141,6 @@ class ExistingThread extends React.Component<Props> {
             </Link>
           ) : null;
         const names = trimmedUsers.map(user => user.name).join(', ');
-        const mentionSuggestions = thread.participants
-          .map(cleanSuggestionUserObject)
-          .filter(user => user && user.username !== currentUser.username);
         return (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <DesktopTitlebar

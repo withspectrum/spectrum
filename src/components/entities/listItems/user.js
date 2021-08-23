@@ -9,7 +9,6 @@ import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import type { Dispatch } from 'redux';
 import ConditionalWrap from 'src/components/conditionalWrap';
-import { OutlineButton } from 'src/components/button';
 import {
   RowWithAvatar,
   UserAvatarContainer,
@@ -17,7 +16,6 @@ import {
   Label,
   Sublabel,
   Description,
-  Actions,
   CardLink,
 } from './style';
 
@@ -55,7 +53,6 @@ const User = (props: Props) => {
     reputation,
     avatarSize = 40,
     badges,
-    children,
     showHoverProfile = true,
     isLink = true,
     onClick = noop,
