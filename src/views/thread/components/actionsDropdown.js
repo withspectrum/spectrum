@@ -4,7 +4,6 @@ import { Manager, Reference, Popper } from 'react-popper';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { openModal } from 'src/actions/modals';
-import { addToastWithTimeout } from 'src/actions/toasts';
 import Flyout from 'src/components/flyout';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import Icon from 'src/components/icon';
@@ -27,15 +26,7 @@ type Props = {
 };
 
 const ActionsDropdown = (props: Props) => {
-  const {
-    thread,
-    dispatch,
-    toggleThreadNotifications,
-    currentUser,
-    toggleEdit,
-    pinThread,
-    setThreadLock,
-  } = props;
+  const { thread, dispatch, currentUser, toggleEdit } = props;
   if (!currentUser) return null;
 
   const {
@@ -58,100 +49,12 @@ const ActionsDropdown = (props: Props) => {
       isCommunityOwner) &&
     toggleEdit;
 
-  const shouldRenderMoveThreadAction = isCommunityModerator || isCommunityOwner;
-
-  const shouldRenderLockThreadAction =
-    isThreadAuthor ||
-    isChannelModerator ||
-    isCommunityModerator ||
-    isChannelOwner ||
-    isCommunityOwner;
-
   const shouldRenderDeleteThreadAction =
     isThreadAuthor ||
     isChannelModerator ||
     isCommunityModerator ||
     isChannelOwner ||
     isCommunityOwner;
-
-  const shouldRenderPinThreadAction =
-    !thread.channel.isPrivate && (isCommunityOwner || isCommunityModerator);
-
-  const toggleNotification = () => {
-    toggleThreadNotifications({
-      threadId: thread.id,
-    })
-      .then(({ data: { toggleThreadNotifications } }) => {
-        if (toggleThreadNotifications.receiveNotifications) {
-          return dispatch(
-            addToastWithTimeout('success', 'Notifications activated!')
-          );
-        } else {
-          return dispatch(
-            addToastWithTimeout('neutral', 'Notifications turned off')
-          );
-        }
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
-  const triggerChangeChannel = () => {
-    dispatch(openModal('CHANGE_CHANNEL', { thread }));
-  };
-
-  const isPinned = thread.community.pinnedThreadId === thread.id;
-  const [isPinningThread, setIsPinningThread] = React.useState(false);
-  const togglePinThread = () => {
-    if (thread.channel.isPrivate) {
-      return dispatch(
-        addToastWithTimeout(
-          'error',
-          'Only threads in public channels can be pinned.'
-        )
-      );
-    }
-
-    setIsPinningThread(true);
-
-    return pinThread({
-      threadId: thread.id,
-      communityId: thread.community.id,
-      value: isPinned ? null : thread.id,
-    })
-      .then(() => {
-        setIsPinningThread(false);
-      })
-      .catch(err => {
-        setIsPinningThread(false);
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
-
-  const [isLockingThread, setIsLockingThread] = React.useState(false);
-  const lockThread = () => {
-    const value = !thread.isLocked;
-    const threadId = thread.id;
-
-    setIsLockingThread(true);
-    setThreadLock({
-      threadId,
-      value,
-    })
-      .then(({ data: { setThreadLock } }) => {
-        setIsLockingThread(false);
-        if (setThreadLock.isLocked) {
-          return dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
-        } else {
-          return dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
-        }
-      })
-      .catch(err => {
-        setIsLockingThread(false);
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
 
   const triggerDelete = e => {
     e.preventDefault();

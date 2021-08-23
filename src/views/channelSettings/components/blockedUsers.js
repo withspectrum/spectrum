@@ -12,7 +12,6 @@ import {
   SectionTitle,
   SectionSubtitle,
 } from 'src/components/settingsViews/style';
-import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
 import { ListContainer, Notice } from 'src/components/listItems/style';
@@ -20,7 +19,6 @@ import EditDropdown from './editDropdown';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Dropdown,
-  DropdownSectionDivider,
   DropdownSection,
   DropdownSectionSubtitle,
   DropdownSectionText,

@@ -43,8 +43,6 @@ import {
   NullColumnHeading,
   NullColumnSubheading,
 } from 'src/components/threadFeed/style';
-import { PrimaryOutlineButton } from 'src/components/button';
-import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
 import { FeedsContainer } from './style';
 import { InfoContainer } from 'src/views/community/style';
@@ -196,7 +194,6 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (user && user.id) {
-      const isCurrentUser = currentUser && user.id === currentUser.id;
       const { title, description } = generateMetaInfo({
         type: 'user',
         data: {

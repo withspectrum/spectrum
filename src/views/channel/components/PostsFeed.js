@@ -22,9 +22,7 @@ type Props = {
 };
 
 export default withCurrentUser((props: Props) => {
-  const { channel, currentUser } = props;
-  const { channelPermissions } = channel;
-  const { isMember } = channelPermissions;
+  const { channel } = props;
   const [clientSearchQuery, setClientSearchQuery] = useState('');
   const [serverSearchQuery, setServerSearchQuery] = useState('');
 

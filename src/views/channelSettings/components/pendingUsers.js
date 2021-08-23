@@ -10,7 +10,6 @@ import getPendingUsersQuery from 'shared/graphql/queries/channel/getChannelPendi
 import type { GetChannelPendingUsersType } from 'shared/graphql/queries/channel/getChannelPendingUsers';
 import ViewError from 'src/components/viewError';
 import { ListContainer } from 'src/components/listItems/style';
-import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   SectionCard,
   SectionTitle,
@@ -19,7 +18,6 @@ import {
 import EditDropdown from './editDropdown';
 import {
   Dropdown,
-  DropdownSectionDivider,
   DropdownSection,
   DropdownSectionSubtitle,
   DropdownSectionText,

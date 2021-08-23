@@ -7,7 +7,6 @@ import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import {
   EditDropdownContainer,
   Dropdown,
-  DropdownSectionDivider,
   DropdownSection,
   DropdownSectionSubtitle,
   DropdownSectionText,
@@ -16,7 +15,6 @@ import {
 } from 'src/components/settingsViews/style';
 import Icon from 'src/components/icon';
 import { Spinner } from 'src/components/globals';
-import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import addCommunityModerator from 'shared/graphql/mutations/communityMember/addCommunityModerator';
 import removeCommunityModerator from 'shared/graphql/mutations/communityMember/removeCommunityModerator';
@@ -190,7 +188,6 @@ class EditDropdown extends React.Component<Props, State> {
   close = () => this.setState({ isOpen: false });
 
   render() {
-    const { user } = this.props;
     const { isOpen } = this.state;
     const configuration = this.getRolesConfiguration();
 
