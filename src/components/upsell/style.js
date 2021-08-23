@@ -2,15 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { MEDIA_BREAK } from 'src/components/layout';
-import {
-  FlexRow,
-  FlexCol,
-  Transition,
-  Shadow,
-  hexa,
-  zIndex,
-} from 'src/components/globals';
-import { Button } from 'src/components/button';
+import { FlexRow, FlexCol, Transition, zIndex } from 'src/components/globals';
 
 export const Title = styled.p`
   color: ${theme.text.default};

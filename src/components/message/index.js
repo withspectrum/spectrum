@@ -15,7 +15,6 @@ import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
 import EditingBody from './editingBody';
 import { openModal } from 'src/actions/modals';
-import { replyToMessage } from 'src/actions/message';
 import { CLIENT_URL } from 'src/api/constants';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
@@ -39,7 +38,6 @@ import {
   ActionsContainer,
   Actions,
   Action,
-  LikeAction,
   EditedIndicator,
 } from './style';
 import getThreadLink from 'src/helpers/get-thread-link';
@@ -124,18 +122,6 @@ class Message extends React.Component<Props, State> {
         message,
         threadType: this.props.threadType,
         threadId: this.props.thread.id,
-      })
-    );
-  };
-
-  replyToMessage = (e: any) => {
-    e.stopPropagation();
-
-    const { thread, message } = this.props;
-    return this.props.dispatch(
-      replyToMessage({
-        threadId: thread.id,
-        messageId: message.id,
       })
     );
   };
@@ -313,45 +299,6 @@ class Message extends React.Component<Props, State> {
                         />
                       </Action>
                     </Tooltip>
-                  )}
-
-                  <Tooltip content={'Reply'}>
-                    <Action onClick={this.replyToMessage}>
-                      <Icon
-                        data-cy="reply-to-message"
-                        glyph="reply"
-                        size={20}
-                      />
-                    </Action>
-                  </Tooltip>
-
-                  {!me && (
-                    <Reaction
-                      message={message}
-                      toggleReaction={toggleReaction}
-                      me={me}
-                      currentUser={currentUser}
-                      dispatch={dispatch}
-                      render={({ hasReacted, mutation }) => (
-                        <Tooltip content={hasReacted ? 'Unlike' : 'Like'}>
-                          <LikeAction
-                            hasReacted={hasReacted}
-                            onClick={e => {
-                              e.stopPropagation();
-                              mutation();
-                            }}
-                          >
-                            <Icon
-                              data-cy={
-                                hasReacted ? 'unlike-action' : 'like-action'
-                              }
-                              glyph={hasReacted ? 'like-fill' : 'like'}
-                              size={20}
-                            />
-                          </LikeAction>
-                        </Tooltip>
-                      )}
-                    />
                   )}
 
                   {threadType === 'story' && (

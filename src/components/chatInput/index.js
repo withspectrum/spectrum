@@ -4,8 +4,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Icon from 'src/components/icon';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { openModal } from 'src/actions/modals';
-import { replyToMessage } from 'src/actions/message';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
   Form,
@@ -20,36 +18,11 @@ import {
 import { PrimaryButton } from 'src/components/button';
 import sendMessage from 'shared/graphql/mutations/message/sendMessage';
 import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage';
-import { getMessageById } from 'shared/graphql/queries/message/getMessage';
 import MediaUploader from './components/mediaUploader';
-import { QuotedMessage as QuotedMessageComponent } from '../message/view';
 import type { Dispatch } from 'redux';
 import { MarkdownHint } from 'src/components/markdownHint';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import { MEDIA_BREAK } from 'src/components/layout';
-
-const QuotedMessage = connect()(
-  getMessageById(props => {
-    if (props.data && props.data.message) {
-      return <QuotedMessageComponent message={props.data.message} />;
-    }
-
-    // if the query is done loading and no message was returned, clear the input
-    if (props.data && props.data.networkStatus === 7 && !props.data.message) {
-      props.dispatch(
-        addToastWithTimeout(
-          'error',
-          'The message you are replying to was deleted or could not be fetched.'
-        )
-      );
-      props.dispatch(
-        replyToMessage({ threadId: props.threadId, messageId: null })
-      );
-    }
-
-    return null;
-  })
-);
 
 type Props = {
   onRef: Function,
@@ -64,7 +37,6 @@ type Props = {
   websocketConnection: string,
   networkOnline: boolean,
   refetchThread?: Function,
-  quotedMessage: ?{ messageId: string, threadId: string },
   // used to pre-populate the @mention suggestions with participants and the author of the thread
   participants: Array<?Object>,
   onFocus: ?Function,
@@ -101,19 +73,12 @@ const ChatInput = (props: Props) => {
     localStorage.setItem(cacheKey, text);
   }, [text]);
 
-  // Focus chatInput when quoted message changes
-  // $FlowFixMe
-  React.useEffect(() => {
-    if (inputRef) inputRef.focus();
-  }, [props.quotedMessage && props.quotedMessage.messageId]);
-
   React.useEffect(() => {
     // autofocus the chat input on desktop
     if (inputRef && window && window.innerWidth > MEDIA_BREAK) inputRef.focus();
   }, [inputRef]);
 
   const removeAttachments = () => {
-    removeQuotedMessage();
     setMediaPreview(null);
   };
 
@@ -166,7 +131,7 @@ const ChatInput = (props: Props) => {
       threadId: props.threadId,
       messageType: file ? 'media' : 'text',
       threadType: props.threadType,
-      parentId: props.quotedMessage,
+      parentId: null,
       content: {
         body,
       },
@@ -239,7 +204,6 @@ const ChatInput = (props: Props) => {
 
     // Clear the chat input now that we're sending a message for sure
     onChange({ target: { value: '' } });
-    removeQuotedMessage();
     inputRef && inputRef.focus();
   };
 
@@ -267,13 +231,6 @@ const ChatInput = (props: Props) => {
     if (blob) {
       reader.readAsDataURL(blob);
     }
-  };
-
-  const removeQuotedMessage = () => {
-    if (props.quotedMessage)
-      props.dispatch(
-        replyToMessage({ threadId: props.threadId, messageId: null })
-      );
   };
 
   const networkDisabled =
@@ -306,7 +263,7 @@ const ChatInput = (props: Props) => {
           )}
           <Form onSubmit={submit}>
             <InputWrapper
-              hasAttachment={!!props.quotedMessage || !!mediaPreview}
+              hasAttachment={!!mediaPreview}
               networkDisabled={networkDisabled}
             >
               {mediaPreview && (
@@ -317,22 +274,8 @@ const ChatInput = (props: Props) => {
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
-              {props.quotedMessage && (
-                <PreviewWrapper data-cy="staged-quoted-message">
-                  <QuotedMessage
-                    id={props.quotedMessage}
-                    threadId={props.threadId}
-                  />
-                  <RemovePreviewButton
-                    data-cy="remove-staged-quoted-message"
-                    onClick={removeQuotedMessage}
-                  >
-                    <Icon glyph="view-close-small" size={'16'} />
-                  </RemovePreviewButton>
-                </PreviewWrapper>
-              )}
               <Input
-                hasAttachment={!!props.quotedMessage || !!mediaPreview}
+                hasAttachment={!!mediaPreview}
                 networkDisabled={networkDisabled}
                 placeholder="Your message here..."
                 value={text}
@@ -363,10 +306,9 @@ const ChatInput = (props: Props) => {
   );
 };
 
-const map = (state, ownProps) => ({
+const map = state => ({
   websocketConnection: state.connectionStatus.websocketConnection,
   networkOnline: state.connectionStatus.networkOnline,
-  quotedMessage: state.message.quotedMessage[ownProps.threadId] || null,
 });
 
 export default compose(

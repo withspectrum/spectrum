@@ -2,7 +2,6 @@
 import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
-import { PrimaryButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import { Link } from 'react-router-dom';
 import { Logo } from 'src/components/logo';

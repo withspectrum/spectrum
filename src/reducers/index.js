@@ -6,7 +6,6 @@ import directMessageThreads from './directMessageThreads';
 import gallery from './gallery';
 import threadSlider from './threadSlider';
 import notifications from './notifications';
-import message from './message';
 import connectionStatus from './connectionStatus';
 import titlebar from './titlebar';
 
@@ -19,7 +18,6 @@ const getReducers = () => {
     threadSlider,
     notifications,
     connectionStatus,
-    message,
     titlebar,
   });
 };

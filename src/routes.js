@@ -126,10 +126,6 @@ const ErrorFallback = Loadable({
   loading: ({ isLoading }) => isLoading && <LoadingView />
 });
 
-const HomeViewRedirectFallback = signedOutFallback(HomeViewRedirect, Pages);
-const HomeFallback = signedOutFallback(HomeViewRedirect, () => (
-  <Redirect to="/explore" />
-));
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
 const CommunityLoginFallback = signedOutFallback(
   props => <Redirect to={`/${props.match.params.communitySlug}`} />,

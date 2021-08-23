@@ -7,7 +7,6 @@ import toggleChannelSubscriptionMutation, {
 } from 'shared/graphql/mutations/channel/toggleChannelSubscription';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import { openModal } from 'src/actions/modals';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 

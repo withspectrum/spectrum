@@ -16,11 +16,8 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
 import ChatInput from 'src/components/chatInput';
 import { ChatInputWrapper } from 'src/components/layout';
-import { PrimaryOutlineButton } from 'src/components/button';
 import usePrevious from 'src/hooks/usePrevious';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import JoinCommunity from 'src/components/joinCommunityWrapper';
-import LockedMessages from 'src/views/thread/components/lockedMessages';
 import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
 
 type Props = {

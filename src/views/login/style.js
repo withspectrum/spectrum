@@ -1,15 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import {
-  FlexRow,
-  FlexCol,
-  Gradient,
-  Shadow,
-  hexa,
-  zIndex,
-} from 'src/components/globals';
-import { Button } from 'src/components/button';
+import { FlexRow, FlexCol, Gradient, zIndex } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Title = styled.h1`
