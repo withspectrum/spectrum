@@ -8,7 +8,6 @@ import { UserAvatar } from 'src/components/avatar';
 import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import type { Dispatch } from 'redux';
-import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import { OutlineButton } from 'src/components/button';
 import {
@@ -34,7 +33,6 @@ type Props = {
   badges?: Array<string>,
   isCurrentUser?: boolean,
   reputation?: number,
-  messageButton?: boolean,
   multiAction?: boolean,
   children?: React$Node,
   history: Object,
@@ -58,7 +56,6 @@ const User = (props: Props) => {
     avatarSize = 40,
     badges,
     children,
-    messageButton,
     showHoverProfile = true,
     isLink = true,
     onClick = noop,
@@ -105,17 +102,6 @@ const User = (props: Props) => {
 
           {description && <Description>{description}</Description>}
         </Content>
-
-        <Actions>
-          {messageButton && (
-            <InitDirectMessageWrapper
-              user={userObject}
-              render={<OutlineButton size={'small'}>Message</OutlineButton>}
-            />
-          )}
-
-          {children}
-        </Actions>
       </RowWithAvatar>
     </ConditionalWrap>
   );
