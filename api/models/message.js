@@ -1,10 +1,6 @@
 //@flow
 const { db } = require('shared/db');
-import {
-  setThreadLastActive,
-  incrementMessageCount,
-  decrementMessageCount,
-} from './thread';
+import { incrementMessageCount, decrementMessageCount } from './thread';
 import type { DBMessage } from 'shared/types';
 
 export type MessageTypes = 'text' | 'media';
@@ -135,8 +131,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
 
       if (message.threadType === 'story') {
         await Promise.all([
-
-          setThreadLastActive(message.threadId, message.timestamp),
           incrementMessageCount(message.threadId)
         ])
       }

@@ -181,7 +181,7 @@ export default requireAuth(
     // $FlowFixMe
     const dbThread: DBThread = await publishThread(threadObject, user.id);
 
-    // create a relationship between the thread and the author and set community lastActive
+    // create a relationship between the thread and the author
     await Promise.all([createParticipantInThread(dbThread.id, user.id)]);
 
     if (!thread.filesToUpload || thread.filesToUpload.length === 0) {

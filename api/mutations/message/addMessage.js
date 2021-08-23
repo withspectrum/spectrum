@@ -3,7 +3,6 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
 import { storeMessage, getMessage } from '../../models/message';
-import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
 import addCommunityMember from '../communityMember/addCommunityMember';
@@ -189,7 +188,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
 
   // handle DM thread messages up front
   if (dbMessage.threadType === 'directMessageThread') {
-    setDirectMessageThreadLastActive(message.threadId);
     return dbMessage;
   }
 

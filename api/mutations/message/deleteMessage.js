@@ -5,9 +5,7 @@ import {
   getMessage,
   deleteMessage,
   userHasMessagesInThread,
-  getMessages,
 } from '../../models/message';
-import { setThreadLastActive } from '../../models/thread';
 import { deleteParticipantInThread } from '../../models/usersThreads';
 import { getUserPermissionsInChannel } from '../../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../../models/usersCommunities';
@@ -56,21 +54,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     .then(async () => {
       // We don't need to delete participants of direct message threads
       if (message.threadType === 'directMessageThread') return true;
-
-      // If it was the last message in the thread, reset thread.lastActive to
-      // the previous messages timestamp
-      if (
-        new Date(thread.lastActive).getTime() ===
-        new Date(message.timestamp).getTime()
-      ) {
-        const messages = await getMessages(message.threadId, { last: 1 });
-        await setThreadLastActive(
-          message.threadId,
-          messages && messages.length > 0
-            ? messages[0].timestamp
-            : thread.createdAt
-        );
-      }
 
       const hasMoreMessages = await userHasMessagesInThread(
         message.threadId,

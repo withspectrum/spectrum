@@ -20,7 +20,6 @@ const createMemberInDirectMessageThread = (threadId: string, userId: string, set
         threadId,
         userId,
         createdAt: new Date(),
-        lastActive: setActive ? new Date() : null,
         lastSeen: setActive ? new Date() : null,
         receiveNotifications: true,
       },

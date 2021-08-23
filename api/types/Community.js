@@ -146,7 +146,6 @@ const Community = /* GraphQL */ `
     pinnedThreadId: String
     pinnedThread: Thread
     isPrivate: Boolean
-    lastActive: Date
     redirect: Boolean
     noindex: Boolean
     communityPermissions: CommunityPermissions @cost(complexity: 1)
