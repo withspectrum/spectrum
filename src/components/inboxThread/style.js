@@ -13,27 +13,13 @@ export const InboxThreadItem = styled.div`
   border-bottom: 1px solid
     ${props => (props.active ? props.theme.brand.alt : props.theme.bg.divider)};
   background: ${props =>
-    props.active
-      ? props.theme.brand.alt
-      : props.new
-      ? hexa(theme.brand.default, 0.04)
-      : props.theme.bg.default};
+    props.active ? props.theme.brand.alt : props.theme.bg.default};
   position: relative;
   padding: 12px 20px 12px 12px;
 
-  ${props =>
-    props.new &&
-    css`
-      box-shadow: inset 2px 0 0 ${theme.brand.default};
-    `}
-
   &:hover {
     background: ${props =>
-      props.active
-        ? props.theme.brand.alt
-        : props.new
-        ? hexa(theme.brand.default, 0.06)
-        : props.theme.bg.wash};
+      props.active ? props.theme.brand.alt : props.theme.bg.wash};
   }
 
   &:last-of-type {
@@ -132,13 +118,7 @@ export const CountWrapper = styled.div`
   font-size: 13px;
   pointer-events: none;
   color: ${props =>
-    props.new
-      ? props.active
-        ? props.theme.text.reverse
-        : props.theme.warn.alt
-      : props.active
-      ? props.theme.text.reverse
-      : props.theme.text.alt};
+    props.active ? props.theme.text.reverse : props.theme.text.alt};
   font-weight: 500;
   align-items: center;
 
