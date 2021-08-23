@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Route, Link, withRouter, type Location } from 'react-router-dom';
 import compose from 'recompose/compose';
 import type { Dispatch } from 'redux';
-import { Query, Mutation } from 'react-apollo';
 import { ErrorBoundary } from 'src/components/error';
 import Icon from 'src/components/icon';
 import { Loading } from 'src/components/loading';
@@ -14,11 +13,8 @@ import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/c
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Tooltip from 'src/components/tooltip';
 import { ChannelListItem } from 'src/components/entities';
-import { WhiteIconButton, OutlineButton } from 'src/components/button';
-import { Spinner } from 'src/components/globals';
+import { WhiteIconButton } from 'src/components/button';
 import { SidebarSectionHeader, SidebarSectionHeading, List } from '../style';
-import { getThreadByIdQuery } from 'shared/graphql/queries/thread/getThread';
-import { toggleThreadNotificationsMutation } from 'shared/graphql/mutations/thread/toggleThreadNotifications';
 import {
   Row,
   Content,
@@ -36,96 +32,6 @@ type Props = {
   communitySlug: string,
   location: Location,
 };
-
-const ChatTab = ({ location, community, currentUser }) =>
-  !community.watercoolerId ? null : (
-    <Route exact path={`/${community.slug}`}>
-      {({ match }) => {
-        const isActive = !!match && location.search.indexOf('tab=chat') > -1;
-        return (
-          <Link to={`/${community.slug}?tab=chat`}>
-            <Row isActive={isActive}>
-              <Content>
-                <Label>Chat</Label>
-              </Content>
-              <Actions>
-                {!currentUser ? (
-                  <Icon glyph="view-forward" size={24} />
-                ) : (
-                  <Query
-                    query={getThreadByIdQuery}
-                    variables={{ id: community.watercoolerId }}
-                  >
-                    {({ loading, error, data }) => {
-                      if (data && data.thread) {
-                        const showNotificationAction = !!data.thread.community
-                          .communityPermissions.isMember;
-
-                        if (!showNotificationAction)
-                          return <Icon glyph="view-forward" size={24} />;
-
-                        const tipText = data.thread.receiveNotifications
-                          ? 'Mute chat notifications'
-                          : 'Enable chat notifications';
-                        const glyph = data.thread.receiveNotifications
-                          ? 'notification'
-                          : 'mute';
-
-                        return (
-                          <Mutation
-                            mutation={toggleThreadNotificationsMutation}
-                          >
-                            {(toggleThreadNotifications, { loading }) => (
-                              <Tooltip content={tipText}>
-                                <span
-                                  style={{ marginLeft: '8px', display: 'flex' }}
-                                >
-                                  {/* {!newActivity && !isActive && <NewActivityDot />} */}
-                                  <OutlineButton
-                                    disabled={loading}
-                                    onClick={(e: any) => {
-                                      e &&
-                                        e.preventDefault() &&
-                                        e.stopPropogation();
-                                      toggleThreadNotifications({
-                                        variables: {
-                                          threadId: data.thread.id,
-                                        },
-                                      });
-                                    }}
-                                    style={{ padding: '4px' }}
-                                    size={'small'}
-                                  >
-                                    <Icon
-                                      style={{
-                                        marginTop: '-1px',
-                                      }}
-                                      glyph={glyph}
-                                      size={24}
-                                    />
-                                  </OutlineButton>
-                                </span>
-                              </Tooltip>
-                            )}
-                          </Mutation>
-                        );
-                      }
-
-                      if (loading) return <Spinner color="text.alt" />;
-
-                      if (error) return <Icon glyph="view-forward" size={24} />;
-
-                      return null;
-                    }}
-                  </Query>
-                )}
-              </Actions>
-            </Row>
-          </Link>
-        );
-      }}
-    </Route>
-  );
 
 class Component extends React.Component<Props> {
   sortChannels = (array: Array<any>): Array<?any> => {
@@ -197,11 +103,6 @@ class Component extends React.Component<Props> {
           </SidebarSectionHeader>
 
           <List data-cy="channel-list">
-            <ChatTab
-              location={location}
-              community={community}
-              currentUser={currentUser}
-            />
             <Route exact path={`/${community.slug}`}>
               {({ match }) => (
                 <Link to={`/${community.slug}?tab=posts`}>
