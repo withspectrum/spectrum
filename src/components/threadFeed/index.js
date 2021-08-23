@@ -18,7 +18,6 @@ import NullState from './nullState';
 
 type Props = {
   data: {
-    subscribeToUpdatedThreads: Function,
     fetchMore: Function,
     networkStatus: number,
     hasNextPage: boolean,
@@ -45,31 +44,7 @@ type Props = {
   websocketConnection: WebsocketConnectionType,
 };
 
-type State = {
-  subscription: ?Function,
-};
-
 class ThreadFeedPure extends React.Component<Props, State> {
-  state = {
-    subscription: null,
-  };
-
-  subscribe = () => {
-    this.setState({
-      subscription:
-        this.props.data.subscribeToUpdatedThreads &&
-        this.props.data.subscribeToUpdatedThreads(),
-    });
-  };
-
-  unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
-  };
-
   shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
     if (curr.networkOnline !== nextProps.networkOnline) return true;
@@ -78,14 +53,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
     if (curr.data.networkStatus === 7 && nextProps.data.networkStatus === 3)
       return false;
     return true;
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  componentDidMount() {
-    this.subscribe();
   }
 
   componentDidUpdate(prev: Props) {

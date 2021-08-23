@@ -2,10 +2,6 @@
 import { isDesktopApp } from './helpers/desktop-app-utils';
 import { getItemFromStorage } from './helpers/localStorage';
 import { client } from 'shared/graphql';
-import {
-  subscribeToNewNotifications,
-  subscribeToDirectMessageNotifications,
-} from 'shared/graphql/subscriptions';
 import formatNotification from 'shared/notification-to-text';
 
 // On Electron listen to new notifications outside the component tree
@@ -34,21 +30,5 @@ export const subscribeToDesktopPush = (
       });
       push.onclick = () => onClick(notificationData);
     };
-
-    client
-      .subscribe({ query: subscribeToDirectMessageNotifications })
-      .subscribe({
-        next({ data }) {
-          if (!data || !data.dmNotificationAdded) return;
-          pushNotification(data.dmNotificationAdded);
-        },
-      });
-
-    client.subscribe({ query: subscribeToNewNotifications }).subscribe({
-      next({ data }) {
-        if (!data || !data.notificationAdded) return;
-        pushNotification(data.notificationAdded);
-      },
-    });
   }
 };

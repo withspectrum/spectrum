@@ -24,7 +24,6 @@ type Props = {
     directMessageNotifications?: GetDirectMessageNotificationsType,
   },
   isActive: boolean,
-  subscribeToDMs: Function,
   markDirectMessageNotificationsSeen: Function,
   dispatch: Function,
   refetch: Function,

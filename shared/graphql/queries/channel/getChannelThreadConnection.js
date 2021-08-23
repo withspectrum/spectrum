@@ -5,8 +5,6 @@ import channelInfoFragment from '../../fragments/channel/channelInfo';
 import type { ChannelInfoType } from '../../fragments/channel/channelInfo';
 import channelThreadConnectionFragment from '../../fragments/channel/channelThreadConnection';
 import type { ChannelThreadConnectionType } from '../../fragments/channel/channelThreadConnection';
-import { subscribeToUpdatedThreads } from '../../subscriptions';
-import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 export type GetChannelThreadConnectionType = {
   ...$Exact<ChannelInfoType>,
@@ -38,15 +36,7 @@ const LoadMoreThreads = gql`
 const getChannelThreadConnectionOptions = {
   props: ({
     ownProps,
-    data: {
-      fetchMore,
-      error,
-      loading,
-      channel,
-      networkStatus,
-      subscribeToMore,
-      refetch,
-    },
+    data: { fetchMore, error, loading, channel, networkStatus, refetch },
   }) => ({
     data: {
       error,
@@ -64,49 +54,6 @@ const getChannelThreadConnectionOptions = {
         channel && channel.threadConnection
           ? channel.threadConnection.pageInfo.hasNextPage
           : false,
-      subscribeToUpdatedThreads: (channelIds?: Array<string>) => {
-        const variables = channelIds
-          ? {
-              variables: {
-                channelIds,
-              },
-            }
-          : {};
-        return subscribeToMore({
-          document: subscribeToUpdatedThreads,
-          ...variables,
-          updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread =
-              subscriptionData.data && subscriptionData.data.threadUpdated;
-            if (!updatedThread) return prev;
-
-            const thisChannelId = ownProps.channelId;
-            const updatedThreadShouldAppearInContext =
-              thisChannelId === updatedThread.channel.id;
-
-            const newThreads = updatedThreadShouldAppearInContext
-              ? parseRealtimeThreads(
-                  prev.channel.threadConnection.edges,
-                  updatedThread
-                ).filter(thread => thread.node.channel.id === thisChannelId)
-              : [...prev.channel.threadConnection.edges];
-
-            return {
-              ...prev,
-              channel: {
-                ...prev.channel,
-                threadConnection: {
-                  ...prev.channel.threadConnection,
-                  pageInfo: {
-                    ...prev.channel.threadConnection.pageInfo,
-                  },
-                  edges: newThreads,
-                },
-              },
-            };
-          },
-        });
-      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
