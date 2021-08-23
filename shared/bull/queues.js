@@ -52,11 +52,6 @@ import {
 
 import { SEARCH_INDEXING_EVENT } from 'vulcan/queues/constants';
 
-import {
-  PROCESS_REPUTATION_EVENT,
-  CALCULATE_THREAD_SCORE,
-} from 'mercury/constants';
-
 // Normalize our (inconsistent) queue names to a set of JS compatible names
 exports.QUEUE_NAMES = {
   // athena - notifications
@@ -96,10 +91,6 @@ exports.QUEUE_NAMES = {
   sendPrivateCommunityRequestApprovedEmailQueue: SEND_PRIVATE_COMMUNITY_REQUEST_APPROVED_EMAIL,
   sendThreadCreatedNotificationEmailQueue: SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
   sendgridEventQueue: SENDGRID_WEBHOOK_EVENT,
-
-  // mercury - reputation
-  processReputationEventQueue: PROCESS_REPUTATION_EVENT,
-  calculateThreadScoreQueue: CALCULATE_THREAD_SCORE,
 
   // vulcan
   searchQueue: SEARCH_INDEXING_EVENT,

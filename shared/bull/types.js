@@ -309,12 +309,6 @@ export type AdministratorEmailValidationEmailJobData = {
   community: DBCommunity,
 };
 
-export type ReputationEventJobData = {
-  userId: string,
-  type: string, // TODO: Type this with the actual possible types
-  entityId: string,
-};
-
 export type AdminCommunityCreatedEmailJobData = {
   user: DBUser,
   community: DBCommunity,
@@ -461,10 +455,6 @@ export type Queues = {
   sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<SendPrivateCommunityRequestApprovedEmailJobData>,
   sendThreadCreatedNotificationEmailQueue: BullQueue<SendNewThreadNotificationEmailJobData>,
   sendgridEventQueue: BullQueue<SendGridWebhookEventJobData>,
-
-  // mercury
-  processReputationEventQueue: BullQueue<ReputationEventJobData>,
-  calculateThreadScoreQueue: BullQueue<CalculateThreadScoreJobData>,
 
   // vulcan
   searchQueue: BullQueue<SearchIndexJobData>,

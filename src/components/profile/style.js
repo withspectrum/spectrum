@@ -12,7 +12,6 @@ import {
   hexa,
 } from 'src/components/globals';
 import { Button, OutlineButton } from 'src/components/button';
-import { ReputationWrapper } from 'src/components/reputation/style';
 import Icon from 'src/components/icon';
 import Card from 'src/components/card';
 import { MEDIA_BREAK } from 'src/components/layout';
@@ -97,14 +96,6 @@ export const Subtitle = styled.div`
   ${Truncate};
 
   overflow: visible;
-
-  > ${ReputationWrapper} {
-    margin-left: 8px;
-
-    span {
-      font-size: 16px;
-    }
-  }
 `;
 
 export const Description = styled.div`
@@ -141,16 +132,6 @@ export const FullDescription = styled.div`
   a:hover {
     color: ${theme.text.default};
     text-decoration: none;
-  }
-
-  > ${ReputationWrapper} {
-    margin-top: 0px;
-
-    span {
-      margin-left: 4px;
-      font-size: 16px;
-      font-weight: 400;
-    }
   }
 `;
 

@@ -246,9 +246,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       .then(async () => {
         const contextPermissions = {
           communityId: thread.communityId,
-          reputation: communityPermissions
-            ? communityPermissions.reputation
-            : 0,
           isModerator: communityPermissions
             ? communityPermissions.isModerator
             : false,

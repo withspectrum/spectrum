@@ -9,7 +9,6 @@ type Edge = {
     ...$Exact<UserInfoType>,
     contextPermissions: {
       communityId: string,
-      reputation: number,
     },
   },
 };
@@ -37,7 +36,6 @@ export default gql`
           ...userInfo
           contextPermissions {
             communityId
-            reputation
           }
         }
       }

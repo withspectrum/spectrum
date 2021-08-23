@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
 import { UserAvatar } from 'src/components/avatar';
-import Reputation from 'src/components/reputation';
 import Badge from 'src/components/badges';
 import type { Dispatch } from 'redux';
 import ConditionalWrap from 'src/components/conditionalWrap';
@@ -30,7 +29,6 @@ type Props = {
   website?: ?string,
   badges?: Array<string>,
   isCurrentUser?: boolean,
-  reputation?: number,
   multiAction?: boolean,
   children?: React$Node,
   history: Object,
@@ -50,7 +48,6 @@ const User = (props: Props) => {
     name,
     username,
     description,
-    reputation,
     avatarSize = 40,
     badges,
     showHoverProfile = true,
@@ -91,11 +88,6 @@ const User = (props: Props) => {
           )}
 
           {username && <Sublabel title={username}>@{username}</Sublabel>}
-
-          {typeof reputation === 'number' && (
-            // $FlowIssue
-            <Reputation reputation={reputation} />
-          )}
 
           {description && <Description>{description}</Description>}
         </Content>

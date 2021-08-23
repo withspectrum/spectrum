@@ -15,7 +15,6 @@ build-iris
 build-api
 build-athena
 build-hermes
-build-mercury
 build-vulcan
 build-hyperion
 build-electron

@@ -23,7 +23,6 @@ export default async (
     ...creator,
     contextPermissions: {
       communityId,
-      reputation: permissions ? permissions.reputation : 0,
       isModerator: permissions ? permissions.isModerator : false,
       isOwner: permissions ? permissions.isOwner : false,
       isBlocked: permissions ? permissions.isBlocked : false,

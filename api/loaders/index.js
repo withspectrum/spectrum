@@ -4,7 +4,6 @@ import {
   __createUserByUsernameLoader,
   __createUserThreadCountLoader,
   __createUserPermissionsInCommunityLoader,
-  __createUserTotalReputationLoader,
   __createUserPermissionsInChannelLoader,
   __createUserThreadNotificationStatusLoader,
 } from './user';
@@ -49,7 +48,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   userThreadCount: __createUserThreadCountLoader(options),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(options),
   userPermissionsInChannel: __createUserPermissionsInChannelLoader(options),
-  userTotalReputation: __createUserTotalReputationLoader(options),
   userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(
     options
   ),

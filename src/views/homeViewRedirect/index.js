@@ -60,20 +60,7 @@ const HomeViewRedirect = (props: Props) => {
   }
 
   // Otherwise select the first one by rep
-  const sorted = communities
-    .slice()
-    .filter(Boolean)
-    .sort((a, b) => {
-      const bc = parseInt(b.communityPermissions.reputation, 10);
-      const ac = parseInt(a.communityPermissions.reputation, 10);
-
-      // sort same-reputation communities alphabetically
-      if (ac === bc) {
-        return a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1;
-      }
-
-      return bc <= ac ? -1 : 1;
-    });
+  const sorted = communities.slice().filter(Boolean);
 
   const first = sorted[0];
   history.replace(`/${first.slug}`);

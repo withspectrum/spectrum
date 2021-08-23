@@ -1,9 +1,6 @@
 // @flow
 import { db } from 'shared/db';
-import {
-  sendReactionNotificationQueue,
-  processReputationEventQueue,
-} from 'shared/bull/queues';
+import { sendReactionNotificationQueue } from 'shared/bull/queues';
 import type { DBReaction } from 'shared/types';
 
 type ReactionType = 'like';
@@ -53,12 +50,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
 
         // user is re-reacting
         if (thisReaction.deletedAt) {
-          processReputationEventQueue.add({
-            userId,
-            type: 'reaction created',
-            entityId: thisReaction.messageId,
-          });
-
           return db
             .table('reactions')
             .get(thisReaction.id)
@@ -67,12 +58,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
             })
             .run();
         }
-
-        processReputationEventQueue.add({
-          userId,
-          type: 'reaction deleted',
-          entityId: thisReaction.messageId,
-        });
 
         return db
           .table('reactions')
@@ -98,12 +83,6 @@ export const toggleReaction = (reaction: ReactionInput, userId: string): Promise
         .then(result => result.changes[0].new_val)
         .then(reaction => {
           sendReactionNotificationQueue.add({ reaction, userId });
-
-          processReputationEventQueue.add({
-            userId,
-            type: 'reaction created',
-            entityId: reaction.messageId,
-          });
 
           return reaction;
         });

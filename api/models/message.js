@@ -3,7 +3,6 @@ const { db } = require('shared/db');
 import {
   sendMessageNotificationQueue,
   sendDirectMessageNotificationQueue,
-  processReputationEventQueue,
   _adminProcessToxicMessageQueue,
   searchQueue,
 } from 'shared/bull/queues';
@@ -155,11 +154,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
           type: 'message',
           event: 'created'
         }),
-        processReputationEventQueue.add({
-          userId,
-          type: 'message created',
-          entityId: message.threadId,
-        }),
         _adminProcessToxicMessageQueue.add({ message }),
 
           setThreadLastActive(message.threadId, message.timestamp),
@@ -219,11 +213,6 @@ export const deleteMessage = (userId: string, messageId: string) => {
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
     .then(async message => {
       await Promise.all([
-        processReputationEventQueue.add({
-          userId,
-          type: 'message deleted',
-          entityId: messageId,
-        }),
         message.threadType === 'story'
           ? decrementMessageCount(message.threadId)
           : Promise.resolve(),

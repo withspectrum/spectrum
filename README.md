@@ -108,7 +108,6 @@ spectrum/
 ├── email-templates
 ├── hermes     # Worker server (email sending)
 ├── hyperion   # Rendering server
-├── mercury    # Worker server (reputation)
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
 ├── src        # Frontend SPA
@@ -125,7 +124,6 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
 - Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
-- Mercury (/ˈmɜːrkjʊri/) is the patron god of financial gain, commerce, eloquence (and thus poetry), messages/communication (including divination), travelers, boundaries, luck, trickery and thieves
 
 </details>
 

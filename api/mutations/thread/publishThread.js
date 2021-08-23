@@ -16,7 +16,6 @@ import { toPlainText, toState } from 'shared/draft-utils';
 import { setCommunityLastActive } from '../../models/community';
 import { setCommunityLastSeen } from '../../models/usersCommunities';
 import {
-  processReputationEventQueue,
   sendThreadNotificationQueue,
   _adminProcessToxicThreadQueue,
 } from 'shared/bull/queues';
@@ -232,20 +231,9 @@ export default requireAuth(
 
       // generate an alert for admins
       _adminProcessToxicThreadQueue.add({ thread: dbThread });
-      processReputationEventQueue.add({
-        userId: user.id,
-        type: 'thread created',
-        entityId: dbThread.id,
-      });
     } else {
       debug('Thread is not toxic, send notifications and add rep');
-      // thread is clean, send notifications and process reputation
       sendThreadNotificationQueue.add({ thread: dbThread });
-      processReputationEventQueue.add({
-        userId: user.id,
-        type: 'thread created',
-        entityId: dbThread.id,
-      });
     }
 
     // create a relationship between the thread and the author and set community lastActive

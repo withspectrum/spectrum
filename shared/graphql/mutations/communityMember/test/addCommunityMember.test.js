@@ -49,14 +49,13 @@ afterAll(
 it('should fail if user is not authenticated', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -71,14 +70,13 @@ it('should fail if user is not authenticated', async () => {
 it('should fail if user is blocked in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -97,14 +95,13 @@ it('should fail if user is blocked in the community', async () => {
 it('should fail if user owns the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -123,14 +120,13 @@ it('should fail if user owns the community', async () => {
 it('should fail if user is moderator in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -149,14 +145,13 @@ it('should fail if user is moderator in the community', async () => {
 it("should fail if the community doesn't exist", async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -181,14 +176,13 @@ it("should fail if the community doesn't exist", async () => {
 it('should fail if user is already a member in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }
@@ -207,14 +201,13 @@ it('should fail if user is already a member in the community', async () => {
 it('should create a member in the community', async () => {
   const query = /* GraphQL */ `
     mutation addCommunityMember($input: AddCommunityMemberInput!) {
-      addCommunityMember (input: $input) {
+      addCommunityMember(input: $input) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
           isModerator
-          reputation
         }
       }
     }

@@ -144,7 +144,6 @@ const Community = /* GraphQL */ `
     website: String
     profilePhoto: String
     coverPhoto: String
-    reputation: Int
     pinnedThreadId: String
     pinnedThread: Thread
     isPrivate: Boolean

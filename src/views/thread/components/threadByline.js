@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import Badge from 'src/components/badges';
-import Reputation from 'src/components/reputation';
 import type { ThreadParticipantType } from 'shared/graphql/fragments/thread/threadParticipant';
 import { UserAvatar } from 'src/components/avatar';
 import {
@@ -11,7 +10,6 @@ import {
   AuthorNameLink,
   AuthorNameNoLink,
   AuthorUsername,
-  ReputationRow,
 } from '../style';
 
 type Props = {
@@ -22,7 +20,7 @@ type Props = {
 class ThreadByline extends React.Component<Props> {
   render() {
     const { author } = this.props;
-    const { user, reputation, roles } = author;
+    const { user, roles } = author;
 
     return (
       <Byline>
@@ -47,11 +45,6 @@ class ThreadByline extends React.Component<Props> {
               ))}
             </AuthorNameNoLink>
           )}
-
-          <ReputationRow>
-            {/* $FlowIssue */}
-            {reputation > 0 && <Reputation reputation={reputation} />}
-          </ReputationRow>
         </BylineMeta>
       </Byline>
     );

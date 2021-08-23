@@ -12,7 +12,6 @@ export type CommunityMemberInfoType = {
   isOwner: boolean,
   isPending: boolean,
   roles: Array<string>,
-  reputation: number,
 };
 
 export default gql`
@@ -27,7 +26,6 @@ export default gql`
     isOwner
     isPending
     roles
-    reputation
   }
   ${userInfoFragment}
 `;

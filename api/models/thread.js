@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { processReputationEventQueue, searchQueue } from 'shared/bull/queues';
+import { searchQueue } from 'shared/bull/queues';
 const { parseRange, NEW_DOCUMENTS } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
@@ -467,7 +467,7 @@ export const publishThread = (
 };
 
 // prettier-ignore
-export const setThreadLock = (threadId: string, value: boolean, userId: string, byModerator: boolean = false): Promise<DBThread> => {
+export const setThreadLock = (threadId: string, value: boolean, userId: string): Promise<DBThread> => {
   return (
     db
       .table('threads')
@@ -529,12 +529,6 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
         type: 'thread',
         event: 'deleted'
       })
-
-      processReputationEventQueue.add({
-        userId: thread.creatorId,
-        type: 'thread deleted',
-        entityId: thread.id,
-      });
 
       return result.replaced >= 1 ? true : false;
     });

@@ -34,7 +34,6 @@ export default async (
     ...sender,
     contextPermission: {
       communityId: thread.communityId,
-      reputation: permissions ? permissions.reputation : 0,
       isModerator: permissions ? permissions.isModerator : false,
       isOwner: permissions ? permissions.isOwner : false,
       isBlocked: permissions ? permissions.isBlocked : false,

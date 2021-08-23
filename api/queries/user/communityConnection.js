@@ -38,7 +38,6 @@ export default async (user: DBUser, _: any, ctx: GraphQLContext) => {
           ...community,
           contextPermissions: {
             communityId: community.id,
-            reputation: permissions ? permissions.reputation : 0,
             isModerator: permissions ? permissions.isModerator : false,
             isOwner: permissions ? permissions.isOwner : false,
           },

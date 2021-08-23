@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import CreateChannelModal from './CreateChannelModal';
 import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
-import RepExplainerModal from './RepExplainerModal';
 import ChangeChannelModal from './ChangeChannelModal';
 import RestoreChannelModal from './RestoreChannelModal';
 import ReportUserModal from './ReportUserModal';
@@ -13,7 +12,6 @@ import CloseComposerConfirmationModal from './CloseComposerConfirmationModal';
 const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
-  REP_EXPLAINER_MODAL: RepExplainerModal,
   CHANGE_CHANNEL: ChangeChannelModal,
   RESTORE_CHANNEL_MODAL: RestoreChannelModal,
   REPORT_USER_MODAL: ReportUserModal,

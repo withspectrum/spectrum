@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
 import { UserAvatar, CommunityAvatar } from 'src/components/avatar';
 import type { CommunityInfoType } from 'shared/graphql/fragments/community/communityInfo';
-import Reputation from 'src/components/reputation';
 import ChannelComponent from './channel';
 import {
   Wrapper,
@@ -22,13 +21,12 @@ type CommunityProps = {
   showMeta?: boolean,
   meta?: any,
   children?: any,
-  reputation?: number,
   showHoverProfile?: boolean,
 };
 
 export class CommunityListItem extends React.Component<CommunityProps> {
   render() {
-    const { community, showDescription, children, reputation } = this.props;
+    const { community, showDescription, children } = this.props;
 
     return (
       <Wrapper>
@@ -41,13 +39,6 @@ export class CommunityListItem extends React.Component<CommunityProps> {
           />
           <Col style={{ marginLeft: '12px' }}>
             <Heading>{community.name}</Heading>
-            {/* greater than -1 because we want to pass the 0 to the component so it returns null */}
-            {typeof reputation === 'number' && reputation > -1 && (
-              <Meta>
-                {/* $FlowIssue */}
-                <Reputation size={'default'} reputation={reputation} />
-              </Meta>
-            )}
           </Col>
           <ActionContainer className={'action'}>{children}</ActionContainer>
         </Row>
@@ -82,17 +73,6 @@ export const UserListItem = ({
   children,
   hideRep = false,
 }: Object): React$Element<any> => {
-  const reputation = user.contextPermissions
-    ? user.contextPermissions.reputation &&
-      typeof user.contextPermissions.reputation === 'number'
-      ? user.contextPermissions.reputation
-      : 0
-    : user.reputation && typeof user.reputation === 'number'
-    ? user.reputation
-    : user.totalReputation && typeof user.totalReputation === 'number'
-    ? user.totalReputation
-    : 0;
-
   const role =
     user.contextPermissions && user.contextPermissions.isOwner
       ? 'Admin'
@@ -120,14 +100,6 @@ export const UserListItem = ({
             )}
             {role && <Badge type={role} />}
           </Heading>
-          {!hideRep && (
-            <Meta>
-              {(user.totalReputation || user.contextPermissions) && (
-                /* $FlowIssue */
-                <Reputation reputation={reputation} />
-              )}
-            </Meta>
-          )}
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>

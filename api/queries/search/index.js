@@ -21,10 +21,6 @@ module.exports = {
       if (root.hasOwnProperty('username')) {
         return 'User';
       }
-      // we want to check for the existence of the field, not the value of it
-      if (root.hasOwnProperty('reputation')) {
-        return 'CommunityMember';
-      }
 
       return null;
     },

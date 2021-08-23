@@ -13,7 +13,6 @@ import directMessageThreadsConnection from './directMessageThreadsConnection';
 import threadConnection from './threadConnection';
 import threadCount from './threadCount';
 import settings from './settings';
-import totalReputation from './totalReputation';
 import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
 import githubProfile from './githubProfile';
@@ -42,7 +41,6 @@ module.exports = {
     threadConnection,
     threadCount,
     settings,
-    totalReputation,
     isAdmin,
     githubProfile,
     contextPermissions,

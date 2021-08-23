@@ -1,9 +1,6 @@
 // @flow
 import { db } from 'shared/db';
-import {
-  sendThreadReactionNotificationQueue,
-  processReputationEventQueue,
-} from 'shared/bull/queues';
+import { sendThreadReactionNotificationQueue } from 'shared/bull/queues';
 import type { DBThreadReaction } from 'shared/types';
 import { incrementReactionCount, decrementReactionCount } from './thread';
 import { getThreadById } from './thread';
@@ -59,11 +56,6 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
 
         await Promise.all([
           sendReactionNotification,
-          processReputationEventQueue.add({
-            userId,
-            type: 'thread reaction created',
-            entityId: thisReaction.threadId,
-          }),
           incrementReactionCount(thisReaction.threadId)
         ])
 
@@ -95,11 +87,6 @@ export const addThreadReaction = (input: ThreadReactionInput, userId: string): P
             : null
 
           await Promise.all([
-            processReputationEventQueue.add({
-              userId,
-              type: 'thread reaction created',
-              entityId: threadReaction.threadId,
-            }),
             sendReactionNotification,
             incrementReactionCount(threadReaction.threadId)
           ])
@@ -123,11 +110,6 @@ export const removeThreadReaction = (threadId: string, userId: string): Promise<
       const threadReaction = results[0];
 
       await Promise.all([
-        processReputationEventQueue.add({
-          userId,
-          type: 'thread reaction deleted',
-          entityId: threadReaction.threadId,
-        }),
         decrementReactionCount(threadId)
       ])
 

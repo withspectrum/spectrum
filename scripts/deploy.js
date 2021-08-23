@@ -13,15 +13,7 @@ const exec = process.env.DEBUG
 // Append --scope space-program to all now commands
 const now = (cmd = '') => `now ${cmd} --scope space-program`;
 
-const VALID_SERVERS = [
-  'all',
-  'api',
-  'athena',
-  'hermes',
-  'hyperion',
-  'mercury',
-  'vulcan',
-];
+const VALID_SERVERS = ['all', 'api', 'athena', 'hermes', 'hyperion', 'vulcan'];
 const VALID_ALPHA_SERVERS = ['api', 'hyperion'];
 const { args, flags } = parse(process.argv);
 

@@ -34,11 +34,7 @@ class ConversationGrowth extends React.Component<Props> {
     const title = 'Top members this week';
 
     if (community) {
-      const sortedTopMembers = community.topMembers.slice().sort((a, b) => {
-        const bc = b && parseInt(b.reputation, 10);
-        const ac = a && parseInt(a.reputation, 10);
-        return bc && ac && bc <= ac ? -1 : 1;
-      });
+      const sortedTopMembers = community.topMembers.slice();
 
       if (sortedTopMembers.length === 0) {
         return (

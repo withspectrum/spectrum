@@ -62,13 +62,12 @@ const getUsersCommunities = (userId: string, communityId: string) =>
 it('should join a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -89,13 +88,12 @@ it('should join a community', async () => {
 it('should leave a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -116,13 +114,12 @@ it('should leave a community', async () => {
 it('should join all default channels when joining a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -144,13 +141,12 @@ it('should join all default channels when joining a community', async () => {
 it('should leave all channels when leaving a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -172,13 +168,12 @@ it('should leave all channels when leaving a community', async () => {
 it('should prevent a blocked user from joining a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -196,13 +191,12 @@ it('should prevent a blocked user from joining a community', async () => {
 it('should prevent community owner from leaving community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -220,13 +214,12 @@ it('should prevent community owner from leaving community', async () => {
 it('should only have one usersCommunities record after joining a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }
@@ -249,13 +242,12 @@ it('should only have one usersCommunities record after joining a community', asy
 it('should only have one usersCommunities record after leaving a community', async () => {
   const query = /* GraphQL */ `
     mutation toggleCommunityMembership($communityId: ID!) {
-      toggleCommunityMembership (communityId: $communityId) {
+      toggleCommunityMembership(communityId: $communityId) {
         id
         communityPermissions {
           isMember
           isBlocked
           isOwner
-          reputation
         }
       }
     }

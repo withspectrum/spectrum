@@ -333,8 +333,6 @@ export const AuthorUsername = styled.span`
   word-break: break-all;
 `;
 
-export const ReputationRow = styled.div``;
-
 export const Location = styled(FlexRow)`
   font-weight: 500;
   color: ${theme.text.alt};

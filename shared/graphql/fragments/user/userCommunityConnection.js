@@ -13,7 +13,6 @@ type Edge = {
       communityId: string,
       isOwner: boolean,
       isModerator: boolean,
-      reputation: number,
     },
   },
 };
@@ -43,7 +42,6 @@ export default gql`
             communityId
             isOwner
             isModerator
-            reputation
           }
         }
       }

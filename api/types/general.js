@@ -25,7 +25,6 @@ const general = /* GraphQL */ `
     isModerator: Boolean
     isPending: Boolean
     receiveNotifications: Boolean
-    reputation: Int
     lastSeen: Date
   }
 
@@ -34,7 +33,6 @@ const general = /* GraphQL */ `
       reason: "Use the CommunityMember or ThreadParticipant type to get permissions"
     ) {
     communityId: String
-    reputation: Int
     isModerator: Boolean
     isOwner: Boolean
     isMember: Boolean

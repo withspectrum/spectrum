@@ -13,7 +13,6 @@
 - desktop
 - athena
 - vulcan
-- mercury
 - hermes
 
 **Run database migrations (delete if no migration was added)**

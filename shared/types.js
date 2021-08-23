@@ -298,7 +298,6 @@ export type DBUsersCommunities = {
   isOwner: boolean,
   isPending: boolean,
   receiveNotifications: boolean,
-  reputation: number,
   userId: string,
 };
 

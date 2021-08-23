@@ -49,7 +49,6 @@ const sendDirectMessageOptions = {
               isModerator: false,
               isOwner: false,
               isBlocked: false,
-              reputation: 0,
               roles: [],
               __typename: 'ThreadParticipant',
             },

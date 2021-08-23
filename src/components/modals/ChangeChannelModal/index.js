@@ -9,8 +9,6 @@ import { TextButton, PrimaryOutlineButton } from 'src/components/button';
 import moveThreadMutation from 'shared/graphql/mutations/thread/moveThread';
 import type { MoveThreadType } from 'shared/graphql/mutations/thread/moveThread';
 import { addToastWithTimeout } from 'src/actions/toasts';
-import Icon from 'src/components/icon';
-import { IconContainer } from '../RepExplainerModal/style';
 import { Actions, modalStyles, Section, Title, Subtitle } from './style';
 import ChannelSelector from './channelSelector';
 import type { Dispatch } from 'redux';
@@ -85,7 +83,6 @@ class ChangeChannelModal extends React.Component<Props, State> {
         /* TODO(@mxstbr): Fix this */
         ariaHideApp={false}
         isOpen={isOpen}
-        contentLabel={'Reputation'}
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
@@ -98,9 +95,6 @@ class ChangeChannelModal extends React.Component<Props, State> {
         >
           {thread.channel.isPrivate ? (
             <Section>
-              <IconContainer>
-                <Icon glyph={'private'} size={64} />
-              </IconContainer>
               <Title>This thread can’t be moved</Title>
               <Subtitle>
                 This thread was posted in the private channel{' '}

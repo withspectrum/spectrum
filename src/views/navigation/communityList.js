@@ -88,18 +88,7 @@ const CommunityList = (props: Props) => {
   const { edges } = communityConnection;
   const communities = edges.map(edge => edge && edge.node);
 
-  const sorted = communities.slice().sort((a, b) => {
-    const bc = parseInt(b.communityPermissions.reputation, 10);
-    const ac = parseInt(a.communityPermissions.reputation, 10);
-
-    // sort same-reputation communities alphabetically
-    if (ac === bc) {
-      return a.name.toUpperCase() <= b.name.toUpperCase() ? -1 : 1;
-    }
-
-    // otherwise sort by reputation
-    return bc <= ac ? -1 : 1;
-  });
+  const sorted = communities.slice();
 
   useEffect(() => {
     const handleCommunitySwitch = e => {

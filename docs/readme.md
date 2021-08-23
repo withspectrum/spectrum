@@ -19,5 +19,4 @@
 - [Workers](workers/intro.md)
   - [Background jobs with Redis](workers/background-jobs.md)
   - [Athena](workers/athena/intro.md)
-  - [Mercury](workers/mercury/intro.md)
   - [Vulcan](workers/vulcan/intro.md)
