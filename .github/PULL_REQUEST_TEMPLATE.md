@@ -12,7 +12,6 @@
 - hyperion (frontend)
 - desktop
 - vulcan
-- hermes
 
 **Run database migrations (delete if no migration was added)**
 YES

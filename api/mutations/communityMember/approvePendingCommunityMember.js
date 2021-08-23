@@ -11,7 +11,6 @@ import {
   isAuthedResolver as requireAuth,
   canModerateCommunity,
 } from '../../utils/permissions';
-import { sendPrivateCommunityRequestApprovedQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -62,12 +61,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     createMemberInDefaultChannels(communityId, userToEvaluateId),
   ])
     .then(([newPermissions]) => {
-      sendPrivateCommunityRequestApprovedQueue.add({
-        userId: userToEvaluateId,
-        communityId,
-        moderatorId: user.id,
-      });
-
       return newPermissions;
     })
     .catch(err => {

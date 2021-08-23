@@ -103,8 +103,6 @@ Here is a list of all the big technologies we use:
 spectrum/
 ├── api        # API server
 ├── docs
-├── email-templates
-├── hermes     # Worker server (email sending)
 ├── hyperion   # Rendering server
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
@@ -120,7 +118,6 @@ spectrum/
 As you can see we follow a loose naming scheme based on ancient Greek, Roman, and philosophical figures that are somewhat related to what our servers do:
 
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
-- Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
 
 </details>
 

@@ -252,12 +252,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
           isOwner: communityPermissions ? communityPermissions.isOwner : false,
         };
 
-        trackUserThreadLastSeenQueue.add({
-          userId: user.id,
-          threadId: message.threadId,
-          timestamp,
-        });
-
         calculateThreadScoreQueue.add(
           {
             threadId: message.threadId,

@@ -44,7 +44,5 @@ export default async (
   if (!slackImport)
     return new UserError('No Slack team connected, cannot import members.');
 
-  slackImportQueue.add({ token: slackImport.token, importId: slackImport.id });
-
   return true;
 };

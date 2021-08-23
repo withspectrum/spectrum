@@ -15,7 +15,6 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
-import { sendPrivateChannelRequestQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -120,10 +119,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     // community - those actions will instead be handled when the channel
     // owner approves the user
     if (channelToEvaluate.isPrivate) {
-      sendPrivateChannelRequestQueue.add({
-        userId: user.id,
-        channel: channelToEvaluate,
-      });
       return createOrUpdatePendingUserInChannel(channelId, user.id);
     }
 

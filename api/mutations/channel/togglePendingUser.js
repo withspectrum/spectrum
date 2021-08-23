@@ -12,7 +12,6 @@ import {
   getUserPermissionsInCommunity,
   createMemberInCommunity,
 } from '../../models/usersCommunities';
-import { sendPrivateChannelRequestApprovedQueue } from 'shared/bull/queues';
 import {
   isAuthedResolver as requireAuth,
   canModerateChannel,
@@ -54,13 +53,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       channel.communityId,
       userId
     );
-
-    sendPrivateChannelRequestApprovedQueue.add({
-      userId: userId,
-      channelId: channelId,
-      communityId: channel.communityId,
-      moderatorId: user.id,
-    });
 
     // if the user is a member of the parent community, we can return
     if (

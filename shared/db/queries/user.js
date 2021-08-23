@@ -2,7 +2,7 @@
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
 import { createNewUsersSettings } from 'api/models/usersSettings';
-import { sendNewUserWelcomeEmailQueue, searchQueue } from 'shared/bull/queues';
+import { searchQueue } from 'shared/bull/queues';
 import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
@@ -119,7 +119,6 @@ export const storeUser = createWriteQuery((user: Object) => ({
     .run()
     .then(res => {
       const dbUser = res.changes[0].new_val || res.changes[0].old_val;
-      sendNewUserWelcomeEmailQueue.add({ user: dbUser });
 
       if (dbUser.username) {
         searchQueue.add({

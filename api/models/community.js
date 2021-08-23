@@ -4,11 +4,7 @@ import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-import {
-  sendNewCommunityWelcomeEmailQueue,
-  _adminSendCommunityCreatedEmailQueue,
-  searchQueue,
-} from 'shared/bull/queues';
+import { searchQueue } from 'shared/bull/queues';
 import { createChangefeed } from 'shared/changefeed-utils';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
@@ -256,11 +252,6 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
         type: 'community',
         event: 'created'
       })
-
-      // send a welcome email to the community creator
-      sendNewCommunityWelcomeEmailQueue.add({ user, community });
-      // email brian with info about the community and owner
-      _adminSendCommunityCreatedEmailQueue.add({ user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {

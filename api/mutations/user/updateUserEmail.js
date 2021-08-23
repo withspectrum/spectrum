@@ -3,7 +3,6 @@ import type { GraphQLContext } from '../../';
 import UserError from '../../utils/UserError';
 import { getUserByEmail, setUserPendingEmail } from 'shared/db/queries/user';
 import isEmail from 'validator/lib/isEmail';
-import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 
 type Input = {
@@ -26,15 +25,10 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
     );
   }
 
-  return await setUserPendingEmail(user.id, email)
-    .then(user => {
-      sendEmailValidationEmailQueue.add({ email, userId: user.id });
-      return user;
-    })
-    .catch(
-      err =>
-        new UserError(
-          "We weren't able to send a confirmation email. Please try again."
-        )
-    );
+  return await setUserPendingEmail(user.id, email).catch(
+    err =>
+      new UserError(
+        "We weren't able to send a confirmation email. Please try again."
+      )
+  );
 });

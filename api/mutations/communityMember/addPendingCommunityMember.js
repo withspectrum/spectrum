@@ -9,7 +9,6 @@ import {
 } from '../../models/usersCommunities';
 import { createMemberInDefaultChannels } from '../../models/usersChannels';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
-import { sendPrivateCommunityRequestQueue } from 'shared/bull/queues';
 
 type Input = {
   input: {
@@ -75,11 +74,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   if (permission && permission.isPending) {
     return new UserError('You have already requested to join this community.');
   }
-
-  sendPrivateCommunityRequestQueue.add({
-    userId: user.id,
-    communityId,
-  });
 
   return await createPendingMemberInCommunity(communityId, user.id).then(
     () => community

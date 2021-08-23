@@ -12,7 +12,6 @@ debug
 now-secrets.json
 build-iris
 build-api
-build-hermes
 build-vulcan
 build-hyperion
 package-lock.json
