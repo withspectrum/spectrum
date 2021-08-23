@@ -149,7 +149,6 @@ class ChannelWithData extends React.Component<Props, State> {
 
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
-    const { channel } = this.props;
     const { name, channelData } = this.state;
     const message = (
       <div>

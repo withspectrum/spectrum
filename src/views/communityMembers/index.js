@@ -3,9 +3,7 @@ import * as React from 'react';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
-import SlackConnection from '../communitySettings/components/slack';
 import CommunityMembers from './components/communityMembers';
-import JoinTokenSettings from './components/joinTokenSettings';
 import type { Dispatch } from 'redux';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SectionsContainer, Column } from 'src/components/settingsViews/style';
@@ -35,16 +33,6 @@ class CommunityMembersSettings extends React.Component<Props> {
                 community={community}
               />
             </ErrorBoundary>
-
-            <ErrorBoundary fallbackComponent={SettingsFallback}>
-              <SlackConnection type={'import-only'} id={community.id} />
-            </ErrorBoundary>
-
-            {community.isPrivate && (
-              <ErrorBoundary fallbackComponent={SettingsFallback}>
-                <JoinTokenSettings id={community.id} community={community} />
-              </ErrorBoundary>
-            )}
           </Column>
         </SectionsContainer>
       );

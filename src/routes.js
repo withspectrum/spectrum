@@ -73,12 +73,6 @@ const ChannelView = Loadable({
 });
 
 /* prettier-ignore */
-const HomeViewRedirect = Loadable({
-  loader: () => import('./views/homeViewRedirect'/* webpackChunkName: "HomeViewRedirect" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const Notifications = Loadable({
   loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,

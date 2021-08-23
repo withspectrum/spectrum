@@ -6,8 +6,6 @@ import PendingUsers from './pendingUsers';
 import BlockedUsers from './blockedUsers';
 import ChannelMembers from './channelMembers';
 import ArchiveForm from './archiveForm';
-import LoginTokenSettings from './joinTokenSettings';
-import SlackConnection from 'src/views/communitySettings/components/slack';
 import { ErrorBoundary, SettingsFallback } from 'src/components/error';
 
 type Props = {
@@ -19,7 +17,7 @@ type Props = {
 };
 class Overview extends React.Component<Props> {
   render() {
-    const { channel, community } = this.props;
+    const { channel } = this.props;
 
     return (
       <SectionsContainer data-cy="channel-overview">
@@ -29,21 +27,7 @@ class Overview extends React.Component<Props> {
           </ErrorBoundary>
 
           <ErrorBoundary fallbackComponent={SettingsFallback}>
-            <SlackConnection
-              type={'bot-only'}
-              id={community.id}
-              channelFilter={channel.id}
-            />
-          </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
             {channel.slug !== 'general' && <ArchiveForm channel={channel} />}
-          </ErrorBoundary>
-
-          <ErrorBoundary fallbackComponent={SettingsFallback}>
-            {channel.isPrivate && (
-              <LoginTokenSettings id={channel.id} channel={channel} />
-            )}
           </ErrorBoundary>
         </Column>
 
