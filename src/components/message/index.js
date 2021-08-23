@@ -281,14 +281,6 @@ class Message extends React.Component<Props, State> {
             {!isEditing && !isOptimistic && (
               <ActionsContainer>
                 <Actions>
-                  {canEditMessage && (
-                    <Tooltip content={'Edit'}>
-                      <Action onClick={this.initEditMessage}>
-                        <Icon data-cy="edit-message" glyph="edit" size={20} />
-                      </Action>
-                    </Tooltip>
-                  )}
-
                   {canModerateMessage && (
                     <Tooltip content={'Delete'}>
                       <Action onClick={this.deleteMessage}>
