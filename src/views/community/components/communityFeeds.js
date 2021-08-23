@@ -14,8 +14,6 @@ import MessagesSubscriber from 'src/views/thread/components/messagesSubscriber';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
-import ChatInput from 'src/components/chatInput';
-import { ChatInputWrapper } from 'src/components/layout';
 import usePrevious from 'src/hooks/usePrevious';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
@@ -28,7 +26,7 @@ type Props = {
 };
 
 const Feeds = (props: Props) => {
-  const { community, location, history, currentUser } = props;
+  const { community, location, history } = props;
   const { search } = location;
   const { tab } = querystring.parse(search);
 
@@ -63,14 +61,6 @@ const Feeds = (props: Props) => {
         return (
           <React.Fragment>
             <MessagesSubscriber isWatercooler id={community.watercoolerId} />
-            <ChatInputWrapper>
-              {currentUser && community.communityPermissions.isMember && (
-                <ChatInput
-                  threadType="story"
-                  threadId={community.watercoolerId}
-                />
-              )}
-            </ChatInputWrapper>
           </React.Fragment>
         );
       }

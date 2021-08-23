@@ -13,7 +13,6 @@ import Reaction from 'src/components/reaction';
 import { ReactionWrapper } from 'src/components//reaction/style';
 import OutsideClickHandler from 'src/components/outsideClickHandler';
 import { Body } from './view';
-import EditingBody from './editingBody';
 import { openModal } from 'src/actions/modals';
 import { CLIENT_URL } from 'src/api/constants';
 import type { MessageInfoType } from 'shared/graphql/fragments/message/messageInfo';
@@ -212,15 +211,11 @@ class Message extends React.Component<Props, State> {
               />
             )}
 
-            {!isEditing ? (
-              <Body
-                me={me}
-                openGallery={e => this.toggleOpenGallery(e, message.id)}
-                message={message}
-              />
-            ) : (
-              <EditingBody message={message} cancelEdit={this.cancelEdit} />
-            )}
+            <Body
+              me={me}
+              openGallery={e => this.toggleOpenGallery(e, message.id)}
+              message={message}
+            />
 
             {message.modifiedAt && !isEditing && (
               <Tooltip

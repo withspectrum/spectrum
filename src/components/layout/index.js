@@ -199,18 +199,3 @@ export const SecondaryColumn = styled.section`
     display: none;
   }
 `;
-
-export const ChatInputWrapper = styled.div`
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 3000;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    width: 100vw;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-  }
-`;

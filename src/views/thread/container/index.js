@@ -14,7 +14,6 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { LoadingView, ErrorView } from 'src/views/viewHelpers';
-import Icon from 'src/components/icon';
 import {
   ViewGrid,
   SecondaryPrimaryColumnGrid,
@@ -22,15 +21,12 @@ import {
   SecondaryColumn,
   SingleColumnGrid,
 } from 'src/components/layout';
-import ChatInput from 'src/components/chatInput';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import MessagesSubscriber from '../components/messagesSubscriber';
 import StickyHeader from '../components/stickyHeader';
 import ThreadDetail from '../components/threadDetail';
 import ThreadHead from '../components/threadHead';
-import LockedMessages from '../components/lockedMessages';
-import { ChatInputWrapper } from 'src/components/layout';
-import { Stretch, LockedText } from '../style';
+import { Stretch } from '../style';
 import { deduplicateChildren } from 'src/components/infiniteScroll/deduplicateChildren';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import CommunitySidebar from 'src/components/communitySidebar';
@@ -106,9 +102,7 @@ const ThreadContainer = (props: Props) => {
     }
   };
 
-  const [mentionSuggestions, setMentionSuggestions] = useState([
-    thread.author.user,
-  ]);
+  const [, setMentionSuggestions] = useState([thread.author.user]);
   const [isEditing, setEditing] = useState(false);
   const updateMentionSuggestions = (thread: GetThreadType) => {
     const { messageConnection, author } = thread;
@@ -168,11 +162,6 @@ const ThreadContainer = (props: Props) => {
     );
   }, []);
 
-  const { community, channel, isLocked } = thread;
-  const { communityPermissions } = community;
-  const { isMember } = communityPermissions;
-  const canChat = !isLocked && !channel.isArchived && isMember;
-
   const renderPrimaryColumn = fullWidth => (
     <PrimaryColumn fullWidth={fullWidth}>
       {/*
@@ -203,34 +192,6 @@ const ThreadContainer = (props: Props) => {
               isWatercooler={thread.watercooler} // used in the graphql query to always fetch the latest messages
               onMessagesLoaded={updateMentionSuggestions}
             />
-
-            {canChat && !community.redirect && (
-              <ChatInputWrapper>
-                <ChatInput
-                  threadType="story"
-                  threadId={thread.id}
-                  participants={mentionSuggestions}
-                />
-              </ChatInputWrapper>
-            )}
-
-            {isLocked && (
-              <ChatInputWrapper>
-                <LockedMessages>
-                  <Icon glyph={'private'} size={24} />
-                  <LockedText>This conversation has been locked</LockedText>
-                </LockedMessages>
-              </ChatInputWrapper>
-            )}
-
-            {channel.isArchived && (
-              <ChatInputWrapper>
-                <LockedMessages>
-                  <Icon glyph={'private'} size={24} />
-                  <LockedText>This channel has been archived</LockedText>
-                </LockedMessages>
-              </ChatInputWrapper>
-            )}
           </React.Fragment>
         )}
       </Stretch>
