@@ -73,22 +73,6 @@ const Feeds = (props: Props) => {
                   threadId={community.watercoolerId}
                 />
               )}
-              {(!currentUser || !community.communityPermissions.isMember) && (
-                <JoinCommunity
-                  community={community}
-                  render={({ isLoading }) => (
-                    <LockedMessages>
-                      <PrimaryOutlineButton
-                        isLoading={isLoading}
-                        icon={'door-enter'}
-                        data-cy="join-community-chat-upsell"
-                      >
-                        {isLoading ? 'Joining...' : 'Join community to chat'}
-                      </PrimaryOutlineButton>
-                    </LockedMessages>
-                  )}
-                />
-              )}
             </ChatInputWrapper>
           </React.Fragment>
         );
