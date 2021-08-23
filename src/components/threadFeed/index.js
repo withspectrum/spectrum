@@ -41,7 +41,6 @@ type Props = {
   slug: string,
   pinnedThreadId: ?string,
   dispatch: Dispatch<Object>,
-  search?: boolean,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
 };
@@ -232,7 +231,6 @@ class ThreadFeedPure extends React.Component<Props, State> {
       <NullState
         communityId={nullComposerCommunityId}
         channelId={this.props.data.channel && this.props.data.channel.id}
-        isSearch={!!this.props.search}
         viewContext={viewContext}
       />
     );

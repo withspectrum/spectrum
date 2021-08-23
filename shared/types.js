@@ -352,39 +352,6 @@ export type DBUsersThreads = {
   lastSeen?: Date | number,
 };
 
-export type SearchThread = {
-  channelId: string,
-  communityId: string,
-  creatorId: string,
-  lastActive: number,
-  messageContent: {
-    body: ?string,
-  },
-  threadContent: {
-    title: string,
-    body: ?string,
-  },
-  createdAt: number,
-  threadId: string,
-  objectID: string,
-};
-
-export type SearchUser = {
-  description: ?string,
-  name: string,
-  username: ?string,
-  website: ?string,
-  objectID: string,
-};
-
-export type SearchCommunity = {
-  description: ?string,
-  name: string,
-  slug: string,
-  website: ?string,
-  objectID: string,
-};
-
 export type DBExpoPushSubscription = {
   id: string,
   token: string,

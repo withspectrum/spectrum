@@ -13,7 +13,6 @@ debug
 now-secrets.json
 build-iris
 build-api
-build-vulcan
 build-hyperion
 build-electron
 package-lock.json

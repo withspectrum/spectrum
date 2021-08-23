@@ -4,9 +4,6 @@ import community from './rootCommunity';
 import communities from './rootCommunities';
 import topCommunities from './rootTopCommunities';
 import recentCommunities from './rootRecentCommunities';
-import searchCommunities from './rootSearchCommunities';
-import searchCommunityThreads from './rootSearchCommunityThreads';
-
 import communityPermissions from './communityPermissions';
 import channelConnection from './channelConnection';
 import memberConnection from './memberConnection';
@@ -48,8 +45,6 @@ module.exports = {
     communities,
     topCommunities,
     recentCommunities,
-    searchCommunities,
-    searchCommunityThreads,
   },
   Community: {
     communityPermissions,

@@ -2,7 +2,6 @@
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
 import { createNewUsersSettings } from 'api/models/usersSettings';
-import { searchQueue } from 'shared/bull/queues';
 import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
@@ -119,14 +118,6 @@ export const storeUser = createWriteQuery((user: Object) => ({
     .run()
     .then(res => {
       const dbUser = res.changes[0].new_val || res.changes[0].old_val;
-
-      if (dbUser.username) {
-        searchQueue.add({
-          id: dbUser.id,
-          type: 'user',
-          event: 'created',
-        });
-      }
 
       return Promise.all([dbUser, createNewUsersSettings(dbUser.id)]).then(
         ([dbUser]) => dbUser
@@ -312,14 +303,6 @@ export const editUser = createWriteQuery(
           });
         })
         .then(user => {
-          if (user.username) {
-            searchQueue.add({
-              id: user.id,
-              type: 'user',
-              event: 'edited',
-            });
-          }
-
           if (file || coverFile) {
             if (file && !coverFile) {
               return uploadImage(file, 'users', user.id)
@@ -578,12 +561,6 @@ export const deleteUser = createWriteQuery((userId: string) => ({
       }) => {
         const user = changes[0].new_val || changes[0].old_val;
 
-        searchQueue.add({
-          id: userId,
-          type: 'user',
-          event: 'deleted',
-        });
-
         return user;
       }
     ),
@@ -624,12 +601,6 @@ export const banUser = createWriteQuery((args: BanUserType) => {
           no longer listed as members of communities or channels
           and their DMs cant be seen by other users
         */
-
-        searchQueue.add({
-          id: userId,
-          type: 'user',
-          event: 'deleted',
-        });
 
         const dmThreadIds = await db
           .table('usersDirectMessageThreads')

@@ -10,17 +10,11 @@ type Props = {
     | 'channelInbox'
     | 'channelProfile'
     | 'userProfile',
-  isSearch: boolean,
   communityId: ?string,
   channelId: ?string,
 };
 
-const NullState = ({
-  viewContext,
-  isSearch,
-  communityId,
-  channelId,
-}: Props) => {
+const NullState = ({ viewContext, communityId, channelId }: Props) => {
   let hd;
   let cp;
 
@@ -37,11 +31,6 @@ const NullState = ({
   if (viewContext && viewContext === 'userProfile') {
     hd = 'This user hasn’t posted yet';
     cp = 'But you could message them!';
-  }
-
-  if (isSearch) {
-    hd = 'We didn’t find any relevant posts...';
-    cp = 'Try searching again or create a new post';
   }
 
   const headingIcon = (communityId || channelId) && (

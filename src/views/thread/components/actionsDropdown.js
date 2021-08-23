@@ -26,7 +26,7 @@ type Props = {
 };
 
 const ActionsDropdown = (props: Props) => {
-  const { thread, dispatch, currentUser, toggleEdit } = props;
+  const { thread, dispatch, currentUser } = props;
   if (!currentUser) return null;
 
   const {

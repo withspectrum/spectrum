@@ -212,11 +212,6 @@ const Community = /* GraphQL */ `
     topCommunities(amount: Int = 20): [Community!]
       @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]
-
-    searchCommunities(string: String, amount: Int = 20): [Community]
-      @deprecated(reason: "Use the new Search query endpoint")
-    searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
-      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input MembersFilter {

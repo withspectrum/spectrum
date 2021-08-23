@@ -1,7 +1,6 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { searchQueue } from 'shared/bull/queues';
 const { parseRange, NEW_DOCUMENTS } = require('./utils');
 import { createChangefeed } from 'shared/changefeed-utils';
 import { deleteMessagesInThread } from '../models/message';
@@ -455,13 +454,6 @@ export const publishThread = (
     .run()
     .then(result => {
       const thread = result.changes[0].new_val;
-
-      searchQueue.add({
-        id: thread.id,
-        type: 'thread',
-        event: 'created',
-      });
-
       return thread;
     });
 };
@@ -522,14 +514,6 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
       ])
     )
     .then(([result]) => {
-      const thread = result.changes[0].new_val;
-
-      searchQueue.add({
-        id: thread.id,
-        type: 'thread',
-        event: 'deleted'
-      })
-
       return result.replaced >= 1 ? true : false;
     });
 };
@@ -569,13 +553,6 @@ export const editThread = (input: EditThreadInput, userId: string, shouldUpdate:
       // if an update happened
       if (result.replaced === 1) {
         const thread = result.changes[0].new_val;
-
-        searchQueue.add({
-          id: thread.id,
-          type: 'thread',
-          event: 'edited'
-        })
-
         return thread;
       }
 
@@ -626,13 +603,6 @@ export const moveThread = (id: string, channelId: string) => {
     .then(result => {
       if (result.replaced === 1) {
         const thread = result.changes[0].new_val;
-
-        searchQueue.add({
-          id: thread.id,
-          type: 'thread',
-          event: 'moved',
-        });
-
         return thread;
       }
 

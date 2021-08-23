@@ -1,9 +1,5 @@
 //@flow
 const { db } = require('shared/db');
-import {
-  _adminProcessToxicMessageQueue,
-  searchQueue,
-} from 'shared/bull/queues';
 import { NEW_DOCUMENTS } from './utils';
 import { createChangefeed } from 'shared/changefeed-utils';
 import {
@@ -141,12 +137,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
 
       if (message.threadType === 'story') {
         await Promise.all([
-        searchQueue.add({
-          id: message.id,
-          type: 'message',
-          event: 'created'
-        }),
-        _adminProcessToxicMessageQueue.add({ message }),
 
           setThreadLastActive(message.threadId, message.timestamp),
           incrementMessageCount(message.threadId)
@@ -208,13 +198,6 @@ export const deleteMessage = (userId: string, messageId: string) => {
         message.threadType === 'story'
           ? decrementMessageCount(message.threadId)
           : Promise.resolve(),
-        message.threadType === 'story'
-          ? searchQueue.add({
-              id: message.id,
-              type: 'message',
-              event: 'deleted',
-            })
-          : Promise.resolve(),
       ]);
 
       return message;
@@ -230,15 +213,6 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
 
   if (!messages || messages.length === 0) return;
 
-  const searchPromises = messages.map(message => {
-    if (message.threadType !== 'story') return null
-    return searchQueue.add({
-      id: message.id,
-      type: 'message',
-      event: 'deleted'
-    })
-  })
-
   const deletePromise = db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
@@ -250,7 +224,6 @@ export const deleteMessagesInThread = async (threadId: string, userId: string) =
 
   return await Promise.all([
     deletePromise,
-    ...searchPromises
   ]).then(() => {
     return Promise.all(Array.from({ length: messages.length }).map(() => decrementMessageCount(threadId)))
   });
@@ -299,14 +272,6 @@ export const editMessage = (message: EditInput): Promise<DBMessage> => {
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val)
     .then(message => {
-      if (message.threadType === 'story') {
-        searchQueue.add({
-          id: message.id,
-          type: 'message',
-          event: 'edited'
-        })
-      }
-
       return message;
     });
 };

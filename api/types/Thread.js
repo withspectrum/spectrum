@@ -81,17 +81,8 @@ const Thread = /* GraphQL */ `
       @deprecated(reason: "No longer used")
   }
 
-  input SearchThreadsFilter {
-    communityId: ID
-    creatorId: ID
-    channelId: ID
-    everythingFeed: Boolean
-  }
-
   extend type Query {
     thread(id: ID!): Thread @cacheControl(maxAge: 1200)
-    searchThreads(queryString: String!, filter: SearchThreadsFilter): [Thread]
-      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input AttachmentInput {

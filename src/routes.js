@@ -96,12 +96,6 @@ const Pages = Loadable({
 });
 
 /* prettier-ignore */
-const Search = Loadable({
-  loader: () => import('./views/search'/* webpackChunkName: "Search" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const ErrorFallback = Loadable({
   loader: () => import('./components/error'/* webpackChunkName: "Error" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />
@@ -301,8 +295,6 @@ class Routes extends React.Component<Props, State> {
                     <Route path="/code-of-conduct" component={Pages} />
 
                     {/* App Pages */}
-                    <Route path="/new/search" component={Search} />
-
                     <Route path="/login" component={LoginFallback} />
                     <Route path="/explore" component={Explore} />
                     <Route

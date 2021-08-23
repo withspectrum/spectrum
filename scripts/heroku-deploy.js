@@ -8,7 +8,7 @@ const exec = cmd =>
 
 const { args } = parse(process.argv);
 
-const VALID_SERVERS = ['all', 'api', 'hyperion', 'vulcan'];
+const VALID_SERVERS = ['all', 'api', 'hyperion'];
 
 const serverType = s => (['api', 'hyperion'].includes(s) ? 'web' : 'worker');
 

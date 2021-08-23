@@ -1,7 +1,6 @@
 // @flow
 import user from './rootUser';
 import currentUser from './rootCurrentUser';
-import searchUsers from './rootSearchUsers';
 
 import email from './email';
 import coverPhoto from './coverPhoto';
@@ -28,7 +27,6 @@ module.exports = {
   Query: {
     user,
     currentUser,
-    searchUsers,
   },
   User: {
     email,

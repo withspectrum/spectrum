@@ -1,7 +1,5 @@
 // @flow
 import thread from './rootThread';
-import searchThreads from './rootSearchThreads';
-
 import attachments from './attachments';
 import channel from './channel';
 import community from './community';
@@ -23,7 +21,6 @@ import type { DBThread } from 'shared/types';
 module.exports = {
   Query: {
     thread,
-    searchThreads,
   },
   Thread: {
     attachments,

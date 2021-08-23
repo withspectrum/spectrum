@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 import compose from 'recompose/compose';
 import { Error, Success } from 'src/components/formElements';
-import UsernameSearch from 'src/components/usernameSearch';
 import { addToastWithTimeout } from 'src/actions/toasts';
 import { Form, Row } from './style';
 import editUserMutation from 'shared/graphql/mutations/user/editUser';
@@ -109,16 +108,6 @@ class SetUsername extends React.Component<Props, State> {
 
     return (
       <Form onSubmit={this.saveUsername}>
-        <Row>
-          <UsernameSearch
-            placeholder={'Your username...'}
-            autoFocus={true}
-            username={username}
-            onValidationResult={this.handleUsernameValidation}
-            dataCy={'username-search'}
-          />
-        </Row>
-
         <Row style={{ minHeight: '43px' }}>
           {error && <Error data-cy="username-search-error">{error}</Error>}
           {success && (

@@ -107,7 +107,6 @@ spectrum/
 ├── public     # Public files used on the frontend
 ├── shared     # Shared JavaScript code
 ├── src        # Frontend SPA
-└── vulcan     # Worker server (search indexing; syncing with Algolia)
 ```
 
 <details>

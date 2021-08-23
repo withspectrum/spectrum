@@ -11,7 +11,6 @@
 - api
 - hyperion (frontend)
 - desktop
-- vulcan
 
 **Run database migrations (delete if no migration was added)**
 YES

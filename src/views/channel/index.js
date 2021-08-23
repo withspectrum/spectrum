@@ -10,7 +10,6 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
@@ -232,12 +231,6 @@ class ChannelView extends React.Component<Props> {
                   </SegmentedControl>
 
                   {selectedView === 'posts' && <PostFeed channel={channel} />}
-
-                  {selectedView === 'search' && (
-                    <ErrorBoundary>
-                      <Search channel={channel} />
-                    </ErrorBoundary>
-                  )}
 
                   {selectedView === 'members' && (
                     <ErrorBoundary>

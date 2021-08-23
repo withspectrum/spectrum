@@ -4,7 +4,6 @@ import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-import { searchQueue } from 'shared/bull/queues';
 import { createChangefeed } from 'shared/changefeed-utils';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
@@ -247,12 +246,6 @@ export const createCommunity = ({ input }: CreateCommunityInput, user: DBUser): 
     .run()
     .then(result => result.changes[0].new_val)
     .then(community => {
-      searchQueue.add({
-        id: community.id,
-        type: 'community',
-        event: 'created'
-      })
-
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
         const { coverPhoto, profilePhoto } = getRandomDefaultPhoto();
@@ -447,12 +440,6 @@ export const editCommunity = async ({ input }: EditCommunityInput, userId: strin
         community = result.changes[0].old_val;
       }
 
-      searchQueue.add({
-        id: communityId,
-        type: 'community',
-        event: 'edited'
-      })
-
       return community
     })
 };
@@ -541,13 +528,6 @@ export const deleteCommunity = (communityId: string, userId: string): Promise<DB
       }
     )
     .run()
-    .then(() => {
-      searchQueue.add({
-        id: communityId,
-        type: 'community',
-        event: 'deleted'
-      })
-    });
 };
 
 // prettier-ignore

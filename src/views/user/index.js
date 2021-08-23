@@ -15,7 +15,6 @@ import ThreadFeed from 'src/components/threadFeed';
 import { UserProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import CommunityList from './components/communityList';
-import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { UserAvatar } from 'src/components/avatar';
 import {
@@ -266,14 +265,6 @@ class UserView extends React.Component<Props, State> {
                     >
                       Info
                     </Segment>
-
-                    <Segment
-                      onClick={() => this.handleSegmentClick('search')}
-                      isActive={selectedView === 'search'}
-                      data-cy="user-search-tab"
-                    >
-                      Search
-                    </Segment>
                   </SegmentedControl>
 
                   {hasThreads &&
@@ -295,8 +286,6 @@ class UserView extends React.Component<Props, State> {
                         id={user.id}
                       />
                     )}
-
-                  {selectedView === 'search' && <Search user={user} />}
 
                   {selectedView === 'info' && (
                     <InfoContainer>

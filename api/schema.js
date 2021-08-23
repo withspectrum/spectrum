@@ -27,7 +27,6 @@ const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
-const Search = require('./types/Search');
 const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
 const ThreadParticipant = require('./types/ThreadParticipant');
@@ -41,7 +40,6 @@ const reactionQueries = require('./queries/reaction');
 const directMessageThreadQueries = require('./queries/directMessageThread');
 const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
-const searchQueries = require('./queries/search');
 const communityMemberQueries = require('./queries/communityMember');
 const communitySlackSettingsQueries = require('./queries/communitySlackSettings');
 const channelSlackSettingsQueries = require('./queries/channelSlackSettings');
@@ -113,7 +111,6 @@ const resolvers = merge(
   reactionQueries,
   notificationQueries,
   metaQueries,
-  searchQueries,
   communityMemberQueries,
   communitySlackSettingsQueries,
   channelSlackSettingsQueries,
@@ -162,7 +159,6 @@ const schema = makeExecutableSchema({
     Notification,
     Meta,
     Invoice,
-    Search,
   ],
   resolvers,
   schemaDirectives: IS_PROD

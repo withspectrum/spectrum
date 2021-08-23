@@ -18,4 +18,3 @@
   - [Unit](testing/unit.md)
 - [Workers](workers/intro.md)
   - [Background jobs with Redis](workers/background-jobs.md)
-  - [Vulcan](workers/vulcan/intro.md)
