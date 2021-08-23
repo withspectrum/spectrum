@@ -4,7 +4,6 @@ import { graphql } from 'react-apollo';
 import userEverythingConnectionFragment, {
   type UserEverythingConnectionType,
 } from '../../fragments/user/userEverythingConnection';
-import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 export type GetCurrentUserEverythingFeedType = {
   id: string,

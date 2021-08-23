@@ -56,12 +56,6 @@ const metaMutations = require('./mutations/meta');
 const communityMemberMutations = require('./mutations/communityMember');
 const fileMutations = require('./mutations/files');
 
-const messageSubscriptions = require('./subscriptions/message');
-const notificationSubscriptions = require('./subscriptions/notification');
-const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
-const threadSubscriptions = require('./subscriptions/thread');
-const communitySubscriptions = require('./subscriptions/community');
-
 const rateLimit = require('./utils/rate-limit-directive').default;
 
 const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
@@ -125,13 +119,7 @@ const resolvers = merge(
   userMutations,
   metaMutations,
   communityMemberMutations,
-  fileMutations,
-  // subscriptions
-  messageSubscriptions,
-  notificationSubscriptions,
-  directMessageThreadSubscriptions,
-  threadSubscriptions,
-  communitySubscriptions
+  fileMutations
 );
 
 if (process.env.NODE_ENV === 'development' && debug.enabled) {

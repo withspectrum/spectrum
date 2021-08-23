@@ -6,7 +6,6 @@ import communityInfoFragment from '../../fragments/community/communityInfo';
 import type { CommunityInfoType } from '../../fragments/community/communityInfo';
 import communityThreadConnectionFragment from '../../fragments/community/communityThreadConnection';
 import type { CommunityThreadConnectionType } from '../../fragments/community/communityThreadConnection';
-import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 export type GetCommunityThreadConnectionType = {
   ...$Exact<CommunityInfoType>,
