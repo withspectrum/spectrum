@@ -20,8 +20,6 @@ import {
 import Icon from 'src/components/icon';
 import NavHead from './navHead';
 import DirectMessagesTab from './directMessagesTab';
-import NotificationsTab from './notificationsTab';
-import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
 import { NavigationContext } from 'src/helpers/navigation-context';
@@ -125,12 +123,8 @@ const Navigation = (props: Props) => {
 
             <NavigationGrid isOpen={navigationIsOpen}>
               <DesktopMenuIconsCover />
-              <GlobalComposerTab />
               <Route path="/messages">
                 {({ match }) => <DirectMessagesTab isActive={!!match} />}
-              </Route>
-              <Route path="/notifications">
-                {({ match }) => <NotificationsTab isActive={!!match} />}
               </Route>
 
               <Route path="/explore">
