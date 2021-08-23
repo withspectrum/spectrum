@@ -12,7 +12,6 @@ const VALID_SERVERS = [
   'all',
   'api',
   'athena',
-  'chronos',
   'hermes',
   'hyperion',
   'mercury',

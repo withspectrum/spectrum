@@ -57,7 +57,6 @@ const init = () => {
     },
     { filename: 'community-created', id: 'd-dc7b4f048f4c460f9dd368fd3796421b' },
     { filename: 'thread-created', id: 'd-084c11332981443388ebdae05d0a2ff4' },
-    { filename: 'digest', id: 'd-5e52250c25be4654af82172970551919' },
     {
       filename: 'user-email-validation',
       id: 'd-9fbb3cc969364050aac891c255d31209',

@@ -10,7 +10,6 @@ export const SEND_NEW_COMMUNITY_WELCOME_EMAIL =
 
 export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
   'send thread created notification email';
-export const SEND_DIGEST_EMAIL = 'send digest email';
 export const SEND_EMAIL_VALIDATION_EMAIL = 'send email validation email';
 export const SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL =
   'send administrator email validation email';
@@ -60,9 +59,6 @@ export const NEW_COMMUNITY_WELCOME_TEMPLATE = IS_PROD
 export const NEW_THREAD_CREATED_TEMPLATE = IS_PROD
   ? 'd-2809d28ff1cc4d89a503e04de3388411'
   : 'd-084c11332981443388ebdae05d0a2ff4';
-export const DIGEST_TEMPLATE = IS_PROD
-  ? 'd-54e8d4905da64158a98ddb92c9330583'
-  : 'd-5e52250c25be4654af82172970551919';
 export const EMAIL_VALIDATION_TEMPLATE = IS_PROD
   ? 'd-8cd6c640e2d944c7a4bb8877722ff00f'
   : 'd-9fbb3cc969364050aac891c255d31209';
@@ -98,8 +94,6 @@ export const PRIVATE_COMMUNITY_REQUEST_APPROVED_TEMPLATE = IS_PROD
   : 'd-d91de18c257344d2bf9ff0c628d1a92e';
 
 // types used to generate unsubscribe tokens
-export const TYPE_DAILY_DIGEST = 'dailyDigest';
-export const TYPE_WEEKLY_DIGEST = 'weeklyDigest';
 export const TYPE_NEW_THREAD_CREATED = 'newThreadCreated';
 export const TYPE_NEW_MESSAGE_IN_THREAD = 'newMessageInThreads';
 export const TYPE_NEW_DIRECT_MESSAGE = 'newDirectMessage';

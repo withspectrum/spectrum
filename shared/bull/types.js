@@ -15,7 +15,6 @@ import type {
   Recipient,
   NewMessageNotificationEmailThread,
 } from 'athena/queues/new-message-in-thread/buffer-email';
-import type { CleanDigestThread, Timeframe } from 'chronos/types';
 
 export type Job<JobData> = {|
   id: string,
@@ -398,24 +397,6 @@ export type AdminActiveCommunityReportEmailJobData = {
   lostMac: Array<string>,
 };
 
-export type ProcessIndividualDigestJobData = {
-  userId: string,
-  topCommunityIds: Array<string>,
-  timeframe: Timeframe,
-};
-
-export type SendDigestEmailJobData = {
-  email: ?string,
-  userId: string,
-  username: ?string,
-  user: DBUser,
-  threads: Array<CleanDigestThread>,
-  reputationString: string,
-  communities: ?Array<DBCommunity>,
-  timeframe: Timeframe,
-  hasOverflowThreads: boolean,
-};
-
 export type SendGridWebhookEventJobData = {
   event: {
     email: string,
@@ -479,7 +460,6 @@ export type Queues = {
   sendPrivateCommunityRequestEmailQueue: BullQueue<SendPrivateCommunityRequestEmailJobData>,
   sendPrivateCommunityRequestApprovedEmailQueue: BullQueue<SendPrivateCommunityRequestApprovedEmailJobData>,
   sendThreadCreatedNotificationEmailQueue: BullQueue<SendNewThreadNotificationEmailJobData>,
-  sendDigestEmailQueue: BullQueue<SendDigestEmailJobData>,
   sendgridEventQueue: BullQueue<SendGridWebhookEventJobData>,
 
   // mercury
@@ -499,14 +479,4 @@ export type Queues = {
   _adminSendToxicContentEmailQueue: BullQueue<AdminToxicContentEmailJobData>,
   _adminProcessUserSpammingThreadsQueue: BullQueue<AdminUserSpammingThreadsJobData>,
   _adminSendActiveCommunityReportEmailQueue: BullQueue<AdminActiveCommunityReportEmailJobData>,
-
-  // chronos
-  weeklyDigestQueue: BullQueue<void>,
-  dailyDigestQueue: BullQueue<void>,
-  processIndividualDigestQueue: BullQueue<ProcessIndividualDigestJobData>,
-  dailyCoreMetricsQueue: BullQueue<void>,
-  activeCommunityReportQueue: BullQueue<void>,
-  removeSeenUsersNotificationsQueue: BullQueue<void>,
-  databaseBackupQueue: BullQueue<void>,
-  offsiteBackupQueue: BullQueue<void>,
 };

@@ -1,8 +1,8 @@
 <div align="center">
 
-  [![Spectrum](./public/img/media.png)](https://spectrum.chat)
+[![Spectrum](./public/img/media.png)](https://spectrum.chat)
 
-  ### Simple, powerful online communities.
+### Simple, powerful online communities.
 
 </div>
 
@@ -103,7 +103,6 @@ Here is a list of all the big technologies we use:
 spectrum/
 ├── api        # API server
 ├── athena     # Worker server (notifications and general processing)
-├── chronos    # Worker server (cron jobs)
 ├── desktop    # desktop apps (build with electron)
 ├── docs
 ├── email-templates
@@ -126,7 +125,6 @@ As you can see we follow a loose naming scheme based on ancient Greek, Roman, an
 - Hyperion: (/haɪˈpɪəriən/) is one of the twelve Titan children of Gaia and Uranus.
 - Athena (/əˈθiːnə/) is the goddess of wisdom, craft, and war.
 - Hermes (/ˈhɜːrmiːz/) is the messenger god, moving between the worlds of the mortal and the divine.
-- Chronos (/ˈkroʊnɒs/) is the personification of Time in pre-Socratic philosophy
 - Mercury (/ˈmɜːrkjʊri/) is the patron god of financial gain, commerce, eloquence (and thus poetry), messages/communication (including divination), travelers, boundaries, luck, trickery and thieves
 
 </details>
@@ -151,8 +149,10 @@ The first step to running Spectrum locally is downloading the code by cloning th
 ```sh
 git clone git@github.com:withspectrum/spectrum.git
 ```
- If you get `Permission denied` error using `ssh` refer [here](https://help.github.com/articles/error-permission-denied-publickey/)
+
+If you get `Permission denied` error using `ssh` refer [here](https://help.github.com/articles/error-permission-denied-publickey/)
 or use `https` link as a fallback.
+
 ```sh
 git clone https://github.com/withspectrum/spectrum.git
 ```
@@ -166,9 +166,9 @@ Spectrum has four big installation steps:
 3. **Install yarn**: We use [yarn](https://yarnpkg.com) to handle our JavaScript dependencies. (plain `npm` doesn't work due to our monorepo setup) See [the yarn documentation](https://yarnpkg.com/en/docs/install) for instructions on installing it.
 4. **Install the dependencies**: Because it's pretty tedious to install the dependencies for each worker individually we've created a script that goes through and runs `yarn install` for every worker for you: (this takes a couple minutes, so dive into the [technical docs](./docs) in the meantime)
 
-  ```sh
-  node shared/install-dependencies.js
-  ```
+```sh
+node shared/install-dependencies.js
+```
 
 You've now finished installing everything! Let's migrate the database and you'll be ready to go :100:
 
@@ -189,6 +189,7 @@ yarn run db:seed
 ```
 
 There's a shortcut for dropping, migrating and seeding the database too:
+
 ```sh
 yarn run db:reset
 ```
@@ -255,15 +256,17 @@ To develop the desktop app you have to have the dev web server running in the ba
 yarn run dev:desktop
 ```
 
-> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!	
+> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!
 
 <br />	
 <div align="center">	
   <img height="200px" src="public/img/connect.svg" />	
-</div>	
+</div>
 
 ## GitHub
+
 Spectrum is now part of GitHub. For code of conduct, please see [GitHub's Community Guidelines](https://help.github.com/en/github/site-policy/github-community-guidelines) and [Acceptable Use Policies](https://help.github.com/en/github/site-policy/github-acceptable-use-policies).
 
-## License	
+## License
+
 BSD 3-Clause, see the [LICENSE](./LICENSE) file.

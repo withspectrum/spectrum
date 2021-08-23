@@ -14,7 +14,6 @@ import processSendUserWelcomeEmail from './queues/send-user-welcome-email';
 import processSendNewCommunityWelcomeEmail from './queues/send-new-community-welcome-email';
 
 import processSendNewThreadEmail from './queues/send-new-thread-email';
-import processSendDigestEmail from './queues/send-digest-email';
 import processSendEmailValidationEmail from './queues/send-email-validation-email';
 import processSendAdministratorEmailValidationEmail from './queues/send-administrator-email-validation-email';
 import processSendAdminCommunityCreatedEmail from './queues/send-admin-community-created-email';
@@ -37,7 +36,6 @@ import {
   SEND_NEW_USER_WELCOME_EMAIL,
   SEND_NEW_COMMUNITY_WELCOME_EMAIL,
   SEND_THREAD_CREATED_NOTIFICATION_EMAIL,
-  SEND_DIGEST_EMAIL,
   SEND_EMAIL_VALIDATION_EMAIL,
   SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL,
   SEND_ADMIN_COMMUNITY_CREATED_EMAIL,
@@ -80,7 +78,6 @@ const server = createWorker(
     [SEND_NEW_COMMUNITY_WELCOME_EMAIL]: processSendNewCommunityWelcomeEmail,
 
     [SEND_THREAD_CREATED_NOTIFICATION_EMAIL]: processSendNewThreadEmail,
-    [SEND_DIGEST_EMAIL]: processSendDigestEmail,
     [SEND_EMAIL_VALIDATION_EMAIL]: processSendEmailValidationEmail,
     [SEND_ADMINISTRATOR_EMAIL_VALIDATION_EMAIL]: processSendAdministratorEmailValidationEmail,
     [SEND_ADMIN_COMMUNITY_CREATED_EMAIL]: processSendAdminCommunityCreatedEmail,
