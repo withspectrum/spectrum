@@ -6,7 +6,6 @@ import { withRouter } from 'react-router';
 import { withApollo } from 'react-apollo';
 import { Loading } from 'src/components/loading';
 import GetMembers from './getMembers';
-import EditDropdown from './editDropdown';
 import queryString from 'query-string';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import {
@@ -89,7 +88,7 @@ class CommunityMembers extends React.Component<Props, State> {
   };
 
   generateUserProfile = communityMember => {
-    const { user, ...permissions } = communityMember;
+    const { user } = communityMember;
     return (
       <React.Fragment>
         <Row style={{ position: 'relative' }}>
@@ -106,13 +105,6 @@ class CommunityMembers extends React.Component<Props, State> {
             showHoverProfile={false}
             messageButton={user.id !== this.props.currentUser.id}
           />
-          {user.id !== this.props.currentUser.id && (
-            <EditDropdown
-              user={user}
-              permissions={permissions}
-              community={this.props.community}
-            />
-          )}
         </Row>
       </React.Fragment>
     );

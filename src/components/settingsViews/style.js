@@ -192,14 +192,6 @@ export const MessageIcon = styled.div`
   cursor: pointer;
 `;
 
-export const EditDropdownContainer = styled.div`
-  position: relative;
-  color: ${theme.text.secondary};
-  cursor: pointer;
-  display: flex;
-  padding-top: 16px;
-`;
-
 export const Dropdown = styled.div`
   border-radius: 4px;
   border: 1px solid ${theme.bg.border};

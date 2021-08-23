@@ -53,7 +53,6 @@ const directMessageThreadMutations = require('./mutations/directMessageThread');
 const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
-const communityMemberMutations = require('./mutations/communityMember');
 const fileMutations = require('./mutations/files');
 
 const rateLimit = require('./utils/rate-limit-directive').default;
@@ -118,7 +117,6 @@ const resolvers = merge(
   notificationMutations,
   userMutations,
   metaMutations,
-  communityMemberMutations,
   fileMutations
 );
 
