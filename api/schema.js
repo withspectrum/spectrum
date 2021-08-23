@@ -25,7 +25,6 @@ const Message = require('./types/Message');
 const Reaction = require('./types/Reaction');
 const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
-const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
 const Invoice = require('./types/Invoice');
 const CommunityMember = require('./types/CommunityMember');
@@ -38,7 +37,6 @@ const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
 const reactionQueries = require('./queries/reaction');
 const directMessageThreadQueries = require('./queries/directMessageThread');
-const notificationQueries = require('./queries/notification');
 const metaQueries = require('./queries/meta');
 const communityMemberQueries = require('./queries/communityMember');
 const communitySlackSettingsQueries = require('./queries/communitySlackSettings');
@@ -49,24 +47,13 @@ const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
-const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
 const fileMutations = require('./mutations/files');
 
-const rateLimit = require('./utils/rate-limit-directive').default;
-
 const IS_PROD = process.env.NODE_ENV === 'production' && !process.env.FORCE_DEV;
 
 const Root = /* GraphQL */ `
-  directive @rateLimit(
-    max: Int
-    window: Int
-    message: String
-    identityArgs: [String]
-    arrayLengthField: String
-  ) on FIELD_DEFINITION
-
   # The dummy queries and mutations are necessary because
   # graphql-js cannot have empty root types and we only extend
   # these types later on
@@ -101,7 +88,6 @@ const resolvers = merge(
   userQueries,
   directMessageThreadQueries,
   reactionQueries,
-  notificationQueries,
   metaQueries,
   communityMemberQueries,
   communitySlackSettingsQueries,
@@ -112,7 +98,6 @@ const resolvers = merge(
   reactionMutations,
   communityMutations,
   channelMutations,
-  notificationMutations,
   userMutations,
   metaMutations,
   fileMutations
@@ -140,16 +125,11 @@ const schema = makeExecutableSchema({
     Reaction,
     User,
     DirectMessageThread,
-    Notification,
     Meta,
     Invoice,
   ],
   resolvers,
-  schemaDirectives: IS_PROD
-    ? {
-        rateLimit,
-      }
-    : {},
+  schemaDirectives: {},
 });
 
 if (process.env.REACT_APP_MAINTENANCE_MODE === 'enabled') {

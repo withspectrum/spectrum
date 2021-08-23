@@ -90,7 +90,6 @@ const general = /* GraphQL */ `
 
   extend type Mutation {
     uploadImage(input: UploadImageInput!): String
-      @rateLimit(max: 20, window: "20m")
   }
 `;
 

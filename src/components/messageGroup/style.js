@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Transition, HorizontalRule } from '../globals';
+import { HorizontalRule } from '../globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const MessagesWrapper = styled.div`

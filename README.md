@@ -86,9 +86,7 @@ Want to fix a bug or implement an agreed-upon feature? Great, jump to the [local
 With the ground rules out of the way, let's talk about the coarse architecture of this mono repo:
 
 - **Full-stack JavaScript**: We use Node.js to power our servers, and React to power our frontend apps. Almost all of the code you'll touch in this codebase will be JavaScript.
-- **Background Jobs**: We leverage background jobs (powered by [`bull`](https://github.com/OptimalBits/bull) and Redis) a lot. These jobs are handled by a handful of small worker servers, each with its own purpose.
-
-Here is a list of all the big technologies we use:
+  Here is a list of all the big technologies we use:
 
 - **RethinkDB**: Data storage
 - **Redis**: Background jobs and caching

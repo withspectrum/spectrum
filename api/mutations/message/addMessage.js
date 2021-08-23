@@ -5,13 +5,11 @@ import { uploadImage } from '../../utils/file-storage';
 import { storeMessage, getMessage } from '../../models/message';
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
-import addCommunityMember from '../communityMember/addCommunityMember';
 import type { FileUpload } from 'shared/types';
 import {
   isAuthedResolver as requireAuth,
   canViewDMThread,
 } from '../../utils/permissions';
-import { calculateThreadScoreQueue } from 'shared/bull/queues';
 import { validateRawContentState } from '../../utils/validate-draft-js-input';
 import processMessageContent, {
   messageTypeObj,
@@ -206,21 +204,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
       await createMemberInChannel(thread.channelId, user.id);
   }
 
-  // if the user is not a member of the community, or has previously joined
-  // and left the community, re-join and sub to default channels
-  if (
-    !communityPermissions ||
-    (communityPermissions && !communityPermissions.isMember)
-  ) {
-    membershipPromise = async () =>
-      await addCommunityMember(
-        {},
-        { input: { communityId: thread.communityId } },
-        ctx
-      );
-  }
-
-  const timestamp = new Date(dbMessage.timestamp).getTime();
   return membershipPromise()
     .then(() => createParticipantInThread(message.threadId, user.id))
     .then(async () => {
@@ -232,14 +215,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
         isOwner: communityPermissions ? communityPermissions.isOwner : false,
       };
 
-      calculateThreadScoreQueue.add(
-        {
-          threadId: message.threadId,
-        },
-        {
-          jobId: message.threadId,
-        }
-      );
       return {
         ...dbMessage,
         contextPermissions,
