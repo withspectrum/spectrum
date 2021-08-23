@@ -333,17 +333,6 @@ class UserView extends React.Component<Props, State> {
                             Posts will show up here as they are published and
                             when conversations are joined.
                           </NullColumnSubheading>
-                          {isCurrentUser && (
-                            <PrimaryOutlineButton
-                              to={{
-                                pathname: '/new/thread',
-                                state: { modal: true },
-                              }}
-                            >
-                              <Icon glyph={'post'} size={24} />
-                              New post
-                            </PrimaryOutlineButton>
-                          )}
                         </span>
                       </NullColumn>
                     )}

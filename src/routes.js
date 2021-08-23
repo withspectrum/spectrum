@@ -23,7 +23,6 @@ import Head from 'src/components/head';
 import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
-import Composer from 'src/components/composer';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
 import PrivateChannelJoin from 'src/views/privateChannelJoin';
 import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
@@ -133,9 +132,6 @@ const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
 ));
 const NotificationsFallback = signedOutFallback(Notifications, () => (
   <Login redirectPath={`${CLIENT_URL}/notifications`} />
-));
-const ComposerFallback = signedOutFallback(Composer, () => (
-  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
 export const RouteModalContext = React.createContext({
@@ -302,11 +298,6 @@ class Routes extends React.Component<Props, State> {
                       render={() => <Redirect to="/explore" />}
                     />
                     <Route
-                      path="/new/community"
-                      exact
-                      render={() => <Redirect to="/explore" />}
-                    />
-                    <Route
                       path="/new"
                       exact
                       render={() => <Redirect to="/explore" />}
@@ -319,7 +310,6 @@ class Routes extends React.Component<Props, State> {
                     <Route path="/code-of-conduct" component={Pages} />
 
                     {/* App Pages */}
-                    <Route path="/new/thread" component={ComposerFallback} />
                     <Route path="/new/search" component={Search} />
 
                     <Route path="/login" component={LoginFallback} />
@@ -426,19 +416,6 @@ class Routes extends React.Component<Props, State> {
                   <Route
                     path="/thread/:threadId"
                     component={RedirectOldThreadRoute}
-                  />
-                )}
-
-                {isModal && (
-                  <Route
-                    path="/new/thread"
-                    render={props => (
-                      <ComposerFallback
-                        {...props}
-                        previousLocation={this.previousLocation}
-                        isModal
-                      />
-                    )}
                   />
                 )}
               </AppViewWrapper>

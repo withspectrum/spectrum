@@ -16,7 +16,6 @@ import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ChannelProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import { MobileChannelAction } from 'src/components/titlebar/actions';
 import { CommunityAvatar } from 'src/components/avatar';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -79,7 +78,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
     }
@@ -99,7 +97,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
     }
@@ -122,7 +119,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
       const { location, history } = this.props;

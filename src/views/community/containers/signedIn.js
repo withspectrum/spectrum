@@ -10,7 +10,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import { CommunityAvatar } from 'src/components/avatar';
-import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { CommunityFeeds } from '../components/communityFeeds';
 import {
@@ -98,7 +97,6 @@ const Component = (props: Props) => {
             size={24}
           />
         ),
-        rightAction: <MobileCommunityAction community={community} />,
       })
     );
   }, [community.id]);
@@ -114,7 +112,6 @@ const Component = (props: Props) => {
             size={24}
           />
         ),
-        rightAction: <MobileCommunityAction community={community} />,
       })
     );
   }, [location]);
