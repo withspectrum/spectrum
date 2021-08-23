@@ -2,7 +2,6 @@
 import theme from 'shared/theme';
 import styled, { css } from 'styled-components';
 import { Transition, Shadow, zIndex, hexa } from 'src/components/globals';
-import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Wrapper = styled.div`
   display: inline-block;
@@ -63,8 +62,7 @@ export const MenuContainer = styled.div`
   color: ${theme.brand.alt};
   background-color: ${theme.bg.wash};
   box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
-  padding-top: ${props =>
-    props.hasNavBar ? '48px' : isDesktopApp() ? '40px' : '0'};
+  padding-top: ${props => (props.hasNavBar ? '48px' : '0')};
   z-index: ${zIndex.fullscreen + 1};
 `;
 

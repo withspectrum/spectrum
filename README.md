@@ -239,16 +239,6 @@ To develop the frontend and web UI run
 yarn run dev:web
 ```
 
-#### Develop the desktop app
-
-To develop the desktop app you have to have the dev web server running in the background (`yarn run dev:web`) and then, in another terminal tab, run:
-
-```
-yarn run dev:desktop
-```
-
-> Note: If something didn't work or you ran into troubles please submit PRs to improve this doc and keep it up to date!
-
 <br />	
 <div align="center">	
   <img height="200px" src="public/img/connect.svg" />	

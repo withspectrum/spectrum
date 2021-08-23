@@ -80,11 +80,7 @@ const parseNotification = notification => {
   };
 };
 
-const formatNotification = (
-  incomingNotification,
-  currentUserId,
-  isDesktop = false
-) => {
+const formatNotification = (incomingNotification, currentUserId) => {
   const notification = parseNotification(incomingNotification);
   const actors =
     notification.actors &&
@@ -135,11 +131,6 @@ const formatNotification = (
           entities.length
         } new ${entities.length > 1 ? 'replies' : 'reply'})`;
         href = `/thread/${notification.context.id}`;
-      }
-      // NOTE(@mxstbr): This is a workaround since MacOS desktop push notifications only show a single line of body
-      // so we reverse all the messages so the latest one is always shown
-      if (isDesktop) {
-        entities = entities.reverse();
       }
       body = entities
         .map(({ payload }) => {

@@ -24,7 +24,6 @@ stats.json
 iris/.env
 api/.env
 test-results.json
-desktop/release
 public/uploads
 cypress/screenshots/
 cypress/videos/

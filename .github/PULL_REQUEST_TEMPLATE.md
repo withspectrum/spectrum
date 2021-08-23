@@ -10,7 +10,6 @@
 
 - api
 - hyperion (frontend)
-- desktop
 
 **Run database migrations (delete if no migration was added)**
 YES

@@ -1,9 +1,8 @@
-# CircleCI configuration for Spectrum 
+# CircleCI configuration for Spectrum
 version: 2.1
 
 # Aliases
 aliases:
-
   # Cache Management
   - &restore-yarn-cache
     keys:
@@ -16,19 +15,16 @@ aliases:
       - ~/.cache/yarn
     key: v1-yarn-{{ arch }}-{{ checksum "package.json" }}
 
-  - &yarn
-    |
-      yarn
-      cd ./desktop && yarn && cd ..
+  - &yarn |
+    yarn
 
   - &install-rethinkdb
     name: Install RethinkDB 2.3.5
-    command:
-      |
-        echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
-        wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
-        sudo apt-get update
-        sudo apt-get install rethinkdb=2.3.5~0jessie
+    command: |
+      echo "deb http://download.rethinkdb.com/apt jessie main" | sudo tee /etc/apt/sources.list.d/rethinkdb.list
+      wget -qO- http://download.rethinkdb.com/apt/pubkey.gpg | sudo apt-key add -
+      sudo apt-get update
+      sudo apt-get install rethinkdb=2.3.5~0jessie
 
   - &start-rethinkdb
     name: Start RethinkDB
@@ -37,10 +33,9 @@ aliases:
 
   - &setup-and-build-web
     name: Setup and build web
-    command:
-      |
-        cp now-secrets.example.json now-secrets.json
-        yarn run build:web
+    command: |
+      cp now-secrets.example.json now-secrets.json
+      yarn run build:web
 
   - &build-api
     name: Build API
@@ -65,7 +60,6 @@ js_defaults: &js_defaults
     - image: circleci/node:8
 
 jobs:
-
   # Set up environment and install required dependencies
   checkout_environment:
     <<: *js_defaults
@@ -109,7 +103,6 @@ jobs:
       - run:
           name: Run Unit Tests
           command: yarn run test:ci
-
 
   # Start db and servers, then run e2e and unit tests
   test_integration:
