@@ -38,28 +38,12 @@ export const Timestamp = styled(HorizontalRule)`
   }
 `;
 
-export const UnseenRobotext = styled(Timestamp)`
-  hr {
-    border-color: ${theme.warn.alt};
-    opacity: 0.1;
-  }
-`;
-
 export const Time = styled.span`
   text-align: center;
   color: ${theme.text.alt};
   font-size: 14px;
   font-weight: 500;
   margin: 0 24px;
-`;
-
-export const UnseenTime = styled(Time)`
-  color: ${theme.warn.alt};
-
-  &:hover {
-    color: ${theme.warn.alt};
-    transiton: ${Transition.hover.on};
-  }
 `;
 
 export const MessageLink = styled.a`
