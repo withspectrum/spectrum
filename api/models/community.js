@@ -4,8 +4,7 @@ import intersection from 'lodash.intersection';
 import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-import { createChangefeed } from 'shared/changefeed-utils';
-import type { DBCommunity, DBUser } from 'shared/types';
+import type { DBCommunity } from 'shared/types';
 import type { Timeframe } from './utils';
 
 export const getCommunityById = (id: string): Promise<DBCommunity> => {

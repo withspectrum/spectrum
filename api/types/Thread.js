@@ -54,7 +54,6 @@ const Thread = /* GraphQL */ `
     content: ThreadContent!
     isLocked: Boolean
     isAuthor: Boolean
-    receiveNotifications: Boolean @cost(complexity: 1)
     lastActive: Date
     type: ThreadType
     edits: [Edit!]
@@ -67,7 +66,6 @@ const Thread = /* GraphQL */ `
     messageCount: Int @cost(complexity: 1)
     author: ThreadParticipant! @cost(complexity: 2)
     watercooler: Boolean
-    currentUserLastSeen: Date @cost(complexity: 1)
     reactions: ThreadReactions @cost(complexity: 1)
     metaImage: String
 
@@ -125,15 +123,10 @@ const Thread = /* GraphQL */ `
       @rateLimit(max: 7, window: "10m")
     editThread(input: EditThreadInput!): Thread
     setThreadLock(threadId: ID!, value: Boolean!): Thread
-    toggleThreadNotifications(threadId: ID!): Thread
     deleteThread(threadId: ID!): Boolean
     moveThread(threadId: ID!, channelId: ID!): Thread
     addThreadReaction(input: AddThreadReactionInput!): Thread
     removeThreadReaction(input: RemoveThreadReactionInput!): Thread
-  }
-
-  extend type Subscription {
-    threadUpdated(channelIds: [String!]): Thread
   }
 `;
 

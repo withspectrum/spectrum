@@ -1,7 +1,5 @@
 //@flow
 const { db } = require('shared/db');
-import { NEW_DOCUMENTS } from './utils';
-import { createChangefeed } from 'shared/changefeed-utils';
 import {
   setThreadLastActive,
   incrementMessageCount,
@@ -145,19 +143,6 @@ export const storeMessage = (message: Object, userId: string): Promise<DBMessage
 
       return message;
     });
-};
-
-const getNewMessageChangefeed = () =>
-  db
-    .table('messages')
-    .changes({
-      includeInitial: false,
-    })
-    .filter(NEW_DOCUMENTS)('new_val')
-    .run();
-
-export const listenToNewMessages = (cb: Function): Function => {
-  return createChangefeed(getNewMessageChangefeed, cb, 'listenToNewMessages');
 };
 
 export const getMessageCount = (threadId: string): Promise<number> => {

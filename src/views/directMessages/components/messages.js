@@ -8,7 +8,6 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import NextPageButton from 'src/components/nextPageButton';
 import getDirectMessageThreadMessages from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
-import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import { MessagesScrollWrapper } from './style';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -24,7 +23,6 @@ type Props = {
   isLoading: boolean,
   hasError: boolean,
   isFetchingMore: boolean,
-  setLastSeen: Function,
 };
 
 class MessagesWithData extends React.Component<Props, State> {
@@ -95,8 +93,6 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prev, _, snapshot) {
-    const { data, setLastSeen } = this.props;
-
     if (snapshot) {
       const elem = document.getElementById('main');
       if (elem) {
@@ -115,22 +111,6 @@ class MessagesWithData extends React.Component<Props, State> {
           }
         }
       }
-    }
-
-    const firstLoad =
-      !prev.data.directMessageThread && data.directMessageThread;
-    const newThread =
-      prev.data.directMessageThread &&
-      data.directMessageThread &&
-      prev.data.directMessageThread.id !== data.directMessageThread.id;
-
-    if (firstLoad) {
-      this.subscribe();
-      setLastSeen(data.directMessageThread.id);
-    } else if (newThread) {
-      this.unsubscribe();
-      this.subscribe();
-      setLastSeen(data.directMessageThread.id);
     }
   }
 
@@ -201,7 +181,6 @@ class MessagesWithData extends React.Component<Props, State> {
 }
 
 const Messages = compose(
-  setLastSeenMutation,
   getDirectMessageThreadMessages,
   viewNetworkHandler
 )(MessagesWithData);

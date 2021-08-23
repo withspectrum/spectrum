@@ -13,26 +13,16 @@ import {
   MessageGroupContainer,
   Timestamp,
   Time,
-  UnseenRobotext,
-  UnseenTime,
 } from './style';
 
 const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
   const { messages, thread, threadType, currentUser } = props;
   if (!thread || !messages) return null;
-  const { currentUserLastSeen, community } = thread;
+  const { community } = thread;
   const { communityPermissions } = community;
   const { isOwner, isModerator } = communityPermissions;
   const canModerate = isOwner || isModerator;
 
-  // Cache last seen in case the user replies to the thread
-  const [lastSeen, setLastSeen] = React.useState(currentUserLastSeen);
-
-  React.useEffect(() => {
-    setLastSeen(thread.currentUserLastSeen);
-  }, [thread.id]);
-
-  let hasInjectedUnseenRobo;
   return (
     <MessagesWrapper data-cy="message-group">
       {messages.map(group => {
@@ -66,30 +56,8 @@ const ChatMessages = (props: { ...Props, thread: GetThreadType }) => {
           }
         }
 
-        let unseenRobo = null;
-        // If the last message in the group was sent after the thread was seen mark the entire
-        // group as last seen in the UI
-        // NOTE(@mxstbr): Maybe we should split the group eventually
-        if (
-          !!lastSeen &&
-          new Date(group[group.length - 1].timestamp).getTime() >
-            new Date(lastSeen).getTime() &&
-          !me &&
-          !hasInjectedUnseenRobo
-        ) {
-          hasInjectedUnseenRobo = true;
-          unseenRobo = (
-            <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
-              <hr />
-              <UnseenTime>New messages</UnseenTime>
-              <hr />
-            </UnseenRobotext>
-          );
-        }
-
         return (
           <React.Fragment key={initialMessage.id}>
-            {unseenRobo}
             <MessageGroupContainer key={initialMessage.id}>
               {group.map((message, index) => {
                 return (

@@ -246,10 +246,6 @@ const Community = /* GraphQL */ `
     toggleCommunityRedirect(communityId: ID!): Community
     toggleCommunityNoindex(communityId: ID!): Community
   }
-
-  extend type Subscription {
-    communityUpdated(communityIds: [ID!]): Community
-  }
 `;
 
 module.exports = Community;

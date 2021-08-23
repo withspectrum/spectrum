@@ -25,7 +25,6 @@ const general = /* GraphQL */ `
     isModerator: Boolean
     isPending: Boolean
     receiveNotifications: Boolean
-    lastSeen: Date
   }
 
   type ContextPermissions

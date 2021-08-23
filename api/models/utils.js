@@ -1,32 +1,6 @@
 // @flow
 import { db } from 'shared/db';
 
-export const NEW_DOCUMENTS = db
-  .row('old_val')
-  .eq(null)
-  .and(db.not(db.row('new_val').eq(null)));
-
-export const listenToNewDocumentsIn = (table: string, cb: Function) => {
-  return (
-    db
-      .table(table)
-      .changes({
-        includeInitial: false,
-      })
-      // Filter to only include newly inserted messages in the changefeed
-      .filter(NEW_DOCUMENTS)
-      .run({ cursor: true })
-      .then(cursor => {
-        cursor.each((err, data) => {
-          if (err) throw err;
-          // Call the passed callback with the message directly
-          cb(data.new_val);
-        });
-        return cursor;
-      })
-  );
-};
-
 export type Timeframe = 'daily' | 'weekly' | 'monthly' | 'quarterly';
 
 export const parseRange = (timeframe?: Timeframe) => {

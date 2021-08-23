@@ -69,7 +69,6 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
               createdAt: new Date(),
               isMember: true,
               receiveNotifications: true,
-              lastSeen: new Date(),
             },
             { returnChanges: 'always' }
           )
@@ -83,7 +82,6 @@ export const createMemberInCommunity = (communityId: string, userId: string): Pr
               communityId,
               userId,
               createdAt: new Date(),
-              lastSeen: new Date(),
               isMember: true,
               isOwner: false,
               isModerator: false,

@@ -6,7 +6,6 @@ import type { Dispatch } from 'redux';
 import { withApollo } from 'react-apollo';
 import { Link } from 'react-router-dom';
 import Icon from 'src/components/icon';
-import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
@@ -30,7 +29,6 @@ type Props = {
     directMessageThread: GetDirectMessageThreadType,
   },
   isLoading: boolean,
-  setLastSeen: Function,
   match: Object,
   id: ?string,
   currentUser: Object,
@@ -46,8 +44,6 @@ class ExistingThread extends React.Component<Props> {
 
     // escape to prevent this from running on mobile
     if (!threadId) return;
-
-    this.props.setLastSeen(threadId);
   }
 
   componentDidUpdate(prev) {
@@ -92,8 +88,6 @@ class ExistingThread extends React.Component<Props> {
 
       // prevent unnecessary behavior on mobile
       if (!threadId) return;
-
-      curr.setLastSeen(threadId);
     }
   }
 
@@ -172,7 +166,6 @@ export default compose(
   // $FlowIssue
   connect(map),
   getDirectMessageThread,
-  setLastSeenMutation,
   withApollo,
   withCurrentUser,
   viewNetworkHandler

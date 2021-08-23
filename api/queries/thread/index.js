@@ -6,11 +6,9 @@ import community from './community';
 import participants from './participants';
 import isAuthor from './isAuthor';
 import isCreator from './isCreator'; // deprecated
-import receiveNotifications from './receiveNotifications';
 import messageConnection from './messageConnection';
 import author from './author';
 import creator from './creator';
-import currentUserLastSeen from './currentUserLastSeen';
 import content from './content';
 import reactions from './reactions';
 import metaImage from './metaImage';
@@ -29,11 +27,9 @@ module.exports = {
     participants,
     isAuthor,
     isCreator, // deprcated
-    receiveNotifications,
     messageConnection,
     author,
     creator, // deprecated
-    currentUserLastSeen,
     content,
     reactions,
     metaImage,

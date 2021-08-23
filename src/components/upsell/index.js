@@ -163,16 +163,6 @@ export const UpsellTeamMembers = (props: TeamMemberProps) => {
   );
 };
 
-export const UpsellNullNotifications = () => {
-  return (
-    <NullCard bg="notification" heading="You don't have any notifications yet.">
-      <Link to="/">
-        <Button>Take Me Home</Button>
-      </Link>
-    </NullCard>
-  );
-};
-
 export const UpsellReload = () => (
   <NullCard
     bg="error"

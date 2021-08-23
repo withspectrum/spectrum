@@ -30,7 +30,6 @@ type State = {
   isEditing?: boolean,
   body: ?string,
   title: string,
-  receiveNotifications?: boolean,
   isSavingEdit?: boolean,
   flyoutOpen?: ?boolean,
   error?: ?string,
@@ -54,7 +53,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
     parsedBody: null,
     body: '',
     title: '',
-    receiveNotifications: false,
     isSavingEdit: false,
     flyoutOpen: false,
     error: '',
@@ -79,7 +77,6 @@ class ThreadDetailPure extends React.Component<Props, State> {
       // We store this in the state to avoid having to JSON.parse on every render
       parsedBody,
       flyoutOpen: false,
-      receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
     });
   }

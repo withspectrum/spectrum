@@ -267,7 +267,6 @@ export type DBUser = {
   googleProviderId?: ?string,
   username: ?string,
   timezone?: ?number,
-  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
   modifiedAt: ?string,
@@ -304,7 +303,6 @@ export type DBUsersDirectMessageThreads = {
   id: string,
   createdAt: Date,
   lastActive?: Date,
-  lastSeen?: Date,
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
@@ -348,7 +346,6 @@ export type DBUsersThreads = {
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
-  lastSeen?: Date | number,
 };
 
 export type DBExpoPushSubscription = {

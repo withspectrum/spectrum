@@ -55,24 +55,6 @@ const removeMembersInDirectMessageThread = (threadId: string): Promise<Object> =
 };
 
 // prettier-ignore
-const setUserLastSeenInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
-    .update({
-      lastSeen: db.now(),
-    })
-    .run()
-    .then(() =>
-      db
-        .table('directMessageThreads')
-        .get(threadId)
-        .run()
-    );
-};
-
-// prettier-ignore
 const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, userId: string, val: boolean): Promise<Object> => {
   return db
     .table('usersDirectMessageThreads')
@@ -135,7 +117,6 @@ module.exports = {
   createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
-  setUserLastSeenInDirectMessageThread,
   updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,

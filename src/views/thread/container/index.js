@@ -4,11 +4,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { withApollo } from 'react-apollo';
-import {
-  getThreadByMatch,
-  getThreadByMatchQuery,
-} from 'shared/graphql/queries/thread/getThread';
-import { markSingleNotificationSeenMutation } from 'shared/graphql/mutations/notification/markSingleNotificationSeen';
+import { getThreadByMatch } from 'shared/graphql/queries/thread/getThread';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import viewNetworkHandler, {
   type ViewNetworkHandlerType,
@@ -41,7 +37,6 @@ type Props = {
   className?: string,
   currentUser?: Object,
   dispatch: Function,
-  notifications: Array<Object>,
   isModal: boolean,
   children: React$Node,
 };
@@ -51,8 +46,6 @@ const ThreadContainer = (props: Props) => {
     data,
     isLoading,
     children,
-    client,
-    currentUser,
     dispatch,
     className,
     isModal = false,
@@ -63,8 +56,6 @@ const ThreadContainer = (props: Props) => {
   const { thread } = data;
   if (!thread) return <ErrorView data-cy="null-thread-view" />;
 
-  const { id } = thread;
-
   /*
   update the last seen timestamp of the current thread whenever it first
   loads, as well as when it unmounts as the user closes the thread. This
@@ -72,35 +63,6 @@ const ThreadContainer = (props: Props) => {
   athena handles storing the actual lastSeen timestamp update in the background
   asynchronously.
   */
-  const updateThreadLastSeen = () => {
-    if (!currentUser || !thread) return;
-    try {
-      const threadData = client.readQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id,
-        },
-      });
-
-      client.writeQuery({
-        query: getThreadByMatchQuery,
-        variables: {
-          id,
-        },
-        data: {
-          ...threadData,
-          thread: {
-            ...threadData.thread,
-            currentUserLastSeen: new Date(),
-            __typename: 'Thread',
-          },
-        },
-      });
-    } catch (err) {
-      // Errors that happen with this shouldn't crash the app
-      console.error(err);
-    }
-  };
 
   const [, setMentionSuggestions] = useState([thread.author.user]);
   const [isEditing, setEditing] = useState(false);
@@ -118,40 +80,6 @@ const ThreadContainer = (props: Props) => {
     const filtered = deduplicateChildren(participantsWithAuthor, 'id');
     return setMentionSuggestions(filtered);
   };
-
-  const markCurrentThreadNotificationsAsSeen = () => {
-    if (!currentUser || !thread) return;
-    try {
-      props.notifications.forEach(notification => {
-        if (notification.isSeen) return;
-
-        const notificationContextIds =
-          notification.type === 'THREAD_CREATED'
-            ? notification.entities.map(entity => entity.id)
-            : [notification.context.id];
-
-        if (notificationContextIds.indexOf(id) === -1) return;
-
-        props.client.mutate({
-          mutation: markSingleNotificationSeenMutation,
-          variables: {
-            id: notification.id,
-          },
-        });
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    markCurrentThreadNotificationsAsSeen();
-  }, [id, props.notifications.length]);
-
-  useEffect(() => {
-    updateThreadLastSeen();
-    return () => updateThreadLastSeen();
-  }, [id]);
 
   useEffect(() => {
     dispatch(
@@ -218,15 +146,11 @@ const ThreadContainer = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state): * => ({
-  notifications: state.notifications.notificationsData,
-});
-
 export default compose(
   getThreadByMatch,
   viewNetworkHandler,
   withRouter,
   withApollo,
   withCurrentUser,
-  connect(mapStateToProps)
+  connect()
 )(ThreadContainer);

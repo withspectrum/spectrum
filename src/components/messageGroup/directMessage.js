@@ -11,8 +11,6 @@ import {
   MessageGroupContainer,
   Timestamp,
   Time,
-  UnseenRobotext,
-  UnseenTime,
 } from './style';
 
 const DirectMessages = (props: {
@@ -23,7 +21,6 @@ const DirectMessages = (props: {
 
   if (!messages) return null;
 
-  let hasInjectedUnseenRobo;
   return (
     <MessagesWrapper data-cy="message-group">
       {messages.map(group => {
@@ -57,34 +54,8 @@ const DirectMessages = (props: {
           }
         }
 
-        let unseenRobo = null;
-        // If the last message in the group was sent after the thread was seen mark the entire
-        // group as last seen in the UI
-        // NOTE(@mxstbr): Maybe we should split the group eventually
-        const currentUserParticipant =
-          currentUser &&
-          thread &&
-          thread.participants.find(({ userId }) => userId === currentUser.id);
-        if (
-          currentUserParticipant &&
-          new Date(group[group.length - 1].timestamp).getTime() >
-            new Date(currentUserParticipant.lastSeen).getTime() &&
-          !me &&
-          !hasInjectedUnseenRobo
-        ) {
-          hasInjectedUnseenRobo = true;
-          unseenRobo = (
-            <UnseenRobotext key={`unseen${initialMessage.timestamp}`}>
-              <hr />
-              <UnseenTime>New messages</UnseenTime>
-              <hr />
-            </UnseenRobotext>
-          );
-        }
-
         return (
           <React.Fragment key={initialMessage.id}>
-            {unseenRobo}
             <MessageGroupContainer key={initialMessage.id}>
               {group.map((message, index) => {
                 return (

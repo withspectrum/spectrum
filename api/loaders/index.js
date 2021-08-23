@@ -5,13 +5,11 @@ import {
   __createUserThreadCountLoader,
   __createUserPermissionsInCommunityLoader,
   __createUserPermissionsInChannelLoader,
-  __createUserThreadNotificationStatusLoader,
 } from './user';
 import {
   __createThreadLoader,
   __createThreadParticipantsLoader,
 } from './thread';
-import { __createNotificationLoader } from './notification';
 import {
   __createChannelLoader,
   __createChannelThreadCountLoader,
@@ -46,12 +44,8 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   userThreadCount: __createUserThreadCountLoader(options),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(options),
   userPermissionsInChannel: __createUserPermissionsInChannelLoader(options),
-  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(
-    options
-  ),
   thread: __createThreadLoader(options),
   threadParticipants: __createThreadParticipantsLoader(options),
-  notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
   channelMemberCount: __createChannelMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),

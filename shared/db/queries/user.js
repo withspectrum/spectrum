@@ -6,7 +6,6 @@ import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
 import { removeUsersChannelMemberships } from 'api/models/usersChannels';
-import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
 import { disableAllUsersEmailSettings } from 'api/models/usersSettings';
 import type { PaginationOptions } from 'api/utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
@@ -111,7 +110,6 @@ export const storeUser = createWriteQuery((user: Object) => ({
         modifiedAt: null,
         createdAt: new Date(),
         termsLastAcceptedAt: new Date(),
-        lastSeen: new Date(),
       },
       { returnChanges: 'always' }
     )
@@ -637,7 +635,6 @@ export const banUser = createWriteQuery((args: BanUserType) => {
         return await Promise.all([
           removeUsersCommunityMemberships(userId),
           removeUsersChannelMemberships(userId),
-          disableAllThreadNotificationsForUser(userId),
           disableAllUsersEmailSettings(userId),
           removeOtherParticipantsDmThreadIds,
           removeDMThreads,

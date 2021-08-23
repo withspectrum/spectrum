@@ -40,25 +40,6 @@ const HomeViewRedirect = (props: Props) => {
     return null;
   }
 
-  // If at least one community has `lastSeen` redirect to it
-  if (
-    communities.some(community => !!community.communityPermissions.lastSeen)
-  ) {
-    const sorted = communities.filter(Boolean).sort((a, b) => {
-      if (!a.communityPermissions.lastSeen) return 1;
-      if (!b.communityPermissions.lastSeen) return -1;
-
-      const x = new Date(a.communityPermissions.lastSeen).getTime();
-      // $FlowIssue Flow you drunk
-      const y = new Date(b.communityPermissions.lastSeen).getTime();
-      const val = y - x;
-      return val;
-    });
-
-    history.replace(`/${sorted[0].slug}`);
-    return null;
-  }
-
   // Otherwise select the first one by rep
   const sorted = communities.slice().filter(Boolean);
 

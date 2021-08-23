@@ -12,15 +12,7 @@ import {
 } from 'shared/graphql/queries/user/getUserCommunityConnection';
 import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 import { getAccessibilityActiveState } from './accessibility';
-import {
-  AvatarGrid,
-  AvatarLink,
-  Avatar,
-  Shortcut,
-  Label,
-  BlackDot,
-} from './style';
-import usePrevious from 'src/hooks/usePrevious';
+import { AvatarGrid, AvatarLink, Avatar, Shortcut, Label } from './style';
 
 type Props = {
   data: {
@@ -33,10 +25,6 @@ type Props = {
 
 const CommunityListItem = props => {
   const { isActive, community, sidenavIsOpen, index, onClick } = props;
-  // NOTE(@mxstbr): This is a really hacky way to ensure the "new activity" dot
-  // does not show up when switching from a community that new activity was in
-  // while you were looking at it.
-  const previousActive = usePrevious(usePrevious(usePrevious(isActive)));
 
   const appControlSymbol = '⌘';
 
@@ -56,12 +44,6 @@ const CommunityListItem = props => {
           {...getAccessibilityActiveState(isActive)}
         >
           <Avatar src={community.profilePhoto} size={sidenavIsOpen ? 32 : 36} />
-          {isActive === false &&
-            previousActive === false &&
-            community.lastActive &&
-            community.communityPermissions.lastSeen &&
-            new Date(community.lastActive) >
-              new Date(community.communityPermissions.lastSeen) && <BlackDot />}
 
           <Label>{community.name}</Label>
 

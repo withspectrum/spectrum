@@ -64,10 +64,6 @@ const Message = /* GraphQL */ `
     deleteMessage(id: ID!): Boolean
     editMessage(input: EditMessageInput!): Message
   }
-
-  extend type Subscription {
-    messageAdded(thread: ID!): Message
-  }
 `;
 
 module.exports = Message;

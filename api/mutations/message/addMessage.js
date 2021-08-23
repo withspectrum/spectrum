@@ -4,10 +4,8 @@ import UserError from '../../utils/UserError';
 import { uploadImage } from '../../utils/file-storage';
 import { storeMessage, getMessage } from '../../models/message';
 import { setDirectMessageThreadLastActive } from '../../models/directMessageThread';
-import { setUserLastSeenInDirectMessageThread } from '../../models/usersDirectMessageThreads';
 import { createMemberInChannel } from '../../models/usersChannels';
 import { createParticipantInThread } from '../../models/usersThreads';
-import { setCommunityLastActive } from '../../models/community';
 import addCommunityMember from '../communityMember/addCommunityMember';
 import type { FileUpload } from 'shared/types';
 import {
@@ -192,7 +190,6 @@ export default requireAuth(async (_: any, args: Input, ctx: GraphQLContext) => {
   // handle DM thread messages up front
   if (dbMessage.threadType === 'directMessageThread') {
     setDirectMessageThreadLastActive(message.threadId);
-    setUserLastSeenInDirectMessageThread(message.threadId, user.id);
     return dbMessage;
   }
 

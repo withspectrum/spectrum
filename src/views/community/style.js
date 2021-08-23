@@ -132,15 +132,6 @@ export const Row = styled.div`
   display: flex;
 `;
 
-export const ToggleNotificationsContainer = styled.div`
-  display: flex;
-  color: ${theme.text.alt};
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  cursor: pointer;
-`;
-
 export const Name = styled.div`
   color: ${theme.text.default};
   font-size: 15px;

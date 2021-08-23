@@ -65,14 +65,6 @@ const getVariables = ({ thread, ...props }): Variables => {
     };
   }
 
-  // If a user has seen a thread, load the last 25
-  if (thread.currentUserLastSeen) {
-    return {
-      id: props.id,
-      last: 25,
-    };
-  }
-
   // In all other cases, load the first 25
   return {
     id: props.id,

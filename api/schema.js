@@ -49,7 +49,6 @@ const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
-const directMessageThreadMutations = require('./mutations/directMessageThread');
 const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
@@ -110,7 +109,6 @@ const resolvers = merge(
   // mutations
   messageMutations,
   threadMutations,
-  directMessageThreadMutations,
   reactionMutations,
   communityMutations,
   channelMutations,

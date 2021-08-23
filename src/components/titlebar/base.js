@@ -6,7 +6,6 @@ import { withRouter, type History } from 'react-router-dom';
 import { ErrorBoundary } from 'src/components/error';
 import { NavigationContext } from 'src/helpers/navigation-context';
 import Icon from 'src/components/icon';
-import { RedDot } from 'src/views/navigation/style';
 import {
   TitlebarContainer,
   Content,
@@ -20,20 +19,11 @@ type Props = {
   history: History,
   titleIcon?: any,
   rightAction?: any,
-  hasUnseenNotifications?: boolean,
   leftAction: 'view-back' | 'menu',
 };
 
 const MobileTitlebar = (props: Props) => {
-  const {
-    title,
-    titleIcon,
-    rightAction,
-    leftAction,
-    history,
-    hasUnseenNotifications,
-    ...rest
-  } = props;
+  const { title, titleIcon, rightAction, leftAction, history, ...rest } = props;
 
   const handleMenuClick = setNavOpen => () => {
     if (leftAction === 'menu') {
@@ -64,7 +54,6 @@ const MobileTitlebar = (props: Props) => {
             glyph={leftAction}
             size={32}
           />
-          {hasUnseenNotifications && leftAction === 'menu' && <RedDot />}
         </div>
       );
     }
@@ -108,14 +97,7 @@ const MobileTitlebar = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state): * => ({
-  hasUnseenNotifications:
-    state.notifications.notifications +
-      state.notifications.directMessageNotifications >
-    0,
-});
-
 export default compose(
   withRouter,
-  connect(mapStateToProps)
+  connect()
 )(MobileTitlebar);

@@ -5,7 +5,6 @@ import type { UserInfoType } from '../user/userInfo';
 export type ParticipantType = {
   ...$Exact<UserInfoType>,
   userId: string,
-  lastSeen: string,
 };
 
 export type DirectMessageThreadInfoType = {
@@ -25,7 +24,6 @@ export default gql`
       name
       profilePhoto
       username
-      lastSeen
       lastActive
       userId
     }

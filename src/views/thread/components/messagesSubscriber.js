@@ -36,7 +36,7 @@ class Messages extends React.Component<Props> {
   componentDidMount() {
     const thread = this.props.data.thread || this.props.thread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
-    if (thread && (thread.watercooler || thread.currentUserLastSeen)) {
+    if (thread && thread.watercooler) {
       const elem = document.getElementById('main');
       if (!elem) return;
       elem.scrollTop = elem.scrollHeight;
@@ -46,11 +46,7 @@ class Messages extends React.Component<Props> {
   getSnapshotBeforeUpdate(prev) {
     const curr = this.props;
     // First load
-    if (
-      !prev.data.thread &&
-      curr.data.thread &&
-      (curr.data.thread.currentUserLastSeen || curr.data.thread.watercooler)
-    ) {
+    if (!prev.data.thread && curr.data.thread && curr.data.thread.watercooler) {
       return {
         type: 'bottom',
       };

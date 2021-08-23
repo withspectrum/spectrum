@@ -21,7 +21,6 @@ export type CommunityInfoType = {
     isOwner: boolean,
     isPending: boolean,
     isModerator: boolean,
-    lastSeen?: Date,
   },
   brandedLogin: {
     isEnabled: boolean,
@@ -51,7 +50,6 @@ export default gql`
       isOwner
       isPending
       isModerator
-      lastSeen
     }
     brandedLogin {
       isEnabled

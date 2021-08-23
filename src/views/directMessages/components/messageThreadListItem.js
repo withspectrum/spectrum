@@ -45,23 +45,8 @@ class ListCardItemDirectMessageThread extends React.Component<Props> {
     // pass participants to a helper function to generate the avatar displays
     const avatars = renderAvatars(participants);
 
-    const currentParticipant = thread.participants.filter(
-      user => user.userId === currentUser.id
-    )[0];
-
-    const currentParticipantLastActiveTimestamp = new Date(
-      currentParticipant.lastSeen
-    ).getTime();
-
-    let isUnread = currentParticipantLastActiveTimestamp < timestamp;
-    isUnread = active ? false : isUnread;
-
     return (
-      <Wrapper
-        active={active}
-        data-cy={isUnread ? 'unread-dm-list-item' : 'dm-list-item'}
-        isUnread={isUnread}
-      >
+      <Wrapper active={active}>
         <WrapperLink to={`/messages/${thread.id}`}>
           <Row>
             {avatars}

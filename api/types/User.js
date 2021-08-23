@@ -91,7 +91,6 @@ const User = /* GraphQL */ `
     email: LowercaseString
     providerId: String
     createdAt: Date!
-    lastSeen: Date!
     timezone: Int
     pendingEmail: LowercaseString
     betaSupporter: Boolean @cacheControl(maxAge: 84700)
