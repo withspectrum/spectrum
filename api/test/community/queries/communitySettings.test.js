@@ -11,7 +11,7 @@ it('should fetch a communitys settings', async () => {
     }
   `;
 
-  expect.assertions(2);
+  expect.assertions(1);
   const result = await request(query);
   expect(result).toMatchSnapshot();
 });
