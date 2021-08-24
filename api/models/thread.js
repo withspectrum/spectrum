@@ -107,18 +107,7 @@ export const getThreadsByCommunity = (communityId: string): Promise<Array<DBThre
       rightBound: 'open',
     })
     .orderBy({ index: db.desc('communityIdAndLastActive') })
-    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
-    .run();
-};
-
-// prettier-ignore
-export const getThreadsByCommunityInTimeframe = (communityId: string, range: Timeframe): Promise<Array<Object>> => {
-  const { current } = parseRange(range);
-  return db
-    .table('threads')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(db.row('createdAt').during(db.now().sub(current), db.now()))
-    .filter(thread => db.not(thread.hasFields('deletedAt')).and(NOT_WATERCOOLER(thread)))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };
 
