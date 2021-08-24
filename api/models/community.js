@@ -339,3 +339,20 @@ export const getCommunityGrowth = async (
     growth: Math.round(rate * 100),
   };
 };
+
+export const setMemberCount = (
+  communityId: string,
+  value: number
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};

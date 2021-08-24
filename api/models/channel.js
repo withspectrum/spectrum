@@ -193,6 +193,23 @@ const deleteChannel = (channelId: string, userId: string): Promise<Boolean> => {
     .run();
 };
 
+const setMemberCount = (
+  channelId: string,
+  value: number
+): Promise<DBChannel> => {
+  return db
+    .table('channels')
+    .get(channelId)
+    .update(
+      {
+        memberCount: value,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -203,6 +220,7 @@ module.exports = {
   editChannel,
   deleteChannel,
   getChannels,
+  setMemberCount,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,
