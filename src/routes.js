@@ -58,12 +58,6 @@ const CommunityView = Loadable({
 });
 
 /* prettier-ignore */
-const CommunityLoginView = Loadable({
-  loader: () => import('./views/communityLogin'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const ChannelView = Loadable({
   loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
@@ -100,10 +94,6 @@ const ErrorFallback = Loadable({
 });
 
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
-const CommunityLoginFallback = signedOutFallback(
-  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
-  CommunityLoginView
-);
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
@@ -359,7 +349,7 @@ class Routes extends React.Component<Props, State> {
                     />
                     <Route
                       path="/:communitySlug/login"
-                      component={CommunityLoginFallback}
+                      render={() => <Redirect to="/explore" />}
                     />
                     <Route
                       // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.

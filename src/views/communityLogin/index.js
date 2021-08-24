@@ -73,8 +73,6 @@ export class Login extends React.Component<Props, State> {
     const { redirectPath } = this.state;
 
     if (community && community.id) {
-      const { brandedLogin } = community;
-
       return (
         <FullscreenView closePath={`${CLIENT_URL}`}>
           <FullscreenContent
@@ -88,11 +86,10 @@ export class Login extends React.Component<Props, State> {
                 size={88}
               />
             </LoginImageContainer>
-            <Title>Sign up to join the {community.name} community</Title>
+            <Title>Log in</Title>
             <Subtitle>
-              {brandedLogin.message && brandedLogin.message.length > 0
-                ? brandedLogin.message
-                : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'}
+              Spectrum is a place where communities can share, discuss, and grow
+              together. Sign in below to get in on the conversation.
             </Subtitle>
 
             <LoginButtonSet

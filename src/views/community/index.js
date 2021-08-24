@@ -12,7 +12,6 @@ import {
   type GetCommunityType,
 } from 'shared/graphql/queries/community/getCommunity';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import CommunityLogin from 'src/views/communityLogin';
 import Login from 'src/views/login';
 import { CLIENT_URL } from 'src/api/constants';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
@@ -29,7 +28,7 @@ type Props = {
 };
 
 const CommunityView = (props: Props) => {
-  const { isLoading, queryVarIsChanging, hasError, currentUser, match } = props;
+  const { isLoading, queryVarIsChanging, hasError, currentUser } = props;
 
   if (isLoading || queryVarIsChanging) return <LoadingView />;
 
@@ -47,11 +46,7 @@ const CommunityView = (props: Props) => {
 
   if (isPrivate && !currentUser) {
     const redirectPath = `${CLIENT_URL}/${community.slug}`;
-    if (community.brandedLogin.isEnabled) {
-      return <CommunityLogin redirectPath={redirectPath} match={match} />;
-    } else {
-      return <Login redirectPath={redirectPath} />;
-    }
+    return <Login redirectPath={redirectPath} />;
   }
 
   if (isPrivate && currentUser && !isMember) {

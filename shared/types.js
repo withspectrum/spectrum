@@ -46,9 +46,6 @@ export type DBCommunity = {
 export type DBCommunitySettings = {
   id: string,
   communityId: string,
-  brandedLogin: ?{
-    customMessage: ?string,
-  },
   slackSettings: ?{
     connectedAt: ?string,
     connectedBy: ?string,

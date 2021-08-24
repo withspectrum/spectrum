@@ -13,7 +13,6 @@ import threadConnection from './threadConnection';
 import metaData from './metaData';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
-import brandedLogin from './brandedLogin';
 import joinSettings from './joinSettings';
 import coverPhoto from './coverPhoto';
 import profilePhoto from './profilePhoto';
@@ -50,7 +49,6 @@ module.exports = {
     metaData,
     contextPermissions,
     watercooler,
-    brandedLogin,
     joinSettings,
     coverPhoto,
     profilePhoto,

@@ -21,10 +21,6 @@ export type CommunityInfoType = {
     isPending: boolean,
     isModerator: boolean,
   },
-  brandedLogin: {
-    isEnabled: boolean,
-    message: ?string,
-  },
 };
 
 export default gql`
@@ -48,10 +44,6 @@ export default gql`
       isOwner
       isPending
       isModerator
-    }
-    brandedLogin {
-      isEnabled
-      message
     }
   }
 `;

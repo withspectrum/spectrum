@@ -46,11 +46,6 @@ const Community = /* GraphQL */ `
     channels: Int
   }
 
-  type BrandedLogin {
-    isEnabled: Boolean
-    message: String
-  }
-
   enum CommunityThreadConnectionSort {
     latest
     trending
@@ -152,7 +147,6 @@ const Community = /* GraphQL */ `
     ): CommunityThreadsConnection @cost(complexity: 2, multipliers: ["first"])
     metaData: CommunityMetaData @cost(complexity: 10)
     watercooler: Thread
-    brandedLogin: BrandedLogin
     joinSettings: JoinSettings
 
     watercoolerId: String
