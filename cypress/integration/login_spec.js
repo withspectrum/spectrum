@@ -15,39 +15,3 @@ describe('Log in', () => {
     );
   });
 });
-
-describe('Redirect paths', () => {
-  it('should preserve community redirect paths', () => {
-    cy.visit('/spectrum/login');
-    cy.get('[data-cy="community-login-page"]').should('be.visible');
-    cy.get('[href*="/auth/github?r=http://localhost:3000/spectrum"]').should(
-      'be.visible'
-    );
-    cy.get('[href*="github.com/withspectrum/code-of-conduct"]').should(
-      'be.visible'
-    );
-
-    cy.get('[href*="/login?r=http://localhost:3000/spectrum"]')
-      .should('be.visible')
-      .click();
-
-    cy.get('[href*="/auth/twitter?r=http://localhost:3000/spectrum"]').should(
-      'be.visible'
-    );
-    cy.get('[href*="/auth/facebook?r=http://localhost:3000/spectrum"]').should(
-      'be.visible'
-    );
-    cy.get('[href*="/auth/google?r=http://localhost:3000/spectrum"]').should(
-      'be.visible'
-    );
-    cy.get('[href*="/auth/github?r=http://localhost:3000/spectrum"]').should(
-      'be.visible'
-    );
-  });
-
-  it('should preserve thread redirect paths', () => {
-    const path =
-      'http://localhost:3000/spectrum/general/yet-another-thread~thread-3';
-    cy.visit(path);
-  });
-});
