@@ -9,8 +9,6 @@ import {
   getOwnersInCommunity,
   getModeratorsInCommunity,
   getTeamMembersInCommunity,
-  getPendingUsersInCommunity,
-  getBlockedUsersInCommunity,
 } from '../../models/usersCommunities';
 
 type MembersFilterType = {
@@ -47,11 +45,7 @@ export default async (root: DBCommunity, args: Args, ctx: GraphQLContext) => {
     (lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10)) || 0;
 
   let query;
-  if (filter.isBlocked) {
-    query = getBlockedUsersInCommunity;
-  } else if (filter.isPending) {
-    query = getPendingUsersInCommunity;
-  } else if (filter.isModerator && filter.isOwner) {
+  if (filter.isModerator && filter.isOwner) {
     query = getTeamMembersInCommunity;
   } else if (filter.isModerator) {
     query = getModeratorsInCommunity;

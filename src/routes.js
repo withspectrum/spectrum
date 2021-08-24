@@ -24,7 +24,6 @@ import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
-import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
 import ThreadSlider from 'src/views/threadSlider';
 import Navigation from 'src/views/navigation';
 import Status from 'src/views/status';
@@ -357,10 +356,6 @@ class Routes extends React.Component<Props, State> {
                     <Route
                       path="/:communitySlug/settings"
                       component={CommunitySettingsFallback}
-                    />
-                    <Route
-                      path="/:communitySlug/join/:token"
-                      component={PrivateCommunityJoin}
                     />
                     <Route
                       path="/:communitySlug/login"

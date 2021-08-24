@@ -34,22 +34,6 @@ const Channel = /* GraphQL */ `
     channelId: ID!
   }
 
-  enum PendingActionType {
-    block
-    approve
-  }
-
-  input TogglePendingUserInput {
-    channelId: ID!
-    userId: ID!
-    action: PendingActionType!
-  }
-
-  input UnblockUserInput {
-    channelId: ID!
-    userId: ID!
-  }
-
   type Channel @cacheControl(maxAge: 1200) {
     id: ID!
     createdAt: Date!
@@ -70,8 +54,6 @@ const Channel = /* GraphQL */ `
       @cost(complexity: 1, multipliers: ["first"])
     memberCount: Int!
     metaData: ChannelMetaData @cost(complexity: 1)
-    pendingUsers: [User] @cost(complexity: 3) @cacheControl(maxAge: 0)
-    blockedUsers: [User] @cost(complexity: 3) @cacheControl(maxAge: 0)
     moderators: [User] @cost(complexity: 3)
     owners: [User] @cost(complexity: 3)
     joinSettings: JoinSettings

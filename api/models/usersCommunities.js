@@ -98,34 +98,6 @@ export const getMembersInCommunity = (communityId: string, options: Options): Pr
 };
 
 // prettier-ignore
-export const getBlockedUsersInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
-  return (
-    db
-      .table('usersCommunities')
-      .getAll([communityId, false], { index: 'communityIdAndIsMember' })
-      .filter({ isBlocked: true })
-      .skip(options.after || 0)
-      .limit(options.first || 25)
-      .map(userCommunity => userCommunity('userId'))
-      .run()
-  );
-};
-
-// prettier-ignore
-export const getPendingUsersInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
-  return (
-    db
-      .table('usersCommunities')
-      .getAll([communityId, false], { index: 'communityIdAndIsMember' })
-      .filter({ isPending: true })
-      .skip(options.after || 0)
-      .limit(options.first || 25)
-      .map(userCommunity => userCommunity('userId'))
-      .run()
-  );
-};
-
-// prettier-ignore
 export const getModeratorsInCommunity = (communityId: string, options: Options): Promise<Array<string>> => {
   return (
     db

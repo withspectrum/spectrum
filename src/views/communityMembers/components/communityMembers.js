@@ -50,16 +50,8 @@ class CommunityMembers extends React.Component<Props, State> {
     const { filter } = queryString.parse(this.props.location.search);
     if (!filter) return;
 
-    if (filter === 'pending') {
-      return this.viewPending();
-    }
-
     if (filter === 'team') {
       return this.viewTeam();
-    }
-
-    if (filter === 'blocked') {
-      return this.viewBlocked();
     }
   }
 
@@ -69,21 +61,9 @@ class CommunityMembers extends React.Component<Props, State> {
     });
   };
 
-  viewPending = () => {
-    return this.setState({
-      filter: { isPending: true },
-    });
-  };
-
   viewTeam = () => {
     return this.setState({
       filter: { isModerator: true, isOwner: true },
-    });
-  };
-
-  viewBlocked = () => {
-    return this.setState({
-      filter: { isBlocked: true },
     });
   };
 
@@ -135,21 +115,6 @@ class CommunityMembers extends React.Component<Props, State> {
           >
             Team
           </Filter>
-          <Filter
-            onClick={this.viewBlocked}
-            active={filter && filter.isBlocked ? true : false}
-          >
-            Blocked
-          </Filter>
-
-          {community.isPrivate && (
-            <Filter
-              onClick={this.viewPending}
-              active={filter && filter.isPending ? true : false}
-            >
-              Pending
-            </Filter>
-          )}
         </Filters>
 
         <GetMembers
@@ -232,18 +197,6 @@ class CommunityMembers extends React.Component<Props, State> {
                     heading={'No team members found'}
                     subheading={
                       "You haven't added any team members to your community yet."
-                    }
-                  />
-                );
-              }
-
-              if (filter && filter.isPending) {
-                return (
-                  <ViewError
-                    emoji={' '}
-                    heading={'No pending members found'}
-                    subheading={
-                      'There are no pending members in your community.'
                     }
                   />
                 );

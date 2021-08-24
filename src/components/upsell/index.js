@@ -96,33 +96,6 @@ export const Upsell404Community = () => {
   );
 };
 
-type NewUserProps = {
-  user: {
-    name: string,
-  },
-};
-export class UpsellNewUser extends React.Component<NewUserProps> {
-  render() {
-    const { user } = this.props;
-
-    return (
-      <NullCard bg="pro">
-        <LargeEmoji>
-          <span role="img" aria-label="Howdy!">
-            👋
-          </span>
-        </LargeEmoji>
-        <Title>Howdy, {user.name}!</Title>
-        <Subtitle>
-          Spectrum is a place where communities live. It’s easy to follow the
-          things that you care about most, or even create your own community to
-          share with the world.
-        </Subtitle>
-      </NullCard>
-    );
-  }
-}
-
 export const Upsell404Thread = () => {
   return (
     <NullCard
@@ -134,32 +107,6 @@ export const Upsell404Thread = () => {
         Take me home
       </Button>
     </NullCard>
-  );
-};
-
-type TeamMemberProps = {
-  communitySlug: string,
-  small?: boolean,
-};
-
-export const UpsellTeamMembers = (props: TeamMemberProps) => {
-  return (
-    <MiniNullCard
-      copy={
-        props.small ? '' : "Looks like you haven't added any team members yet!"
-      }
-      noPadding
-      alignItems="flex-end"
-    >
-      <Link to={`/${props.communitySlug}/settings/members`}>
-        <OutlineButton
-          icon={props.small ? null : 'member-add'}
-          style={{ alignSelf: 'flex-end', marginTop: '16px' }}
-        >
-          Add {props.small ? 'more' : ''} team members
-        </OutlineButton>
-      </Link>
-    </MiniNullCard>
   );
 };
 

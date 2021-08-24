@@ -356,33 +356,6 @@ export const ShareInputContainer = styled.div`
   margin-top: 16px;
 `;
 
-export const JoinChannelContainer = styled.div`
-  display: flex;
-  border: 1px solid ${theme.bg.border};
-  border-radius: 4px;
-  padding: 8px;
-  align-items: center;
-  flex: 0 0 auto;
-  width: calc(100% - 16px);
-  margin-bottom: 12px;
-  background: ${theme.bg.wash};
-  position: relative;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    button {
-      width: 100%;
-    }
-  }
-`;
-
-export const JoinChannelContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: auto;
-  align-self: flex-start;
-  width: 100%;
-`;
-
 export const HeadingIconWrapper = styled.div`
   display: flex;
   padding: 32px;

@@ -123,42 +123,6 @@ const getMembersInChannel = (channelId: string, options: Options): Promise<Array
   );
 };
 
-// prettier-ignore
-const getPendingUsersInChannel = (channelId: string): Promise<Array<string>> => {
-  return (
-    db
-      .table('usersChannels')
-      .getAll([channelId, "pending"], { index: 'channelIdAndRole' })
-      // return an array of the userIds to be loaded by gql
-      .map(userChannel => userChannel('userId'))
-      .run()
-  );
-};
-
-const getPendingUsersInChannels = (channelIds: Array<string>) => {
-  return db
-    .table('usersChannels')
-    .getAll(...channelIds.map(id => [id, 'pending']), {
-      index: 'channelIdAndRole',
-    })
-    .group('channelId')
-    .run();
-};
-
-// prettier-ignore
-const getBlockedUsersInChannel = (channelId: string): Promise<Array<string>> => {
-  return (
-    db
-      .table('usersChannels')
-      .getAll([channelId, 'blocked'], {
-        index: 'channelIdAndRole',
-      })
-      // return an array of the userIds to be loaded by gql
-      .map(userChannel => userChannel('userId'))
-      .run()
-  );
-};
-
 const getModeratorsInChannel = (channelId: string): Promise<Array<string>> => {
   return (
     db
@@ -266,13 +230,10 @@ module.exports = {
   removeUsersChannelMemberships,
   // get
   getMembersInChannel,
-  getPendingUsersInChannel,
-  getBlockedUsersInChannel,
   getModeratorsInChannel,
   getOwnersInChannel,
   getUserPermissionsInChannel,
   getUsersPermissionsInChannels,
-  getPendingUsersInChannels,
   getUserUsersChannels,
   getUserChannelIds,
   // constants
