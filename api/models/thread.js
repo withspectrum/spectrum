@@ -462,3 +462,29 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
       return result.replaced >= 1 ? true : false;
     });
 };
+
+export const incrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(0)
+        .add(1),
+    })
+    .run();
+};
+
+export const decrementMessageCount = (threadId: string) => {
+  return db
+    .table('threads')
+    .get(threadId)
+    .update({
+      messageCount: db
+        .row('messageCount')
+        .default(1)
+        .sub(1),
+    })
+    .run();
+};
