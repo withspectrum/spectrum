@@ -356,3 +356,41 @@ export const setMemberCount = (
     .run()
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
+
+export const incrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(0)
+          .add(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
+
+export const decrementMemberCount = (
+  communityId: string
+): Promise<DBCommunity> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        memberCount: db
+          .row('memberCount')
+          .default(1)
+          .sub(1),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val || result.changes[0].old_val);
+};
