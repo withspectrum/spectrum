@@ -101,29 +101,6 @@ export const getUsers = createReadQuery((userIds: Array<string>) => ({
   tags: (users: ?Array<DBUser>) => (users ? users.map(({ id }) => id) : []),
 }));
 
-export const storeUser = createWriteQuery((user: Object) => ({
-  query: db
-    .table('users')
-    .insert(
-      {
-        ...user,
-        modifiedAt: null,
-        createdAt: new Date(),
-        termsLastAcceptedAt: new Date(),
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(res => {
-      const dbUser = res.changes[0].new_val || res.changes[0].old_val;
-
-      return Promise.all([dbUser, createNewUsersSettings(dbUser.id)]).then(
-        ([dbUser]) => dbUser
-      );
-    }),
-  invalidateTags: (user: DBUser) => [user.id],
-}));
-
 export const saveUserProvider = createWriteQuery(
   (
     userId: string,
@@ -195,19 +172,15 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
         return Promise.resolve(storedUser);
       }
       
-      // restrict new signups to github auth only
-      if (providerMethod !== 'githubProviderId') return Promise.resolve(null)
-      // if no user exists, create a new one with the oauth profile data
-      return storeUser(user);
+      // no new sign ups
+      return Promise.resolve(null)
     })
     .catch(err => {
       if (user.id) {
         console.error(err);
         return null;
       }
-
-      if (providerMethod !== 'githubProviderId') return null
-      return storeUser(user);
+      return null
     });
 };
 
