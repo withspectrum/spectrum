@@ -337,6 +337,8 @@ class Routes extends React.Component<Props, State> {
                       render={() =>
                         currentUser && currentUser.username ? (
                           <Redirect to={`/users/${currentUser.username}`} />
+                        ) : currentUser && !currentUser.username ? (
+                          <NewUserOnboarding />
                         ) : isLoadingCurrentUser ? null : (
                           <Login redirectPath={`${CLIENT_URL}/me`} />
                         )
