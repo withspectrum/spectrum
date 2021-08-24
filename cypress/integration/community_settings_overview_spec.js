@@ -22,7 +22,6 @@ describe('Community settings overview tab', () => {
       cy.get(`[href*="${community.slug}/${channel.slug}/settings"]`);
     });
     // Make sure the subnav is rendered correctly
-    cy.get(`[href*="settings/analytics"]`).should('be.visible');
     cy.get(`[href*="settings/members"]`).should('be.visible');
 
     // Editing
