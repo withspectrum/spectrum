@@ -106,39 +106,6 @@ export const getMediaMessagesForThread = (threadId: string): Promise<Array<DBMes
     .run();
 };
 
-// prettier-ignore
-export const storeMessage = (message: Object, userId: string): Promise<DBMessage> => {
-  // Insert a message
-  return db
-    .table('messages')
-    .insert(
-      Object.assign({}, message, {
-        timestamp: new Date(),
-        senderId: userId,
-        content: {
-          body:
-            message.messageType === 'media'
-              ? message.content.body
-              : // For text messages linkify URLs and strip HTML tags
-                message.content.body,
-        },
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val)
-    .then(async message => {
-
-      if (message.threadType === 'story') {
-        await Promise.all([
-          incrementMessageCount(message.threadId)
-        ])
-      }
-
-      return message;
-    });
-};
-
 export const getMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')

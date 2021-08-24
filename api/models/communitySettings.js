@@ -25,30 +25,6 @@ const defaultSettings = {
 };
 
 // prettier-ignore
-export const getOrCreateCommunitySettings = async (communityId: string): Promise<DBCommunitySettings> => {
-  const settings = await db
-    .table('communitySettings')
-    .getAll(communityId, { index: 'communityId' })
-    .run();
-
-  if (!settings || settings.length === 0) {
-    return await db
-      .table('communitySettings')
-      .insert(
-        {
-          ...defaultSettings,
-          communityId,
-        },
-        { returnChanges: true }
-      )
-      .run()
-      .then(results => results.changes[0].new_val);
-  }
-
-  return settings[0];
-};
-
-// prettier-ignore
 export const getCommunitySettings = (id: string): Promise<DBCommunitySettings> => {
   return db
     .table('communitySettings')

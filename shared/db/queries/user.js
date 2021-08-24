@@ -1,7 +1,6 @@
 // @flow
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
-import { createNewUsersSettings } from 'api/models/usersSettings';
 import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';

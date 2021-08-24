@@ -15,82 +15,6 @@ import type { DBUsersChannels, DBChannel } from 'shared/types';
 ===========================================================
 */
 
-// invoked only when a new channel is being created. the user who is doing
-// the creation is automatically an owner and a member
-// prettier-ignore
-const createOwnerInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
-  return db
-    .table('usersChannels')
-    .insert(
-      {
-        channelId,
-        userId,
-        createdAt: new Date(),
-        isOwner: true,
-        isMember: true,
-        isModerator: false,
-        isBlocked: false,
-        isPending: false,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(async result => {
-      const join = result.changes[0].new_val;
-      await incrementMemberCount(channelId)
-      return db.table('channels').get(join.channelId).run();
-    });
-};
-
-// creates a single member in a channel. invoked when a user joins a public channel
-// prettier-ignore
-const createMemberInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .run()
-    .then(result => {
-      if (result && result.length > 0) {
-        return db
-          .table('usersChannels')
-          .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-          .filter({ isBlocked: false })
-          .update(
-            {
-              createdAt: new Date(),
-              isMember: true,
-              receiveNotifications: true,
-            },
-            { returnChanges: 'always' }
-          )
-          .run();
-      } else {
-        return db
-          .table('usersChannels')
-          .insert(
-            {
-              channelId,
-              userId,
-              createdAt: new Date(),
-              isMember: true,
-              isOwner: false,
-              isModerator: false,
-              isBlocked: false,
-              isPending: false,
-              receiveNotifications: true,
-            },
-            { returnChanges: true }
-          )
-          .run();
-      }
-    })
-    .then(async () => {
-      await incrementMemberCount(channelId)
-      return db.table('channels').get(channelId).run()
-    });
-};
-
 // removes a single member from a channel. will be invoked if a user leaves a channel
 // prettier-ignore
 const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
@@ -155,51 +79,6 @@ const removeMembersInChannel = async (channelId: string): Promise<Array<?DBUsers
       receiveNotifications: false,
     })
     .run();
-};
-
-// creates a single pending user in channel. invoked only when a user is requesting
-// to join a private channel
-// prettier-ignore
-const createOrUpdatePendingUserInChannel = (channelId: string, userId: string): Promise<DBChannel> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .run()
-    .then(data => {
-      if (data && data.length > 0) {
-        return db
-          .table('usersChannels')
-          .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-          .update(
-            {
-              isPending: true,
-            },
-            { returnChanges: true }
-          )
-          .run();
-      } else {
-        return db
-          .table('usersChannels')
-          .insert(
-            {
-              channelId,
-              userId,
-              createdAt: new Date(),
-              isMember: false,
-              isOwner: false,
-              isModerator: false,
-              isBlocked: false,
-              isPending: true,
-              receiveNotifications: false,
-            },
-            { returnChanges: true }
-          )
-          .run();
-      }
-    })
-    .then(() => {
-      return db.table('channels').get(channelId).run();
-    });
 };
 
 // removes a collection of pending users from a channel. invoked only when a private
@@ -345,48 +224,6 @@ const removeModeratorInChannel = (
       isModerator: false,
     })
     .run();
-};
-
-// creates a new relationship between the user and all of a community's
-// default channels, skipping over any relationships that already exist
-// prettier-ignore
-const createMemberInDefaultChannels = (communityId: string, userId: string): Promise<Array<Object>> => {
-  // get the default channels for the community being joined
-  const defaultChannels = db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter({ isDefault: true })
-    .run();
-
-  // get the current user's relationships to all channels
-
-  const usersChannels = db
-    .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .run();
-
-  return Promise.all([defaultChannels, usersChannels]).then(
-    ([defaultChannels, usersChannels]) => {
-      // convert default channels and users channels to arrays of ids
-      // to efficiently filter down to find the default channels that exist
-      // which a user has not joined
-      const defaultChannelIds = defaultChannels.map(channel => channel.id);
-      const usersChannelIds = usersChannels.map(e => e.channelId);
-
-      // returns a list of Ids that represent channels which are defaults
-      // in the community but the user has no relationship with yet
-      const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
-        channelId => usersChannelIds.indexOf(channelId) >= -1
-      );
-
-      // create all the necessary relationships
-      return Promise.all(
-        defaultChannelsTheUserHasNotJoined.map(channel =>
-          createMemberInChannel(channel, userId)
-        )
-      );
-    }
-  );
 };
 
 // prettier-ignore
@@ -626,19 +463,15 @@ const getUserChannelIds = (userId: string) => {
 
 module.exports = {
   // modify and create
-  createOwnerInChannel,
-  createMemberInChannel,
   removeMemberInChannel,
   unblockMemberInChannel,
   removeMembersInChannel,
-  createOrUpdatePendingUserInChannel,
   removePendingUsersInChannel,
   blockUserInChannel,
   approvePendingUserInChannel,
   approvePendingUsersInChannel,
   approveBlockedUserInChannel,
   removeModeratorInChannel,
-  createMemberInDefaultChannels,
   toggleUserChannelNotifications,
   removeUsersChannelMemberships,
   // get

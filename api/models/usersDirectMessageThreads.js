@@ -9,26 +9,6 @@ const { db } = require('shared/db');
 ===========================================================
 */
 
-// creates a single member in a direct message thread. invoked when a user is added
-// to an existing direct message thread (group thread only)
-// prettier-ignore
-const createMemberInDirectMessageThread = (threadId: string, userId: string, setActive: boolean): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .insert(
-      {
-        threadId,
-        userId,
-        createdAt: new Date(),
-        lastSeen: setActive ? new Date() : null,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
-};
-
 // removes a single member from a channel. will be invoked if a user leaves
 // a channel
 // prettier-ignore
@@ -113,7 +93,6 @@ const getDirectMessageThreadRecords = (threadId: string) => {
 };
 
 module.exports = {
-  createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
   updateDirectMessageThreadNotificationStatusForUser,

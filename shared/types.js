@@ -191,21 +191,6 @@ export type DBReputationEvent = {
   userId: string,
 };
 
-export type DBSlackUser = {
-  email: string,
-  firstName: string,
-  lastName: string,
-};
-export type DBSlackImport = {
-  id: string,
-  communityId: string,
-  members?: Array<DBSlackUser>,
-  senderId?: string,
-  teamId: string,
-  teamName: string,
-  token: string,
-};
-
 type DBThreadAttachment = {
   attachmentType: 'photoPreview',
   data: {

@@ -11,7 +11,6 @@ import members from './members';
 import pinnedThread from './pinnedThread';
 import threadConnection from './threadConnection';
 import metaData from './metaData';
-import slackImport from './slackImport';
 import memberGrowth from './memberGrowth';
 import conversationGrowth from './conversationGrowth';
 import topMembers from './topMembers';
@@ -19,7 +18,6 @@ import topAndNewThreads from './topAndNewThreads';
 import contextPermissions from './contextPermissions';
 import watercooler from './watercooler';
 import brandedLogin from './brandedLogin';
-import slackSettings from './slackSettings';
 import joinSettings from './joinSettings';
 import coverPhoto from './coverPhoto';
 import profilePhoto from './profilePhoto';
@@ -54,7 +52,6 @@ module.exports = {
     pinnedThread,
     threadConnection,
     metaData,
-    slackImport,
     memberGrowth,
     conversationGrowth,
     topMembers,
@@ -62,7 +59,6 @@ module.exports = {
     contextPermissions,
     watercooler,
     brandedLogin,
-    slackSettings,
     joinSettings,
     coverPhoto,
     profilePhoto,

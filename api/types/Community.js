@@ -46,12 +46,6 @@ const Community = /* GraphQL */ `
     channels: Int
   }
 
-  type SlackImport @deprecated(reason: "Use the slack settings field instead") {
-    members: String
-    teamName: String
-    sent: Date
-  }
-
   type TopAndNewThreads {
     topThreads: [Thread]
     newThreads: [Thread]
@@ -172,12 +166,8 @@ const Community = /* GraphQL */ `
     watercooler: Thread
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings
-    slackSettings: CommunitySlackSettings @cost(complexity: 2)
 
     watercoolerId: String
-    slackImport: SlackImport
-      @cost(complexity: 2)
-      @deprecated(reason: "Use slack settings field instead")
 
     memberConnection(
       first: Int = 10
