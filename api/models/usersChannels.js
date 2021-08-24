@@ -1,11 +1,7 @@
 // @flow
 const { db } = require('shared/db');
-import {
-  incrementMemberCount,
-  decrementMemberCount,
-  setMemberCount,
-} from './channel';
-import type { DBUsersChannels, DBChannel } from 'shared/types';
+import { decrementMemberCount, setMemberCount } from './channel';
+import type { DBUsersChannels } from 'shared/types';
 
 /*
 ===========================================================

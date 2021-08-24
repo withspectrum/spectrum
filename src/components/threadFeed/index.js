@@ -44,7 +44,7 @@ type Props = {
   websocketConnection: WebsocketConnectionType,
 };
 
-class ThreadFeedPure extends React.Component<Props, State> {
+class ThreadFeedPure extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const curr = this.props;
     if (curr.networkOnline !== nextProps.networkOnline) return true;

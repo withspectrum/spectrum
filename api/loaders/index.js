@@ -13,7 +13,6 @@ import {
 import {
   __createChannelLoader,
   __createChannelThreadCountLoader,
-  __createChannelMemberCountLoader,
   __createChannelSettingsLoader,
 } from './channel';
 import {
@@ -46,7 +45,6 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   thread: __createThreadLoader(options),
   threadParticipants: __createThreadParticipantsLoader(options),
   channel: __createChannelLoader(options),
-  channelMemberCount: __createChannelMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
   channelSettings: __createChannelSettingsLoader(options),
   community: __createCommunityLoader(options),

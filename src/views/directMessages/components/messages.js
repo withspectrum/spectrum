@@ -25,7 +25,7 @@ type Props = {
   isFetchingMore: boolean,
 };
 
-class MessagesWithData extends React.Component<Props, State> {
+class MessagesWithData extends React.Component<Props> {
   componentDidMount() {
     const thread = this.props.data.directMessageThread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts

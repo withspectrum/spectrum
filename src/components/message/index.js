@@ -57,7 +57,7 @@ type Props = {|
   deleteMessage: Function,
 |};
 
-class Message extends React.Component<Props, State> {
+class Message extends React.Component<Props> {
   wrapperRef: React$Node;
 
   setWrapperRef = (node: React$Node) => {

@@ -9,6 +9,46 @@ export type DBDirectMessageThread = {
 };
 
 // prettier-ignore
+const checkForExistingDMThread = async (participants: Array<string>): Promise<?string> => {
+  // return a list of all threadIds where both participants are active
+  let idsToCheck = await db
+    .table('usersDirectMessageThreads')
+    .getAll(...participants, { index: 'userId' })
+    .group('threadId')
+    .map(row => row('userId'))
+    .ungroup()
+    .filter(row =>
+      row('reduction')
+        .count()
+        .eq(participants.length)
+    )
+    .pluck('group')
+    .run();
+
+  if (!idsToCheck || idsToCheck.length === 0) return null;
+
+  // return only the thread Ids
+  idsToCheck = idsToCheck.map(row => row.group);
+
+  // given a list of threads where both users are active (includes all groups)
+  // return only threads where these exact participants are used
+  return await db
+    .table('usersDirectMessageThreads')
+    .getAll(...idsToCheck, { index: 'threadId' })
+    .group('threadId')
+    .ungroup()
+    .filter(row =>
+      row('reduction')
+        .count()
+        .eq(participants.length)
+    )
+    .pluck('group')
+    .map(row => row('group'))
+    .run()
+    .then(results => (results && results.length > 0 ? results[0] : null));
+};
+
+// prettier-ignore
 const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
   return db
     .table('directMessageThreads')
@@ -47,6 +87,7 @@ const getDirectMessageThreadsByUser = (
 };
 
 module.exports = {
+  checkForExistingDMThread,
   getDirectMessageThread,
   getDirectMessageThreads,
   getDirectMessageThreadsByUser,

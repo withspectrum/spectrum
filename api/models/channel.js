@@ -227,6 +227,11 @@ const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
+type GroupedCount = {
+  group: string,
+  reduction: number,
+};
+
 // prettier-ignore
 const getChannelsThreadCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
   return threadsByChannelsQuery(...channelIds)

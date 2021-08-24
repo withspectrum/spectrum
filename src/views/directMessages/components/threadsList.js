@@ -35,7 +35,7 @@ type Props = {
   },
 };
 
-class ThreadsList extends React.Component<Props, State> {
+class ThreadsList extends React.Component<Props> {
   componentDidUpdate(prev: Props) {
     const curr = this.props;
 
