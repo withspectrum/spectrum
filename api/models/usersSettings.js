@@ -53,29 +53,6 @@ export const getUsersSettings = (userId: string): Promise<Object> => {
     });
 };
 
-// prettier-ignore
-export const updateUsersNotificationSettings = (userId: string, settings: object, type: string, method: string, enabled: string): Promise<Object> => {
-  return db
-    .table('usersSettings')
-    .getAll(userId, { index: 'userId' })
-    .update({
-      ...settings,
-    })
-    .run();
-};
-
-// prettier-ignore
-export const unsubscribeUserFromEmailNotification = (userId: string, type: object): Promise<Object> => {
-  const obj = { notifications: { types: {} } };
-  obj['notifications']['types'][type] = { email: false };
-
-  return db
-    .table('usersSettings')
-    .getAll(userId, { index: 'userId' })
-    .update({ ...obj })
-    .run();
-};
-
 export const disableAllUsersEmailSettings = (userId: string) => {
   return db
     .table('usersSettings')

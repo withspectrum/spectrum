@@ -428,14 +428,6 @@ export const getWatercoolerThread = (
     });
 };
 
-export const setThreadLastActive = (threadId: string, value: Date) => {
-  return db
-    .table('threads')
-    .get(threadId)
-    .update({ lastActive: value })
-    .run();
-};
-
 // prettier-ignore
 export const deleteThread = (threadId: string, userId: string): Promise<Boolean> => {
   return db

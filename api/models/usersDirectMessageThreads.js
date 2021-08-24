@@ -33,18 +33,6 @@ const removeMembersInDirectMessageThread = (threadId: string): Promise<Object> =
     .run();
 };
 
-// prettier-ignore
-const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, userId: string, val: boolean): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
-    .update({
-      receiveNotifications: val,
-    })
-    .run();
-};
-
 /*
 ===========================================================
 
@@ -95,7 +83,6 @@ const getDirectMessageThreadRecords = (threadId: string) => {
 module.exports = {
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
-  updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,
   getMembersInDirectMessageThreads,

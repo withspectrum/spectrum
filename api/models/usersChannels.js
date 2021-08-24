@@ -15,55 +15,6 @@ import type { DBUsersChannels, DBChannel } from 'shared/types';
 ===========================================================
 */
 
-// removes a single member from a channel. will be invoked if a user leaves a channel
-// prettier-ignore
-const removeMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .update(
-      {
-        isModerator: false,
-        isMember: false,
-        isPending: false,
-        receiveNotifications: false,
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(async result => {
-      if (result && result.changes && result.changes.length > 0) {
-        const join = result.changes[0].old_val;
-
-        await decrementMemberCount(channelId)
-        return db.table('channels').get(join.channelId).run();
-      } else {
-        return null;
-      }
-    });
-};
-
-// prettier-ignore
-const unblockMemberInChannel = (channelId: string, userId: string): Promise<?DBChannel> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .update(
-      {
-        isBlocked: false,
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(result => {
-      if (result && result.changes && result.changes.length > 0) {
-        return db.table('channels').get(channelId).run();
-      } else {
-        return null;
-      }
-    });
-};
-
 // removes all the user relationships to a channel. will be invoked when a
 // channel is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted channel
@@ -79,75 +30,6 @@ const removeMembersInChannel = async (channelId: string): Promise<Array<?DBUsers
       receiveNotifications: false,
     })
     .run();
-};
-
-// removes a collection of pending users from a channel. invoked only when a private
-// channel is converted into a public channel, at which point we delete all pending
-// user associations. this will allow those pending users to re-join if they
-// choose, but will not add unwanted users to the now-public channel
-const removePendingUsersInChannel = (channelId: string): Promise<DBChannel> => {
-  return db
-    .table('usersChannels')
-    .getAll([channelId, 'pending'], { index: 'channelIdAndRole' })
-    .update({
-      isPending: false,
-      receiveNotifications: false,
-    })
-    .run()
-    .then(result => {
-      const join = result.changes[0].new_val;
-      return db
-        .table('channels')
-        .get(join.channelId)
-        .run();
-    });
-};
-
-// toggles user to blocked in a channel. invoked by a channel or community
-// owner when managing a private channel. sets pending to false to handle
-// private channels modifying pending users to be blocked
-// prettier-ignore
-const blockUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  await decrementMemberCount(channelId)
-
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .update(
-      {
-        isMember: false,
-        isModerator: false,
-        isOwner: false,
-        isPending: false,
-        isBlocked: true,
-        receiveNotifications: false,
-      },
-      { returnChanges: true }
-    )
-    .run();
-};
-
-// toggles a pending user to member in a channel. invoked by a channel or community
-// owner when managing a private channel
-// prettier-ignore
-const approvePendingUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  await incrementMemberCount(channelId)
-
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .update(
-      {
-        isMember: true,
-        isPending: false,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(() => {
-      return db.table('channels').get(channelId).run();
-    });
 };
 
 // toggles all pending users to make them a member in a channel. invoked by a
@@ -188,76 +70,6 @@ const approvePendingUsersInChannel = async (channelId: string): Promise<DBUsersC
       { returnChanges: true }
     )
     .run()
-};
-
-// unblocks a blocked user in a channel. invoked by a channel or community
-// owner when managing a private channel. this *does* add the user
-// as a member
-// prettier-ignore
-const approveBlockedUserInChannel = async (channelId: string, userId: string): Promise<DBUsersChannels> => {
-  await incrementMemberCount(channelId)
-
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .filter({ isBlocked: true })
-    .update(
-      {
-        isMember: true,
-        isBlocked: false,
-        receiveNotifications: false,
-      },
-      { returnChanges: true }
-    )
-    .run();
-};
-
-// moves a moderator to be only a member in a channel. does not remove them from the channel
-const removeModeratorInChannel = (
-  channelId: string,
-  userId: string
-): Promise<DBUsersChannels> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .update({
-      isModerator: false,
-    })
-    .run();
-};
-
-// prettier-ignore
-const toggleUserChannelNotifications = async (userId: string, channelId: string, value: boolean): Promise<?DBChannel> => {
-  const permissions = await db
-    .table('usersChannels')
-    .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-    .run();
-
-  const channel = await db
-    .table('channels')
-    .get(channelId)
-    .run()
-
-  // permissions exist, this user is trying to toggle notifications for a channel where they
-  // are already a member
-  if (permissions && permissions.length > 0) {
-    return db
-      .table('usersChannels')
-      .getAll([userId, channelId], { index: 'userIdAndChannelId' })
-      .update({ receiveNotifications: value })
-      .run();
-  }
-
-  // if the channel isn't private, it means the user is enabling notifications
-  // in a public channel that they have not yet joined - for example, if a user
-  // joins a community, then some time later the community creates a new channel,
-  // then again some time later the user wants notifications about that channel
-  if (!channel.isPrivate) {
-    // if permissions don't exist, create a usersChannel relationship with notifications on
-    return createMemberInChannel(channelId, userId)
-  }
-
-  return null
 };
 
 const removeUsersChannelMemberships = async (userId: string) => {
@@ -447,32 +259,10 @@ const getUserChannelIds = (userId: string) => {
     .run();
 };
 
-// const getUserChannelIds = createQuery({
-//   read: (userId: string) =>
-//     db
-//       .table('usersChannels')
-//       .getAll(userId, { index: 'userId' })
-//       .filter({ isMember: true })
-//       .map(rec => rec('channelId')),
-//   tags: (userId: string) => (usersChannels: ?Array<DBUsersChannels>) => [
-//     userId,
-//     ...(usersChannels || []).map(({ channelId }) => channelId),
-//     ...(usersChannels || []).map(({ id }) => id),
-//   ],
-// });
-
 module.exports = {
   // modify and create
-  removeMemberInChannel,
-  unblockMemberInChannel,
   removeMembersInChannel,
-  removePendingUsersInChannel,
-  blockUserInChannel,
-  approvePendingUserInChannel,
   approvePendingUsersInChannel,
-  approveBlockedUserInChannel,
-  removeModeratorInChannel,
-  toggleUserChannelNotifications,
   removeUsersChannelMemberships,
   // get
   getMembersInChannel,
