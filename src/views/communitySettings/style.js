@@ -212,18 +212,6 @@ export const View = styled.div`
   }
 `;
 
-export const GrowthText = styled.h5`
-  color: ${props =>
-    props.positive
-      ? props.theme.success.default
-      : props.negative
-      ? props.theme.warn.alt
-      : props.theme.text.alt};
-  display: inline-block;
-  margin-right: 6px;
-  font-size: 14px;
-`;
-
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;

@@ -46,11 +46,6 @@ const Community = /* GraphQL */ `
     channels: Int
   }
 
-  type TopAndNewThreads {
-    topThreads: [Thread]
-    newThreads: [Thread]
-  }
-
   type BrandedLogin {
     isEnabled: Boolean
     message: String
@@ -156,13 +151,6 @@ const Community = /* GraphQL */ `
       sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multipliers: ["first"])
     metaData: CommunityMetaData @cost(complexity: 10)
-    memberGrowth: GrowthData @cost(complexity: 10)
-    conversationGrowth: GrowthData @cost(complexity: 3)
-
-    topMembers: [CommunityMember] @cost(complexity: 10)
-
-    topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
-
     watercooler: Thread
     brandedLogin: BrandedLogin
     joinSettings: JoinSettings

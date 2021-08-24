@@ -14,7 +14,6 @@ import type { ContextRouter } from 'react-router';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ViewGrid } from 'src/components/layout';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import Analytics from '../communityAnalytics';
 import Members from '../communityMembers';
 import Overview from './components/overview';
 
@@ -72,11 +71,6 @@ class CommunitySettings extends React.Component<Props> {
           label: 'Members',
           activeLabel: 'members',
         },
-        {
-          to: `/${community.slug}/settings/analytics`,
-          label: 'Analytics',
-          activeLabel: 'analytics',
-        },
       ];
 
       const subheading = {
@@ -116,9 +110,6 @@ class CommunitySettings extends React.Component<Props> {
               </SegmentedControl>
 
               <Switch>
-                <Route path={`${match.url}/analytics`}>
-                  {() => <Analytics community={community} id={community.id} />}
-                </Route>
                 <Route path={`${match.url}/members`}>
                   {() => <Members community={community} history={history} />}
                 </Route>

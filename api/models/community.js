@@ -1,11 +1,9 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { parseRange } from './utils';
 import { uploadImage } from '../utils/file-storage';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 import type { DBCommunity } from 'shared/types';
-import type { Timeframe } from './utils';
 
 export const getCommunityById = (id: string): Promise<DBCommunity> => {
   return db
@@ -306,38 +304,6 @@ export const getThreadCount = (communityId: string) => {
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .count()
     .run();
-};
-
-export const getCommunityGrowth = async (
-  table: string,
-  range: Timeframe,
-  field: string,
-  communityId: string,
-  filter?: mixed
-) => {
-  const { current, previous } = parseRange(range);
-  const currentPeriodCount = await db
-    .table(table)
-    .getAll(communityId, { index: 'communityId' })
-    .filter(db.row(field).during(db.now().sub(current), db.now()))
-    .filter(filter ? filter : '')
-    .count()
-    .run();
-
-  const prevPeriodCount = await db
-    .table(table)
-    .getAll(communityId, { index: 'communityId' })
-    .filter(db.row(field).during(db.now().sub(previous), db.now().sub(current)))
-    .filter(filter ? filter : '')
-    .count()
-    .run();
-
-  const rate = (await (currentPeriodCount - prevPeriodCount)) / prevPeriodCount;
-  return {
-    currentPeriodCount,
-    prevPeriodCount,
-    growth: Math.round(rate * 100),
-  };
 };
 
 export const setMemberCount = (

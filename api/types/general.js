@@ -38,19 +38,6 @@ const general = /* GraphQL */ `
     isBlocked: Boolean
   }
 
-  type GrowthDataCounts {
-    growth: Float
-    currentPeriodCount: Int
-    prevPeriodCount: Int
-  }
-
-  type GrowthData {
-    count: Int
-    weeklyGrowth: GrowthDataCounts
-    monthlyGrowth: GrowthDataCounts
-    quarterlyGrowth: GrowthDataCounts
-  }
-
   input EmailInviteContactInput {
     email: LowercaseString!
     firstName: String

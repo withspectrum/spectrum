@@ -75,21 +75,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           isOwner,
         };
       }
-      case 'getCommunityTopMembers': {
-        const communities = await getCommunities([info.variableValues.id]);
-        const { id } = communities[0];
-        const {
-          isModerator,
-          isOwner,
-          isBlocked,
-        } = await loaders.userPermissionsInCommunity.load([user.id, id]);
-        return {
-          communityId: id,
-          isModerator,
-          isOwner,
-          isBlocked,
-        };
-      }
     }
   };
 

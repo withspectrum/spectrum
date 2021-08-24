@@ -4,7 +4,7 @@ import intersection from 'lodash.intersection';
 const { parseRange } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBThread, FileUpload } from 'shared/types';
+import type { DBThread } from 'shared/types';
 import type { Timeframe } from './utils';
 
 const NOT_WATERCOOLER = thread =>
