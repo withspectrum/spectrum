@@ -19,18 +19,15 @@ const NullState = ({ viewContext, communityId, channelId }: Props) => {
   let cp;
 
   if (viewContext && viewContext === 'communityProfile') {
-    hd = 'Start a conversation';
-    cp = 'Ask a question, share a tip, or anything else that’s on your mind.';
+    hd = 'There’s nothing in this community';
   }
 
   if (viewContext && viewContext === 'channelProfile') {
-    hd = 'There’s nothing in this channel yet';
-    cp = 'But you could be the first person to post something here!';
+    hd = 'There’s nothing in this channel';
   }
 
   if (viewContext && viewContext === 'userProfile') {
     hd = 'This user hasn’t posted yet';
-    cp = 'But you could message them!';
   }
 
   const headingIcon = (communityId || channelId) && (

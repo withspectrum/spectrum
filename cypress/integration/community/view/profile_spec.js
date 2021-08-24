@@ -93,16 +93,6 @@ describe('public community signed out', () => {
         .should('be.visible');
     });
   });
-
-  it('should prompt user to login when joining', () => {
-    cy.get('[data-cy="join-community-button-login"]')
-      .last()
-      .scrollIntoView()
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="login-modal"]').should('be.visible');
-  });
 });
 
 describe('public community signed in without permission', () => {
@@ -156,33 +146,6 @@ describe('public community signed in without permission', () => {
         .should('be.visible');
     });
   });
-
-  it('should join the community', () => {
-    cy.get('[data-cy="join-community-button"]')
-      .last()
-      .scrollIntoView()
-      .should('be.visible');
-
-    cy.get('[data-cy="join-community-button"]')
-      .contains(`Join community`)
-      .click();
-
-    cy.get('[data-cy="leave-community-button"]')
-      .contains(`Member`)
-      .click();
-
-    // triggered the leave modal
-    cy.get('[data-cy="delete-button"]')
-      .contains(`Leave Community`)
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="delete-button"]').should('not.be.visible');
-
-    cy.get('[data-cy="join-community-button"]')
-      .last()
-      .should('be.visible');
-  });
 });
 
 describe('public community signed in with permission', () => {
@@ -204,10 +167,6 @@ describe('private community signed out', () => {
   beforeEach(() => {
     cy.visit(`/${privateCommunity.slug}`);
   });
-
-  it('should prompt a login', () => {
-    cy.get('[data-cy="login-page"]').should('be.visible');
-  });
 });
 
 describe('private community signed in without permission', () => {
@@ -220,22 +179,6 @@ describe('private community signed in without permission', () => {
   it('should render the blocked page', () => {
     cy.get('[data-cy="community-view-private"]').should('be.visible');
     cy.contains('This community is private');
-  });
-
-  it('should request to join the private community', () => {
-    cy.get('[data-cy="request-to-join-private-community-button"]')
-      .should('be.visible')
-      .contains(`Request to join`)
-      .click();
-
-    cy.get('[data-cy="cancel-request-to-join-private-community-button"]')
-      .should('be.visible')
-      .contains('Cancel request')
-      .click();
-
-    cy.get('[data-cy="request-to-join-private-community-button"]')
-      .should('be.visible')
-      .contains(`Request to join`);
   });
 });
 

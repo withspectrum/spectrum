@@ -13,13 +13,6 @@ describe('/messages', () => {
 
     cy.contains('Previous member').should('be.visible');
     cy.contains('No messages yet...').should('be.visible');
-
-    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
   });
 
   it('should select an individual conversation', () => {
@@ -50,83 +43,5 @@ describe('/messages', () => {
     cy.get('[data-cy="message"]').should($p => {
       expect($p).to.have.length(0);
     });
-  });
-
-  it('should send a message in a conversation', () => {
-    cy.contains('Previous member')
-      .should('be.visible')
-      .click();
-
-    const newMessage = 'A new message!';
-    cy.get('[data-cy="chat-input"]').type(newMessage);
-    cy.get('[data-cy="chat-input-send-button"]').click();
-    cy.get('[data-cy="chat-input"]').clear();
-    cy.contains(newMessage);
-
-    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
-      expect($p).to.have.length(0);
-    });
-
-    cy.get('[data-cy="dm-list-item"]').should($p => {
-      expect($p).to.have.length(2);
-    });
-
-    cy.wait(2000);
-
-    cy.get('[data-cy="dm-list-item"]')
-      .first()
-      .contains('Previous member');
-  });
-});
-
-describe('messages tab badge count', () => {
-  beforeEach(() => {
-    cy.auth(user.id).then(() => cy.visit('/spectrum'));
-  });
-
-  it('should show a badge for unread direct messages', () => {
-    cy.get('[data-cy="unread-dm-badge"]').should('be.visible');
-  });
-
-  it('should clear the badge when messages tab clicked', () => {
-    cy.get('[data-cy="unread-dm-badge"]').should('be.visible');
-    cy.get('[data-cy="navigation-messages"]').click();
-    cy.get('[data-cy="dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-badge"]').should('not.be.visible');
-  });
-
-  it('should not show an unread badge after leaving messages tab', () => {
-    cy.get('[data-cy="unread-dm-badge"]').should('be.visible');
-    cy.get('[data-cy="navigation-messages"]').click();
-    cy.get('[data-cy="dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-badge"]').should('not.be.visible');
-    cy.get('[data-cy="navigation-explore"]').click();
-    cy.get('[data-cy="unread-dm-badge"]').should('not.be.visible');
-  });
-});
-
-describe('clearing messages tab', () => {
-  beforeEach(() => {
-    cy.auth(user.id).then(() => cy.visit('/messages'));
-  });
-
-  it('should clear the badge when landing directly on /messages', () => {
-    cy.get('[data-cy="dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-list-item"]').should($p => {
-      expect($p).to.have.length(1);
-    });
-    cy.get('[data-cy="unread-dm-badge"]').should('not.be.visible');
   });
 });

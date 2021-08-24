@@ -49,23 +49,5 @@ describe('Redirect paths', () => {
     const path =
       'http://localhost:3000/spectrum/general/yet-another-thread~thread-3';
     cy.visit(path);
-    cy.get('[data-cy="join-community-chat-upsell"]')
-      .should('be.visible')
-      .click();
-
-    cy.get('[data-cy="login-modal"]').should('be.visible');
-    cy.get(`[href*="/auth/github?r=${path}"]`).should('be.visible');
-    cy.get('[href*="github.com/withspectrum/code-of-conduct"]').should(
-      'be.visible'
-    );
-
-    cy.get(`[href*="/login?r=${path}"]`)
-      .should('be.visible')
-      .click();
-
-    cy.get(`[href*="/auth/twitter?r=${path}"]`).should('be.visible');
-    cy.get(`[href*="/auth/facebook?r=${path}"]`).should('be.visible');
-    cy.get(`[href*="/auth/google?r=${path}"]`).should('be.visible');
-    cy.get(`[href*="/auth/github?r=${path}"]`).should('be.visible');
   });
 });
