@@ -59,21 +59,7 @@ class Component extends React.Component<Props> {
     const nodes = members
       .map(member => member && member.node)
       .filter(node => node && (node.isOwner || node.isModerator))
-      .filter(Boolean)
-      .sort((a, b) => {
-        const bc = parseInt(b.reputation, 10);
-        const ac = parseInt(a.reputation, 10);
-
-        // sort same-reputation communities alphabetically
-        if (ac === bc) {
-          return a.user.name.toUpperCase() <= b.user.name.toUpperCase()
-            ? -1
-            : 1;
-        }
-
-        // otherwise sort by reputation
-        return bc <= ac ? -1 : 1;
-      });
+      .filter(Boolean);
 
     return (
       <React.Fragment>
@@ -99,7 +85,6 @@ class Component extends React.Component<Props> {
                 username={user.username}
                 profilePhoto={user.profilePhoto}
                 isCurrentUser={currentUser && user.id === currentUser.id}
-                isOnline={user.isOnline}
                 avatarSize={40}
                 showHoverProfile={false}
                 messageButton={currentUser && user.id !== currentUser.id}

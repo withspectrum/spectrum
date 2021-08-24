@@ -1,15 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import {
-  FlexRow,
-  FlexCol,
-  Gradient,
-  Shadow,
-  hexa,
-  zIndex,
-} from 'src/components/globals';
-import { Button } from 'src/components/button';
+import { FlexRow, FlexCol, Gradient, zIndex } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Title = styled.h1`
@@ -162,29 +154,6 @@ export const UpsellIconContainer = styled.div`
   margin-bottom: 16px;
   margin-top: 32px;
   color: ${theme.text.alt};
-`;
-
-export const SignupButton = styled(Button)`
-  font-size: 18px;
-  font-weight: 700;
-  color: ${theme.text.reverse};
-  padding: 16px 88px;
-  max-width: 100%;
-  box-shadow: ${props =>
-    `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
-  margin-top: 8px;
-`;
-
-export const SignupFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  font-size: 14px;
-  color: ${theme.text.alt};
-  font-weight: 500;
-  border-top: 2px solid ${theme.bg.wash};
-  margin-top: 40px;
-  width: 100%;
 `;
 
 export const SigninLink = styled.span`

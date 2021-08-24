@@ -14,7 +14,6 @@ import { history } from 'src/helpers/history';
 import { client } from 'shared/graphql';
 import { initStore } from 'src/store';
 import { wsLink } from 'shared/graphql';
-import { subscribeToDesktopPush } from 'src/subscribe-to-desktop-push';
 import RedirectHandler from 'src/components/redirectHandler';
 const params = queryString.parse(history.location.search);
 
@@ -89,7 +88,3 @@ wsLink.subscriptionClient.on('connected', () =>
 wsLink.subscriptionClient.on('reconnected', () =>
   store.dispatch({ type: 'WEBSOCKET_CONNECTION', value: 'reconnected' })
 );
-
-subscribeToDesktopPush(data => {
-  if (data && data.href) history.push(data.href);
-});

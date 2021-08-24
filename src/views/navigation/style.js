@@ -9,7 +9,6 @@ import {
   NAVBAR_EXPANDED_WIDTH,
   MIN_WIDTH_TO_EXPAND_NAVIGATION,
 } from 'src/components/layout';
-import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
 export const Overlay = styled.div`
   position: fixed;
@@ -66,13 +65,6 @@ export const NavigationWrapper = styled.div`
   height: 100vh;
   overflow: hidden;
   overflow-y: auto;
-  
-  ${isDesktopApp() &&
-    css`
-      -webkit-app-region: drag;
-      user-select: none;
-    `}
-
 
   @media (max-width: ${MEDIA_BREAK}px) {
     display: ${props => (props.isOpen ? 'block' : 'none')};
@@ -119,15 +111,6 @@ export const NavigationGrid = styled.div`
   overflow-y: auto;
   padding: 12px 0 16px;
 
-  ${isDesktopApp() &&
-    css`
-      padding-top: 40px;
-
-      ${DesktopMenuIconsCover} {
-        display: block;
-      }
-    `}
-
   &::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -142,11 +125,6 @@ export const NavigationGrid = styled.div`
     max-width: ${NAVBAR_EXPANDED_WIDTH}px;
     grid-gap: 0px;
     padding: 12px 0;
-
-    ${isDesktopApp() &&
-      css`
-        padding-top: 40px;
-      `}
   }
 
   @media (min-width: ${MIN_WIDTH_TO_EXPAND_NAVIGATION}px) {
@@ -155,11 +133,6 @@ export const NavigationGrid = styled.div`
     max-width: ${NAVBAR_EXPANDED_WIDTH}px;
     grid-gap: 0px;
     padding: 12px 0;
-
-    ${isDesktopApp() &&
-      css`
-        padding-top: 40px;
-      `}
   }
 `;
 

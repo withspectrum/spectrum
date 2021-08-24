@@ -5,13 +5,12 @@ import type { UserInfoType } from '../user/userInfo';
 export type ParticipantType = {
   ...$Exact<UserInfoType>,
   userId: string,
-  lastSeen: string,
 };
 
 export type DirectMessageThreadInfoType = {
   id: string,
-  threadLastActive: Date,
   snippet: string,
+  threadLastActive: Date,
   participants: Array<ParticipantType>,
 };
 
@@ -25,10 +24,7 @@ export default gql`
       name
       profilePhoto
       username
-      lastSeen
-      lastActive
       userId
-      isOnline
     }
   }
 `;

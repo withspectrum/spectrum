@@ -14,8 +14,6 @@ import deleteThreadMutation from 'shared/graphql/mutations/thread/deleteThread';
 import type { DeleteThreadType } from 'shared/graphql/mutations/thread/deleteThread';
 import deleteMessage from 'shared/graphql/mutations/message/deleteMessage';
 import type { DeleteMessageType } from 'shared/graphql/mutations/message/deleteMessage';
-import archiveChannel from 'shared/graphql/mutations/channel/archiveChannel';
-import removeCommunityMember from 'shared/graphql/mutations/communityMember/removeCommunityMember';
 
 import ModalContainer from '../modalContainer';
 import { TextButton, WarnButton } from 'src/components/button';
@@ -55,8 +53,6 @@ type Props = {
   deleteCommunity: Function,
   deleteThread: Function,
   deleteChannel: Function,
-  archiveChannel: Function,
-  removeCommunityMember: Function,
   dispatch: Dispatch<Object>,
   isOpen: boolean,
   history: History,
@@ -203,40 +199,6 @@ class DeleteDoubleCheckModal extends React.Component<Props, State> {
             });
           });
       }
-      case 'channel-archive': {
-        return this.props
-          .archiveChannel({ channelId: id })
-          .then(() => {
-            dispatch(addToastWithTimeout('neutral', 'Channel archived'));
-            this.setState({
-              isLoading: false,
-            });
-            return this.close();
-          })
-          .catch(err => {
-            dispatch(addToastWithTimeout('error', err.message));
-            this.setState({
-              isLoading: false,
-            });
-          });
-      }
-      case 'team-member-leaving-community': {
-        return this.props
-          .removeCommunityMember({ input: { communityId: id } })
-          .then(() => {
-            dispatch(addToastWithTimeout('neutral', 'Left community'));
-            this.setState({
-              isLoading: false,
-            });
-            return this.close();
-          })
-          .catch(err => {
-            dispatch(addToastWithTimeout('error', err.message));
-            this.setState({
-              isLoading: false,
-            });
-          });
-      }
       default: {
         this.setState({
           isLoading: false,
@@ -298,8 +260,6 @@ const DeleteDoubleCheckModalWithMutations = compose(
   deleteChannelMutation,
   deleteThreadMutation,
   deleteMessage,
-  archiveChannel,
-  removeCommunityMember,
   withRouter
 )(DeleteDoubleCheckModal);
 

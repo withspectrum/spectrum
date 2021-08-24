@@ -19,7 +19,6 @@ it('should fetch a channels member connection', async () => {
               name
               contextPermissions {
                 communityId
-                reputation
               }
             }
           }

@@ -34,39 +34,13 @@ const Message = /* GraphQL */ `
     sender: User! @deprecated(reason: "Use Message.author field instead")
   }
 
-  input MessageContentInput {
-    body: String
-  }
-
-  input MessageInput {
-    threadId: ID!
-    threadType: ThreadTypes!
-    messageType: MessageTypes!
-    content: MessageContentInput!
-    parentId: String
-    file: Upload
-  }
-
   extend type Query {
     message(id: ID!): Message
     getMediaMessagesForThread(threadId: ID!): [Message]
   }
 
-  input EditMessageInput {
-    id: ID!
-    messageType: MessageTypes!
-    content: MessageContentInput
-  }
-
   extend type Mutation {
-    addMessage(message: MessageInput!): Message
-      @rateLimit(max: 30, window: "1m")
     deleteMessage(id: ID!): Boolean
-    editMessage(input: EditMessageInput!): Message
-  }
-
-  extend type Subscription {
-    messageAdded(thread: ID!): Message
   }
 `;
 

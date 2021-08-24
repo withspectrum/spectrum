@@ -21,7 +21,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         const threadId = info.variableValues.id;
         const { communityId } = await getThread(threadId);
         const {
-          reputation,
           isModerator,
           isOwner,
           isBlocked,
@@ -32,7 +31,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         return {
           isBlocked,
           communityId,
-          reputation,
           isModerator,
           isOwner,
         };
@@ -41,7 +39,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
       case 'getCommunityMembers': {
         const communityId = info.variableValues.id;
         const {
-          reputation,
           isOwner,
           isBlocked,
           isModerator,
@@ -54,7 +51,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
           communityId,
           isMember,
           isBlocked,
-          reputation,
           isModerator,
           isOwner,
         };
@@ -65,7 +61,6 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         const channelId = info.variableValues.id;
         const { communityId } = await getChannelById(channelId);
         const {
-          reputation,
           isModerator,
           isOwner,
           isBlocked,
@@ -76,47 +71,7 @@ export default (user: any, _: any, { loaders }: GraphQLContext, info: any) => {
         return {
           isBlocked,
           communityId,
-          reputation,
           isModerator,
-          isOwner,
-        };
-      }
-      case 'getCommunityTopMembers': {
-        const communities = await getCommunities([info.variableValues.id]);
-        const { id } = communities[0];
-        const {
-          reputation,
-          isModerator,
-          isOwner,
-          isBlocked,
-        } = await loaders.userPermissionsInCommunity.load([user.id, id]);
-        return {
-          communityId: id,
-          reputation: reputation || 0,
-          isModerator,
-          isOwner,
-          isBlocked,
-        };
-      }
-      case 'search': {
-        const communityId = info.variableValues.filter.communityId;
-        if (!communityId) return null;
-        const {
-          reputation,
-          isModerator,
-          isMember,
-          isBlocked,
-          isOwner,
-        } = await loaders.userPermissionsInCommunity.load([
-          user.id,
-          communityId,
-        ]);
-        return {
-          communityId,
-          reputation: reputation || 0,
-          isModerator,
-          isMember,
-          isBlocked,
           isOwner,
         };
       }

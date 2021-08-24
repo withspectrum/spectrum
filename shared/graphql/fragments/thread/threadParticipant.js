@@ -13,7 +13,6 @@ export type ThreadParticipantType = {
   isBlocked: boolean,
   isOwner: boolean,
   roles: Array<string>,
-  reputation: number,
 };
 
 export default gql`
@@ -26,7 +25,6 @@ export default gql`
     isBlocked
     isOwner
     roles
-    reputation
   }
   ${userInfoFragment}
 `;

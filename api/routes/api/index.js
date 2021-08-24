@@ -9,12 +9,6 @@ const apiRouter = Router();
 //   apiRouter.use('/graphiql', graphiql);
 // }
 
-import slackImporter from './slackImporter';
-apiRouter.use('/slack', slackImporter);
-
-import email from './email';
-apiRouter.use('/email', email);
-
 import userExportRouter from './export-user-data';
 apiRouter.use('/user.json', userExportRouter);
 

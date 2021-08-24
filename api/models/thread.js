@@ -1,13 +1,10 @@
 // @flow
 const { db } = require('shared/db');
 import intersection from 'lodash.intersection';
-import { processReputationEventQueue, searchQueue } from 'shared/bull/queues';
-const { parseRange, NEW_DOCUMENTS } = require('./utils');
-import { createChangefeed } from 'shared/changefeed-utils';
+const { parseRange } = require('./utils');
 import { deleteMessagesInThread } from '../models/message';
-import { turnOffAllThreadNotifications } from '../models/usersThreads';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { DBThread, FileUpload } from 'shared/types';
+import type { DBThread } from 'shared/types';
 import type { Timeframe } from './utils';
 
 const NOT_WATERCOOLER = thread =>
@@ -431,73 +428,6 @@ export const getWatercoolerThread = (
     });
 };
 
-export const publishThread = (
-  // eslint-disable-next-line
-  { filesToUpload, ...thread }: Object,
-  userId: string
-): Promise<DBThread> => {
-  return db
-    .table('threads')
-    .insert(
-      Object.assign({}, thread, {
-        creatorId: userId,
-        createdAt: new Date(),
-        lastActive: new Date(),
-        modifiedAt: null,
-        isPublished: true,
-        isLocked: false,
-        edits: [],
-        reactionCount: 0,
-        messageCount: 0,
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => {
-      const thread = result.changes[0].new_val;
-
-      searchQueue.add({
-        id: thread.id,
-        type: 'thread',
-        event: 'created',
-      });
-
-      return thread;
-    });
-};
-
-// prettier-ignore
-export const setThreadLock = (threadId: string, value: boolean, userId: string, byModerator: boolean = false): Promise<DBThread> => {
-  return (
-    db
-      .table('threads')
-      .get(threadId)
-      // Note(@mxstbr): There surely is a better way to toggle a bool
-      // with ReQL, I just couldn't find the API for it in a pinch
-      .update(
-        {
-          isLocked: value,
-          lockedBy: value === true ? userId : db.literal(),
-          lockedAt: value === true ? new Date() : db.literal(),
-        },
-        { returnChanges: true }
-      )
-      .run()
-      .then(async () => {
-        const thread = await getThreadById(threadId)
-        return thread
-      })
-  );
-};
-
-export const setThreadLastActive = (threadId: string, value: Date) => {
-  return db
-    .table('threads')
-    .get(threadId)
-    .update({ lastActive: value })
-    .run();
-};
-
 // prettier-ignore
 export const deleteThread = (threadId: string, userId: string): Promise<Boolean> => {
   return db
@@ -517,132 +447,11 @@ export const deleteThread = (threadId: string, userId: string): Promise<Boolean>
     .then(result =>
       Promise.all([
         result,
-        turnOffAllThreadNotifications(threadId),
         deleteMessagesInThread(threadId, userId),
       ])
     )
     .then(([result]) => {
-      const thread = result.changes[0].new_val;
-
-      searchQueue.add({
-        id: thread.id,
-        type: 'thread',
-        event: 'deleted'
-      })
-
-      processReputationEventQueue.add({
-        userId: thread.creatorId,
-        type: 'thread deleted',
-        entityId: thread.id,
-      });
-
       return result.replaced >= 1 ? true : false;
-    });
-};
-
-type File = FileUpload;
-
-export type EditThreadInput = {
-  threadId: string,
-  content: {
-    title: string,
-    body: ?string,
-  },
-  filesToUpload?: ?Array<File>,
-};
-
-// shouldUpdate arguemnt is used to prevent a thread from being marked as edited when the images are uploaded at publish time
-// prettier-ignore
-export const editThread = (input: EditThreadInput, userId: string, shouldUpdate: boolean = true): Promise<DBThread> => {
-  return db
-    .table('threads')
-    .get(input.threadId)
-    .update(
-      {
-        content: input.content,
-        modifiedAt: shouldUpdate ? new Date() : null,
-        editedBy: userId,
-        edits: db.row('edits').append({
-          content: db.row('content'),
-          timestamp: new Date(),
-          editedBy: db.row('editedBy').default(db.row('creatorId'))
-        }),
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(result => {
-      // if an update happened
-      if (result.replaced === 1) {
-        const thread = result.changes[0].new_val;
-
-        searchQueue.add({
-          id: thread.id,
-          type: 'thread',
-          event: 'edited'
-        })
-
-        return thread;
-      }
-
-      // an update was triggered from the client, but no data was changed
-      return result.changes[0].old_val;
-    });
-};
-
-export const updateThreadWithImages = (id: string, body: string) => {
-  return db
-    .table('threads')
-    .get(id)
-    .update(
-      {
-        content: {
-          body,
-        },
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(result => {
-      // if an update happened
-      if (result.replaced === 1) {
-        return result.changes[0].new_val;
-      }
-
-      // no data was changed
-      if (result.unchanged === 1) {
-        return result.changes[0].old_val;
-      }
-
-      return null;
-    });
-};
-
-export const moveThread = (id: string, channelId: string) => {
-  return db
-    .table('threads')
-    .get(id)
-    .update(
-      {
-        channelId,
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(result => {
-      if (result.replaced === 1) {
-        const thread = result.changes[0].new_val;
-
-        searchQueue.add({
-          id: thread.id,
-          type: 'thread',
-          event: 'moved',
-        });
-
-        return thread;
-      }
-
-      return null;
     });
 };
 
@@ -670,64 +479,4 @@ export const decrementMessageCount = (threadId: string) => {
         .sub(1),
     })
     .run();
-};
-
-export const incrementReactionCount = (threadId: string) => {
-  return db
-    .table('threads')
-    .get(threadId)
-    .update({
-      reactionCount: db
-        .row('reactionCount')
-        .default(0)
-        .add(1),
-    })
-    .run();
-};
-
-export const decrementReactionCount = (threadId: string) => {
-  return db
-    .table('threads')
-    .get(threadId)
-    .update({
-      reactionCount: db
-        .row('reactionCount')
-        .default(1)
-        .sub(1),
-    })
-    .run();
-};
-
-const hasChanged = (field: string) =>
-  db
-    .row('old_val')(field)
-    .ne(db.row('new_val')(field));
-
-const getUpdatedThreadsChangefeed = () =>
-  db
-    .table('threads')
-    .changes({
-      includeInitial: false,
-    })
-    .filter(
-      NEW_DOCUMENTS.or(
-        hasChanged('content')
-          .or(hasChanged('lastActive'))
-          .or(hasChanged('channelId'))
-          .or(hasChanged('communityId'))
-          .or(hasChanged('creatorId'))
-          .or(hasChanged('isPublished'))
-          .or(hasChanged('modifiedAt'))
-          .or(hasChanged('messageCount'))
-          .or(hasChanged('reactionCount'))
-      )
-    )('new_val')
-    .run();
-
-export const listenToUpdatedThreads = (cb: Function): Function => {
-  return createChangefeed(
-    getUpdatedThreadsChangefeed,
-    cb,
-    'listenToUpdatedThreads'
-  );
 };

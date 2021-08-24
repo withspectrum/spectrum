@@ -97,13 +97,6 @@ export const Input = styled(FlexRow)`
 export const Detail = styled(Column)`
   min-width: 100%;
   margin: 0;
-
-  ${props =>
-    props.isEditing &&
-    css`
-      height: 100%;
-      overflow-y: scroll;
-    `}
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
@@ -147,17 +140,6 @@ export const ThreadWrapper = styled(FlexCol)`
   margin-bottom: -68px;
   z-index: 3;
 
-  ${props =>
-    props.isEditing &&
-    css`
-      height: 100%;
-      max-height: 100%;
-      position: relative;
-      display: block;
-      overflow: hidden;
-      overflow-y: auto;
-    `}
-
   @media (max-width: ${MEDIA_BREAK}px) {
     top: 0;
     margin-bottom: 0;
@@ -166,18 +148,10 @@ export const ThreadWrapper = styled(FlexCol)`
 
 export const ThreadContent = styled.div`
   height: 100%;
-  padding: ${props => (props.isEditing ? '0' : '16px')};
-
-  ${props =>
-    props.isEditing &&
-    css`
-      max-height: calc(100% - 55px);
-      overflow: hidden;
-      overflow-y: auto;
-    `}
+  padding: 16px;
 
   @media (max-width: 1024px) {
-    padding: ${props => (props.isEditing ? '0' : '16px')};
+    padding: 16px;
   }
 `;
 
@@ -332,8 +306,6 @@ export const AuthorUsername = styled.span`
   align-self: flex-end;
   word-break: break-all;
 `;
-
-export const ReputationRow = styled.div``;
 
 export const Location = styled(FlexRow)`
   font-weight: 500;

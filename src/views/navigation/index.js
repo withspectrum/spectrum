@@ -20,8 +20,6 @@ import {
 import Icon from 'src/components/icon';
 import NavHead from './navHead';
 import DirectMessagesTab from './directMessagesTab';
-import NotificationsTab from './notificationsTab';
-import GlobalComposerTab from './globalComposerTab';
 import { Skip, getAccessibilityActiveState } from './accessibility';
 import CommunityList from './communityList';
 import { NavigationContext } from 'src/helpers/navigation-context';
@@ -82,7 +80,7 @@ const Navigation = (props: Props) => {
               <Route path="/login">
                 {({ match }) => (
                   <Tooltip
-                    content="Log in or sign up"
+                    content="Log in"
                     placement={'left'}
                     isEnabled={!isWideViewport}
                   >
@@ -97,7 +95,7 @@ const Navigation = (props: Props) => {
                           <Icon glyph="door-enter" />
                         </IconWrapper>
 
-                        <Label>Log in or sign up</Label>
+                        <Label>Log in</Label>
                       </AvatarLink>
                     </AvatarGrid>
                   </Tooltip>
@@ -125,12 +123,8 @@ const Navigation = (props: Props) => {
 
             <NavigationGrid isOpen={navigationIsOpen}>
               <DesktopMenuIconsCover />
-              <GlobalComposerTab />
               <Route path="/messages">
                 {({ match }) => <DirectMessagesTab isActive={!!match} />}
-              </Route>
-              <Route path="/notifications">
-                {({ match }) => <NotificationsTab isActive={!!match} />}
               </Route>
 
               <Route path="/explore">
@@ -190,7 +184,6 @@ const Navigation = (props: Props) => {
                       >
                         <UserAvatar
                           size={32}
-                          showOnlineStatus={false}
                           user={currentUser}
                           isClickable={false}
                           showHoverProfile={false}

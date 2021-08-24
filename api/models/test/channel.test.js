@@ -152,24 +152,4 @@ describe('models/channel', () => {
       ).toMatchSnapshot();
     });
   });
-
-  describe('getChannelsMemberCounts', () => {
-    it('excludes deleted channels', async () => {
-      expect(
-        await channel.getChannelsMemberCounts([
-          SPECTRUM_GENERAL_CHANNEL_ID,
-          DELETED_COMMUNITY_DELETED_CHANNEL_ID,
-        ])
-      ).toMatchSnapshot();
-    });
-
-    it('excludes non-members', async () => {
-      expect(
-        await channel.getChannelsMemberCounts([
-          SPECTRUM_GENERAL_CHANNEL_ID,
-          SPECTRUM_PRIVATE_CHANNEL_ID,
-        ])
-      ).toMatchSnapshot();
-    });
-  });
 });

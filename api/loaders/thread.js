@@ -1,9 +1,7 @@
 // @flow
 import { getThreads } from '../models/thread';
-import { getMessageCountInThreads } from '../models/message';
 import { getParticipantsInThreads } from '../models/usersThreads';
 import createLoader from './create-loader';
-import type { Loader } from './types';
 
 export const __createThreadLoader = createLoader(threads =>
   getThreads(threads)

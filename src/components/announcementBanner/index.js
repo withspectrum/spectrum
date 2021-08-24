@@ -9,8 +9,7 @@ class Banner extends React.Component<{}> {
         <Content>
           <Icon glyph="announcement" size="24" />
           <p>
-            Spectrum will become read-only on August 24, 2021. Learn more about
-            the decision in our{' '}
+            Spectrum is now read-only. Learn more about the decision in our{' '}
             <a
               href={
                 'https://spectrum.chat/spectrum/general/join-us-on-our-new-journey~e4ca0386-f15c-4ba8-8184-21cf5fa39cf5'

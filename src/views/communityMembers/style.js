@@ -2,7 +2,6 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { TextButton } from 'src/components/button';
-import { MEDIA_BREAK } from 'src/components/layout';
 
 export const Heading = styled.h1`
   margin-left: 16px;
@@ -118,55 +117,6 @@ export const Filter = styled.li`
 
   &:hover {
     color: ${theme.text.default};
-  }
-`;
-
-export const SearchForm = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: relative;
-  flex: auto;
-  color: ${theme.brand.alt};
-
-  .icon:first-of-type {
-    position: absolute;
-    left: -6px;
-    top: 0px;
-    pointer-events: none;
-    color: ${theme.text.alt};
-  }
-
-  .icon:last-of-type {
-    position: absolute;
-    right: 0;
-    top: 0;
-    point-events: none;
-  }
-`;
-
-export const SearchFilter = styled(Filter)`
-  padding-left: 8px;
-
-  &:hover {
-    background: none;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    display: none;
-  }
-`;
-
-export const SearchInput = styled.input`
-  font-size: 16px;
-  border-bottom: 1px solid transparent;
-  flex: 1;
-  padding: 4px 0 15px 24px;
-  margin-bottom: -13px;
-  background: transparent;
-
-  &:focus {
-    border-bottom: 1px solid ${theme.text.default};
   }
 `;
 

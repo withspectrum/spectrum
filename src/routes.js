@@ -23,12 +23,9 @@ import Head from 'src/components/head';
 import ModalRoot from 'src/components/modals/modalRoot';
 import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
-import Composer from 'src/components/composer';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
-import AnnouncementBanner from 'src/components/announcementBanner';
-import PrivateChannelJoin from 'src/views/privateChannelJoin';
-import PrivateCommunityJoin from 'src/views/privateCommunityJoin';
 import ThreadSlider from 'src/views/threadSlider';
+import AnnouncementBanner from 'src/components/announcementBanner';
 import Navigation from 'src/views/navigation';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
@@ -42,7 +39,6 @@ import NewUserOnboarding from './views/newUserOnboarding';
 import QueryParamToastDispatcher from './views/queryParamToastDispatcher';
 import { LoadingView } from 'src/views/viewHelpers';
 import GlobalTitlebar from 'src/views/globalTitlebar';
-import NoUsernameHandler from 'src/views/authViewHandler/noUsernameHandler';
 import { NavigationContext } from 'src/helpers/navigation-context';
 
 const Explore = Loadable({
@@ -63,26 +59,8 @@ const CommunityView = Loadable({
 });
 
 /* prettier-ignore */
-const CommunityLoginView = Loadable({
-  loader: () => import('./views/communityLogin'/* webpackChunkName: "CommunityView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const ChannelView = Loadable({
   loader: () => import('./views/channel'/* webpackChunkName: "ChannelView" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
-const HomeViewRedirect = Loadable({
-  loader: () => import('./views/homeViewRedirect'/* webpackChunkName: "HomeViewRedirect" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
-const Notifications = Loadable({
-  loader: () => import('./views/notifications'/* webpackChunkName: "Notifications" */),
   loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
@@ -105,21 +83,9 @@ const ChannelSettings = Loadable({
 });
 
 /* prettier-ignore */
-const NewDirectMessage = Loadable({
-  loader: () => import('./views/newDirectMessage'/* webpackChunkName: "NewDirectMessage" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
-});
-
-/* prettier-ignore */
 const Pages = Loadable({
   loader: () => import('./views/pages'/* webpackChunkName: "Splash" */),
   loading: ({ isLoading }) => isLoading && null,
-});
-
-/* prettier-ignore */
-const Search = Loadable({
-  loader: () => import('./views/search'/* webpackChunkName: "Search" */),
-  loading: ({ isLoading }) => isLoading && <LoadingView />,
 });
 
 /* prettier-ignore */
@@ -128,18 +94,7 @@ const ErrorFallback = Loadable({
   loading: ({ isLoading }) => isLoading && <LoadingView />
 });
 
-const HomeViewRedirectFallback = signedOutFallback(HomeViewRedirect, Pages);
-const HomeFallback = signedOutFallback(HomeViewRedirect, () => (
-  <Redirect to="/explore" />
-));
 const LoginFallback = signedOutFallback(() => <Redirect to="/" />, Login);
-const CommunityLoginFallback = signedOutFallback(
-  props => <Redirect to={`/${props.match.params.communitySlug}`} />,
-  CommunityLoginView
-);
-const NewDirectMessageFallback = signedOutFallback(NewDirectMessage, () => (
-  <Login redirectPath={`${CLIENT_URL}/new/message`} />
-));
 const MessagesFallback = signedOutFallback(DirectMessages, () => (
   <Login redirectPath={`${CLIENT_URL}/messages`} />
 ));
@@ -151,12 +106,6 @@ const CommunitySettingsFallback = signedOutFallback(CommunitySettings, () => (
 ));
 const ChannelSettingsFallback = signedOutFallback(ChannelSettings, () => (
   <Login />
-));
-const NotificationsFallback = signedOutFallback(Notifications, () => (
-  <Login redirectPath={`${CLIENT_URL}/notifications`} />
-));
-const ComposerFallback = signedOutFallback(Composer, () => (
-  <Login redirectPath={`${CLIENT_URL}/new/thread`} />
 ));
 
 export const RouteModalContext = React.createContext({
@@ -245,23 +194,6 @@ class Routes extends React.Component<Props, State> {
               <QueryParamToastDispatcher />
             </ErrorBoundary>
 
-            {/* 
-              while users should be able to browse communities/threads
-              if they are signed out (eg signedOutFallback), they should not
-              be allowed to use the app after signing up if they dont set a username.
-
-              otherwise we can get into a state where people are sending DMs,
-              sending messages, and posting threads without having a user profile
-              that people can report or link to.
-
-              this global component simply listens for users without a username
-              to be authenticated, and if so forces a redirect to /new/user 
-              prompting them to set a username
-            */}
-            <ErrorBoundary>
-              <NoUsernameHandler currentUser={currentUser} />
-            </ErrorBoundary>
-
             {isModal && (
               <Route
                 // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
@@ -300,6 +232,7 @@ class Routes extends React.Component<Props, State> {
                   <ErrorBoundary>
                     <AnnouncementBanner />
                   </ErrorBoundary>
+
                   {/*
                     switch only renders the first match. Subrouting happens downstream
                     https://reacttraining.com/react-router/web/api/Switch
@@ -343,11 +276,6 @@ class Routes extends React.Component<Props, State> {
                       render={() => <Redirect to="/explore" />}
                     />
                     <Route
-                      path="/new/community"
-                      exact
-                      render={() => <Redirect to="/explore" />}
-                    />
-                    <Route
                       path="/new"
                       exact
                       render={() => <Redirect to="/explore" />}
@@ -360,14 +288,6 @@ class Routes extends React.Component<Props, State> {
                     <Route path="/code-of-conduct" component={Pages} />
 
                     {/* App Pages */}
-                    <Route path="/new/thread" component={ComposerFallback} />
-                    <Route path="/new/search" component={Search} />
-                    <Route path="/new/user" component={NewUserOnboarding} />
-                    <Route
-                      path="/new/message"
-                      component={NewDirectMessageFallback}
-                    />
-
                     <Route path="/login" component={LoginFallback} />
                     <Route path="/explore" component={Explore} />
                     <Route
@@ -391,10 +311,6 @@ class Routes extends React.Component<Props, State> {
                       path="/users/:username/settings"
                       component={UserSettingsFallback}
                     />
-                    <Route
-                      path="/notifications"
-                      component={NotificationsFallback}
-                    />
 
                     <Route
                       path="/me/settings"
@@ -415,6 +331,8 @@ class Routes extends React.Component<Props, State> {
                       render={() =>
                         currentUser && currentUser.username ? (
                           <Redirect to={`/users/${currentUser.username}`} />
+                        ) : currentUser && !currentUser.username ? (
+                          <NewUserOnboarding />
                         ) : isLoadingCurrentUser ? null : (
                           <Login redirectPath={`${CLIENT_URL}/me`} />
                         )
@@ -431,24 +349,12 @@ class Routes extends React.Component<Props, State> {
                       component={ChannelSettingsFallback}
                     />
                     <Route
-                      path="/:communitySlug/:channelSlug/join/:token"
-                      component={PrivateChannelJoin}
-                    />
-                    <Route
-                      path="/:communitySlug/:channelSlug/join"
-                      component={PrivateChannelJoin}
-                    />
-                    <Route
                       path="/:communitySlug/settings"
                       component={CommunitySettingsFallback}
                     />
                     <Route
-                      path="/:communitySlug/join/:token"
-                      component={PrivateCommunityJoin}
-                    />
-                    <Route
                       path="/:communitySlug/login"
-                      component={CommunityLoginFallback}
+                      render={() => <Redirect to="/explore" />}
                     />
                     <Route
                       // NOTE(@mxstbr): This custom path regexp matches threadId correctly in all cases, no matter if we prepend it with a custom slug or not.
@@ -472,32 +378,6 @@ class Routes extends React.Component<Props, State> {
                   <Route
                     path="/thread/:threadId"
                     component={RedirectOldThreadRoute}
-                  />
-                )}
-
-                {isModal && (
-                  <Route
-                    path="/new/thread"
-                    render={props => (
-                      <ComposerFallback
-                        {...props}
-                        previousLocation={this.previousLocation}
-                        isModal
-                      />
-                    )}
-                  />
-                )}
-
-                {isModal && (
-                  <Route
-                    path="/new/message"
-                    render={props => (
-                      <NewDirectMessageFallback
-                        {...props}
-                        previousLocation={this.previousLocation}
-                        isModal
-                      />
-                    )}
                   />
                 )}
               </AppViewWrapper>

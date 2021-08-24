@@ -14,13 +14,8 @@ import MessagesSubscriber from 'src/views/thread/components/messagesSubscriber';
 import { PostsFeeds } from './postsFeeds';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { useAppScroller } from 'src/hooks/useAppScroller';
-import ChatInput from 'src/components/chatInput';
-import { ChatInputWrapper } from 'src/components/layout';
-import { PrimaryOutlineButton } from 'src/components/button';
 import usePrevious from 'src/hooks/usePrevious';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import JoinCommunity from 'src/components/joinCommunityWrapper';
-import LockedMessages from 'src/views/thread/components/lockedMessages';
 import { FeedsContainer, SidebarSection, InfoContainer } from '../style';
 
 type Props = {
@@ -31,7 +26,7 @@ type Props = {
 };
 
 const Feeds = (props: Props) => {
-  const { community, location, history, currentUser } = props;
+  const { community, location, history } = props;
   const { search } = location;
   const { tab } = querystring.parse(search);
 
@@ -66,30 +61,6 @@ const Feeds = (props: Props) => {
         return (
           <React.Fragment>
             <MessagesSubscriber isWatercooler id={community.watercoolerId} />
-            <ChatInputWrapper>
-              {currentUser && community.communityPermissions.isMember && (
-                <ChatInput
-                  threadType="story"
-                  threadId={community.watercoolerId}
-                />
-              )}
-              {(!currentUser || !community.communityPermissions.isMember) && (
-                <JoinCommunity
-                  community={community}
-                  render={({ isLoading }) => (
-                    <LockedMessages>
-                      <PrimaryOutlineButton
-                        isLoading={isLoading}
-                        icon={'door-enter'}
-                        data-cy="join-community-chat-upsell"
-                      >
-                        {isLoading ? 'Joining...' : 'Join community to chat'}
-                      </PrimaryOutlineButton>
-                    </LockedMessages>
-                  )}
-                />
-              )}
-            </ChatInputWrapper>
           </React.Fragment>
         );
       }

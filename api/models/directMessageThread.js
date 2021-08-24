@@ -1,123 +1,11 @@
 //@flow
 const { db } = require('shared/db');
-import { NEW_DOCUMENTS } from './utils';
-import { createChangefeed } from 'shared/changefeed-utils';
-import { getDirectMessageThreadRecords } from './usersDirectMessageThreads';
 
 export type DBDirectMessageThread = {
   createdAt: Date,
   id: string,
   name?: string,
   threadLastActive: Date,
-};
-
-// prettier-ignore
-const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
-  return db
-    .table('directMessageThreads')
-    .get(directMessageThreadId)
-    .run()
-    .then(res => res && !res.deletedAt ? res : null);
-};
-
-// prettier-ignore
-const getDirectMessageThreads = (ids: Array<string>): Promise<Array<DBDirectMessageThread>> => {
-  return db
-    .table('directMessageThreads')
-    .getAll(...ids)
-    .filter(row => row.hasFields('deletedAt').not())
-    .run();
-};
-
-const getDirectMessageThreadsByUser = (
-  userId: string,
-  // $FlowFixMe
-  { first, after }
-): Promise<Array<DBDirectMessageThread>> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter(row => row.hasFields('deletedAt').not())
-    .eqJoin('threadId', db.table('directMessageThreads'))
-    .without({
-      left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
-    })
-    .zip()
-    .orderBy(db.desc('threadLastActive'))
-    .skip(after || 0)
-    .limit(first)
-    .run();
-};
-
-// prettier-ignore
-const createDirectMessageThread = (isGroup: boolean, userId: string): DBDirectMessageThread => {
-  return db
-    .table('directMessageThreads')
-    .insert(
-      {
-        createdAt: new Date(),
-        name: null,
-        isGroup,
-        threadLastActive: new Date(),
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => {
-      return result.changes[0].new_val
-    });
-};
-
-// prettier-ignore
-const setDirectMessageThreadLastActive = (id: string): DBDirectMessageThread => {
-  return db
-    .table('directMessageThreads')
-    .get(id)
-    .update({
-      threadLastActive: db.now(),
-    })
-    .run();
-};
-
-const hasChanged = (field: string) =>
-  db
-    .row('old_val')(field)
-    .ne(db.row('new_val')(field));
-const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
-
-const getUpdatedDirectMessageThreadChangefeed = () =>
-  db
-    .table('directMessageThreads')
-    .changes({
-      includeInitial: false,
-    })
-    .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
-    .run();
-
-const listenToUpdatedDirectMessageThreadRecords = (cb: Function) => {
-  return createChangefeed(
-    getUpdatedDirectMessageThreadChangefeed,
-    cb,
-    'listenToUpdatedDirectMessageThreads'
-  );
-};
-
-const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
-  // NOTE(@mxstbr): Running changefeeds on eqJoin's does not work well, so we
-  // hack around that by listening to record changes and then "faking" an eqJoin
-  // by doing another db query!
-  return listenToUpdatedDirectMessageThreadRecords(directMessageThread => {
-    getDirectMessageThreadRecords(directMessageThread.id).then(
-      usersDirectMessageThread => {
-        usersDirectMessageThread.forEach(userDirectMessageThread => {
-          cb({
-            ...userDirectMessageThread,
-            ...directMessageThread,
-          });
-        });
-      }
-    );
-  });
 };
 
 // prettier-ignore
@@ -160,12 +48,47 @@ const checkForExistingDMThread = async (participants: Array<string>): Promise<?s
     .then(results => (results && results.length > 0 ? results[0] : null));
 };
 
+// prettier-ignore
+const getDirectMessageThread = (directMessageThreadId: string): Promise<DBDirectMessageThread> => {
+  return db
+    .table('directMessageThreads')
+    .get(directMessageThreadId)
+    .run()
+    .then(res => res && !res.deletedAt ? res : null);
+};
+
+// prettier-ignore
+const getDirectMessageThreads = (ids: Array<string>): Promise<Array<DBDirectMessageThread>> => {
+  return db
+    .table('directMessageThreads')
+    .getAll(...ids)
+    .filter(row => row.hasFields('deletedAt').not())
+    .run();
+};
+
+const getDirectMessageThreadsByUser = (
+  userId: string,
+  // $FlowFixMe
+  { first, after }
+): Promise<Array<DBDirectMessageThread>> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter(row => row.hasFields('deletedAt').not())
+    .eqJoin('threadId', db.table('directMessageThreads'))
+    .without({
+      left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
+    })
+    .zip()
+    .orderBy(db.desc('threadLastActive'))
+    .skip(after || 0)
+    .limit(first)
+    .run();
+};
+
 module.exports = {
-  createDirectMessageThread,
+  checkForExistingDMThread,
   getDirectMessageThread,
   getDirectMessageThreads,
   getDirectMessageThreadsByUser,
-  setDirectMessageThreadLastActive,
-  listenToUpdatedDirectMessageThreads,
-  checkForExistingDMThread,
 };

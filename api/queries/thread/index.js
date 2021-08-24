@@ -1,18 +1,14 @@
 // @flow
 import thread from './rootThread';
-import searchThreads from './rootSearchThreads';
-
 import attachments from './attachments';
 import channel from './channel';
 import community from './community';
 import participants from './participants';
 import isAuthor from './isAuthor';
 import isCreator from './isCreator'; // deprecated
-import receiveNotifications from './receiveNotifications';
 import messageConnection from './messageConnection';
 import author from './author';
 import creator from './creator';
-import currentUserLastSeen from './currentUserLastSeen';
 import content from './content';
 import reactions from './reactions';
 import metaImage from './metaImage';
@@ -23,7 +19,6 @@ import type { DBThread } from 'shared/types';
 module.exports = {
   Query: {
     thread,
-    searchThreads,
   },
   Thread: {
     attachments,
@@ -32,11 +27,9 @@ module.exports = {
     participants,
     isAuthor,
     isCreator, // deprcated
-    receiveNotifications,
     messageConnection,
     author,
     creator, // deprecated
-    currentUserLastSeen,
     content,
     reactions,
     metaImage,

@@ -6,7 +6,6 @@ import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from 'src/components/button';
-import JoinCommunityWrapper from 'src/components/joinCommunityWrapper';
 import type { GetCommunityType } from 'shared/graphql/queries/community/getCommunity';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import type { Dispatch } from 'redux';
@@ -68,20 +67,6 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!isModerator && !isOwner && (
-              // TODO @Brian
-              <JoinCommunityWrapper
-                community={community}
-                render={({ isLoading }) => {
-                  return (
-                    <Button loading={isLoading}>
-                      {isLoading ? 'Joining...' : 'Join'}
-                    </Button>
-                  );
-                }}
-              />
-            )}
-
             {(isModerator || isOwner) && (
               <Link to={`/${community.slug}/settings`}>
                 <OutlineButton icon={'settings'}>Settings</OutlineButton>

@@ -175,29 +175,9 @@ export const HeaderText = styled.div`
   justify-content: space-around;
 `;
 
-export const GrowthText = styled.span`
-  color: ${props =>
-    props.positive
-      ? props.theme.success.default
-      : props.negative
-      ? props.theme.warn.alt
-      : props.theme.text.alt};
-  display: inline-block;
-  margin-right: 6px;
-  font-size: 14px;
-`;
-
 export const MessageIcon = styled.div`
   color: ${theme.brand.alt};
   cursor: pointer;
-`;
-
-export const EditDropdownContainer = styled.div`
-  position: relative;
-  color: ${theme.text.secondary};
-  cursor: pointer;
-  display: flex;
-  padding-top: 16px;
 `;
 
 export const Dropdown = styled.div`

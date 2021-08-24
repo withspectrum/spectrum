@@ -15,7 +15,6 @@ type CommunityNode = {
       isBlocked: boolean,
       isOwner: boolean,
       isModerator: boolean,
-      reputation: number,
     },
   },
 };
@@ -67,7 +66,6 @@ export const getComposerCommunitiesAndChannelsQuery = gql`
               isBlocked
               isOwner
               isModerator
-              reputation
             }
           }
         }

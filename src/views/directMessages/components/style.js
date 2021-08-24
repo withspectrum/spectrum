@@ -26,19 +26,10 @@ export const Wrapper = styled(FlexCol)`
   max-width: 100%;
   min-height: 64px;
   position: relative;
-  background: ${props =>
-    props.active
-      ? theme.bg.wash
-      : props.isUnread
-      ? hexa(theme.brand.default, 0.04)
-      : theme.bg.default};
+  background: ${props => (props.active ? theme.bg.wash : theme.bg.default)};
   border-bottom: 1px solid ${theme.bg.divider};
   box-shadow: ${props =>
-    props.active
-      ? `inset 2px 0 0 ${props.theme.text.placeholder}`
-      : props.isUnread
-      ? `inset 2px 0 0 ${props.theme.brand.default}`
-      : 'none'};
+    props.active ? `inset 2px 0 0 ${props.theme.text.placeholder}` : 'none'};
 
   &:hover {
     cursor: pointer;

@@ -19,16 +19,10 @@ import viewNetworkHandler, {
   type ViewNetworkHandlerType,
 } from 'src/components/viewNetworkHandler';
 import { DesktopTitlebar } from 'src/components/titlebar';
-import { PrimaryOutlineButton } from 'src/components/button';
-import {
-  NoCommunitySelected,
-  NoCommunityHeading,
-  NoCommunitySubheading,
-} from '../style';
+import { NoCommunitySelected, NoCommunityHeading } from '../style';
 
 type Props = {
   currentUser: Object,
-  subscribeToUpdatedDirectMessageThreads: Function,
   networkOnline: boolean,
   websocketConnection: WebsocketConnectionType,
   activeThreadId: ?string,
@@ -41,33 +35,7 @@ type Props = {
   },
 };
 
-type State = {
-  subscription: ?Function,
-};
-
-class ThreadsList extends React.Component<Props, State> {
-  state = {
-    subscription: null,
-  };
-
-  subscribe = () => {
-    this.setState({
-      subscription: this.props.dmData.subscribeToUpdatedDirectMessageThreads(),
-    });
-  };
-
-  unsubscribe = () => {
-    const { subscription } = this.state;
-    if (subscription) {
-      // This unsubscribes the subscription
-      subscription();
-    }
-  };
-
-  componentDidMount() {
-    this.subscribe();
-  }
-
+class ThreadsList extends React.Component<Props> {
   componentDidUpdate(prev: Props) {
     const curr = this.props;
 
@@ -75,10 +43,6 @@ class ThreadsList extends React.Component<Props, State> {
     if (didReconnect && curr.dmData.refetch) {
       curr.dmData.refetch();
     }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -162,17 +126,6 @@ class ThreadsList extends React.Component<Props, State> {
           <NoCommunitySelected hideOnDesktop>
             <div>
               <NoCommunityHeading>No conversation selected</NoCommunityHeading>
-              <NoCommunitySubheading>
-                Choose from an existing conversation, or start a new one.
-              </NoCommunitySubheading>
-              <PrimaryOutlineButton
-                to={{
-                  pathname: '/new/message',
-                  state: { modal: true },
-                }}
-              >
-                New message
-              </PrimaryOutlineButton>
             </div>
           </NoCommunitySelected>
         </ThreadsListScrollContainer>
@@ -197,18 +150,7 @@ class ThreadsList extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <DesktopTitlebar
-          title={'Messages'}
-          rightAction={
-            <PrimaryOutlineButton
-              data-cy="compose-dm"
-              size={'small'}
-              to={{ pathname: '/new/message', state: { modal: true } }}
-            >
-              New
-            </PrimaryOutlineButton>
-          }
-        />
+        <DesktopTitlebar title={'Messages'} />
         <ThreadsListScrollContainer>
           {uniqueThreads.map(thread => {
             if (!thread) return null;

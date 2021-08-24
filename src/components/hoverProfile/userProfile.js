@@ -6,13 +6,12 @@ import { withRouter } from 'react-router';
 import AvatarImage from 'src/components/avatar/image';
 import { Link } from 'react-router-dom';
 import Badge from 'src/components/badges';
-import { PrimaryOutlineButton, OutlineButton } from 'src/components/button';
+import { OutlineButton } from 'src/components/button';
 import ConditionalWrap from 'src/components/conditionalWrap';
 import type { GetUserType } from 'shared/graphql/queries/user/getUser';
 import type { Dispatch } from 'redux';
 import renderTextWithLinks from 'src/helpers/render-text-with-markdown-links';
 import { withCurrentUser } from 'src/components/withCurrentUser';
-import InitDirectMessageWrapper from 'src/components/initDirectMessageWrapper';
 import {
   HoverWrapper,
   ProfileCard,
@@ -84,17 +83,6 @@ class HoverProfile extends Component<ProfileProps> {
           </Content>
 
           <Actions>
-            {!me && (
-              <InitDirectMessageWrapper
-                user={user}
-                render={
-                  <PrimaryOutlineButton icon={'message-simple-new'}>
-                    Message
-                  </PrimaryOutlineButton>
-                }
-              />
-            )}
-
             {me && <OutlineButton to={'/me'}>My profile</OutlineButton>}
           </Actions>
         </ProfileCard>

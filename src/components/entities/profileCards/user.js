@@ -25,12 +25,7 @@ export const UserProfileCard = (props: Props) => {
       </Link>
 
       <RoundProfileAvatarContainer>
-        <UserAvatar
-          showHoverProfile={false}
-          size={60}
-          user={user}
-          showOnlineStatus={false}
-        />
+        <UserAvatar showHoverProfile={false} size={60} user={user} />
       </RoundProfileAvatarContainer>
 
       <UserMeta user={user} />

@@ -2,12 +2,7 @@
 import { request } from '../../utils';
 import db from 'shared/testing/db';
 import data from 'shared/testing/data';
-import {
-  fromPlainText,
-  toJSON,
-  toPlainText,
-  toState,
-} from 'shared/draft-utils';
+import { fromPlainText, toJSON } from 'shared/draft-utils';
 
 const query = /* GraphQL */ `
   mutation sendMessage($message: MessageInput!) {

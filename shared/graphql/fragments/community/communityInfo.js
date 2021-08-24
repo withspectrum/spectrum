@@ -12,7 +12,6 @@ export type CommunityInfoType = {
   coverPhoto: string,
   pinnedThreadId: ?string,
   watercoolerId: ?string,
-  lastActive?: Date,
   isPrivate: boolean,
   redirect?: Boolean,
   communityPermissions: {
@@ -21,12 +20,6 @@ export type CommunityInfoType = {
     isOwner: boolean,
     isPending: boolean,
     isModerator: boolean,
-    reputation: number,
-    lastSeen?: Date,
-  },
-  brandedLogin: {
-    isEnabled: boolean,
-    message: ?string,
   },
 };
 
@@ -43,7 +36,6 @@ export default gql`
     pinnedThreadId
     isPrivate
     watercoolerId
-    lastActive
     redirect
     noindex
     communityPermissions {
@@ -52,12 +44,6 @@ export default gql`
       isOwner
       isPending
       isModerator
-      reputation
-      lastSeen
-    }
-    brandedLogin {
-      isEnabled
-      message
     }
   }
 `;

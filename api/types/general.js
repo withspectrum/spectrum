@@ -25,8 +25,6 @@ const general = /* GraphQL */ `
     isModerator: Boolean
     isPending: Boolean
     receiveNotifications: Boolean
-    reputation: Int
-    lastSeen: Date
   }
 
   type ContextPermissions
@@ -34,24 +32,10 @@ const general = /* GraphQL */ `
       reason: "Use the CommunityMember or ThreadParticipant type to get permissions"
     ) {
     communityId: String
-    reputation: Int
     isModerator: Boolean
     isOwner: Boolean
     isMember: Boolean
     isBlocked: Boolean
-  }
-
-  type GrowthDataCounts {
-    growth: Float
-    currentPeriodCount: Int
-    prevPeriodCount: Int
-  }
-
-  type GrowthData {
-    count: Int
-    weeklyGrowth: GrowthDataCounts
-    monthlyGrowth: GrowthDataCounts
-    quarterlyGrowth: GrowthDataCounts
   }
 
   input EmailInviteContactInput {
@@ -93,7 +77,6 @@ const general = /* GraphQL */ `
 
   extend type Mutation {
     uploadImage(input: UploadImageInput!): String
-      @rateLimit(max: 20, window: "20m")
   }
 `;
 

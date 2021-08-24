@@ -4,10 +4,7 @@ import type { DBCommunity } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import { canViewCommunity } from '../../utils/permissions';
 import cache from 'shared/cache/redis';
-import {
-  communityOnlineMemberCount,
-  communityChannelCount,
-} from 'shared/graphql-cache-keys';
+import { communityChannelCount } from 'shared/graphql-cache-keys';
 
 export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;
@@ -17,13 +14,11 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
     return {
       channels: 0,
       members: 0,
-      onlineMembers: 0,
     };
   }
 
-  const [cachedChannelCount, cachedOnlineMemberCount] = await Promise.all([
+  const [cachedChannelCount] = await Promise.all([
     cache.get(communityChannelCount(id)),
-    cache.get(communityOnlineMemberCount(id)),
   ]);
 
   const getDbCommunityChannelCount = async () => {
@@ -32,16 +27,6 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
       .then(res => (res && res.reduction) || 0);
 
     await cache.set(communityChannelCount(id), count, 'ex', 3600);
-
-    return count;
-  };
-
-  const getDbCommunityOnlineMemberCount = async () => {
-    const count = await loaders.communityOnlineMemberCount
-      .load(id)
-      .then(res => (res && res.reduction) || 0);
-
-    await cache.set(communityOnlineMemberCount(id), count, 'ex', 3600);
 
     return count;
   };
@@ -65,11 +50,6 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
       ? parseInt(cachedChannelCount, 10)
       : await getDbCommunityChannelCount();
 
-  const returnedOnlineMemberCount =
-    typeof cachedOnlineMemberCount === 'string'
-      ? parseInt(cachedOnlineMemberCount, 10)
-      : await getDbCommunityOnlineMemberCount();
-
   const returnedMemberCount =
     typeof rootMemberCount === 'number'
       ? rootMemberCount
@@ -78,6 +58,5 @@ export default async (root: DBCommunity, _: any, ctx: GraphQLContext) => {
   return {
     channels: returnedChannelCount,
     members: returnedMemberCount,
-    onlineMembers: returnedOnlineMemberCount,
   };
 };

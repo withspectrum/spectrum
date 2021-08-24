@@ -2,13 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { ChannelInfoType } from 'shared/graphql/fragments/channel/channelInfo';
-import {
-  OutlineButton,
-  PrimaryOutlineButton,
-  HoverWarnOutlineButton,
-} from 'src/components/button';
-import JoinChannel from 'src/components/joinChannelWrapper';
-import LeaveChannel from 'src/components/leaveChannelWrapper';
+import { OutlineButton } from 'src/components/button';
 import { ActionsRowContainer } from '../style';
 
 type Props = {
@@ -33,19 +27,6 @@ export const UnconnectedChannelActions = (props: Props) => {
             Settings
           </OutlineButton>
         )}
-
-        <LeaveChannel
-          channel={channel}
-          render={({ isLoading, isHovering }) => (
-            <HoverWarnOutlineButton isLoading={isLoading} icon={'door-enter'}>
-              {isLoading
-                ? 'Leaving...'
-                : isHovering
-                ? 'Leave channel'
-                : 'Member'}
-            </HoverWarnOutlineButton>
-          )}
-        />
       </ActionsRowContainer>
     );
   }
@@ -57,15 +38,6 @@ export const UnconnectedChannelActions = (props: Props) => {
           Settings
         </OutlineButton>
       )}
-
-      <JoinChannel
-        channel={channel}
-        render={({ isLoading }) => (
-          <PrimaryOutlineButton isLoading={isLoading} icon={'door-enter'}>
-            {isLoading ? 'Joining...' : 'Join channel'}
-          </PrimaryOutlineButton>
-        )}
-      />
     </ActionsRowContainer>
   );
 };

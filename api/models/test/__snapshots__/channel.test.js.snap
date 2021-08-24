@@ -180,28 +180,6 @@ Array [
 ]
 `;
 
-exports[`models/channel getChannelsMemberCounts excludes deleted channels 1`] = `
-Array [
-  Object {
-    "group": "1",
-    "reduction": 5,
-  },
-]
-`;
-
-exports[`models/channel getChannelsMemberCounts excludes non-members 1`] = `
-Array [
-  Object {
-    "group": "1",
-    "reduction": 5,
-  },
-  Object {
-    "group": "2",
-    "reduction": 5,
-  },
-]
-`;
-
 exports[`models/channel getChannelsThreadCounts excludes deleted channels 1`] = `
 Array [
   Object {

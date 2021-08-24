@@ -14,7 +14,6 @@ import type { GraphQLContext } from '../../';
         const username = info.variableValues.username;
         const user = await loaders.userByUsername.load(username);
         const {
-          reputation,
           isModerator,
           isOwner,
         } = await loaders.userPermissionsInCommunity.load([
@@ -23,7 +22,6 @@ import type { GraphQLContext } from '../../';
         ]);
         return {
           communityId: community.id,
-          reputation,
           isModerator,
           isOwner,
         };

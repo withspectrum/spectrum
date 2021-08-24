@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../components/icon';
 import { HorizontalRuleWithIcon } from '../components/globals';
-import { ChatMessage } from '../views/notifications/style';
 
 const icons = {
   NEW_THREAD: 'post',
@@ -94,7 +93,6 @@ export const constructContent = notification => {
             <Icon glyph={'messages'} />
             <hr />
           </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender.name}>{content.excerpt}</ChatMessage>
         </div>
       );
     default:

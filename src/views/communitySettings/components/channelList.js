@@ -3,9 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { openModal } from 'src/actions/modals';
 import { Loading } from 'src/components/loading';
-import { OutlineButton } from 'src/components/button';
 import Icon from 'src/components/icon';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import ViewError from 'src/components/viewError';
@@ -14,11 +12,7 @@ import getCommunityChannels from 'shared/graphql/queries/community/getCommunityC
 import type { GetCommunityChannelConnectionType } from 'shared/graphql/queries/community/getCommunityChannelConnection';
 import type { Dispatch } from 'redux';
 import { ListContainer } from '../style';
-import {
-  SectionCard,
-  SectionTitle,
-  SectionCardFooter,
-} from 'src/components/settingsViews/style';
+import { SectionCard, SectionTitle } from 'src/components/settingsViews/style';
 import { ChannelListItem } from 'src/components/listItems';
 
 type Props = {
@@ -35,7 +29,6 @@ class ChannelList extends React.Component<Props> {
     const {
       data: { community },
       isLoading,
-      dispatch,
     } = this.props;
 
     if (community) {
@@ -64,24 +57,6 @@ class ChannelList extends React.Component<Props> {
                 );
               })}
           </ListContainer>
-
-          <SectionCardFooter>
-            <OutlineButton
-              style={{ alignSelf: 'flex-start' }}
-              icon={'plus'}
-              onClick={() =>
-                dispatch(
-                  openModal('CREATE_CHANNEL_MODAL', {
-                    community,
-                    id: community.id,
-                  })
-                )
-              }
-              data-cy="create-channel-button"
-            >
-              Create Channel
-            </OutlineButton>
-          </SectionCardFooter>
         </SectionCard>
       );
     }

@@ -10,7 +10,6 @@ import {
   Description,
   MetaLinksContainer,
   MetaRow,
-  OnlineDot,
 } from '../style';
 
 type Props = {
@@ -52,11 +51,6 @@ export const CommunityMeta = (props: Props) => {
             <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
               <Icon glyph={'person'} size={20} />{' '}
               {community.metaData.members.toLocaleString()} members
-            </MetaRow>
-
-            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
-              <OnlineDot /> {community.metaData.onlineMembers.toLocaleString()}{' '}
-              members online
             </MetaRow>
           </React.Fragment>
         )}

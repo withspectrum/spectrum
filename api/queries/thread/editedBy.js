@@ -27,7 +27,6 @@ export default async (
     communityPermissions.isModerator || channelPermissions.isModerator;
   const isBlocked =
     channelPermissions.isBlocked || communityPermissions.isBlocked;
-  const reputation = communityPermissions.reputation;
 
   const roles = [];
   if (isModerator) roles.push('moderator');
@@ -41,7 +40,6 @@ export default async (
     isModerator,
     isBlocked,
     isMember,
-    reputation,
     roles,
   };
 };

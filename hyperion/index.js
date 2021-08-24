@@ -14,7 +14,6 @@ import path from 'path';
 import { getUserById } from 'shared/db/queries/user';
 import Raven from 'shared/raven';
 import toobusy from 'shared/middlewares/toobusy';
-import rateLimiter from 'shared/middlewares/rate-limiter';
 import addSecurityMiddleware from 'shared/middlewares/security';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
@@ -91,13 +90,6 @@ if (process.env.NODE_ENV === 'development') {
     express.static(path.resolve(__dirname, '..', 'public'), { index: false })
   );
 }
-
-app.use(
-  rateLimiter({
-    max: 13,
-    duration: '20s',
-  })
-);
 
 import bodyParser from 'body-parser';
 app.use(bodyParser.json());

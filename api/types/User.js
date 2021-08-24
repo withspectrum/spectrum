@@ -91,10 +91,7 @@ const User = /* GraphQL */ `
     email: LowercaseString
     providerId: String
     createdAt: Date!
-    lastSeen: Date!
-    isOnline: Boolean
     timezone: Int
-    totalReputation: Int
     pendingEmail: LowercaseString
     betaSupporter: Boolean @cacheControl(maxAge: 84700)
 
@@ -133,8 +130,6 @@ const User = /* GraphQL */ `
   extend type Query {
     user(id: ID, username: LowercaseString): User @cacheControl(maxAge: 1200)
     currentUser: User @cacheControl(maxAge: 1200, scope: PRIVATE)
-    searchUsers(string: String): [User]
-      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input EditUserInput {
@@ -148,31 +143,6 @@ const User = /* GraphQL */ `
     email: String
   }
 
-  input UpgradeToProInput {
-    plan: String!
-    token: String!
-  }
-
-  input ToggleNotificationSettingsInput {
-    deliveryMethod: String!
-    notificationType: String!
-  }
-
-  input WebPushSubscriptionKeys {
-    p256dh: String!
-    auth: String!
-  }
-
-  input WebPushSubscription {
-    endpoint: String!
-    keys: WebPushSubscriptionKeys!
-  }
-
-  input ReportUserInput {
-    userId: String!
-    reason: String!
-  }
-
   input BanUserInput {
     userId: String!
     reason: String!
@@ -180,14 +150,7 @@ const User = /* GraphQL */ `
 
   extend type Mutation {
     editUser(input: EditUserInput!): User
-    upgradeToPro(input: UpgradeToProInput!): User
-    downgradeFromPro: User
-    toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
-    subscribeWebPush(subscription: WebPushSubscription!): Boolean
-    unsubscribeWebPush(endpoint: String!): Boolean
     deleteCurrentUser: Boolean
-    updateUserEmail(email: LowercaseString!): User
-    reportUser(input: ReportUserInput!): Boolean
     banUser(input: BanUserInput!): Boolean
   }
 `;

@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { getItemFromStorage, storeItem } from 'src/helpers/localStorage';
-import { OutlineButton } from 'src/components/button';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { SERVER_URL, CLIENT_URL } from 'src/api/constants';
@@ -99,18 +98,6 @@ class LoginButtonSet extends React.Component<Props> {
             }
             showAfter={preferredSigninMethod === 'github'}
           />
-
-          {!githubOnly && (
-            <div style={{ gridColumn: 'span 2' }}>
-              <div style={{ padding: '16px' }} />
-              <OutlineButton
-                css={{ width: '100%' }}
-                to={`/new/user?r=${postAuthRedirectPath}`}
-              >
-                New to Spectrum? Click here to sign up.
-              </OutlineButton>
-            </div>
-          )}
         </Container>
       </React.Fragment>
     );

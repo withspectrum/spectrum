@@ -9,27 +9,6 @@ const { db } = require('shared/db');
 ===========================================================
 */
 
-// creates a single member in a direct message thread. invoked when a user is added
-// to an existing direct message thread (group thread only)
-// prettier-ignore
-const createMemberInDirectMessageThread = (threadId: string, userId: string, setActive: boolean): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .insert(
-      {
-        threadId,
-        userId,
-        createdAt: new Date(),
-        lastActive: setActive ? new Date() : null,
-        lastSeen: setActive ? new Date() : null,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
-};
-
 // removes a single member from a channel. will be invoked if a user leaves
 // a channel
 // prettier-ignore
@@ -51,36 +30,6 @@ const removeMembersInDirectMessageThread = (threadId: string): Promise<Object> =
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
     .delete()
-    .run();
-};
-
-// prettier-ignore
-const setUserLastSeenInDirectMessageThread = (threadId: string, userId: string): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
-    .update({
-      lastSeen: db.now(),
-    })
-    .run()
-    .then(() =>
-      db
-        .table('directMessageThreads')
-        .get(threadId)
-        .run()
-    );
-};
-
-// prettier-ignore
-const updateDirectMessageThreadNotificationStatusForUser = (threadId: string, userId: string, val: boolean): Promise<Object> => {
-  return db
-    .table('usersDirectMessageThreads')
-    .getAll(userId, { index: 'userId' })
-    .filter({ threadId })
-    .update({
-      receiveNotifications: val,
-    })
     .run();
 };
 
@@ -132,11 +81,8 @@ const getDirectMessageThreadRecords = (threadId: string) => {
 };
 
 module.exports = {
-  createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
-  setUserLastSeenInDirectMessageThread,
-  updateDirectMessageThreadNotificationStatusForUser,
   // get
   getMembersInDirectMessageThread,
   getMembersInDirectMessageThreads,

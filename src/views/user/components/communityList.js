@@ -48,13 +48,7 @@ class CommunityList extends React.Component<Props> {
     let sortedCommunities = communities;
 
     if (sortedCommunities[0] && sortedCommunities[0].contextPermissions) {
-      sortedCommunities = communities.slice().sort((a, b) => {
-        if (!a || !b) return 0;
-
-        const bc = parseInt(b.contextPermissions.reputation, 10);
-        const ac = parseInt(a.contextPermissions.reputation, 10);
-        return bc <= ac ? -1 : 1;
-      });
+      sortedCommunities = communities.slice();
     }
 
     return (

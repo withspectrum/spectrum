@@ -80,7 +80,6 @@ it('should fetch a list of community members', async () => {
               user {
                 id
               }
-              reputation
               isOwner
               isModerator
               isMember

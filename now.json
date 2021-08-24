@@ -48,8 +48,6 @@
     "EMAIL_JWT_SIGNATURE": "@email-jwt-signature",
     "PERSPECTIVE_API_KEY": "@perspective-api-key",
     "SESSION_COOKIE_SECRET": "@session-cookie-secret",
-    "ALGOLIA_APP_ID": "@algolia-app-id",
-    "ALGOLIA_API_SECRET": "@algolia-api-secret",
     "API_TOKEN_SECRET": "@api-token-secret",
     "SENTRY_DSN_CLIENT": "@sentry-dsn-client",
     "SENTRY_DSN_SERVER": "@sentry-dsn-server",

@@ -5,7 +5,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 import { truncate } from 'src/helpers/utils';
 import { UserAvatar } from 'src/components/avatar';
-import { LikeButton } from 'src/components/threadLikes';
 import { convertTimestampToDate } from 'shared/time-formatting';
 import type { GetThreadType } from 'shared/graphql/queries/thread/getThread';
 import getThreadLink from 'src/helpers/get-thread-link';
@@ -37,11 +36,7 @@ const StickyHeader = (props: Props) => {
     <StickyHeaderContainer>
       <StickyHeaderContent onClick={scrollToTop}>
         <CommunityHeaderMeta>
-          <UserAvatar
-            showHoverProfile
-            showOnlineStatus
-            username={thread.author.user.username}
-          />
+          <UserAvatar showHoverProfile username={thread.author.user.username} />
           <CommunityHeaderMetaCol>
             <CommunityHeaderName>
               {truncate(thread.content.title, 80)}
@@ -56,7 +51,6 @@ const StickyHeader = (props: Props) => {
       {channel.channelPermissions.isMember && (
         <StickyHeaderActionsContainer>
           <ActionsDropdown thread={thread} />
-          <LikeButton thread={thread} />
         </StickyHeaderActionsContainer>
       )}
     </StickyHeaderContainer>

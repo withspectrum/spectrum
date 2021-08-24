@@ -11,7 +11,6 @@ import {
 } from 'shared/db/queries/user';
 import { isAuthedResolver as requireAuth } from '../../utils/permissions';
 import isEmail from 'validator/lib/isEmail';
-import { sendEmailValidationEmailQueue } from 'shared/bull/queues';
 
 export default requireAuth(
   async (_: any, args: EditUserInput, ctx: GraphQLContext) => {
@@ -48,12 +47,7 @@ export default requireAuth(
 
         // the user will have to confirm their email for it to be saved in
         // order to prevent spoofing your email as someone elses
-        await setUserPendingEmail(currentUser.id, pendingEmail).then(() => {
-          sendEmailValidationEmailQueue.add({
-            email: pendingEmail,
-            userId: currentUser.id,
-          });
-        });
+        await setUserPendingEmail(currentUser.id, pendingEmail);
       }
     }
 

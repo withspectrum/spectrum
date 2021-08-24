@@ -23,16 +23,13 @@ export const Content = styled.div`
   line-height: 1.2;
   padding: 12px 0;
   flex: 1 0 auto;
-
   a {
     text-decoration: underline;
     font-weight: 600;
   }
-
   .icon {
     margin-right: 8px;
   }
-
   @media (max-width: 768px) {
     justify-content: flex-start;
     padding-left: 12px;

@@ -7,16 +7,13 @@ import { withRouter, type History, type Location } from 'react-router-dom';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
 import viewNetworkHandler from 'src/components/viewNetworkHandler';
-import PendingUsersNotification from './components/pendingUsersNotification';
 import { getChannelByMatch } from 'shared/graphql/queries/channel/getChannel';
 import type { GetChannelType } from 'shared/graphql/queries/channel/getChannel';
-import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { SegmentedControl, Segment } from 'src/components/segmentedControl';
 import { ErrorView, LoadingView } from 'src/views/viewHelpers';
 import { ChannelProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
-import { MobileChannelAction } from 'src/components/titlebar/actions';
 import { CommunityAvatar } from 'src/components/avatar';
 import type { Dispatch } from 'redux';
 import { ErrorBoundary } from 'src/components/error';
@@ -79,7 +76,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
     }
@@ -99,7 +95,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
     }
@@ -122,7 +117,6 @@ class ChannelView extends React.Component<Props> {
               size={24}
             />
           ),
-          rightAction: <MobileChannelAction channel={channel} />,
         })
       );
       const { location, history } = this.props;
@@ -147,20 +141,15 @@ class ChannelView extends React.Component<Props> {
   render() {
     const {
       data: { channel },
-      currentUser,
       isLoading,
       location,
     } = this.props;
-    const isLoggedIn = currentUser;
     const { search } = location;
     const { tab } = querystring.parse(search);
     const selectedView = tab;
     if (channel && channel.id) {
       // at this point the view is no longer loading, has not encountered an error, and has returned a channel record
-      const { isOwner } = channel.channelPermissions;
       const { community } = channel;
-      const isGlobalOwner =
-        isOwner || channel.community.communityPermissions.isOwner;
 
       // at this point the user has full permission to view the channel
       const { title, description } = generateMetaInfo({
@@ -192,16 +181,6 @@ class ChannelView extends React.Component<Props> {
             <SecondaryPrimaryColumnGrid data-cy="channel-view">
               <SecondaryColumn>
                 <CommunitySidebar community={channel.community} />
-
-                {/* user is signed in and has permissions to view pending users */}
-                {isLoggedIn && (isOwner || isGlobalOwner) && (
-                  <ErrorBoundary>
-                    <PendingUsersNotification
-                      channel={channel}
-                      id={channel.id}
-                    />
-                  </ErrorBoundary>
-                )}
               </SecondaryColumn>
 
               <PrimaryColumn>
@@ -237,12 +216,6 @@ class ChannelView extends React.Component<Props> {
 
                   {selectedView === 'posts' && <PostFeed channel={channel} />}
 
-                  {selectedView === 'search' && (
-                    <ErrorBoundary>
-                      <Search channel={channel} />
-                    </ErrorBoundary>
-                  )}
-
                   {selectedView === 'members' && (
                     <ErrorBoundary>
                       <MembersList id={channel.id} />
@@ -254,16 +227,6 @@ class ChannelView extends React.Component<Props> {
                       <SidebarSection>
                         <ChannelProfileCard channel={channel} />
                       </SidebarSection>
-
-                      {/* user is signed in and has permissions to view pending users */}
-                      {isLoggedIn && (isOwner || isGlobalOwner) && (
-                        <ErrorBoundary>
-                          <PendingUsersNotification
-                            channel={channel}
-                            id={channel.id}
-                          />
-                        </ErrorBoundary>
-                      )}
                     </InfoContainer>
                   )}
                 </FeedsContainer>

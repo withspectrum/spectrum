@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import generateMetaInfo from 'shared/generate-meta-info';
 import Head from 'src/components/head';
-import Search from './components/search';
-import CommunitySearchWrapper from './components/communitySearchWrapper';
 import { Charts } from './view';
 import { ErrorBoundary } from 'src/components/error';
 import { withCurrentUser } from 'src/components/withCurrentUser';
@@ -36,15 +34,6 @@ class Explore extends React.Component<Props> {
       <React.Fragment>
         <Head title={title} description={description} />
         <ViewGrid data-cy="explore-page">
-          <ErrorBoundary>
-            <CommunitySearchWrapper
-              currentUser={this.props.currentUser}
-              redirectPath={window.location}
-            >
-              <Search />
-            </CommunitySearchWrapper>
-          </ErrorBoundary>
-
           <ErrorBoundary>
             <Charts />
           </ErrorBoundary>

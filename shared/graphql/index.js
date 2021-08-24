@@ -11,7 +11,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import introspectionQueryResultData from './schema.json';
 import getSharedApolloClientOptions from './apollo-client-options';
-import { IS_PROD, API_URI, WS_URI } from './constants';
+import { API_URI, WS_URI } from './constants';
 
 // Fixes a bug with ReactNative, see https://github.com/facebook/react-native/issues/9599
 if (typeof global.self === 'undefined') {

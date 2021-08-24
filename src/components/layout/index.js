@@ -1,16 +1,15 @@
 // @flow
 import styled from 'styled-components';
 import theme from 'shared/theme';
-import { isDesktopApp } from 'src/helpers/desktop-app-utils';
 
-export const NAVBAR_WIDTH = isDesktopApp() ? 80 : 72;
+export const NAVBAR_WIDTH = 72;
 export const NAVBAR_EXPANDED_WIDTH = 256;
 export const MIN_PRIMARY_COLUMN_WIDTH = 600;
 export const MIN_SECONDARY_COLUMN_WIDTH = 320;
 export const MAX_PRIMARY_COLUMN_WIDTH = 968;
 export const MAX_SECONDARY_COLUMN_WIDTH = 400;
 export const COL_GAP = 24;
-export const TITLEBAR_HEIGHT = isDesktopApp() ? 82 : 62;
+export const TITLEBAR_HEIGHT = 62;
 export const MIN_MAX_WIDTH =
   MIN_PRIMARY_COLUMN_WIDTH + MIN_SECONDARY_COLUMN_WIDTH + COL_GAP;
 export const MAX_WIDTH =
@@ -197,20 +196,5 @@ export const SecondaryColumn = styled.section`
   @media (max-width: ${MEDIA_BREAK}px) {
     height: calc(100vh - ${TITLEBAR_HEIGHT}px - 48px);
     display: none;
-  }
-`;
-
-export const ChatInputWrapper = styled.div`
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 3000;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    width: 100vw;
-    position: fixed;
-    bottom: 0;
-    left: 0;
   }
 `;

@@ -2,7 +2,7 @@
 import styled, { css } from 'styled-components';
 import theme from 'shared/theme';
 import { Link } from 'react-router-dom';
-import { Truncate, tint } from 'src/components/globals';
+import { Truncate } from 'src/components/globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 import { CardStyles } from 'src/views/viewHelpers';
 
@@ -132,15 +132,6 @@ export const Row = styled.div`
   display: flex;
 `;
 
-export const ToggleNotificationsContainer = styled.div`
-  display: flex;
-  color: ${theme.text.alt};
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  cursor: pointer;
-`;
-
 export const Name = styled.div`
   color: ${theme.text.default};
   font-size: 15px;
@@ -214,36 +205,6 @@ export const PostsFeedsSelectorContainer = styled.div`
   background: ${theme.bg.wash};
   display: flex;
   justify-content: space-between;
-`;
-
-export const SearchInput = styled.input`
-  font-size: 15px;
-  border: none;
-  border: 1px solid ${theme.bg.border};
-  -webkit-appearance: none;
-  border-radius: 32px;
-  padding: 8px 16px;
-  color: ${theme.text.default};
-  font-weight: 600;
-  width: 100%;
-  max-width: 240px;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    box-shadow: 0 0 0 2px ${theme.bg.default}, 0 0 0 4px ${theme.bg.border};
-    transition: all 0.2s ease-in-out;
-  }
-
-  &:active {
-    box-shadow: 0 0 0 2px ${theme.bg.default},
-      0 0 0 4px ${tint(theme.bg.border, -24)};
-    transition: box-shadow 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-  }
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    font-size: 16px;
-  }
 `;
 
 export const FeedsStretch = styled.div`

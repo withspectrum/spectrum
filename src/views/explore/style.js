@@ -1,7 +1,6 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import {
   FlexCol,
   FlexRow,
@@ -12,13 +11,9 @@ import {
   Transition,
   Shadow,
   hexa,
-  Truncate,
   zIndex,
 } from 'src/components/globals';
-import Card from 'src/components/card';
 import { StyledCard } from 'src/components/listItems/style';
-import Icon from 'src/components/icon';
-import { CommunityAvatar } from 'src/components/avatar';
 import ScrollRow from 'src/components/scrollRow';
 import { MEDIA_BREAK } from 'src/components/layout';
 
@@ -209,147 +204,6 @@ export const ErrorState = styled(FlexCol)`
   }
   &:not(:first-of-type) {
     display: none;
-  }
-`;
-
-export const SearchWrapper = styled(Card)`
-  position: relative;
-  margin-bottom: 0;
-  padding: 12px 16px;
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
-  transition: ${Transition.hover.off};
-  z-index: 14;
-  border-radius: 8px;
-
-  &:hover {
-    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
-    transition: ${Transition.hover.on};
-  }
-`;
-
-export const SearchInputWrapper = styled(FlexRow)`
-  flex: auto;
-  color: ${theme.text.placeholder};
-`;
-
-export const SearchIcon = styled(Icon)``;
-
-export const SearchInput = styled.input`
-  font-size: 16px;
-  padding: 4px 20px 4px 12px;
-  flex: auto;
-  position: relative;
-  z-index: ${zIndex.search};
-`;
-
-export const SearchSpinnerContainer = styled.span`
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  z-index: ${zIndex.search + 1};
-`;
-
-export const SearchResultsDropdown = styled.ul`
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.1)};
-  position: absolute;
-  top: 64px;
-  left: 0;
-  display: inline-block;
-  width: 100%;
-  flex: auto;
-  max-height: 400px;
-  overflow-y: auto;
-  background: ${theme.bg.default};
-  z-index: 12;
-`;
-
-export const SearchResultTextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: auto;
-`;
-
-export const SearchResult = styled.li`
-  display: flex;
-  background: ${props =>
-    props.focused ? props.theme.bg.wash : props.theme.bg.default};
-  border-bottom: 1px solid ${theme.bg.border};
-
-  &:hover {
-    background: ${theme.bg.wash};
-    cursor: pointer;
-  }
-
-  &:only-child {
-    border-bottom: none;
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-export const SearchLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  ${Truncate()} padding: 8px 16px 8px 8px;
-`;
-
-export const SearchResultImage = styled(CommunityAvatar)``;
-
-export const SearchResultMetaWrapper = styled(FlexCol)`
-  margin-left: 16px;
-  align-items: flex-start;
-`;
-
-export const SearchResultName = styled.h2`
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.4;
-  color: ${theme.text.default};
-`;
-
-export const SearchResultMetadata = styled.p`
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.4;
-  color: ${theme.text.secondary};
-`;
-
-export const SearchResultNull = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background-color: ${theme.bg.default};
-  border: 0;
-
-  &:hover {
-    border: 0;
-
-    p {
-      color: ${theme.text.alt};
-    }
-  }
-
-  a {
-    margin-top: 16px;
-  }
-
-  p {
-    text-align: center;
-    font-size: 14px;
-    font-weight: 400;
-    color: ${theme.text.alt};
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
   }
 `;
 

@@ -1,12 +1,10 @@
 // @flow
 const debug = require('debug')('api:thread-message-connection');
-import type { GraphQLContext } from '../../';
 import type { DBThread } from 'shared/types';
 import type { PaginationOptions } from '../../utils/paginate-arrays';
 import UserError from '../../utils/UserError';
 import { encode, decode } from '../../utils/base64';
 import { getMessages } from '../../models/message';
-import { trackUserThreadLastSeenQueue } from 'shared/bull/queues';
 
 export default (
   { id }: DBThread,
@@ -15,8 +13,7 @@ export default (
     after,
     last,
     before,
-  }: { ...PaginationOptions, last: number, before: string },
-  { user }: GraphQLContext
+  }: { ...PaginationOptions, last: number, before: string }
 ) => {
   // Make sure users don't provide bonkers arguments that paginate in both directions at the same time
   if (
@@ -81,13 +78,6 @@ export default (
   options.last && options.last++;
 
   return getMessages(id, options).then(result => {
-    if (user && user.id) {
-      trackUserThreadLastSeenQueue.add({
-        threadId: id,
-        userId: user.id,
-        timestamp: Date.now(),
-      });
-    }
     let messages = result;
     // Check if more messages were returned than were requested, which would mean
     // there's a next/previous page. (depending on the direction of the pagination)

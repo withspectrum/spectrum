@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import queryString from 'query-string';
 import { btoa } from 'b2a';
-import { subscribeToNewMessages } from '../../subscriptions';
 import threadInfoFragment from '../../fragments/thread/threadInfo';
 import type { ThreadInfoType } from '../../fragments/thread/threadInfo';
 import threadMessageConnectionFragment from '../../fragments/thread/threadMessageConnection';
@@ -60,14 +59,6 @@ const getVariables = ({ thread, ...props }): Variables => {
 
   // if it's a watercooler thread load the 25 most recent messages
   if (props.isWatercooler) {
-    return {
-      id: props.id,
-      last: 25,
-    };
-  }
-
-  // If a user has seen a thread, load the last 25
-  if (thread.currentUserLastSeen) {
     return {
       id: props.id,
       last: 25,
@@ -196,74 +187,6 @@ export const getThreadMessageConnectionOptions = {
                 edges: edges
                   ? [...edges, ...prev.thread.messageConnection.edges]
                   : prev.thread.messageConnection.edges,
-              },
-            },
-          };
-        },
-      });
-    },
-    subscribeToNewMessages: () => {
-      return props.data.subscribeToMore({
-        document: subscribeToNewMessages,
-        variables: {
-          thread: props.ownProps.id,
-        },
-        updateQuery: (prev, { subscriptionData }) => {
-          const newMessage = subscriptionData.data.messageAdded;
-          const existingMessage = prev.thread.messageConnection.edges.find(
-            // Check whether we have a node with the same ID or an optimistic response
-            // with the same content
-            // NOTE(@mxstbr): Checking for equality in the content is very brittle, what if we change the content on the server?
-            // I couldn't find a better way to do this for now, ref withspectrum/spectrum#2328
-            ({ node }) =>
-              node.id === newMessage.id ||
-              (typeof node.id === 'number' &&
-                node.content.body === newMessage.content.body)
-          );
-          // If there is an optimstic update with the same content that wasn't replaced yet, replace it
-          if (existingMessage && typeof existingMessage.node.id === 'number') {
-            return {
-              ...prev,
-              thread: {
-                ...prev.thread,
-                messageConnection: {
-                  ...prev.thread.messageConnection,
-                  edges: prev.thread.messageConnection.edges.map(edge => {
-                    // Replace the optimstic update with the actual db message
-                    if (edge.node.id === existingMessage.id)
-                      return {
-                        ...edge,
-                        cursor: btoa(newMessage.id),
-                        node: newMessage,
-                      };
-
-                    return edge;
-                  }),
-                },
-              },
-            };
-            // If the message is already in the state because the mutation already
-            // added it, ignore it and don't duplicate it
-          } else if (existingMessage) {
-            return prev;
-          }
-
-          // Add the new message to the data
-          return {
-            ...prev,
-            thread: {
-              ...prev.thread,
-              messageConnection: {
-                ...prev.thread.messageConnection,
-                edges: [
-                  ...prev.thread.messageConnection.edges,
-                  // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
-                  {
-                    node: newMessage,
-                    cursor: btoa(newMessage.id),
-                    __typename: 'ThreadMessageEdge',
-                  },
-                ],
               },
             },
           };

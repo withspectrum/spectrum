@@ -26,7 +26,6 @@ type Props = {
   },
   loadPreviousPage: Function,
   loadNextPage: Function,
-  subscribeToNewMessages: Function,
   onMessagesLoaded?: Function,
   location: Location,
   thread?: Object,
@@ -34,31 +33,20 @@ type Props = {
 };
 
 class Messages extends React.Component<Props> {
-  unsubscribe: Function;
-
   componentDidMount() {
     const thread = this.props.data.thread || this.props.thread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
-    if (thread && (thread.watercooler || thread.currentUserLastSeen)) {
+    if (thread && thread.watercooler) {
       const elem = document.getElementById('main');
       if (!elem) return;
       elem.scrollTop = elem.scrollHeight;
     }
-    this.unsubscribe = this.props.subscribeToNewMessages();
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscribe) this.unsubscribe();
   }
 
   getSnapshotBeforeUpdate(prev) {
     const curr = this.props;
     // First load
-    if (
-      !prev.data.thread &&
-      curr.data.thread &&
-      (curr.data.thread.currentUserLastSeen || curr.data.thread.watercooler)
-    ) {
+    if (!prev.data.thread && curr.data.thread && curr.data.thread.watercooler) {
       return {
         type: 'bottom',
       };

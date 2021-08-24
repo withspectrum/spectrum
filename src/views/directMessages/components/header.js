@@ -27,7 +27,7 @@ const Header = ({ thread, currentUser }) => {
 
   const photos = trimmedUsers.map(user => (
     <PhotoWrapper key={user.id}>
-      <Photo user={user} size={56} showOnlineStatus={false} />
+      <Photo user={user} size={56} />
     </PhotoWrapper>
   ));
 

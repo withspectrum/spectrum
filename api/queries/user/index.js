@@ -1,7 +1,6 @@
 // @flow
 import user from './rootUser';
 import currentUser from './rootCurrentUser';
-import searchUsers from './rootSearchUsers';
 
 import email from './email';
 import coverPhoto from './coverPhoto';
@@ -13,11 +12,9 @@ import directMessageThreadsConnection from './directMessageThreadsConnection';
 import threadConnection from './threadConnection';
 import threadCount from './threadCount';
 import settings from './settings';
-import totalReputation from './totalReputation';
 import isAdmin from './isAdmin';
 import contextPermissions from './contextPermissions';
 import githubProfile from './githubProfile';
-import isOnline from './isOnline';
 
 // no-op resolvers to transition while removing payments
 import type { DBUser } from 'shared/types';
@@ -29,7 +26,6 @@ module.exports = {
   Query: {
     user,
     currentUser,
-    searchUsers,
   },
   User: {
     email,
@@ -42,13 +38,11 @@ module.exports = {
     threadConnection,
     threadCount,
     settings,
-    totalReputation,
     isAdmin,
     githubProfile,
     contextPermissions,
     isPro,
     recurringPayments,
     invoices,
-    isOnline,
   },
 };

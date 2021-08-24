@@ -2,15 +2,7 @@
 import theme from 'shared/theme';
 import styled from 'styled-components';
 import { MEDIA_BREAK } from 'src/components/layout';
-import {
-  FlexRow,
-  FlexCol,
-  Transition,
-  Shadow,
-  hexa,
-  zIndex,
-} from 'src/components/globals';
-import { Button } from 'src/components/button';
+import { FlexRow, FlexCol, Transition, zIndex } from 'src/components/globals';
 
 export const Title = styled.p`
   color: ${theme.text.default};
@@ -177,29 +169,6 @@ export const UpsellIconContainer = styled.div`
   margin-bottom: 16px;
   margin-top: 32px;
   color: ${theme.text.alt};
-`;
-
-export const SignupButton = styled(Button)`
-  font-size: 18px;
-  font-weight: 700;
-  color: ${theme.text.reverse};
-  padding: 16px 88px;
-  max-width: 100%;
-  box-shadow: ${props =>
-    `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
-  margin-top: 8px;
-`;
-
-export const SignupFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  font-size: 14px;
-  color: ${theme.text.alt};
-  font-weight: 500;
-  border-top: 2px solid ${theme.bg.wash};
-  margin-top: 40px;
-  width: 100%;
 `;
 
 export const SigninLink = styled.span`
@@ -385,33 +354,6 @@ export const ShareInputContainer = styled.div`
   width: 100%;
   max-width: 528px;
   margin-top: 16px;
-`;
-
-export const JoinChannelContainer = styled.div`
-  display: flex;
-  border: 1px solid ${theme.bg.border};
-  border-radius: 4px;
-  padding: 8px;
-  align-items: center;
-  flex: 0 0 auto;
-  width: calc(100% - 16px);
-  margin-bottom: 12px;
-  background: ${theme.bg.wash};
-  position: relative;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    button {
-      width: 100%;
-    }
-  }
-`;
-
-export const JoinChannelContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: auto;
-  align-self: flex-start;
-  width: 100%;
 `;
 
 export const HeadingIconWrapper = styled.div`

@@ -1,13 +1,10 @@
 // @flow
 import { createReadQuery, createWriteQuery, db } from 'shared/db';
 import { uploadImage } from 'api/utils/file-storage';
-import { createNewUsersSettings } from 'api/models/usersSettings';
-import { sendNewUserWelcomeEmailQueue, searchQueue } from 'shared/bull/queues';
 import { deleteThread } from 'api/models/thread';
 import { deleteMessage } from 'api/models/message';
 import { removeUsersCommunityMemberships } from 'api/models/usersCommunities';
 import { removeUsersChannelMemberships } from 'api/models/usersChannels';
-import { disableAllThreadNotificationsForUser } from 'api/models/usersThreads';
 import { disableAllUsersEmailSettings } from 'api/models/usersSettings';
 import type { PaginationOptions } from 'api/utils/paginate-arrays';
 import type { DBUser, FileUpload } from 'shared/types';
@@ -103,39 +100,6 @@ export const getUsers = createReadQuery((userIds: Array<string>) => ({
   tags: (users: ?Array<DBUser>) => (users ? users.map(({ id }) => id) : []),
 }));
 
-export const storeUser = createWriteQuery((user: Object) => ({
-  query: db
-    .table('users')
-    .insert(
-      {
-        ...user,
-        modifiedAt: null,
-        createdAt: new Date(),
-        termsLastAcceptedAt: new Date(),
-        lastSeen: new Date(),
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(res => {
-      const dbUser = res.changes[0].new_val || res.changes[0].old_val;
-      sendNewUserWelcomeEmailQueue.add({ user: dbUser });
-
-      if (dbUser.username) {
-        searchQueue.add({
-          id: dbUser.id,
-          type: 'user',
-          event: 'created',
-        });
-      }
-
-      return Promise.all([dbUser, createNewUsersSettings(dbUser.id)]).then(
-        ([dbUser]) => dbUser
-      );
-    }),
-  invalidateTags: (user: DBUser) => [user.id],
-}));
-
 export const saveUserProvider = createWriteQuery(
   (
     userId: string,
@@ -207,19 +171,15 @@ export const createOrFindUser = (user: Object, providerMethod: string): Promise<
         return Promise.resolve(storedUser);
       }
       
-      // restrict new signups to github auth only
-      if (providerMethod !== 'githubProviderId') return Promise.resolve(null)
-      // if no user exists, create a new one with the oauth profile data
-      return storeUser(user);
+      // no new sign ups
+      return Promise.resolve(null)
     })
     .catch(err => {
       if (user.id) {
         console.error(err);
         return null;
       }
-
-      if (providerMethod !== 'githubProviderId') return null
-      return storeUser(user);
+      return null
     });
 };
 
@@ -313,14 +273,6 @@ export const editUser = createWriteQuery(
           });
         })
         .then(user => {
-          if (user.username) {
-            searchQueue.add({
-              id: user.id,
-              type: 'user',
-              event: 'edited',
-            });
-          }
-
           if (file || coverFile) {
             if (file && !coverFile) {
               return uploadImage(file, 'users', user.id)
@@ -462,24 +414,6 @@ export const editUser = createWriteQuery(
   }
 );
 
-export const setUserOnline = async (id: string, isOnline: boolean) => {
-  return await db
-    .table('users')
-    .get(id)
-    .update(
-      {
-        isOnline,
-        lastSeen: new Date(),
-      },
-      { returnChanges: 'always' }
-    )
-    .run()
-    .then(res => {
-      const user = res.changes[0].new_val || res.changes[0].old_val;
-      return user;
-    });
-};
-
 export const setUserPendingEmail = createWriteQuery(
   (userId: string, pendingEmail: string) => ({
     query: db
@@ -579,12 +513,6 @@ export const deleteUser = createWriteQuery((userId: string) => ({
       }) => {
         const user = changes[0].new_val || changes[0].old_val;
 
-        searchQueue.add({
-          id: userId,
-          type: 'user',
-          event: 'deleted',
-        });
-
         return user;
       }
     ),
@@ -625,12 +553,6 @@ export const banUser = createWriteQuery((args: BanUserType) => {
           no longer listed as members of communities or channels
           and their DMs cant be seen by other users
         */
-
-        searchQueue.add({
-          id: userId,
-          type: 'user',
-          event: 'deleted',
-        });
 
         const dmThreadIds = await db
           .table('usersDirectMessageThreads')
@@ -685,7 +607,6 @@ export const banUser = createWriteQuery((args: BanUserType) => {
         return await Promise.all([
           removeUsersCommunityMemberships(userId),
           removeUsersChannelMemberships(userId),
-          disableAllThreadNotificationsForUser(userId),
           disableAllUsersEmailSettings(userId),
           removeOtherParticipantsDmThreadIds,
           removeDMThreads,

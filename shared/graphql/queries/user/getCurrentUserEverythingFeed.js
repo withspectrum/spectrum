@@ -4,8 +4,6 @@ import { graphql } from 'react-apollo';
 import userEverythingConnectionFragment, {
   type UserEverythingConnectionType,
 } from '../../fragments/user/userEverythingConnection';
-import { subscribeToUpdatedThreads } from '../../subscriptions';
-import { parseRealtimeThreads } from '../../subscriptions/utils';
 
 export type GetCurrentUserEverythingFeedType = {
   id: string,
@@ -37,16 +35,7 @@ const getCurrentUserEverythingOptions = {
     fetchPolicy: 'cache-and-network',
   }),
   props: ({
-    ownProps,
-    data: {
-      fetchMore,
-      error,
-      loading,
-      user,
-      networkStatus,
-      subscribeToMore,
-      refetch,
-    },
+    data: { fetchMore, error, loading, user, networkStatus, refetch },
   }) => ({
     data: {
       error,
@@ -59,32 +48,6 @@ const getCurrentUserEverythingOptions = {
       threadConnection: user && user.everything ? user.everything : null,
       hasNextPage:
         user && user.everything ? user.everything.pageInfo.hasNextPage : false,
-      subscribeToUpdatedThreads: () => {
-        return subscribeToMore({
-          document: subscribeToUpdatedThreads,
-          updateQuery: (prev, { subscriptionData }) => {
-            const updatedThread = subscriptionData.data.threadUpdated;
-            if (!updatedThread) return prev;
-
-            const newThreads = parseRealtimeThreads(
-              prev.user.everything.edges,
-              updatedThread
-            );
-
-            // Add the new notification to the data
-            return Object.assign({}, prev, {
-              ...prev,
-              user: {
-                ...prev.user,
-                everything: {
-                  ...prev.user.everything,
-                  edges: newThreads,
-                },
-              },
-            });
-          },
-        });
-      },
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,

@@ -10,7 +10,6 @@ import generateMetaInfo from 'shared/generate-meta-info';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import Head from 'src/components/head';
 import { CommunityAvatar } from 'src/components/avatar';
-import { MobileCommunityAction } from 'src/components/titlebar/actions';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import { CommunityFeeds } from '../components/communityFeeds';
 import {
@@ -20,8 +19,6 @@ import {
   SecondaryColumn,
 } from 'src/components/layout';
 import Sidebar from 'src/components/communitySidebar';
-import setCommunityLastSeenMutation from 'shared/graphql/mutations/community/setCommunityLastSeen';
-import usePrevious from 'src/hooks/usePrevious';
 import { FullScreenRedirectView } from 'src/views/viewHelpers/fullScreenRedirect';
 
 type Props = {
@@ -29,44 +26,10 @@ type Props = {
   currentUser: ?UserInfoType,
   dispatch: Dispatch<Object>,
   location: Location,
-  setCommunityLastSeen: Function,
 };
 
 const Component = (props: Props) => {
-  const {
-    community,
-    currentUser,
-    dispatch,
-    location,
-    setCommunityLastSeen,
-  } = props;
-
-  const previousCommunity = usePrevious(community);
-  useEffect(() => {
-    if (
-      !community.id ||
-      !currentUser ||
-      !community.communityPermissions.isMember
-    )
-      return;
-
-    if (
-      previousCommunity &&
-      community &&
-      previousCommunity.id !== community.id
-    ) {
-      setCommunityLastSeen({
-        id: previousCommunity.id,
-        lastSeen: new Date(),
-      });
-    }
-    if (!previousCommunity && community) {
-      setCommunityLastSeen({
-        id: community.id,
-        lastSeen: new Date(Date.now() + 10000),
-      });
-    }
-  }, [community.id, currentUser]);
+  const { community, dispatch, location } = props;
 
   const [metaInfo, setMetaInfo] = useState(
     generateMetaInfo({
@@ -98,7 +61,6 @@ const Component = (props: Props) => {
             size={24}
           />
         ),
-        rightAction: <MobileCommunityAction community={community} />,
       })
     );
   }, [community.id]);
@@ -114,7 +76,6 @@ const Component = (props: Props) => {
             size={24}
           />
         ),
-        rightAction: <MobileCommunityAction community={community} />,
       })
     );
   }, [location]);
@@ -155,6 +116,5 @@ const Component = (props: Props) => {
 export const SignedIn = compose(
   withCurrentUser,
   withRouter,
-  setCommunityLastSeenMutation,
   connect()
 )(Component);

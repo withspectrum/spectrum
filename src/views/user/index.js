@@ -15,7 +15,6 @@ import ThreadFeed from 'src/components/threadFeed';
 import { UserProfileCard } from 'src/components/entities';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import CommunityList from './components/communityList';
-import Search from './components/search';
 import { withCurrentUser } from 'src/components/withCurrentUser';
 import { UserAvatar } from 'src/components/avatar';
 import {
@@ -43,8 +42,6 @@ import {
   NullColumnHeading,
   NullColumnSubheading,
 } from 'src/components/threadFeed/style';
-import { PrimaryOutlineButton } from 'src/components/button';
-import Icon from 'src/components/icon';
 import { MobileUserAction } from 'src/components/titlebar/actions';
 import { FeedsContainer } from './style';
 import { InfoContainer } from 'src/views/community/style';
@@ -94,7 +91,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />
@@ -130,7 +126,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />
@@ -152,7 +147,6 @@ class UserView extends React.Component<Props, State> {
           titleIcon: (
             <UserAvatar
               isClickable={false}
-              showOnlineStatus={false}
               user={this.props.data.user}
               size={24}
             />
@@ -196,7 +190,6 @@ class UserView extends React.Component<Props, State> {
     }
 
     if (user && user.id) {
-      const isCurrentUser = currentUser && user.id === currentUser.id;
       const { title, description } = generateMetaInfo({
         type: 'user',
         data: {
@@ -269,14 +262,6 @@ class UserView extends React.Component<Props, State> {
                     >
                       Info
                     </Segment>
-
-                    <Segment
-                      onClick={() => this.handleSegmentClick('search')}
-                      isActive={selectedView === 'search'}
-                      data-cy="user-search-tab"
-                    >
-                      Search
-                    </Segment>
                   </SegmentedControl>
 
                   {hasThreads &&
@@ -298,8 +283,6 @@ class UserView extends React.Component<Props, State> {
                         id={user.id}
                       />
                     )}
-
-                  {selectedView === 'search' && <Search user={user} />}
 
                   {selectedView === 'info' && (
                     <InfoContainer>
@@ -333,17 +316,6 @@ class UserView extends React.Component<Props, State> {
                             Posts will show up here as they are published and
                             when conversations are joined.
                           </NullColumnSubheading>
-                          {isCurrentUser && (
-                            <PrimaryOutlineButton
-                              to={{
-                                pathname: '/new/thread',
-                                state: { modal: true },
-                              }}
-                            >
-                              <Icon glyph={'post'} size={24} />
-                              New post
-                            </PrimaryOutlineButton>
-                          )}
                         </span>
                       </NullColumn>
                     )}

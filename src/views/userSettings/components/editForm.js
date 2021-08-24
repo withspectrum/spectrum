@@ -18,7 +18,6 @@ import {
   PhotoInput,
   CoverInput,
 } from 'src/components/formElements';
-import UsernameSearch from 'src/components/usernameSearch';
 import { StyledLabel } from 'src/components/formElements/style';
 import {
   Form,
@@ -364,17 +363,6 @@ class UserWithData extends React.Component<Props, State> {
           </Input>
 
           {nameError && <Error>Names can be up to 50 characters.</Error>}
-
-          <UsernameSearch
-            type={'text'}
-            label="Username"
-            size={'small'}
-            username={username}
-            placeholder="Set a username..."
-            onValidationResult={this.handleUsernameValidation}
-            onError={this.handleOnError}
-            dataCy="user-username-input"
-          />
 
           {usernameError && (
             <Notice style={{ marginTop: '16px' }}>{usernameError}</Notice>

@@ -8,7 +8,6 @@ import viewNetworkHandler from 'src/components/viewNetworkHandler';
 import NextPageButton from 'src/components/nextPageButton';
 import getDirectMessageThreadMessages from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
 import type { GetDirectMessageThreadMessageConnectionType } from 'shared/graphql/queries/directMessageThread/getDirectMessageThreadMessageConnection';
-import setLastSeenMutation from 'shared/graphql/mutations/directMessageThread/setDMThreadLastSeen';
 import { MessagesScrollWrapper } from './style';
 import { ErrorBoundary } from 'src/components/error';
 
@@ -21,23 +20,13 @@ type Props = {
     hasNextPage: boolean,
     fetchMore: Function,
   },
-  subscribeToNewMessages: Function,
   isLoading: boolean,
   hasError: boolean,
   isFetchingMore: boolean,
-  setLastSeen: Function,
 };
 
-type State = {
-  subscription: ?Function,
-};
-
-class MessagesWithData extends React.Component<Props, State> {
-  subscription: ?Function;
-
+class MessagesWithData extends React.Component<Props> {
   componentDidMount() {
-    this.subscribe();
-
     const thread = this.props.data.directMessageThread;
     // Scroll to bottom on mount if we got cached data as getSnapshotBeforeUpdate does not fire for mounts
     if (thread) {
@@ -46,18 +35,6 @@ class MessagesWithData extends React.Component<Props, State> {
       elem.scrollTop = elem.scrollHeight;
     }
   }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  subscribe = () => {
-    this.subscription = this.props.subscribeToNewMessages();
-  };
-
-  unsubscribe = () => {
-    if (this.subscription) this.subscription();
-  };
 
   getSnapshotBeforeUpdate(prev) {
     const curr = this.props;
@@ -116,8 +93,6 @@ class MessagesWithData extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prev, _, snapshot) {
-    const { data, setLastSeen } = this.props;
-
     if (snapshot) {
       const elem = document.getElementById('main');
       if (elem) {
@@ -136,22 +111,6 @@ class MessagesWithData extends React.Component<Props, State> {
           }
         }
       }
-    }
-
-    const firstLoad =
-      !prev.data.directMessageThread && data.directMessageThread;
-    const newThread =
-      prev.data.directMessageThread &&
-      data.directMessageThread &&
-      prev.data.directMessageThread.id !== data.directMessageThread.id;
-
-    if (firstLoad) {
-      this.subscribe();
-      setLastSeen(data.directMessageThread.id);
-    } else if (newThread) {
-      this.unsubscribe();
-      this.subscribe();
-      setLastSeen(data.directMessageThread.id);
     }
   }
 
@@ -222,7 +181,6 @@ class MessagesWithData extends React.Component<Props, State> {
 }
 
 const Messages = compose(
-  setLastSeenMutation,
   getDirectMessageThreadMessages,
   viewNetworkHandler
 )(MessagesWithData);

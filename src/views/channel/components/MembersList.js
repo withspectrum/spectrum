@@ -66,7 +66,6 @@ class MembersList extends React.Component<Props> {
                 description={user.description}
                 profilePhoto={user.profilePhoto}
                 isCurrentUser={currentUser && user.id === currentUser.id}
-                isOnline={user.isOnline}
                 avatarSize={40}
                 showHoverProfile={false}
                 messageButton={currentUser && user.id !== currentUser.id}

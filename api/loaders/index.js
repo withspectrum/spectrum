@@ -4,21 +4,15 @@ import {
   __createUserByUsernameLoader,
   __createUserThreadCountLoader,
   __createUserPermissionsInCommunityLoader,
-  __createUserTotalReputationLoader,
   __createUserPermissionsInChannelLoader,
-  __createUserThreadNotificationStatusLoader,
 } from './user';
 import {
   __createThreadLoader,
   __createThreadParticipantsLoader,
 } from './thread';
-import { __createNotificationLoader } from './notification';
 import {
   __createChannelLoader,
   __createChannelThreadCountLoader,
-  __createChannelMemberCountLoader,
-  __createChannelOnlineMemberCountLoader,
-  __createChannelPendingMembersLoader,
   __createChannelSettingsLoader,
 } from './channel';
 import {
@@ -27,7 +21,6 @@ import {
   __createCommunityChannelCountLoader,
   __createCommunitySettingsLoader,
   __createCommunityMemberCountLoader,
-  __createCommunityOnlineMemberCountLoader,
 } from './community';
 import {
   __createDirectMessageThreadLoader,
@@ -49,24 +42,15 @@ const createLoaders = (options?: DataLoaderOptions) => ({
   userThreadCount: __createUserThreadCountLoader(options),
   userPermissionsInCommunity: __createUserPermissionsInCommunityLoader(options),
   userPermissionsInChannel: __createUserPermissionsInChannelLoader(options),
-  userTotalReputation: __createUserTotalReputationLoader(options),
-  userThreadNotificationStatus: __createUserThreadNotificationStatusLoader(
-    options
-  ),
   thread: __createThreadLoader(options),
   threadParticipants: __createThreadParticipantsLoader(options),
-  notification: __createNotificationLoader(options),
   channel: __createChannelLoader(options),
-  channelMemberCount: __createChannelMemberCountLoader(options),
-  channelOnlineMemberCount: __createChannelOnlineMemberCountLoader(options),
   channelThreadCount: __createChannelThreadCountLoader(options),
-  channelPendingUsers: __createChannelPendingMembersLoader(options),
   channelSettings: __createChannelSettingsLoader(options),
   community: __createCommunityLoader(options),
   communityBySlug: __createCommunityBySlugLoader(options),
   communityChannelCount: __createCommunityChannelCountLoader(options),
   communityMemberCount: __createCommunityMemberCountLoader(options),
-  communityOnlineMemberCount: __createCommunityOnlineMemberCountLoader(options),
   communitySettings: __createCommunitySettingsLoader(options),
   directMessageThread: __createDirectMessageThreadLoader(options),
   directMessageParticipants: __createDirectMessageParticipantsLoader(options),

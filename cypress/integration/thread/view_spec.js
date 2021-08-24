@@ -45,9 +45,6 @@ describe('sidebar components on thread view', () => {
       cy.get('[data-cy="community-profile-card"]')
         .scrollIntoView()
         .should('be.visible');
-
-      // loaded join button which directs to login
-      cy.get('[data-cy="profile-join-button"]').should('be.visible');
     });
   });
 
@@ -61,11 +58,6 @@ describe('sidebar components on thread view', () => {
     it('should render', () => {
       // loaded community info
       cy.get('[data-cy="community-profile-card"]')
-        .scrollIntoView()
-        .should('be.visible');
-
-      // loaded join button which directs to login
-      cy.get('[data-cy="profile-join-button"]')
         .scrollIntoView()
         .should('be.visible');
     });

@@ -44,23 +44,6 @@ const Community = /* GraphQL */ `
   type CommunityMetaData @cacheControl(maxAge: 1800) {
     members: Int
     channels: Int
-    onlineMembers: Int
-  }
-
-  type SlackImport @deprecated(reason: "Use the slack settings field instead") {
-    members: String
-    teamName: String
-    sent: Date
-  }
-
-  type TopAndNewThreads {
-    topThreads: [Thread]
-    newThreads: [Thread]
-  }
-
-  type BrandedLogin {
-    isEnabled: Boolean
-    message: String
   }
 
   enum CommunityThreadConnectionSort {
@@ -144,11 +127,9 @@ const Community = /* GraphQL */ `
     website: String
     profilePhoto: String
     coverPhoto: String
-    reputation: Int
     pinnedThreadId: String
     pinnedThread: Thread
     isPrivate: Boolean
-    lastActive: Date
     redirect: Boolean
     noindex: Boolean
     communityPermissions: CommunityPermissions @cost(complexity: 1)
@@ -165,22 +146,10 @@ const Community = /* GraphQL */ `
       sort: CommunityThreadConnectionSort = latest
     ): CommunityThreadsConnection @cost(complexity: 2, multipliers: ["first"])
     metaData: CommunityMetaData @cost(complexity: 10)
-    memberGrowth: GrowthData @cost(complexity: 10)
-    conversationGrowth: GrowthData @cost(complexity: 3)
-
-    topMembers: [CommunityMember] @cost(complexity: 10)
-
-    topAndNewThreads: TopAndNewThreads @cost(complexity: 4)
-
     watercooler: Thread
-    brandedLogin: BrandedLogin
     joinSettings: JoinSettings
-    slackSettings: CommunitySlackSettings @cost(complexity: 2)
 
     watercoolerId: String
-    slackImport: SlackImport
-      @cost(complexity: 2)
-      @deprecated(reason: "Use slack settings field instead")
 
     memberConnection(
       first: Int = 10
@@ -213,11 +182,6 @@ const Community = /* GraphQL */ `
     topCommunities(amount: Int = 20): [Community!]
       @cost(complexity: 4, multipliers: ["amount"])
     recentCommunities: [Community!]
-
-    searchCommunities(string: String, amount: Int = 20): [Community]
-      @deprecated(reason: "Use the new Search query endpoint")
-    searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
-      @deprecated(reason: "Use the new Search query endpoint")
   }
 
   input MembersFilter {
@@ -237,16 +201,6 @@ const Community = /* GraphQL */ `
     isModerator: Boolean
   }
 
-  input CreateCommunityInput {
-    name: String!
-    slug: LowercaseString!
-    description: String
-    website: String
-    file: Upload
-    coverFile: Upload
-    isPrivate: Boolean
-  }
-
   input EditCommunityInput {
     name: String
     description: String
@@ -257,114 +211,11 @@ const Community = /* GraphQL */ `
     communityId: ID!
   }
 
-  input UpgradeCommunityInput {
-    plan: String!
-    token: String!
-    communityId: String!
-  }
-
-  input DowngradeCommunityInput {
-    id: String!
-  }
-
-  input UpdateAdministratorEmailInput {
-    id: ID!
-    email: LowercaseString!
-  }
-
-  input EnableBrandedLoginInput {
-    id: String!
-  }
-
-  input DisableBrandedLoginInput {
-    id: String!
-  }
-
-  input SaveBrandedLoginSettingsInput {
-    id: String!
-    message: String
-  }
-
-  input ImportSlackMembersInput
-    @deprecated(
-      reason: "Slack imports are no longer used, invites sent directly with sendSlackInvites"
-    ) {
-    id: String!
-  }
-
-  input SendSlackInvitesInput {
-    id: ID!
-    customMessage: String
-  }
-
-  input EnableCommunityTokenJoinInput {
-    id: ID!
-  }
-
-  input DisableCommunityTokenJoinInput {
-    id: ID!
-  }
-
-  input ResetCommunityJoinTokenInput {
-    id: ID!
-  }
-
-  input EnableCommunityWatercoolerInput {
-    id: ID!
-  }
-
-  input DisableCommunityWatercoolerInput {
-    id: ID!
-  }
-
-  input SetCommunityLastSeenInput {
-    id: ID!
-    lastSeen: Date!
-  }
-
   extend type Mutation {
-    createCommunity(input: CreateCommunityInput!): Community
-      @rateLimit(max: 3, window: "15m")
     editCommunity(input: EditCommunityInput!): Community
     deleteCommunity(communityId: ID!): Boolean
-    toggleCommunityMembership(communityId: ID!): Community
-      @deprecated(
-        reason: "Use the new addCommunityMember or removeCommunityMember mutations"
-      )
-    sendSlackInvites(input: SendSlackInvitesInput!): Community
-    importSlackMembers(input: ImportSlackMembersInput!): Boolean
-      @deprecated(reason: "Importing slack members is deprecated")
-    sendEmailInvites(input: EmailInvitesInput!): Boolean
-      @rateLimit(max: 5000, window: "1w", arrayLengthField: "input.contacts")
-    pinThread(threadId: ID!, communityId: ID!, value: String): Community
-    upgradeCommunity(input: UpgradeCommunityInput!): Community
-      @deprecated(
-        reason: "Use feature level upgrade mutations like enableCommunityAnalytics"
-      )
-    downgradeCommunity(input: DowngradeCommunityInput!): Community
-      @deprecated(
-        reason: "Use feature level downgrade mutations like disableCommunityAnalytics"
-      )
-    updateAdministratorEmail(input: UpdateAdministratorEmailInput!): Community
-    enableBrandedLogin(input: EnableBrandedLoginInput!): Community
-    disableBrandedLogin(input: DisableBrandedLoginInput!): Community
-    saveBrandedLoginSettings(input: SaveBrandedLoginSettingsInput!): Community
-    enableCommunityTokenJoin(input: EnableCommunityTokenJoinInput!): Community
-    disableCommunityTokenJoin(input: DisableCommunityTokenJoinInput!): Community
-    resetCommunityJoinToken(input: ResetCommunityJoinTokenInput!): Community
-    enableCommunityWatercooler(
-      input: EnableCommunityWatercoolerInput!
-    ): Community
-    disableCommunityWatercooler(
-      input: DisableCommunityWatercoolerInput!
-    ): Community
-    setCommunityLastSeen(input: SetCommunityLastSeenInput!): Community
     toggleCommunityRedirect(communityId: ID!): Community
     toggleCommunityNoindex(communityId: ID!): Community
-  }
-
-  extend type Subscription {
-    communityUpdated(communityIds: [ID!]): Community
   }
 `;
 

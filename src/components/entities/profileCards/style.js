@@ -142,15 +142,6 @@ export const MetaRow = styled.div`
   }
 `;
 
-export const OnlineDot = styled.div`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: ${theme.success.default};
-  margin-right: 16px;
-  margin-left: 6px;
-`;
-
 export const ChannelCommunityMetaRow = styled.div`
   display: flex;
   padding: 16px;

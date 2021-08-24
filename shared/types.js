@@ -46,9 +46,6 @@ export type DBCommunity = {
 export type DBCommunitySettings = {
   id: string,
   communityId: string,
-  brandedLogin: ?{
-    customMessage: ?string,
-  },
   slackSettings: ?{
     connectedAt: ?string,
     connectedBy: ?string,
@@ -191,21 +188,6 @@ export type DBReputationEvent = {
   userId: string,
 };
 
-export type DBSlackUser = {
-  email: string,
-  firstName: string,
-  lastName: string,
-};
-export type DBSlackImport = {
-  id: string,
-  communityId: string,
-  members?: Array<DBSlackUser>,
-  senderId?: string,
-  teamId: string,
-  teamName: string,
-  token: string,
-};
-
 type DBThreadAttachment = {
   attachmentType: 'photoPreview',
   data: {
@@ -267,8 +249,6 @@ export type DBUser = {
   googleProviderId?: ?string,
   username: ?string,
   timezone?: ?number,
-  isOnline?: boolean,
-  lastSeen?: ?string,
   description?: ?string,
   website?: ?string,
   modifiedAt: ?string,
@@ -298,15 +278,12 @@ export type DBUsersCommunities = {
   isOwner: boolean,
   isPending: boolean,
   receiveNotifications: boolean,
-  reputation: number,
   userId: string,
 };
 
 export type DBUsersDirectMessageThreads = {
   id: string,
   createdAt: Date,
-  lastActive?: Date,
-  lastSeen?: Date,
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
@@ -350,40 +327,6 @@ export type DBUsersThreads = {
   receiveNotifications: boolean,
   threadId: string,
   userId: string,
-  lastSeen?: Date | number,
-};
-
-export type SearchThread = {
-  channelId: string,
-  communityId: string,
-  creatorId: string,
-  lastActive: number,
-  messageContent: {
-    body: ?string,
-  },
-  threadContent: {
-    title: string,
-    body: ?string,
-  },
-  createdAt: number,
-  threadId: string,
-  objectID: string,
-};
-
-export type SearchUser = {
-  description: ?string,
-  name: string,
-  username: ?string,
-  website: ?string,
-  objectID: string,
-};
-
-export type SearchCommunity = {
-  description: ?string,
-  name: string,
-  slug: string,
-  website: ?string,
-  objectID: string,
 };
 
 export type DBExpoPushSubscription = {

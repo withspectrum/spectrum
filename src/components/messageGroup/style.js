@@ -1,7 +1,7 @@
 // @flow
 import theme from 'shared/theme';
 import styled from 'styled-components';
-import { Transition, HorizontalRule } from '../globals';
+import { HorizontalRule } from '../globals';
 import { MEDIA_BREAK } from 'src/components/layout';
 
 export const MessagesWrapper = styled.div`
@@ -38,28 +38,12 @@ export const Timestamp = styled(HorizontalRule)`
   }
 `;
 
-export const UnseenRobotext = styled(Timestamp)`
-  hr {
-    border-color: ${theme.warn.alt};
-    opacity: 0.1;
-  }
-`;
-
 export const Time = styled.span`
   text-align: center;
   color: ${theme.text.alt};
   font-size: 14px;
   font-weight: 500;
   margin: 0 24px;
-`;
-
-export const UnseenTime = styled(Time)`
-  color: ${theme.warn.alt};
-
-  &:hover {
-    color: ${theme.warn.alt};
-    transiton: ${Transition.hover.on};
-  }
 `;
 
 export const MessageLink = styled.a`

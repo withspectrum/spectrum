@@ -6,7 +6,6 @@ import type { Match } from 'react-router';
 import Head from 'src/components/head';
 import ThreadsList from '../components/threadsList';
 import ExistingThread from './existingThread';
-import { PrimaryOutlineButton } from 'src/components/button';
 import { setTitlebarProps } from 'src/actions/titlebar';
 import {
   ViewGrid,
@@ -17,7 +16,6 @@ import {
   StyledSecondaryColumn,
   NoCommunitySelected,
   NoCommunityHeading,
-  NoCommunitySubheading,
 } from '../style';
 
 type Props = {
@@ -35,11 +33,6 @@ class DirectMessages extends React.Component<Props, State> {
     dispatch(
       setTitlebarProps({
         title: 'Messages',
-        rightAction: (
-          <PrimaryOutlineButton size={'small'} to={'/new/message'}>
-            New
-          </PrimaryOutlineButton>
-        ),
       })
     );
   }
@@ -51,11 +44,6 @@ class DirectMessages extends React.Component<Props, State> {
       dispatch(
         setTitlebarProps({
           title: 'Messages',
-          rightAction: (
-            <PrimaryOutlineButton size={'small'} to={'/new/message'}>
-              New
-            </PrimaryOutlineButton>
-          ),
         })
       );
     }
@@ -82,17 +70,6 @@ class DirectMessages extends React.Component<Props, State> {
                   <NoCommunityHeading>
                     No conversation selected
                   </NoCommunityHeading>
-                  <NoCommunitySubheading>
-                    Choose from an existing conversation, or start a new one.
-                  </NoCommunitySubheading>
-                  <PrimaryOutlineButton
-                    to={{
-                      pathname: '/new/message',
-                      state: { modal: true },
-                    }}
-                  >
-                    New message
-                  </PrimaryOutlineButton>
                 </div>
               </NoCommunitySelected>
             )}

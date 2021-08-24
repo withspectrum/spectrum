@@ -102,19 +102,3 @@ export const LoadingImg = styled.div`
       }
     `};
 `;
-
-export const OnlineIndicator = styled.span`
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border: 2px solid
-    ${props =>
-      props.onlineBorderColor
-        ? props.onlineBorderColor(props.theme)
-        : props.theme.text.reverse};
-  background: ${theme.success.alt};
-  border-radius: 5px;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-`;

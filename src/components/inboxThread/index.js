@@ -52,26 +52,9 @@ class InboxThread extends React.Component<Props> {
       currentUser,
     } = this.props;
 
-    const newMessagesSinceLastViewed =
-      !active &&
-      thread.currentUserLastSeen &&
-      thread.lastActive &&
-      thread.currentUserLastSeen < thread.lastActive;
-
-    const newUnseenThread =
-      !active &&
-      currentUser &&
-      !thread.currentUserLastSeen &&
-      thread.community.communityPermissions.isMember &&
-      currentUser.id !== thread.author.user.id;
-
     return (
       <ErrorBoundary>
-        <InboxThreadItem
-          new={newMessagesSinceLastViewed || newUnseenThread}
-          data-cy="thread-card"
-          active={active}
-        >
+        <InboxThreadItem data-cy="thread-card" active={active}>
           <InboxLinkWrapper
             to={{
               pathname: getThreadLink(thread),
@@ -121,7 +104,6 @@ class InboxThread extends React.Component<Props> {
                   thread={thread}
                   active={active}
                   currentUser={currentUser}
-                  newMessages={!!newMessagesSinceLastViewed}
                 />
               </ErrorBoundary>
             </Column>

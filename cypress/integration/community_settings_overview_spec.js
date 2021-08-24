@@ -22,7 +22,6 @@ describe('Community settings overview tab', () => {
       cy.get(`[href*="${community.slug}/${channel.slug}/settings"]`);
     });
     // Make sure the subnav is rendered correctly
-    cy.get(`[href*="settings/analytics"]`).should('be.visible');
     cy.get(`[href*="settings/members"]`).should('be.visible');
 
     // Editing
@@ -66,47 +65,5 @@ describe('Community settings overview tab', () => {
     cy.contains(community.name);
     cy.contains(community.description);
     cy.contains(community.website);
-  });
-
-  it.skip('should allow managing branded login settings', () => {
-    const brandedLoginString = 'Testing branded login custom message';
-
-    // click the enable custom branded login toggle
-    cy.get('[data-cy="community-settings-branded-login"]')
-      .contains('Enable custom branded login')
-      .click();
-
-    // should be enabled and input should appear
-    cy.get('[data-cy="community-settings-branded-login-input"]').should(
-      'be.visible'
-    );
-
-    // type in a new branded login string
-    cy.get('[data-cy="community-settings-branded-login-input"]')
-      .click()
-      .type(brandedLoginString);
-
-    // save the string
-    cy.get('[data-cy="community-settings-branded-login-save"]')
-      .should('be.visible')
-      .click();
-
-    // go to the preview page
-    cy.get('[data-cy="community-settings-branded-login-preview"]')
-      .should('be.visible')
-      .click();
-
-    // custom string should be visible
-    cy.get('[data-cy="community-login-page"]')
-      .contains(brandedLoginString)
-      .should('be.visible');
-
-    // go back to settings
-    cy.visit(`/${community.slug}/settings`);
-
-    // disable branded login
-    cy.get('[data-cy="community-settings-branded-login"]')
-      .contains('Enable custom branded login')
-      .click();
   });
 });

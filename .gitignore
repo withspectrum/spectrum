@@ -11,11 +11,6 @@ debug
 now-secrets.json
 build-iris
 build-api
-build-athena
-build-hermes
-build-chronos
-build-mercury
-build-vulcan
 build-hyperion
 build-electron
 package-lock.json
@@ -29,7 +24,6 @@ stats.json
 iris/.env
 api/.env
 test-results.json
-desktop/release
 public/uploads
 cypress/screenshots/
 cypress/videos/

@@ -21,13 +21,11 @@ export const StyledLabel = styled.label`
   transition: ${Transition.hover.off};
   position: relative;
   margin-top: ${props => (props.size === 'small' ? '12px' : 0)};
-
   &:hover > input {
     border-color: ${props =>
       props.disabled ? props.theme.bg.border : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
-
   &:hover > input:focus {
     border-color: ${props =>
       props.disabled ? props.theme.bg.inactive : props.theme.brand.alt};
@@ -50,7 +48,6 @@ export const StyledInput = styled.input`
   text-align: ${props => (props.size === 'small' ? 'left' : 'center')};
   box-shadow: none;
   transition: ${Transition.hover.off};
-
   &::placeholder {
     color: ${theme.text.placeholder};
   }
@@ -63,7 +60,6 @@ export const StyledInput = styled.input`
   &:-ms-input-placeholder {
     color: ${theme.text.placeholder};
   }
-
   &:focus {
     border-color: ${theme.brand.default};
     transition: ${Transition.hover.on};
