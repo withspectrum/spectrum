@@ -227,6 +227,14 @@ const decrementMemberCount = (channelId: string): Promise<DBChannel> => {
     .then(result => result.changes[0].new_val || result.changes[0].old_val);
 };
 
+// prettier-ignore
+const getChannelsThreadCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
+  return threadsByChannelsQuery(...channelIds)
+    .group('channelId')
+    .count()
+    .run();
+};
+
 module.exports = {
   getChannelBySlug,
   getChannelById,
@@ -239,6 +247,7 @@ module.exports = {
   getChannels,
   setMemberCount,
   decrementMemberCount,
+  getChannelsThreadCounts,
   __forQueryTests: {
     channelsByCommunitiesQuery,
     channelsByIdsQuery,

@@ -93,7 +93,6 @@ Object {
               "isMember": true,
               "isModerator": false,
               "isOwner": false,
-              "reputation": 101,
               "user": Object {
                 "id": "2",
               },
@@ -106,7 +105,6 @@ Object {
               "isMember": true,
               "isModerator": false,
               "isOwner": false,
-              "reputation": 100,
               "user": Object {
                 "id": "3",
               },
@@ -119,7 +117,6 @@ Object {
               "isMember": true,
               "isModerator": false,
               "isOwner": false,
-              "reputation": 100,
               "user": Object {
                 "id": "8",
               },
@@ -132,7 +129,6 @@ Object {
               "isMember": true,
               "isModerator": false,
               "isOwner": true,
-              "reputation": 100,
               "user": Object {
                 "id": "1",
               },
