@@ -143,31 +143,6 @@ const User = /* GraphQL */ `
     email: String
   }
 
-  input UpgradeToProInput {
-    plan: String!
-    token: String!
-  }
-
-  input ToggleNotificationSettingsInput {
-    deliveryMethod: String!
-    notificationType: String!
-  }
-
-  input WebPushSubscriptionKeys {
-    p256dh: String!
-    auth: String!
-  }
-
-  input WebPushSubscription {
-    endpoint: String!
-    keys: WebPushSubscriptionKeys!
-  }
-
-  input ReportUserInput {
-    userId: String!
-    reason: String!
-  }
-
   input BanUserInput {
     userId: String!
     reason: String!
@@ -175,14 +150,7 @@ const User = /* GraphQL */ `
 
   extend type Mutation {
     editUser(input: EditUserInput!): User
-    upgradeToPro(input: UpgradeToProInput!): User
-    downgradeFromPro: User
-    toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
-    subscribeWebPush(subscription: WebPushSubscription!): Boolean
-    unsubscribeWebPush(endpoint: String!): Boolean
     deleteCurrentUser: Boolean
-    updateUserEmail(email: LowercaseString!): User
-    reportUser(input: ReportUserInput!): Boolean
     banUser(input: BanUserInput!): Boolean
   }
 `;
