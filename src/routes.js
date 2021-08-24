@@ -25,6 +25,7 @@ import Gallery from 'src/components/gallery';
 import Toasts from 'src/components/toasts';
 import signedOutFallback from 'src/helpers/signed-out-fallback';
 import ThreadSlider from 'src/views/threadSlider';
+import AnnouncementBanner from 'src/components/announcementBanner';
 import Navigation from 'src/views/navigation';
 import Status from 'src/views/status';
 import Login from 'src/views/login';
@@ -228,6 +229,10 @@ class Routes extends React.Component<Props, State> {
                 <Route component={GlobalTitlebar} />
 
                 <div css={isModal ? { overflow: 'hidden' } : {}}>
+                  <ErrorBoundary>
+                    <AnnouncementBanner />
+                  </ErrorBoundary>
+
                   {/*
                     switch only renders the first match. Subrouting happens downstream
                     https://reacttraining.com/react-router/web/api/Switch
