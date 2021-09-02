@@ -6,7 +6,7 @@
     "apollo-server-plugin-response-cache": "^0.1.0-alpha.0",
     "apollo-upload-client": "^9.1.0",
     "aws-sdk": "2.200.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "b2a": "^1.0.11",
     "babel-plugin-replace-dynamic-import-runtime": "^1.0.2",
     "babel-plugin-styled-components": "^1.10.0",
