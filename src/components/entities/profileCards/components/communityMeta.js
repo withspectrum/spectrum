@@ -45,15 +45,6 @@ export const CommunityMeta = (props: Props) => {
             </a>
           </MetaRow>
         )}
-
-        {community.metaData && (
-          <React.Fragment>
-            <MetaRow as={Link} to={`/${community.slug}?tab=members`}>
-              <Icon glyph={'person'} size={20} />{' '}
-              {community.metaData.members.toLocaleString()} members
-            </MetaRow>
-          </React.Fragment>
-        )}
       </MetaLinksContainer>
     </MetaContainer>
   );
