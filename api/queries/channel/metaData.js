@@ -3,7 +3,6 @@ import Raven from 'shared/raven';
 import type { DBChannel } from 'shared/types';
 import type { GraphQLContext } from '../../';
 import { canViewChannel } from '../../utils/permissions';
-import cache from 'shared/cache/redis';
 
 export default async (root: DBChannel, _: any, ctx: GraphQLContext) => {
   const { user, loaders } = ctx;

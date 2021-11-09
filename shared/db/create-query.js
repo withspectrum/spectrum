@@ -17,22 +17,7 @@
  * });
  */
 
-const debug = require('debug')('shared:rethinkdb:db-query-cache');
-import queryCache from './query-cache';
 import { READ_RUN_ERROR, WRITE_RUN_ERROR } from './constants';
-
-let TOTAL_QUERIES = 0;
-let CACHED_RESULTS = 0;
-
-// if (debug.enabled) {
-//   debug('Logging of cache hit rate enabled! (every 30s)');
-//   setInterval(() => {
-//     debug(
-//       `Cache hit rate: ${(CACHED_RESULTS / TOTAL_QUERIES) *
-//         100}% (${CACHED_RESULTS} cached of ${TOTAL_QUERIES} total)`
-//     );
-//   }, 30000);
-// }
 
 type RethinkDBQuery<O> = {
   toString: Function,
@@ -53,7 +38,6 @@ type CreateQueryCallback<I, O> = (...args: I) => O;
 export const createReadQuery = (callback: any) => {
   return async (...args: any) => {
     const input = callback(...args);
-    TOTAL_QUERIES++;
     if (typeof input.query.run !== 'function') throw new Error(READ_RUN_ERROR);
 
     // const queryString = input.query.toString();
