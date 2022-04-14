@@ -1,38 +1,116 @@
-// @flow
+// -@-f-l-o-w
 const { db } = require('shared/db');
 import { sendChannelNotificationQueue } from 'shared/bull/queues';
 import type { DBChannel } from 'shared/types';
+const mongodb = require('mongodb');
 
 // reusable query parts -- begin
-const channelsByCommunitiesQuery = (...communityIds: string[]) =>
-  db
-    .table('channels')
-    .getAll(...communityIds, { index: 'communityId' })
-    .filter(channel => channel.hasFields('deletedAt').not());
+// const channelsByCommunitiesQuery = (...communityIds: string[]) =>
+//   db
+//     .table('channels')
+//     .getAll(...communityIds, { index: 'communityId' })
+//     .filter(channel => channel.hasFields('deletedAt').not());
+const channelsByCommunitiesQuery = async (...communityIds) => {
+  return db.collection('channels').aggregate([
+    {
+      $match: {
+        communityId: { $in: communityIds },
+        deletedAt: null,
+      },
+    },
+  ]);
+};
 
-const channelsByIdsQuery = (...channelIds: string[]) =>
-  db
-    .table('channels')
-    .getAll(...channelIds)
-    .filter(channel => channel.hasFields('deletedAt').not());
+// const channelsByIdsQuery = (...channelIds: string[]) =>
+//   db
+//     .table('channels')
+//     .getAll(...channelIds)
+//     .filter(channel => channel.hasFields('deletedAt').not());
+const channelsByIdsQuery = async (...channelIds) => {
+  return (await db
+    .collection('channels')
+    .find({})
+    .toArray())
+    .filter(channel => {
+      return channelIds.includes(channel.id);
+    })
+    .filter(channel => {
+      return !channel.deletedAt;
+    });
+};
 
-const threadsByChannelsQuery = (...channelIds: string[]) =>
-  channelsByIdsQuery(...channelIds)
-    .eqJoin('id', db.table('threads'), { index: 'channelId' })
-    .map(row => row('right'))
-    .filter(thread => db.not(thread.hasFields('deletedAt')));
+// const threadsByChannelsQuery = (...channelIds: string[]) =>
+//   channelsByIdsQuery(...channelIds)
+//     .eqJoin('id', db.table('threads'), { index: 'channelId' })
+//     .map(row => row('right'))
+//     .filter(thread => db.not(thread.hasFields('deletedAt')));
+const threadsByChannelsQuery = async (...channelIds) => {
+  return (await channelsByIdsQuery(...channelIds))
+    .map(async channel => {
+      return (await db
+        .collection('threads')
+        .find({})
+        .toArray())
+        .filter(thread => {
+          return thread.channelId == channel.id;
+        })
+        .map(thread => {
+          return { left: channel, right: thread };
+        });
+    })
+    .reduce((previousValue, currentValue) => {
+      return [...previousValue, ...currentValue];
+    }, [])
+    .map(row => {
+      return row.right;
+    })
+    .filter(thread => {
+      return !thread.deletedAt;
+    });
+};
 
-const membersByChannelsQuery = (...channelIds: string[]) =>
-  channelsByIdsQuery(...channelIds)
-    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
-    .map(row => row('right'))
-    .filter({ isBlocked: false, isPending: false, isMember: true });
+// const membersByChannelsQuery = (...channelIds: string[]) =>
+//   channelsByIdsQuery(...channelIds)
+//     .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+//     .map(row => row('right'))
+//     .filter({ isBlocked: false, isPending: false, isMember: true });
+const membersByChannelsQuery = async (...channelIds) => {
+  return (await channelsByIdsQuery(channelIds))
+    .map(async channel => {
+      return (await db
+        .collection('usersChannels')
+        .find({})
+        .toArray())
+        .filter(usersChannel => {
+          usersChannel.channelId == channel.id;
+        })
+        .map(usersChannel => {
+          return { left: channel, right: usersChannel };
+        });
+    })
+    .reduce((previousValue, currentValue) => {
+      return [...previousValue, ...currentValue];
+    }, [])
+    .map(row => {
+      return row.right;
+    })
+    .filter(usersChannel => {
+      return (
+        usersChannel.isBlocked == false &&
+        usersChannel.isPending == false &&
+        usersChannel.isMember == true
+      );
+    });
+};
 
 // reusable query parts -- end
 
 // prettier-ignore
-const getChannelsByCommunity = (communityId: string): Promise<Array<DBChannel>> => {
-  return channelsByCommunitiesQuery(communityId).run();
+// const getChannelsByCommunity = (communityId: string): Promise<Array<DBChannel>> => {
+//   return channelsByCommunitiesQuery(communityId).run();
+// };
+const getChannelsByCommunity = async (communityId: string): Promise<Array<DBChannel>> => {
+  return await channelsByCommunitiesQuery(communityId)
 };
 
 /*
@@ -41,12 +119,24 @@ const getChannelsByCommunity = (communityId: string): Promise<Array<DBChannel>> 
   that are public, and pass them into a getThreads function
 */
 // prettier-ignore
-const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string>> => {
-  return channelsByCommunitiesQuery(communityId)
-    .filter({ isPrivate: false })
-    .filter(row => row.hasFields('archivedAt').not())
-    .map(c => c('id'))
-    .run();
+// const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string>> => {
+//   return channelsByCommunitiesQuery(communityId)
+//     .filter({ isPrivate: false })
+//     .filter(row => row.hasFields('archivedAt').not())
+//     .map(c => c('id'))
+//     .run();
+// };
+const getPublicChannelsByCommunity = async (communityId: string): Promise<Array<string>> => {  
+  return (await channelsByCommunitiesQuery(communityId))
+    .filter(channel => {
+      return channel.isPrivate == false
+    })
+    .filter(row => {
+      return !row.archivedAt
+    })
+    .map(c => {
+      return c.id
+    })
 };
 
 /*
@@ -57,61 +147,160 @@ const getPublicChannelsByCommunity = (communityId: string): Promise<Array<string
   will only return threads in those channels
 */
 // prettier-ignore
+// const getChannelsByUserAndCommunity = async (communityId: string, userId: string): Promise<Array<string>> => {
+//   const channels = await channelsByCommunitiesQuery(communityId).run();
+//   const unarchived = channels.filter(channel => !channel.archivedAt)
+//   const channelIds = unarchived.map(channel => channel.id)
+
+//   return db
+//     .table('usersChannels')
+//     .getAll(...channelIds.map(id => ([userId, id])), {
+//       index: 'userIdAndChannelId',
+//     })
+//     .filter({ isMember: true })('channelId')
+//     .run();
+// };
 const getChannelsByUserAndCommunity = async (communityId: string, userId: string): Promise<Array<string>> => {
-  const channels = await channelsByCommunitiesQuery(communityId).run();
-  const unarchived = channels.filter(channel => !channel.archivedAt)
-  const channelIds = unarchived.map(channel => channel.id)
-  
-  return db
-    .table('usersChannels')
-    .getAll(...channelIds.map(id => ([userId, id])), {
-      index: 'userIdAndChannelId',
+  const channels = await channelsByCommunitiesQuery(communityId);
+  const unarchived = channels.filter(channel => !channel.archivedAt);
+  const channelIds = unarchived.map(channel => channel.id);
+
+  return (await db.collection("usersChannels")
+    .find({})
+    .toArray())
+    .filter(usersChannel => {
+      return usersChannel.userId == userId 
+        && channelIds.includes(usersChannel.channelId)
     })
-    .filter({ isMember: true })('channelId')
-    .run();
+    .filter(usersChannel => {
+      return usersChannel.isMember == true
+    })
+    .map(usersChannel => {
+      return usersChannel.channelId
+    })
 };
 
-const getChannelsByUser = (userId: string): Promise<Array<DBChannel>> => {
-  return db
-    .table('usersChannels')
-    .getAll([userId, 'member'], [userId, 'moderator'], [userId, 'owner'], {
-      index: 'userIdAndRole',
+// const getChannelsByUser = async (userId: string): Promise<Array<DBChannel>> => {
+//   return db
+//     .table('usersChannels')
+//     .getAll([userId, 'member'], [userId, 'moderator'], [userId, 'owner'], {
+//       index: 'userIdAndRole',
+//     })
+//     .eqJoin('channelId', db.table('channels'))
+//     .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
+//     .zip()
+//     .filter(channel => db.not(channel.hasFields('deletedAt')))
+//     .run();
+// };
+const getChannelsByUser = async (userId: string): Promise<Array<DBChannel>> => {
+  return (await db
+    .collection('usersChannels')
+    .find({})
+    .toArray())
+    .filter(usersChannel => {
+      return (
+        usersChannel.userId == userId &&
+        (usersChannel.isMember ||
+          usersChannel.isModerator ||
+          usersChannel.isOwner)
+      );
     })
-    .eqJoin('channelId', db.table('channels'))
-    .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
-    .zip()
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
-    .run();
+    .map(async usersChannel => {
+      return (await db
+        .collection('channels')
+        .find({})
+        .toArray())
+        .filter(channel => {
+          return channel.id == usersChannel.channelId;
+        })
+        .map(channel => {
+          return { left: usersChannel, right: channel };
+        });
+    })
+    .reduce((previousValue, currentValue) => {
+      return [...previousValue, ...currentValue];
+    }, [])
+    .map(element => {
+      const left = element.left;
+
+      delete left.id;
+      delete left.channelId;
+      delete left.userId;
+      delete left.createdAt;
+
+      return element;
+    })
+    .map(element => {
+      return { ...element.left, ...element.right };
+    })
+    .filter(channel => {
+      return !channel.deletedAt;
+    });
 };
 
+// const getChannelBySlug = async (
+//   channelSlug: string,
+//   communitySlug: string
+// ): Promise<?DBChannel> => {
+//   const [communityId] = await db
+//     .table('communities')
+//     .getAll(communitySlug, { index: 'slug' })('id')
+//     .run();
+
+//   if (!communityId) return null;
+
+//   return db
+//     .table('channels')
+//     .getAll(communityId, { index: 'communityId' })
+//     .filter(channel =>
+//       channel('slug')
+//         .eq(channelSlug)
+//         .and(db.not(channel.hasFields('deletedAt')))
+//     )
+//     .run()
+//     .then(res => {
+//       if (Array.isArray(res) && res.length > 0) return res[0];
+//       return null;
+//     });
+// };
 const getChannelBySlug = async (
   channelSlug: string,
   communitySlug: string
 ): Promise<?DBChannel> => {
-  const [communityId] = await db
-    .table('communities')
-    .getAll(communitySlug, { index: 'slug' })('id')
-    .run();
+  const [communityId] = (await db
+    .collection('communities')
+    .find({})
+    .toArray()).filter(community => {
+    return community.slug == communitySlug;
+  });
 
-  if (!communityId) return null;
+  if (!communityId) {
+    return null;
+  }
 
-  return db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .filter(channel =>
-      channel('slug')
-        .eq(channelSlug)
-        .and(db.not(channel.hasFields('deletedAt')))
-    )
-    .run()
-    .then(res => {
-      if (Array.isArray(res) && res.length > 0) return res[0];
-      return null;
+  const res = (await db
+    .collection('channels')
+    .find({})
+    .toArray())
+    .filter(channel => {
+      return channel.communityId == communityId;
+    })
+    .filter(channel => {
+      return channel.slug == channelSlug && !channel.deletedAt;
     });
+
+  if (Array.isArray(res) && res.length > 0) {
+    return res[0];
+  }
+
+  return null;
 };
 
+// const getChannelById = async (id: string) => {
+//   return (await channelsByIdsQuery(id).run())[0] || null;
+// };
 const getChannelById = async (id: string) => {
-  return (await channelsByIdsQuery(id).run())[0] || null;
+  return (await channelsByIdsQuery(id))[0] || null;
 };
 
 type GetChannelByIdArgs = {|
@@ -125,8 +314,13 @@ type GetChannelBySlugArgs = {|
 
 export type GetChannelArgs = GetChannelByIdArgs | GetChannelBySlugArgs;
 
-const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
-  return channelsByIdsQuery(...channelIds).run();
+// const getChannels = (channelIds: Array<string>): Promise<Array<DBChannel>> => {
+//   return channelsByIdsQuery(...channelIds).run();
+// };
+const getChannels = async (
+  channelIds: Array<string>
+): Promise<Array<DBChannel>> => {
+  return await channelsByIdsQuery(...channelIds);
 };
 
 type GroupedCount = {
@@ -135,19 +329,52 @@ type GroupedCount = {
 };
 
 // prettier-ignore
-const getChannelsThreadCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
-  return threadsByChannelsQuery(...channelIds)
-    .group('channelId')
-    .count()
-    .run();
+// const getChannelsThreadCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
+//   return threadsByChannelsQuery(...channelIds)
+//     .group('channelId')
+//     .count()
+//     .run();
+// };
+const getChannelsThreadCounts = async (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
+  return Object.values((await threadsByChannelsQuery(...channelIds))
+    .reduce((previousValue, currentValue) => {
+      const group = previousValue[currentValue.channelId] || {
+        group: currentValue.channelId,
+        reduction: []
+      };
+      group.reduction.push(currentValue);
+      previousValue[currentValue.channelId] = group;
+      return previousValue;
+    }, {}))
+    .map(group => {
+      group.reduction = group.reduction.length;
+      return group;
+    })
 };
 
 // prettier-ignore
-const getChannelsMemberCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
-  return membersByChannelsQuery(...channelIds)
-    .group('channelId')
-    .count()
-    .run();
+// const getChannelsMemberCounts = (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
+//   return membersByChannelsQuery(...channelIds)
+//     .group('channelId')
+//     .count()
+//     .run();
+// };
+
+const getChannelsMemberCounts = async (channelIds: Array<string>): Promise<Array<GroupedCount>> => {
+  return Object.values((await membersByChannelsQuery(...channelIds))
+    .reduce((previousValue, currentValue) => {
+      const group = previousValue[currentValue.channelId] || {
+        group: currentValue.channelId,
+        reduction: []
+      };
+      group.reduction.push(currentValue);
+      previousValue[currentValue.channelId] = group;
+      return previousValue;
+    }, {}))
+    .map(group => {
+      group.reduction = group.reduction.length;
+      return group;
+    })
 };
 
 export type CreateChannelInput = {
@@ -172,26 +399,49 @@ export type EditChannelInput = {
 };
 
 // prettier-ignore
-const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<DBChannel> => {
+// const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<DBChannel> => {
+//   const { communityId, name, slug, description, isPrivate, isDefault } = input;
+
+//   return db
+//     .table('channels')
+//     .insert(
+//       {
+//         communityId,
+//         createdAt: new Date(),
+//         name,
+//         description,
+//         slug,
+//         isPrivate,
+//         isDefault: isDefault ? true : false,
+//         memberCount: 0,
+//       },
+//       { returnChanges: true }
+//     )
+//     .run()
+//     .then(result => result.changes[0].new_val)
+//     .then(channel => {
+//       // only trigger a new channel notification is the channel is public
+//       if (!channel.isPrivate) {
+//         sendChannelNotificationQueue.add({ channel, userId });
+//       }
+
+//       return channel;
+//     });
+// };
+const createChannel = async ({ input }: CreateChannelInput, userId: string): Promise<DBChannel> => {
   const { communityId, name, slug, description, isPrivate, isDefault } = input;
 
-  return db
-    .table('channels')
-    .insert(
-      {
-        communityId,
-        createdAt: new Date(),
-        name,
-        description,
-        slug,
-        isPrivate,
-        isDefault: isDefault ? true : false,
-        memberCount: 0,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val)
+  return db.collection("channels")
+    .insertOne({
+      communityId,
+      createdAt: new Date(),
+      name,
+      description,
+      slug,
+      isPrivate,
+      isDefault: isDefault ? true : false,
+      memberCount: 0,
+    })
     .then(channel => {
       // only trigger a new channel notification is the channel is public
       if (!channel.isPrivate) {
@@ -199,7 +449,10 @@ const createChannel = ({ input }: CreateChannelInput, userId: string): Promise<D
       }
 
       return channel;
-    });
+    })
+  
+
+
 };
 
 // prettier-ignore

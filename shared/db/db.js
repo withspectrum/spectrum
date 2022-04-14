@@ -68,46 +68,57 @@ const config = IS_PROD
       ...DEFAULT_CONFIG,
     };
 
-let r = require('rethinkhaberdashery')(config);
-const poolMaster = r.getPoolMaster();
+// let r = require('rethinkhaberdashery')(config);
 
-poolMaster.on('queueing', size => {
-  statsd.gauge('db.query_queue.size', size);
-});
+const { MongoClient } = require('mongodb');
 
-setInterval(() => {
-  statsd.gauge('db.connections.count', poolMaster.getLength());
-}, 5000);
+const uri = '';
+
+const client = new MongoClient(uri);
+async () => {
+  await client.connect();
+};
+
+// const poolMaster = r.getPoolMaster();
+
+// poolMaster.on('queueing', size => {
+//   statsd.gauge('db.query_queue.size', size);
+// });
+
+// setInterval(() => {
+//   statsd.gauge('db.connections.count', poolMaster.getLength());
+// }, 5000);
 
 // Exit the process on unhealthy db in test env
-if (process.env.TEST_DB) {
-  poolMaster.on('healthy', healthy => {
-    if (!healthy) {
-      process.exit(1);
-    }
-  });
-}
+// if (process.env.TEST_DB) {
+//   poolMaster.on('healthy', healthy => {
+//     if (!healthy) {
+//       process.exit(1);
+//     }
+//   });
+// }
 
-const queries = [];
-inspect(r, {
-  onQueryComplete: (query, { size, time }) => {
-    if (query.indexOf('.changes') > -1) return;
-    statsd.increment('db.queries.count');
-    statsd.histogram('db.queries.response_time', time);
-    statsd.histogram('db.queries.response_size', size);
-    // In development write out a file of the most expensive queries
-    if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
-      queries.push({ query, time, size });
-      fs.writeFileSync(
-        'queries-by-time.js',
-        JSON.stringify(queries.sort((a, b) => b.time - a.time), null, 2)
-      );
-      fs.writeFileSync(
-        'queries-by-response-size.js',
-        JSON.stringify(queries.sort((a, b) => b.size - a.size), null, 2)
-      );
-    }
-  },
-});
+// const queries = [];
+// inspect(r, {
+//   onQueryComplete: (query, { size, time }) => {
+//     if (query.indexOf('.changes') > -1) return;
+//     statsd.increment('db.queries.count');
+//     statsd.histogram('db.queries.response_time', time);
+//     statsd.histogram('db.queries.response_size', size);
+//     // In development write out a file of the most expensive queries
+//     if (process.env.NODE_ENV === 'development' && process.env.TRACK_DB_PERF) {
+//       queries.push({ query, time, size });
+//       fs.writeFileSync(
+//         'queries-by-time.js',
+//         JSON.stringify(queries.sort((a, b) => b.time - a.time), null, 2)
+//       );
+//       fs.writeFileSync(
+//         'queries-by-response-size.js',
+//         JSON.stringify(queries.sort((a, b) => b.size - a.size), null, 2)
+//       );
+//     }
+//   },
+// });
 
-module.exports = { db: r };
+// module.exports = { db: r };
+module.exports = { db: client };

@@ -13,48 +13,67 @@ import { createChangefeed } from 'shared/changefeed-utils';
 import type { DBCommunity, DBUser } from 'shared/types';
 import type { Timeframe } from './utils';
 
+// export const getCommunityById = (id: string): Promise<DBCommunity> => {
+//   return db
+//     .table('communities')
+//     .get(id)
+//     .run()
+//     .then(result => {
+//       if (result && result.deletedAt) return null;
+//       return result;
+//     });
+// };
 export const getCommunityById = (id: string): Promise<DBCommunity> => {
-  return db
-    .table('communities')
-    .get(id)
-    .run()
-    .then(result => {
-      if (result && result.deletedAt) return null;
-      return result;
-    });
+  return db.collection('communities').findOne({ id: id, deletedAt: null });
 };
 
 // prettier-ignore
+// export const getCommunities = (communityIds: Array<string>): Promise<Array<DBCommunity>> => {
+//   return db
+//     .table('communities')
+//     .getAll(...communityIds)
+//     .filter(community => db.not(community.hasFields('deletedAt')))
+//     .run();
+// };
 export const getCommunities = (communityIds: Array<string>): Promise<Array<DBCommunity>> => {
   return db
-    .table('communities')
-    .getAll(...communityIds)
-    .filter(community => db.not(community.hasFields('deletedAt')))
-    .run();
+    .collection('communities')
+    .find({ id: { $in: communityIds }, deletedAt: null })
+    .toArray();
 };
 
 // prettier-ignore
+// export const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<DBCommunity>> => {
+//   return db
+//     .table('communities')
+//     .getAll(...slugs, { index: 'slug' })
+//     .filter(community => db.not(community.hasFields('deletedAt')))
+//     .run();
+// };
 export const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<DBCommunity>> => {
   return db
-    .table('communities')
-    .getAll(...slugs, { index: 'slug' })
-    .filter(community => db.not(community.hasFields('deletedAt')))
-    .run();
+    .collection('communities')
+    .find({ slug: { $in: slugs}, deletedAt: null })
+    .toArray();
 };
 
+// export const getCommunityBySlug = (slug: string): Promise<?DBCommunity> => {
+//   return db
+//     .table('communities')
+//     .getAll(slug, { index: 'slug' })
+//     .filter(community => db.not(community.hasFields('deletedAt')))
+//     .run()
+//     .then(results => {
+//       if (!results || results.length === 0) return null;
+//       return results[0];
+//     });
+// };
 export const getCommunityBySlug = (slug: string): Promise<?DBCommunity> => {
-  return db
-    .table('communities')
-    .getAll(slug, { index: 'slug' })
-    .filter(community => db.not(community.hasFields('deletedAt')))
-    .run()
-    .then(results => {
-      if (!results || results.length === 0) return null;
-      return results[0];
-    });
+  return db.collection('communities').findOne({ slug: slug, deletedAt: null });
 };
 
 // prettier-ignore
+// TODO: convert
 export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>> => {
   return (
     db
@@ -74,6 +93,7 @@ export const getCommunitiesByUser = (userId: string): Promise<Array<DBCommunity>
 };
 
 // prettier-ignore
+// TODO: convert
 export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, currentUserId: string) => {
   const evaluatingUserMemberships = await db
     .table('usersCommunities')
@@ -119,6 +139,7 @@ export const getVisibleCommunitiesByUser = async (evaluatingUserId: string, curr
     .run()
 }
 
+// TODO: convert
 export const getPublicCommunitiesByUser = async (userId: string) => {
   return await db
     .table('usersCommunities')

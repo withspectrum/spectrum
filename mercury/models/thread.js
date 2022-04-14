@@ -2,14 +2,31 @@
 const { db } = require('shared/db');
 import type { DBThread } from 'shared/types';
 
+// export const getThread = (id: string): Promise<DBThread> => {
+//   return db
+//     .table('threads')
+//     .get(id)
+//     .run();
+// };
 export const getThread = (id: string): Promise<DBThread> => {
-  return db
-    .table('threads')
-    .get(id)
-    .run();
+  return db.collection('threads').findOne({ id: id });
 };
 
+// export const getParticipantCount = (threadId: string): Promise<number> => {
+//   return db
+//     .table('usersThreads')
+//     .getAll(threadId, { index: 'threadId' })
+//     .filter({ isParticipant: true })
+//     .count()
+//     .default(0)
+//     .run();
+// };
 export const getParticipantCount = (threadId: string): Promise<number> => {
+  return db.collection('usersThreads').countDocuments({
+    threadId: threadId,
+    isParticipant: true,
+  });
+
   return db
     .table('usersThreads')
     .getAll(threadId, { index: 'threadId' })

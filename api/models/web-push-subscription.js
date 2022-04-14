@@ -4,25 +4,44 @@ const { db } = require('shared/db');
 import type { WebPushSubscription } from '../mutations/user';
 
 // prettier-ignore
+// export const storeSubscription = (subscription: WebPushSubscription, userId: string) => {
+//   debug(
+//     `store subscription for user#${userId}, endpoint ${subscription.endpoint}`
+//   );
+//   return db
+//     .table('webPushSubscriptions')
+//     .insert({
+//       ...subscription,
+//       userId,
+//     })
+//     .run();
+// };
+
+//* mongodb
 export const storeSubscription = (subscription: WebPushSubscription, userId: string) => {
   debug(
     `store subscription for user#${userId}, endpoint ${subscription.endpoint}`
   );
   return db
-    .table('webPushSubscriptions')
-    .insert({
+    .collection('webPushSubscriptions')
+    .insertOne({
       ...subscription,
       userId,
     })
-    .run();
 };
 
+// export const getSubscriptions = (userId: string) => {
+//   debug(`get subscriptions for user#${userId}`);
+//   return db
+//     .table('webPushSubscriptions')
+//     .getAll(userId, { index: 'userId' })
+//     .run();
+// };
+
+//* mongodb
 export const getSubscriptions = (userId: string) => {
   debug(`get subscriptions for user#${userId}`);
-  return db
-    .table('webPushSubscriptions')
-    .getAll(userId, { index: 'userId' })
-    .run();
+  return db.collection('webPushSubscriptions').findOne({ userId: userId });
 };
 
 export const removeSubscription = (endpoint: string) => {

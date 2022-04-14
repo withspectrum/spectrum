@@ -17,28 +17,32 @@ const defaultSettings = {
 };
 
 // prettier-ignore
-export const getOrCreateChannelSettings = async (channelId: string): Promise<DBChannelSettings> => {
-  const settings = await db
-    .table('channelSettings')
-    .getAll(channelId, { index: 'channelId' })
-    .run();
+// export const getOrCreateChannelSettings = async (channelId: string): Promise<DBChannelSettings> => {
+//   const settings = await db
+//     .table('channelSettings')
+//     .getAll(channelId, { index: 'channelId' })
+//     .run();
 
-  if (!settings || settings.length === 0) {
-    return await db
-      .table('channelSettings')
-      .insert(
-        {
-          ...defaultSettings,
-          channelId,
-        },
-        { returnChanges: true }
-      )
-      .run()
-      .then(results => results.changes[0].new_val);
-  }
+//   if (!settings || settings.length === 0) {
+//     return await db
+//       .table('channelSettings')
+//       .insert(
+//         {
+//           ...defaultSettings,
+//           channelId,
+//         },
+//         { returnChanges: true }
+//       )
+//       .run()
+//       .then(results => results.changes[0].new_val);
+//   }
 
-  return settings[0];
-};
+//   return settings[0];
+// };
+// TODO: write function
+// export const getOrCreateChannelSettings = async (channelId: string): Promise<DBChannelSettings> => {
+
+// };
 
 // prettier-ignore
 export const getChannelsSettings = (channelIds: Array<string>): Promise<?DBChannelSettings> => {
